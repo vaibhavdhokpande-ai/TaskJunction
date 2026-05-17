@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Engineering eBook Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #00B4D8;
+    --teal-dark: #0077B6;
+    --teal-deep: #023E8A;
+    --cyan: #00F5FF;
+    --bg: #F0F8FF;
+    --bg2: #E8F4FD;
+    --card: #FFFFFF;
+    --text: #0A1628;
+    --muted: #5E7A9A;
+    --gold: #FFB700;
+    --green: #00C47D;
+    --tag-bg: #E3F4FB;
+    --tag-border: #B8DFF0;
+    --shadow: 0 8px 36px rgba(0,119,182,0.13);
+    --shadow-hover: 0 20px 56px rgba(0,119,182,0.24);
+    --orange: #FF6B35;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BG PATTERN ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(circle at 80% 10%, rgba(0,180,216,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 10% 80%, rgba(0,119,182,0.10) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(0,245,255,0.04) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 48px;
+    background: rgba(240,248,255,0.88);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0,180,216,0.15);
+    box-shadow: 0 2px 20px rgba(0,119,182,0.08);
+  }
+  .logo {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px; font-weight: 900; letter-spacing: -.5px;
+    color: var(--text); display: flex; align-items: center; gap: 9px;
+  }
+  .logo .logo-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo span { color: var(--teal); }
+  nav { display: flex; gap: 26px; }
+  nav a {
+    font-size: 13.5px; font-weight: 600; color: var(--muted);
+    text-decoration: none; transition: color .2s; letter-spacing: .01em;
+  }
+  nav a:hover { color: var(--teal-dark); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .home-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff; color: var(--text);
+    border: 1.5px solid rgba(0,119,182,0.18);
+    border-radius: 50px; padding: 8px 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    transition: all .2s; box-shadow: 0 2px 10px rgba(0,119,182,0.08);
+  }
+  .home-btn:hover {
+    border-color: var(--teal); background: var(--tag-bg);
+    box-shadow: 0 4px 16px rgba(0,180,216,0.2); transform: translateY(-1px);
+  }
+  .cta-header {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff; border: none; border-radius: 50px; padding: 10px 22px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: transform .2s, box-shadow .2s;
+    text-decoration: none; letter-spacing: .01em;
+  }
+  .cta-header:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,119,182,0.38); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index: 1;
+    text-align: center; padding: 80px 24px 52px;
+    animation: fadeUp .7s ease both;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(0,180,216,0.1); border: 1px solid rgba(0,180,216,0.25);
+    border-radius: 50px; padding: 6px 16px;
+    font-size: 12px; font-weight: 700; color: var(--teal-dark);
+    text-transform: uppercase; letter-spacing: .07em; margin-bottom: 22px;
+  }
+  .hero h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(38px, 6vw, 68px); font-weight: 900; line-height: 1.06;
+    letter-spacing: -.02em; color: var(--text); margin-bottom: 18px;
+  }
+  .hero h1 em { 
+    color: transparent;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    -webkit-background-clip: text; background-clip: text;
+    font-style: normal;
+  }
+  .hero p {
+    font-size: 17px; color: var(--muted); max-width: 580px;
+    margin: 0 auto 38px; line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff; border: none; border-radius: 50px; padding: 15px 34px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: transform .2s, box-shadow .2s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,119,182,0.4); }
+  .btn-secondary {
+    background: #fff; color: var(--text);
+    border: 2px solid rgba(0,119,182,0.15); border-radius: 50px; padding: 13px 28px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all .2s; text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: var(--teal); background: var(--tag-bg); }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    position: relative; z-index: 1;
+    display: flex; justify-content: center; gap: 0;
+    max-width: 700px; margin: 0 auto 56px;
+    background: #fff; border-radius: 20px;
+    box-shadow: var(--shadow); overflow: hidden;
+    animation: fadeUp .6s .1s ease both;
+  }
+  .stat-item {
+    flex: 1; text-align: center; padding: 20px 16px;
+    border-right: 1px solid var(--tag-bg);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900;
+    color: var(--teal-dark); line-height: 1;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+
+  /* ── AMAZON BANNER ── */
+  .amazon-banner {
+    position: relative; z-index: 1;
+    max-width: 1140px; margin: 0 auto 28px; padding: 0 24px;
+    animation: fadeUp .6s .15s ease both;
+  }
+  .amazon-inner {
+    background: linear-gradient(135deg, #FF9900 0%, #FF6600 100%);
+    border-radius: 20px; padding: 22px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    box-shadow: 0 12px 40px rgba(255,153,0,0.35);
+  }
+  .amz-left { display: flex; align-items: center; gap: 14px; }
+  .amz-icon { font-size: 34px; }
+  .amz-tag {
+    background: rgba(255,255,255,0.25); color: #fff;
+    font-size: 10px; font-weight: 800; letter-spacing: .1em;
+    border-radius: 4px; padding: 2px 8px; text-transform: uppercase;
+    display: inline-block; margin-bottom: 5px;
+  }
+  .amz-title { color: #fff; font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 800; }
+  .amz-sub { color: rgba(255,255,255,0.85); font-size: 13px; margin-top: 3px; }
+  .btn-amz {
+    background: #fff; color: #E65C00;
+    border: none; border-radius: 50px; padding: 12px 26px;
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800;
+    cursor: pointer; text-decoration: none; white-space: nowrap;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-amz:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+
+  /* ── EDUCATIVE BANNER ── */
+  .edu-banner {
+    position: relative; z-index: 1;
+    max-width: 1140px; margin: 0 auto 52px; padding: 0 24px;
+    animation: fadeUp .6s .2s ease both;
+  }
+  .edu-inner {
+    background: linear-gradient(135deg, #0A1628 0%, #0E2A4A 100%);
+    border-radius: 20px; padding: 22px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    box-shadow: 0 12px 40px rgba(10,22,40,0.28);
+  }
+  .edu-tag {
+    background: rgba(0,180,216,0.2); color: var(--cyan);
+    font-size: 10px; font-weight: 800; letter-spacing: .1em;
+    border-radius: 4px; padding: 2px 8px; text-transform: uppercase;
+    display: inline-block; margin-bottom: 5px;
+  }
+  .edu-title { color: #fff; font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 800; }
+  .edu-sub { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 3px; }
+  .btn-edu {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff; border: none; border-radius: 50px; padding: 12px 26px;
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800;
+    cursor: pointer; text-decoration: none; white-space: nowrap;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-edu:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,119,182,0.4); }
+
+  /* ── SECTION TITLE ── */
+  .section-head {
+    position: relative; z-index: 1;
+    max-width: 1140px; margin: 0 auto 32px; padding: 0 24px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    animation: fadeUp .6s .25s ease both;
+  }
+  .section-head h2 {
+    font-family: 'Outfit', sans-serif; font-size: 30px; font-weight: 900; letter-spacing: -.02em;
+  }
+  .section-head p { color: var(--muted); font-size: 14px; margin-top: 5px; }
+  .view-all {
+    font-size: 13px; font-weight: 700; color: var(--teal-dark);
+    text-decoration: none; display: flex; align-items: center; gap: 4px;
+    transition: gap .2s;
+  }
+  .view-all:hover { gap: 8px; }
+
+  /* ── CARDS GRID ── */
+  .books-grid {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+    gap: 24px;
+    max-width: 1140px; margin: 0 auto 72px;
+    padding: 0 24px;
+  }
+
+  .book-card {
+    background: var(--card);
+    border-radius: 22px; overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform .3s, box-shadow .3s;
+    display: flex; flex-direction: column;
+    border: 1px solid rgba(0,180,216,0.07);
+    animation: fadeUp .6s ease both;
+  }
+  .book-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+
+  .card-thumb {
+    height: 155px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 58px; position: relative; overflow: hidden;
+  }
+  .card-thumb .shimmer {
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform .6s;
+  }
+  .book-card:hover .shimmer { transform: translateX(100%); }
+
+  .card-body { padding: 20px 20px 16px; flex: 1; display: flex; flex-direction: column; }
+  .badge-row { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .badge {
+    border-radius: 50px; padding: 3px 11px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .b-rec  { background: rgba(255,183,0,0.12); color: #B07D00; border: 1px solid rgba(255,183,0,0.25); }
+  .b-new  { background: rgba(0,196,125,0.1); color: #00945D; border: 1px solid rgba(0,196,125,0.25); }
+  .b-hot  { background: rgba(255,107,53,0.1); color: #C44A10; border: 1px solid rgba(255,107,53,0.25); }
+  .b-free { background: rgba(0,180,216,0.1); color: var(--teal-dark); border: 1px solid rgba(0,180,216,0.25); }
+
+  .book-card h3 {
+    font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 800;
+    margin-bottom: 8px; line-height: 1.25; letter-spacing: -.01em;
+  }
+  .book-card .desc { font-size: 13.5px; color: var(--muted); line-height: 1.65; flex: 1; }
+
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 13px 0 0; }
+  .tag {
+    background: var(--tag-bg); border: 1px solid var(--tag-border);
+    border-radius: 50px; padding: 4px 12px;
+    font-size: 11.5px; font-weight: 600; color: var(--teal-dark);
+  }
+
+  .card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px 18px;
+    border-top: 1px solid var(--tag-bg);
+    margin-top: 14px;
+  }
+  .price { font-family: 'Outfit', sans-serif; font-size: 21px; font-weight: 900; color: var(--text); }
+  .price-old { font-size: 13px; color: var(--muted); text-decoration: line-through; margin-left: 5px; }
+  .price-free { color: var(--green); }
+  .btn-read {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff; border: none; border-radius: 50px; padding: 10px 22px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: transform .2s, box-shadow .2s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-read:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,119,182,0.4);
+  }
+
+  /* ── INLINE AD CARD ── */
+  .ad-card {
+    background: linear-gradient(145deg, #EBF8FD, #F0F8FF);
+    border: 1.5px solid rgba(0,180,216,0.18);
+    border-radius: 22px; padding: 22px;
+    display: flex; flex-direction: column; gap: 14px;
+    box-shadow: 0 4px 20px rgba(0,180,216,0.09);
+  }
+  .ad-top { display: flex; align-items: flex-start; gap: 12px; }
+  .ad-ico { font-size: 30px; flex-shrink: 0; }
+  .ad-tag {
+    font-size: 10px; font-weight: 800; color: var(--teal-dark);
+    background: rgba(0,180,216,0.12); border-radius: 4px; padding: 2px 7px;
+    text-transform: uppercase; letter-spacing: .07em; display: inline-block; margin-bottom: 5px;
+  }
+  .ad-name { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800; color: var(--text); }
+  .ad-desc { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.55; }
+  .btn-ad {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff; border: none; border-radius: 50px; padding: 11px 0;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; text-decoration: none; text-align: center; display: block;
+    width: 100%; transition: transform .2s, box-shadow .2s;
+  }
+  .btn-ad:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,119,182,0.38); }
+
+  /* ── AFFILIATE RESOURCES ── */
+  .aff-section {
+    position: relative; z-index: 1;
+    max-width: 1140px; margin: 0 auto 68px; padding: 0 24px;
+    animation: fadeUp .7s .3s ease both;
+  }
+  .aff-section-title {
+    font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900;
+    letter-spacing: -.02em; margin-bottom: 22px;
+  }
+  .aff-section-title span { color: var(--teal); }
+  .aff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 16px;
+  }
+  .aff-card {
+    background: var(--card); border-radius: 18px; padding: 20px;
+    display: flex; align-items: flex-start; gap: 13px;
+    box-shadow: 0 4px 20px rgba(0,119,182,0.08);
+    transition: transform .2s, box-shadow .2s;
+    text-decoration: none; color: inherit;
+    border: 1px solid rgba(0,180,216,0.07);
+  }
+  .aff-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+  .aff-card-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+  .aff-card-info .aff-badge {
+    font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+    background: rgba(0,180,216,0.1); color: var(--teal-dark);
+    border-radius: 4px; padding: 2px 6px; display: inline-block; margin-bottom: 5px;
+  }
+  .aff-card-info strong { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800; display: block; }
+  .aff-card-info p { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+  .aff-arrow { margin-left: auto; font-size: 20px; color: var(--teal); transition: transform .2s; flex-shrink: 0; }
+  .aff-card:hover .aff-arrow { transform: translateX(5px); }
+
+  /* ── PRIVACY ── */
+  .privacy-section {
+    position: relative; z-index: 1;
+    max-width: 860px; margin: 0 auto 68px; padding: 0 24px;
+    animation: fadeUp .7s .2s ease both;
+  }
+  .privacy-card {
+    background: var(--card); border-radius: 24px; padding: 48px 52px;
+    box-shadow: var(--shadow); border: 1px solid rgba(0,180,216,0.1);
+  }
+  .priv-header {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 8px;
+    padding-bottom: 24px; border-bottom: 2px solid var(--tag-bg);
+  }
+  .priv-icon-box {
+    width: 54px; height: 54px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+  }
+  .priv-header h2 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 900; }
+  .priv-header p { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+  .priv-updated {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(0,196,125,0.1); color: #009D5E;
+    border-radius: 50px; padding: 5px 14px;
+    font-size: 12px; font-weight: 700; margin: 20px 0 28px;
+  }
+  .priv-block { margin-bottom: 26px; }
+  .priv-block h3 {
+    font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 800;
+    color: var(--text); margin-bottom: 9px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .priv-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+  .priv-block p, .priv-block li { font-size: 14px; color: var(--muted); line-height: 1.75; }
+  .priv-block ul { padding-left: 20px; }
+  .priv-block li { margin-bottom: 5px; }
+  .priv-highlight {
+    background: linear-gradient(135deg, rgba(0,180,216,0.06), rgba(0,119,182,0.04));
+    border-left: 3px solid var(--teal);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px; margin-top: 10px;
+  }
+  .priv-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;
+  }
+  .priv-pill {
+    background: var(--tag-bg); border: 1px solid var(--tag-border);
+    border-radius: 12px; padding: 12px 15px;
+    font-size: 13px; color: var(--text); font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    background: var(--teal-deep); padding: 48px 24px 28px;
+    font-size: 13px;
+  }
+  .footer-inner {
+    max-width: 900px; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+    text-align: center;
+  }
+  .footer-brand {
+    font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900;
+    color: #fff; display: flex; align-items: center; gap: 10px;
+  }
+  .footer-brand span { color: var(--teal); }
+  .footer-made {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50px; padding: 9px 24px;
+    font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.8);
+  }
+  .footer-made strong { color: #fff; }
+  .footer-links { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+  footer a { color: rgba(0,245,255,0.7); text-decoration: none; font-size: 13px; transition: color .2s; }
+  footer a:hover { color: #fff; }
+  .footer-divider { width: 100%; max-width: 500px; height: 1px; background: rgba(255,255,255,0.08); }
+  .footer-aff { font-size: 12px; color: rgba(255,255,255,0.4); max-width: 600px; line-height: 1.65; }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,0.28); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .book-card:nth-child(1) { animation-delay: .05s; }
+  .book-card:nth-child(2) { animation-delay: .11s; }
+  .book-card:nth-child(3) { animation-delay: .17s; }
+  .book-card:nth-child(4) { animation-delay: .23s; }
+  .book-card:nth-child(5) { animation-delay: .29s; }
+  .book-card:nth-child(6) { animation-delay: .35s; }
+  .book-card:nth-child(7) { animation-delay: .41s; }
+  .book-card:nth-child(8) { animation-delay: .47s; }
+
+  @media (max-width: 720px) {
+    header { padding: 14px 18px; }
+    nav { display: none; }
+    .hero { padding: 52px 18px 36px; }
+    .stats-strip { margin: 0 24px 40px; }
+    .books-grid { grid-template-columns: 1fr; }
+    .privacy-card { padding: 28px 22px; }
+    .priv-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body id="top">
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">💻</div>
+    IT<span>Books</span>
+  </div>
+  <nav>
+    <a href="#top">Home</a>
+    <a href="#books">eBooks</a>
+    <a href="#resources">Resources</a>
+    <a href="#privacy">Privacy</a>
+  </nav>
+  <div class="header-right">
+    <a href="#top" class="home-btn" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">🏠 Home</a>
+    <a href="#books" class="cta-header">Browse eBooks</a>
+  </div>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-badge">🖥️ Curated IT Engineering Library</div>
+  <h1>Master <em>IT Engineering</em><br>with Top eBooks</h1>
+  <p>Networks, cybersecurity, cloud computing, databases, OS and enterprise IT infrastructure — all in one place.</p>
+  <div class="hero-btns">
+    <a href="#books" class="btn-primary">📚 Browse All eBooks</a>
+    <a href="#resources" class="btn-secondary">🎓 Free Resources</a>
+  </div>
+</section>
+
+<!-- ══════════ STATS ══════════ -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">50+</div>
+    <div class="stat-label">IT eBooks</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">12</div>
+    <div class="stat-label">Topics Covered</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">8</div>
+    <div class="stat-label">Free Resources</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">5K+</div>
+    <div class="stat-label">Readers</div>
+  </div>
+</div>
+
+<!-- ══════════ AMAZON BANNER ══════════ -->
+<div class="amazon-banner" id="resources">
+  <div class="amazon-inner">
+    <div class="amz-left">
+      <div class="amz-icon">🛒</div>
+      <div>
+        <div class="amz-tag">Amazon Associates · taskjunction-21</div>
+        <div class="amz-title">Shop IT Books on Amazon.in</div>
+        <div class="amz-sub">Best-selling networking, cloud & cybersecurity books. Earn commissions on every purchase.</div>
+      </div>
+    </div>
+    <a href="https://www.amazon.in/s?k=IT+engineering+books&tag=taskjunction-21" target="_blank" rel="noopener noreferrer" class="btn-amz">Shop on Amazon.in →</a>
+  </div>
+</div>
+
+<!-- ══════════ EDUCATIVE BANNER ══════════ -->
+<div class="edu-banner">
+  <div class="edu-inner">
+    <div class="amz-left">
+      <div class="amz-icon">🎓</div>
+      <div>
+        <div class="edu-tag">Sponsored · Affiliate</div>
+        <div class="edu-title">Educative.io — Learn IT by Building</div>
+        <div class="edu-sub">Interactive cloud, DevOps, and networking courses. Hands-on labs, no environment setup needed.</div>
+      </div>
+    </div>
+    <a href="https://educative.io" target="_blank" rel="noopener noreferrer" class="btn-edu">Claim 40% Off →</a>
+  </div>
+</div>
+
+<!-- ══════════ BOOKS SECTION ══════════ -->
+<div class="section-head" id="books">
+  <div>
+    <h2>📘 IT Engineering eBooks</h2>
+    <p>Hand-picked resources for networking, cloud, cybersecurity and more.</p>
+  </div>
+  <a href="https://www.amazon.in/s?k=IT+engineering+books&tag=taskjunction-21" target="_blank" rel="noopener" class="view-all">View All on Amazon →</a>
+</div>
+
+<div class="books-grid">
+
+  <!-- Card 1 – IT Engineering (from image) -->
+  <div class="book-card">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#CAF0F8,#E0F7FF)">
+      💻<div class="shimmer"></div>
+    </div>
+    <div class="card-body">
+      <div class="badge-row"><span class="badge b-rec">⭐ Recommended</span></div>
+      <h3>IT Engineering eBook</h3>
+      <p class="desc">Networking, cybersecurity, cloud computing, databases, operating systems and enterprise IT infrastructure.</p>
+      <div class="tag-row">
+        <span class="tag">Networks</span>
+        <span class="tag">Cloud</span>
+        <span class="tag">Security</span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div><span class="price price-free">FREE</span></div>
+      <a href="https://github.com/topics/information-technology" target="_blank" rel="noopener" class="btn-read">📖 Read eBook</a>
+    </div>
+  </div>
+
+  <!-- Card 2 – Networking -->
+  <div class="book-card">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#D6F5E3,#EDFFF5)">
+      🌐<div class="shimmer"></div>
+    </div>
+    <div class="card-body">
+      <div class="badge-row"><span class="badge b-hot">🔥 Bestseller</span></div>
+      <h3>Computer Networking: Top-Down Approach</h3>
+      <p class="desc">TCP/IP, DNS, HTTP, routing protocols, LAN/WAN, wireless networks. The gold standard IT networking textbook.</p>
+      <div class="tag-row">
+        <span class="tag">TCP/IP</span>
+        <span class="tag">DNS</span>
+        <span class="tag">Routing</span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div><span class="price">₹899<span class="price-old">₹1,999</span></span></div>
+      <a href="https://www.amazon.in/s?k=computer+networking+top+down+approach&tag=taskjunction-21" target="_blank" rel="noopener" class="btn-read">🛒 Buy Now</a>
+    </div>
+  </div>
+
+  <!-- Card 3 – Cybersecurity -->
+  <div class="book-card">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#FFE8D6,#FFF4EE)">
+      🔐<div class="shimmer"></div>
+    </div>
+    <div class="card-body">
+      <div class="badge-row"><span class="badge b-rec">⭐ Top Pick</span></div>
+      <h3>Cybersecurity & Ethical Hacking</h3>
+      <p class="desc">Penetration testing, vulnerability assessment, OWASP top 10, firewalls, IDS/IPS, and SOC operations.</p>
+      <div class="tag-row">
+        <span class="tag">Pen Testing</span>
+        <span class="tag">OWASP</span>
+        <span class="tag">SOC</span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div><span class="price">₹749<span class="price-old">₹1,499</span></span></div>
+      <a href="https://www.amazon.in/s?k=cybersecurity+ethical+hacking+book&tag=taskjunction-21" target="_blank" rel="noopener" class="btn-read">🛒 Buy Now</a>
+    </div>
+  </div>
+
+  <!-- Card 4 – Cloud Computing -->
+  <div class="book-card">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#D6EEFF,#EDF6FF)">
+      ☁️<div class="shimmer"></div>
+    </div>
+    <div class="card-body">
+      <div class="badge-row"><span class="badge b-new">🆕 2025 Edition</span></div>
+      <h3>Cloud Computing & AWS Architecture</h3>
+      <p class="desc">AWS, Azure, GCP fundamentals. Cloud-native design, serverless computing, containers, Kubernetes, and DevOps pipelines.</p>
+      <div class="tag-row">
+        <span class="tag">AWS</span>
+        <span class="tag">Azure</span>
+        <span class="tag">K8s</span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div><span class="price">₹999<span class="price-old">₹2,499</span></span></div>
+      <a href="https://www.amazon.in/s?k=cloud+computing+aws+architecture+book&tag=taskjunction-21" target="_blank" rel="noopener" class="btn-read">🛒 Buy Now</a>
+    </div>
+  </div>
+
+  <!-- Card 5 – Inline Ad: Udemy -->
+  <div class="ad-card">
+    <div class="ad-top">
+      <div class="ad-ico">🎬</div>
+      <div>
+        <div class="ad-tag">Sponsored · Affiliate</div>
+        <div class="ad-name">Udemy — CompTIA Network+</div>
+        <p class="ad-desc">India's most popular IT cert course. 120K+ students. Covers all Network+ exam objectives with practice tests.</p>
+      </div>
+    </div>
+    <a href="https://www.udemy.com/course/comptia-network-cert-n10-007/?couponCode=AFFILIATE" target="_blank" rel="noopener" class="btn-ad">Enroll — ₹449 Only</a>
+  </div>
+
+  <!-- Card 6 – Database Engineering -->
+  <div class="book-card">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#E8D6FF,#F5EEFF)">
+      🗄️<div class="shimmer"></div>
+    </div>
+    <div class="card-body">
+      <div class="badge-row"><span class="badge b-hot">🔥 Classic</span></div>
+      <h3>Database Systems & SQL Mastery</h3>
+      <p class="desc">Relational databases, SQL, NoSQL, indexing, transactions, normalization, PostgreSQL, MySQL and MongoDB.</p>
+      <div class="tag-row">
+        <span class="tag">SQL</span>
+        <span class="tag">NoSQL</span>
+        <span class="tag">PostgreSQL</span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div><span class="price">₹649<span class="price-old">₹1,299</span></span></div>
+      <a href="https://www.amazon.in/s?k=database+systems+sql+book&tag=taskjunction-21" target="_blank" rel="noopener" class="btn-read">🛒 Buy Now</a>
+    </div>
+  </div>
+
+  <!-- Card 7 – Linux & OS -->
+  <div class="book-card">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#FFF3D6,#FFFBEE)">
+      🖥️<div class="shimmer"></div>
+    </div>
+    <div class="card-body">
+      <div class="badge-row"><span class="badge b-rec">⭐ Recommended</span></div>
+      <h3>Linux Administration & Shell Scripting</h3>
+      <p class="desc">Linux OS internals, bash scripting, system administration, cron jobs, user management and enterprise server setup.</p>
+      <div class="tag-row">
+        <span class="tag">Linux</span>
+        <span class="tag">Bash</span>
+        <span class="tag">SysAdmin</span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div><span class="price price-free">FREE</span></div>
+      <a href="https://linuxcommand.org/tlcl.php" target="_blank" rel="noopener" class="btn-read">📖 Read Free</a>
+    </div>
+  </div>
+
+  <!-- Card 8 – DevOps -->
+  <div class="book-card">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#D6FFE8,#EDFFF4)">
+      ⚙️<div class="shimmer"></div>
+    </div>
+    <div class="card-body">
+      <div class="badge-row"><span class="badge b-new">🆕 Hot 2025</span></div>
+      <h3>DevOps & CI/CD Pipeline Handbook</h3>
+      <p class="desc">Docker, Jenkins, GitHub Actions, Terraform, Ansible — full DevOps lifecycle from code to production deployment.</p>
+      <div class="tag-row">
+        <span class="tag">Docker</span>
+        <span class="tag">Jenkins</span>
+        <span class="tag">Terraform</span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div><span class="price">₹849<span class="price-old">₹1,799</span></span></div>
+      <a href="https://www.amazon.in/s?k=devops+cicd+handbook+book&tag=taskjunction-21" target="_blank" rel="noopener" class="btn-read">🛒 Buy Now</a>
+    </div>
+  </div>
+
+  <!-- Card 9 – Inline Ad: A Cloud Guru -->
+  <div class="ad-card">
+    <div class="ad-top">
+      <div class="ad-ico">☁️</div>
+      <div>
+        <div class="ad-tag">Sponsored · Affiliate</div>
+        <div class="ad-name">A Cloud Guru — AWS Cert</div>
+        <p class="ad-desc">Hands-on cloud labs & learning paths for AWS, Azure & GCP. 500K+ cloud professionals trained.</p>
+      </div>
+    </div>
+    <a href="https://acloudguru.com/?utm_source=affiliate&utm_medium=taskjunction" target="_blank" rel="noopener" class="btn-ad">Start Free Trial →</a>
+  </div>
+
+  <!-- Card 10 – IT Security+ -->
+  <div class="book-card">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#FFD6D6,#FFF0F0)">
+      🛡️<div class="shimmer"></div>
+    </div>
+    <div class="card-body">
+      <div class="badge-row"><span class="badge b-rec">⭐ Exam Prep</span></div>
+      <h3>CompTIA Security+ Study Guide</h3>
+      <p class="desc">Full coverage of SY0-701. Threats, attacks, cryptography, identity management, network security and compliance frameworks.</p>
+      <div class="tag-row">
+        <span class="tag">CompTIA</span>
+        <span class="tag">SY0-701</span>
+        <span class="tag">Crypto</span>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div><span class="price">₹799<span class="price-old">₹1,599</span></span></div>
+      <a href="https://www.amazon.in/s?k=comptia+security+plus+study+guide&tag=taskjunction-21" target="_blank" rel="noopener" class="btn-read">🛒 Buy Now</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ AFFILIATE RESOURCES ══════════ -->
+<section class="aff-section" id="resources-strip">
+  <div class="aff-section-title">🤝 Recommended <span>IT Learning Platforms</span></div>
+  <div class="aff-grid">
+
+    <a href="https://www.coursera.org/browse/information-technology?siteID=taskjunction" target="_blank" rel="noopener" class="aff-card">
+      <div class="aff-card-icon">🎓</div>
+      <div class="aff-card-info">
+        <span class="aff-badge">Affiliate</span>
+        <strong>Coursera IT Courses</strong>
+        <p>Google IT Support, IBM Cybersecurity, Meta Networking — accredited certs online.</p>
+      </div>
+      <span class="aff-arrow">›</span>
+    </a>
+
+    <a href="https://www.linkedin.com/learning/topics/it?utm_source=taskjunction" target="_blank" rel="noopener" class="aff-card">
+      <div class="aff-card-icon">💼</div>
+      <div class="aff-card-info">
+        <span class="aff-badge">Affiliate</span>
+        <strong>LinkedIn Learning</strong>
+        <p>Networking, cloud, cybersecurity paths with LinkedIn certificate recognition.</p>
+      </div>
+      <span class="aff-arrow">›</span>
+    </a>
+
+    <a href="https://www.pluralsight.com/paths/it-ops?clickid=taskjunction" target="_blank" rel="noopener" class="aff-card">
+      <div class="aff-card-icon">📊</div>
+      <div class="aff-card-info">
+        <span class="aff-badge">Affiliate</span>
+        <strong>Pluralsight IT Ops</strong>
+        <p>Role-based learning paths for sysadmins, network engineers and cloud architects.</p>
+      </div>
+      <span class="aff-arrow">›</span>
+    </a>
+
+    <a href="https://tryhackme.com/?utm_source=taskjunction" target="_blank" rel="noopener" class="aff-card">
+      <div class="aff-card-icon">🔓</div>
+      <div class="aff-card-info">
+        <span class="aff-badge">Affiliate</span>
+        <strong>TryHackMe</strong>
+        <p>Gamified cybersecurity training. Perfect for beginners to SOC analysts.</p>
+      </div>
+      <span class="aff-arrow">›</span>
+    </a>
+
+    <a href="https://www.cbtnuggets.com/?utm_source=taskjunction" target="_blank" rel="noopener" class="aff-card">
+      <div class="aff-card-icon">📡</div>
+      <div class="aff-card-info">
+        <span class="aff-badge">Affiliate</span>
+        <strong>CBT Nuggets</strong>
+        <p>Cisco CCNA, CompTIA, Microsoft certs. Trusted by IT pros worldwide.</p>
+      </div>
+      <span class="aff-arrow">›</span>
+    </a>
+
+    <a href="https://www.oreilly.com/topics/operations-it/?utm_source=taskjunction" target="_blank" rel="noopener" class="aff-card">
+      <div class="aff-card-icon">📕</div>
+      <div class="aff-card-info">
+        <span class="aff-badge">Affiliate</span>
+        <strong>O'Reilly IT Library</strong>
+        <p>Full access to 60K+ IT books and video courses from top tech publishers.</p>
+      </div>
+      <span class="aff-arrow">›</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ══════════ PRIVACY POLICY ══════════ -->
+<section class="privacy-section" id="privacy">
+  <div class="privacy-card">
+    <div class="priv-header">
+      <div class="priv-icon-box">🔒</div>
+      <div>
+        <h2>Privacy Policy</h2>
+        <p>ITBooks Hub — taskjunction-21 · Last updated May 2025</p>
+      </div>
+    </div>
+    <div class="priv-updated">✅ Effective Date: May 17, 2025</div>
+
+    <div class="priv-block">
+      <h3><span class="priv-dot"></span>Overview</h3>
+      <p>Welcome to <strong>ITBooks Hub</strong>, operated by <strong>Vaibhav Dhokpande</strong> via <strong>TaskJunction</strong>. We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard information when you visit our website.</p>
+    </div>
+
+    <div class="priv-block">
+      <h3><span class="priv-dot"></span>Information We Collect</h3>
+      <p>We do not collect personally identifiable information directly. Third-party services may collect data automatically:</p>
+      <div class="priv-grid">
+        <div class="priv-pill">🍪 Browser cookies</div>
+        <div class="priv-pill">📊 Anonymous analytics</div>
+        <div class="priv-pill">🔗 Referral click data</div>
+        <div class="priv-pill">📍 Approximate location</div>
+      </div>
+    </div>
+
+    <div class="priv-block">
+      <h3><span class="priv-dot"></span>Amazon Associates Disclosure</h3>
+      <div class="priv-highlight">
+        <p>ITBooks Hub is a participant in the <strong>Amazon Associates Programme</strong> (Store ID: <strong>taskjunction-21</strong>), an affiliate advertising programme designed to provide a means for sites to earn advertising fees by advertising and linking to <strong>amazon.in</strong>. When you click an Amazon link and make a purchase, we may earn a small commission at <strong>no extra cost to you</strong>.</p>
+      </div>
+    </div>
+
+    <div class="priv-block">
+      <h3><span class="priv-dot"></span>Other Affiliate Links</h3>
+      <p>This site contains other affiliate or sponsored links (Educative, Udemy, Coursera, TryHackMe, etc.), clearly labelled with "Affiliate" or "Sponsored". We only recommend resources genuinely useful for IT learners.</p>
+    </div>
+
+    <div class="priv-block">
+      <h3><span class="priv-dot"></span>Cookies & Third-Party Services</h3>
+      <ul>
+        <li>We use <strong>Google Fonts</strong> to load web fonts, which may log your IP address.</li>
+        <li>Affiliate partners may set their own cookies when you click their links.</li>
+        <li>Analytics tools may track visitor behaviour anonymously.</li>
+        <li>You can disable cookies in your browser settings at any time.</li>
+      </ul>
+    </div>
+
+    <div class="priv-block">
+      <h3><span class="priv-dot"></span>How We Use Information</h3>
+      <ul>
+        <li>To improve content and user experience on ITBooks Hub.</li>
+        <li>To track affiliate link performance (anonymised).</li>
+        <li>We do <strong>not</strong> sell, trade, or rent personal information to third parties.</li>
+        <li>We do <strong>not</strong> send marketing emails without explicit consent.</li>
+      </ul>
+    </div>
+
+    <div class="priv-block">
+      <h3><span class="priv-dot"></span>Children's Privacy</h3>
+      <p>ITBooks Hub is intended for users aged 13 and above. We do not knowingly collect personal data from children under 13.</p>
+    </div>
+
+    <div class="priv-block" style="margin-bottom:0">
+      <h3><span class="priv-dot"></span>Contact Us</h3>
+      <div class="priv-highlight">
+        <p>📧 For privacy-related queries, contact:<br>
+        <strong>Vaibhav Dhokpande</strong> · <strong>TaskJunction</strong><br>
+        Email: <a href="mailto:contact@taskjunction.in" style="color:var(--teal-dark);font-weight:700">contact@taskjunction.in</a><br>
+        Amazon Associates Store ID: <strong>taskjunction-21</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">💻 IT<span>Books</span> Hub</div>
+    <div class="footer-made">
+      ❤️ &nbsp;Made by <strong>&nbsp;Vaibhav Dhokpande&nbsp;</strong> &amp; <strong>&nbsp;TaskJunction</strong>
+    </div>
+    <div class="footer-links">
+      <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">🏠 Home</a>
+      <a href="#books">📚 eBooks</a>
+      <a href="#resources">🛒 Amazon</a>
+      <a href="#resources-strip">🎓 Platforms</a>
+      <a href="#privacy">🔒 Privacy Policy</a>
+      <a href="mailto:contact@taskjunction.in">📧 Contact</a>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-aff">
+      Some links are <strong style="color:rgba(255,255,255,0.7)">Amazon Associates affiliate links</strong>
+      (Store ID: <strong style="color:#FF9900">taskjunction-21</strong>).
+      We earn a small commission at no extra cost to you. All recommendations are genuine.
+    </div>
+    <div class="footer-copy">© 2025 ITBooks Hub · Built by Vaibhav Dhokpande · TaskJunction · All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>
