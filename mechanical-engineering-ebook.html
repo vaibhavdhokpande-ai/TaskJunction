@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanical Engineering eBook – Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #1A6EBF;
+    --blue-dark: #124F8A;
+    --blue-light: #EAF3FB;
+    --steel: #F0F4F8;
+    --accent: #F5A623;
+    --dark: #0D1B2A;
+    --text: #1C2B3A;
+    --muted: #5A7184;
+    --surface: #F7FAFD;
+    --card-bg: #FFFFFF;
+    --border: #D6E4F0;
+    --radius: 16px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); line-height: 1.6; }
+
+  /* NAV */
+  nav {
+    background: var(--dark);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; color: var(--accent); font-size: 20px; }
+  .nav-links { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+  .nav-links a {
+    color: rgba(255,255,255,0.7); text-decoration: none;
+    font-size: 13px; padding: 6px 12px; border-radius: 8px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .home-btn {
+    background: var(--blue) !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    border-radius: 100px !important;
+    padding: 7px 18px !important;
+  }
+  .home-btn:hover { background: var(--blue-dark) !important; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0D1B2A 0%, #163A5E 60%, #1A6EBF 100%);
+    padding: 80px 24px 88px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '⚙️';
+    position: absolute; top: 20px; left: 5%; font-size: 120px; opacity: 0.05;
+  }
+  .hero::after {
+    content: '🔩';
+    position: absolute; bottom: 10px; right: 5%; font-size: 100px; opacity: 0.05;
+  }
+  .hero-badge {
+    display: inline-block; background: var(--accent); color: var(--dark);
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 6px 18px; border-radius: 100px; margin-bottom: 22px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; color: #fff;
+    font-size: clamp(34px, 6vw, 62px); line-height: 1.1;
+    margin-bottom: 20px; max-width: 740px; margin-inline: auto;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: rgba(255,255,255,0.65); font-size: 17px; max-width: 540px; margin: 0 auto 38px; }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: var(--dark); padding: 14px 34px;
+    border-radius: 100px; font-weight: 700; font-size: 16px;
+    text-decoration: none; transition: opacity 0.2s, transform 0.15s; display: inline-block;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+  .btn-outline {
+    border: 1.5px solid rgba(255,255,255,0.3); color: #fff;
+    padding: 14px 34px; border-radius: 100px; font-size: 16px;
+    text-decoration: none; transition: border-color 0.2s; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 48px; margin-top: 52px; flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 30px; font-weight: 700; color: var(--accent); font-family: 'Playfair Display', serif; }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* SECTION */
+  .section { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 38px); color: var(--dark); margin-bottom: 8px; }
+  .section-sub { color: var(--muted); font-size: 15px; margin-bottom: 40px; }
+
+  /* TOPICS */
+  .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+  .topic-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px 18px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
+  }
+  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(26,110,191,0.1); }
+  .topic-icon {
+    width: 44px; height: 44px; border-radius: 12px; background: var(--blue-light);
+    display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px;
+  }
+  .topic-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+  .topic-card p { font-size: 12px; color: var(--muted); }
+
+  /* CHAPTERS */
+  .chapters-list { display: flex; flex-direction: column; gap: 10px; }
+  .chapter-item {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 22px; display: flex; align-items: center; gap: 16px;
+    transition: border-color 0.2s; cursor: pointer;
+  }
+  .chapter-item:hover { border-color: var(--blue); }
+  .ch-num {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--blue); color: #fff;
+    font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .ch-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .ch-info p { font-size: 12px; color: var(--muted); }
+  .ch-tag {
+    margin-left: auto; font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 100px; background: var(--blue-light); color: var(--blue); white-space: nowrap; flex-shrink: 0;
+  }
+  .ch-tag.adv { background: #FFF3E0; color: #E65100; }
+  .ch-tag.int { background: #E8F5E9; color: #2E7D32; }
+
+  /* AD BANNER */
+  .ad-banner {
+    background: linear-gradient(135deg, #0D1B2A 0%, #163A5E 100%);
+    border-radius: var(--radius); padding: 26px 32px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 28px 0;
+  }
+  .ad-label { color: rgba(255,255,255,0.4); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .ad-title { color: #fff; font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .ad-sub { color: rgba(255,255,255,0.5); font-size: 13px; }
+  .ad-btn {
+    background: var(--accent); color: var(--dark); padding: 11px 26px;
+    border-radius: 100px; font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .ad-btn:hover { opacity: 0.88; }
+
+  /* PRODUCTS */
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+  .product-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(26,110,191,0.12); }
+  .product-img {
+    background: var(--blue-light); padding: 22px; text-align: center;
+    font-size: 50px; height: 130px; display: flex; align-items: center; justify-content: center;
+  }
+  .product-body { padding: 16px; }
+  .product-badge { font-size: 11px; font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  .product-name { font-size: 14px; font-weight: 600; margin-bottom: 5px; line-height: 1.4; }
+  .product-desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 17px; font-weight: 700; color: var(--blue); }
+  .product-price span { font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
+  .amz-btn {
+    background: var(--accent); color: var(--dark); font-size: 12px; font-weight: 700;
+    padding: 7px 14px; border-radius: 8px; text-decoration: none; transition: opacity 0.2s;
+  }
+  .amz-btn:hover { opacity: 0.85; }
+
+  /* SIDEBAR */
+  .content-with-sidebar { display: grid; grid-template-columns: 1fr 270px; gap: 28px; align-items: start; }
+  @media (max-width: 768px) { .content-with-sidebar { grid-template-columns: 1fr; } }
+  .sidebar-ad { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: sticky; top: 68px; }
+  .sidebar-ad-hdr { background: var(--blue); color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 8px 14px; }
+  .sidebar-ad-body { padding: 16px; }
+  .sidebar-ad-body h4 { font-size: 14px; font-weight: 600; margin-bottom: 7px; }
+  .sidebar-ad-body p { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+
+  /* INLINE AD */
+  .inline-ad {
+    background: var(--blue-light); border-left: 4px solid var(--blue);
+    border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 20px 0;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .inline-ad-text { flex: 1; }
+  .inline-ad-text strong { font-size: 13px; color: var(--dark); display: block; margin-bottom: 2px; }
+  .inline-ad-text span { font-size: 12px; color: var(--muted); }
+
+  /* CONTENT */
+  .content-area { min-width: 0; }
+  .chapter-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; }
+  .chapter-content h2 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 14px; color: var(--dark); }
+  .chapter-content p { font-size: 14px; color: #2A3F52; line-height: 1.8; margin-bottom: 14px; }
+  .chapter-content h3 { font-size: 16px; font-weight: 600; margin: 22px 0 8px; color: var(--dark); }
+  .formula-box {
+    background: #EBF3FB; border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; font-size: 13px; color: var(--blue-dark); margin: 14px 0; font-weight: 500; white-space: pre-line;
+  }
+  .tip-box { background: #E8F5E9; border-left: 4px solid #27AE60; border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0; }
+  .tip-box strong { color: #1A7A40; font-size: 12px; display: block; margin-bottom: 3px; }
+  .tip-box p { font-size: 13px; color: #1A5C33; margin: 0; }
+  .warn-box { background: #FFF8E1; border-left: 4px solid #FFA000; border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0; }
+  .warn-box strong { color: #E65100; font-size: 12px; display: block; margin-bottom: 3px; }
+  .warn-box p { font-size: 13px; color: #7B4800; margin: 0; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
+  .tab-btn {
+    background: none; border: 1px solid var(--border); border-radius: 100px;
+    padding: 7px 18px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; color: var(--muted); transition: all 0.15s;
+  }
+  .tab-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* PRIVACY */
+  .privacy-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 30px; margin-bottom: 16px; }
+  .privacy-card h3 { font-size: 16px; font-weight: 600; color: var(--dark); margin-bottom: 10px; }
+  .privacy-card p { font-size: 14px; color: #2A3F52; line-height: 1.8; }
+
+  /* FOOTER */
+  footer { background: var(--dark); color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">MechEngg Pro</div>
+  <div class="nav-links">
+    <a href="#topics">Topics</a>
+    <a href="#chapters">Chapters</a>
+    <a href="#products">Shop</a>
+    <a href="#privacy">Privacy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" class="home-btn">🏠 Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⭐ Recommended – Free eBook 2025</div>
+  <h1>Complete <span>Mechanical Engineering</span> eBook</h1>
+  <p>Design, Manufacturing, Thermodynamics, Fluid Mechanics & Material Science — all in one comprehensive guide</p>
+  <div class="hero-btns">
+    <a href="#chapters" class="btn-primary">📖 Read Free eBook</a>
+    <a href="#products" class="btn-outline">🛒 Buy Tools on Amazon</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">15</div><div class="stat-label">Chapters</div></div>
+    <div class="stat"><div class="stat-num">300+</div><div class="stat-label">Pages</div></div>
+    <div class="stat"><div class="stat-num">80+</div><div class="stat-label">Formulas</div></div>
+    <div class="stat"><div class="stat-num">Free</div><div class="stat-label">Forever</div></div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div id="topics" class="section">
+  <h2 class="section-title">What You'll Learn</h2>
+  <p class="section-sub">From core fundamentals to advanced engineering concepts</p>
+  <div class="topics-grid">
+    <div class="topic-card"><div class="topic-icon">⚙️</div><h3>Machine Design</h3><p>Shafts, keys, couplings, bearings & gears</p></div>
+    <div class="topic-card"><div class="topic-icon">🔥</div><h3>Thermodynamics</h3><p>Laws, cycles, entropy, heat engines & refrigeration</p></div>
+    <div class="topic-card"><div class="topic-icon">💧</div><h3>Fluid Mechanics</h3><p>Bernoulli, flow types, pumps & turbines</p></div>
+    <div class="topic-card"><div class="topic-icon">🏗️</div><h3>Strength of Materials</h3><p>Stress, strain, bending moment, shear force</p></div>
+    <div class="topic-card"><div class="topic-icon">🔩</div><h3>Manufacturing</h3><p>Casting, welding, machining & forming processes</p></div>
+    <div class="topic-card"><div class="topic-icon">🧲</div><h3>Material Science</h3><p>Metals, alloys, heat treatment & testing</p></div>
+    <div class="topic-card"><div class="topic-icon">📐</div><h3>Engineering Drawing</h3><p>Orthographic, isometric, GD&T basics</p></div>
+    <div class="topic-card"><div class="topic-icon">🌡️</div><h3>Heat Transfer</h3><p>Conduction, convection, radiation & HEX design</p></div>
+  </div>
+</div>
+
+<!-- AD BANNER 1 -->
+<div style="max-width:1100px; margin:0 auto; padding:0 24px;">
+  <div class="ad-banner">
+    <div>
+      <div class="ad-label">🛒 Amazon Affiliate – Sponsored</div>
+      <div class="ad-title">R.S. Khurmi – Theory of Machines (Textbook)</div>
+      <div class="ad-sub">Best-selling ME textbook used in 1000+ engineering colleges across India</div>
+    </div>
+    <a href="https://www.amazon.in/s?k=rs+khurmi+theory+of+machines&tag=taskjunction-21-21" target="_blank" class="ad-btn">View on Amazon ↗</a>
+  </div>
+</div>
+
+<!-- CHAPTERS -->
+<div id="chapters" class="section">
+  <h2 class="section-title">Read the eBook</h2>
+  <p class="section-sub">15 comprehensive chapters — click to start reading</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('toc')">📋 Contents</button>
+    <button class="tab-btn" onclick="switchTab('ch1')">Chapter 1</button>
+    <button class="tab-btn" onclick="switchTab('ch2')">Chapter 2</button>
+    <button class="tab-btn" onclick="switchTab('ch3')">Chapter 3</button>
+    <button class="tab-btn" onclick="switchTab('ch4')">Chapter 4</button>
+    <button class="tab-btn" onclick="switchTab('ch5')">Chapter 5</button>
+  </div>
+
+  <!-- TOC -->
+  <div id="toc" class="tab-content active">
+    <div class="chapters-list">
+      <div class="chapter-item" onclick="switchTab('ch1');setTab(1)"><div class="ch-num">1</div><div class="ch-info"><h4>Engineering Mechanics – Statics & Dynamics</h4><p>Forces, moments, equilibrium, kinematics & Newton's laws</p></div><span class="ch-tag">Beginner</span></div>
+      <div class="chapter-item" onclick="switchTab('ch2');setTab(2)"><div class="ch-num">2</div><div class="ch-info"><h4>Strength of Materials</h4><p>Stress, strain, bending, shear force & deflection</p></div><span class="ch-tag">Beginner</span></div>
+      <div class="chapter-item" onclick="switchTab('ch3');setTab(3)"><div class="ch-num">3</div><div class="ch-info"><h4>Thermodynamics</h4><p>Laws, Carnot cycle, steam tables, refrigeration</p></div><span class="ch-tag int">Intermediate</span></div>
+      <div class="chapter-item" onclick="switchTab('ch4');setTab(4)"><div class="ch-num">4</div><div class="ch-info"><h4>Fluid Mechanics & Machinery</h4><p>Bernoulli, Reynolds number, pumps & turbines</p></div><span class="ch-tag int">Intermediate</span></div>
+      <div class="chapter-item" onclick="switchTab('ch5');setTab(5)"><div class="ch-num">5</div><div class="ch-info"><h4>Heat Transfer</h4><p>Conduction, convection, radiation, heat exchangers</p></div><span class="ch-tag int">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">6</div><div class="ch-info"><h4>Theory of Machines</h4><p>Mechanisms, velocity/acceleration analysis, governors</p></div><span class="ch-tag int">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">7</div><div class="ch-info"><h4>Machine Design</h4><p>Shafts, keys, couplings, springs, bolted joints</p></div><span class="ch-tag adv">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">8</div><div class="ch-info"><h4>Manufacturing Processes</h4><p>Casting, forging, welding, machining, forming</p></div><span class="ch-tag int">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">9</div><div class="ch-info"><h4>Material Science & Metallurgy</h4><p>Crystal structure, phase diagrams, heat treatment</p></div><span class="ch-tag adv">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">10</div><div class="ch-info"><h4>Engineering Metrology & Quality</h4><p>Measurement, tolerances, SPC, Gauge R&R</p></div><span class="ch-tag adv">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">11</div><div class="ch-info"><h4>Refrigeration & Air Conditioning</h4><p>Vapour compression, psychrometry, cooling load</p></div><span class="ch-tag adv">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">12</div><div class="ch-info"><h4>Power Plant Engineering</h4><p>Steam, diesel, gas turbine & nuclear power plants</p></div><span class="ch-tag adv">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">13</div><div class="ch-info"><h4>Automobile Engineering</h4><p>Engine, transmission, braking & suspension systems</p></div><span class="ch-tag adv">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">14</div><div class="ch-info"><h4>Industrial Engineering</h4><p>Work study, plant layout, production planning, PERT/CPM</p></div><span class="ch-tag adv">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">15</div><div class="ch-info"><h4>Finite Element Analysis (FEA)</h4><p>Introduction to FEA, meshing, boundary conditions</p></div><span class="ch-tag adv">Advanced</span></div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 1 -->
+  <div id="ch1" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 1: Engineering Mechanics</h2>
+          <p>Engineering Mechanics is the foundation of all mechanical engineering. It deals with the effect of forces on bodies at rest (Statics) and in motion (Dynamics). A strong grasp of mechanics is essential for machine design, structural analysis and manufacturing.</p>
+          <h3>Statics – Equilibrium of Forces</h3>
+          <p>A body is in static equilibrium when the net force and net moment acting on it are both zero. These are the two conditions of equilibrium used in every structural and machine analysis problem.</p>
+          <div class="formula-box">ΣFx = 0 (Sum of horizontal forces = 0)
+ΣFy = 0 (Sum of vertical forces = 0)
+ΣM = 0 (Sum of moments about any point = 0)</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Engineering Mechanics – R.K. Bansal (Textbook)</strong>
+              <span>Top-rated mechanics book for BE/BTech students, clear solved examples</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=engineering+mechanics+rk+bansal&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+          </div>
+          <h3>Types of Forces</h3>
+          <p><strong>Concurrent Forces:</strong> Lines of action meet at a single point. Resolved using Lami's theorem or resolution method.</p>
+          <p><strong>Coplanar Forces:</strong> All forces act in the same plane. Most 2D structural problems fall here.</p>
+          <h3>Dynamics – Newton's Laws</h3>
+          <p>Dynamics covers bodies in motion. Newton's three laws govern all mechanical motion from simple machines to complex mechanisms.</p>
+          <div class="formula-box">F = ma  (Newton's 2nd Law)
+Work = F × d × cos θ
+Power = Work / Time = F × v
+KE = ½mv²    PE = mgh</div>
+          <div class="tip-box"><strong>💡 Exam Tip</strong><p>In statics problems, always draw a Free Body Diagram (FBD) first. Identify all forces including reactions at supports before writing equilibrium equations.</p></div>
+          <h3>Moment of Inertia</h3>
+          <p>The moment of inertia (I) measures a body's resistance to angular acceleration. Used extensively in beam bending analysis and rotating machinery design.</p>
+          <div class="formula-box">I_rectangle = bd³/12  (about centroidal axis)
+I_circle = πd⁴/64
+Parallel Axis Theorem: I = Ig + A·d²</div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">TEXTBOOK</p>
+            <h4>Engineering Mechanics – S. Timoshenko</h4>
+            <p>Classic reference used worldwide for statics and dynamics problems.</p>
+            <a href="https://www.amazon.in/s?k=timoshenko+engineering+mechanics&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+        <div class="sidebar-ad" style="margin-top:14px;">
+          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">CALCULATOR</p>
+            <h4>Casio FX-991EX Scientific Calculator</h4>
+            <p>Best calculator for all ME calculations — supports 552 functions.</p>
+            <a href="https://www.amazon.in/s?k=casio+fx+991ex+scientific+calculator&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div id="ch2" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 2: Strength of Materials</h2>
+          <p>Strength of Materials (SOM), also called Mechanics of Materials, studies the behaviour of solid objects under various types of loading — tension, compression, bending, shear, and torsion. It forms the basis for structural and machine component design.</p>
+          <h3>Stress and Strain</h3>
+          <p>When an external load acts on a body, internal resisting forces are set up — this internal resistance per unit area is called <strong>stress</strong>. The resulting deformation per unit length is called <strong>strain</strong>.</p>
+          <div class="formula-box">Stress (σ) = Force (F) / Area (A)   [N/mm² or MPa]
+Strain (ε) = Change in Length (δL) / Original Length (L)
+Young's Modulus (E) = Stress / Strain = σ/ε
+For steel: E = 200 GPa,  For aluminium: E = 70 GPa</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Strength of Materials – R.K. Bansal Book</strong>
+              <span>Comprehensive SOM book with 1000+ solved problems and examples</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=strength+of+materials+rk+bansal&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+          </div>
+          <h3>Bending Moment & Shear Force</h3>
+          <p>For beams under transverse loads, shear force (V) and bending moment (M) diagrams are drawn to understand internal forces at every cross-section.</p>
+          <div class="formula-box">Bending Equation: M/I = σ/y = E/R
+Where: M = Bending Moment, I = Moment of Inertia
+σ = Bending Stress, y = distance from NA, R = Radius of curvature</div>
+          <h3>Torsion in Shafts</h3>
+          <p>When a shaft is subjected to a twisting moment (torque), shear stresses are set up throughout the cross-section. The torsion equation relates torque to shear stress.</p>
+          <div class="formula-box">Torsion Equation: T/J = τ/r = Gθ/L
+T = Torque, J = Polar Moment of Inertia
+τ = Shear Stress, G = Modulus of Rigidity</div>
+          <div class="tip-box"><strong>💡 Key Formula</strong><p>For a solid circular shaft: J = πd⁴/32. For hollow shaft: J = π(D⁴-d⁴)/32. Always remember this in torsion problems.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">MEASUREMENT</p>
+            <h4>Digital Vernier Caliper 150mm</h4>
+            <p>Essential for material testing lab experiments and measurements.</p>
+            <a href="https://www.amazon.in/s?k=digital+vernier+caliper+150mm&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div id="ch3" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 3: Thermodynamics</h2>
+          <p>Thermodynamics is the science of energy, heat, and work. It governs the design of all heat engines, power plants, refrigeration systems, and gas turbines. The four laws of thermodynamics form the foundation of this subject.</p>
+          <h3>Zeroth Law</h3>
+          <p>If two systems are each in thermal equilibrium with a third system, they are in thermal equilibrium with each other. This law defines temperature and is the basis of thermometers.</p>
+          <h3>First Law – Energy Conservation</h3>
+          <div class="formula-box">Q = ΔU + W
+Q = Heat added to system
+ΔU = Change in internal energy
+W = Work done by system
+For a cycle: ΔU = 0, so Q_net = W_net</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Engineering Thermodynamics – P.K. Nag</strong>
+              <span>The definitive Indian textbook for thermodynamics — GATE & university exams</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=engineering+thermodynamics+pk+nag&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+          </div>
+          <h3>Second Law & Carnot Cycle</h3>
+          <p>The second law states that heat cannot spontaneously flow from a cold body to a hot body. The Carnot cycle gives the maximum possible efficiency between two temperature limits.</p>
+          <div class="formula-box">Carnot Efficiency: η = 1 - (T_L / T_H)
+Where T_L = Lower temperature (K), T_H = Higher temperature (K)
+COP (Refrigerator) = T_L / (T_H - T_L)
+COP (Heat Pump) = T_H / (T_H - T_L)</div>
+          <h3>Steam Tables & Rankine Cycle</h3>
+          <p>The Rankine cycle is the ideal thermodynamic cycle for steam power plants. It consists of four processes: isentropic compression, constant pressure heat addition, isentropic expansion, and constant pressure condensation.</p>
+          <div class="warn-box"><strong>⚠️ Common Mistake</strong><p>Always convert temperatures to Kelvin (K = °C + 273) before using thermodynamic efficiency formulas. Using °C directly gives wrong answers.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">REFERENCE</p>
+            <h4>Steam Tables – R.S. Khurmi</h4>
+            <p>Complete steam tables for all thermodynamics and power plant calculations.</p>
+            <a href="https://www.amazon.in/s?k=steam+tables+rs+khurmi&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 4 -->
+  <div id="ch4" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 4: Fluid Mechanics & Machinery</h2>
+          <p>Fluid Mechanics deals with the behaviour of fluids (liquids and gases) at rest (Fluid Statics) and in motion (Fluid Dynamics). It is fundamental to the design of pumps, turbines, pipe systems, and hydraulic machines.</p>
+          <h3>Properties of Fluids</h3>
+          <div class="formula-box">Density (ρ) = Mass / Volume  [kg/m³]
+Specific Weight (γ) = ρg  [N/m³]
+Dynamic Viscosity (μ): unit = Pa·s or N·s/m²
+Kinematic Viscosity (ν) = μ/ρ  [m²/s]</div>
+          <h3>Bernoulli's Equation</h3>
+          <p>Bernoulli's equation is one of the most important equations in fluid mechanics. It represents conservation of energy along a streamline for an ideal (inviscid, incompressible) fluid.</p>
+          <div class="formula-box">P/ρg + V²/2g + z = Constant
+P = Pressure, ρ = Density, g = 9.81 m/s²
+V = Velocity, z = Elevation (head)
+= Pressure Head + Velocity Head + Datum Head</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Fluid Mechanics – R.K. Bansal (Hindi+English)</strong>
+              <span>Best FM book with 500+ problems, widely used in university exams</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=fluid+mechanics+rk+bansal&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+          </div>
+          <h3>Reynolds Number & Flow Types</h3>
+          <div class="formula-box">Re = ρVD/μ = VD/ν
+Re < 2000 → Laminar Flow
+Re > 4000 → Turbulent Flow
+2000 < Re < 4000 → Transitional Flow</div>
+          <h3>Centrifugal Pumps</h3>
+          <p>A centrifugal pump converts mechanical energy into hydraulic energy by means of a rotating impeller. The key performance parameters are head (H), flow rate (Q), power (P) and efficiency (η).</p>
+          <div class="formula-box">Power Input = ρgQH / η
+Specific Speed: Ns = NQ^0.5 / H^0.75
+Affinity Laws: Q ∝ N, H ∝ N², P ∝ N³</div>
+          <div class="tip-box"><strong>💡 Pro Tip</strong><p>Cavitation in pumps occurs when local pressure falls below vapour pressure. To prevent it: increase NPSH available, reduce pump speed, or install pump closer to the sump.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">BOOK</p>
+            <h4>Hydraulic Machines – Jagdish Lal</h4>
+            <p>Comprehensive guide on pumps, turbines and hydraulic systems.</p>
+            <a href="https://www.amazon.in/s?k=hydraulic+machines+jagdish+lal&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 5 -->
+  <div id="ch5" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 5: Heat Transfer</h2>
+          <p>Heat Transfer studies the movement of thermal energy from a region of higher temperature to lower temperature. There are three fundamental modes: Conduction, Convection, and Radiation. All heat exchanger design is based on these principles.</p>
+          <h3>Conduction – Fourier's Law</h3>
+          <p>Conduction is heat transfer through a solid material by molecular vibration. Fourier's law quantifies the rate of heat conduction.</p>
+          <div class="formula-box">Q = -kA (dT/dx)
+k = Thermal conductivity [W/m·K]
+A = Cross-sectional area [m²]
+dT/dx = Temperature gradient [K/m]
+Thermal Resistance: R = L/(kA)  [K/W]</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Heat Transfer – J.P. Holman (Textbook)</strong>
+              <span>International bestseller — most complete heat transfer textbook available</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=heat+transfer+jp+holman&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+          </div>
+          <h3>Convection – Newton's Law of Cooling</h3>
+          <div class="formula-box">Q = hA(T_surface - T_fluid)
+h = Convective heat transfer coefficient [W/m²·K]
+Nu = hL/k  (Nusselt Number)
+Re = ρVL/μ  (Reynolds Number — determines h)
+For forced convection over flat plate: Nu = 0.664 Re^0.5 Pr^(1/3)</div>
+          <h3>Radiation – Stefan-Boltzmann Law</h3>
+          <div class="formula-box">Q = εσA(T₁⁴ - T₂⁴)
+ε = Emissivity (0 to 1)
+σ = 5.67 × 10⁻⁸ W/m²·K⁴ (Stefan-Boltzmann constant)
+Blackbody: ε = 1 (perfect emitter/absorber)</div>
+          <h3>Heat Exchangers</h3>
+          <p>Heat exchangers transfer heat between two fluids. The LMTD method and NTU-effectiveness method are used for HEX design and analysis.</p>
+          <div class="formula-box">Q = U × A × LMTD
+LMTD = (ΔT₁ - ΔT₂) / ln(ΔT₁/ΔT₂)
+NTU = UA / C_min
+Effectiveness ε = Q_actual / Q_max</div>
+          <div class="warn-box"><strong>⚠️ Note</strong><p>In radiation problems, always use absolute temperature in Kelvin (K). Using Celsius will give completely wrong results since radiation is proportional to T⁴.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">LAB TOOL</p>
+            <h4>Infrared Thermometer Gun</h4>
+            <p>Non-contact temperature measurement for heat transfer experiments.</p>
+            <a href="https://www.amazon.in/s?k=infrared+thermometer+gun&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AD BANNER 2 -->
+<div style="max-width:1100px; margin:0 auto; padding:0 24px;">
+  <div class="ad-banner">
+    <div>
+      <div class="ad-label">🛒 Amazon Affiliate – Sponsored</div>
+      <div class="ad-title">GATE Mechanical Engineering – Previous Year Papers</div>
+      <div class="ad-sub">Crack GATE ME with 30 years of solved papers + detailed solutions</div>
+    </div>
+    <a href="https://www.amazon.in/s?k=gate+mechanical+engineering+previous+year+papers&tag=taskjunction-21-21" target="_blank" class="ad-btn">View on Amazon ↗</a>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div id="products" style="background: #EBF3FB; padding: 64px 0;">
+  <div class="section" style="padding-top:0; padding-bottom:0;">
+    <h2 class="section-title">Recommended ME Books & Tools</h2>
+    <p class="section-sub">Best books and instruments for Mechanical Engineering students — on Amazon India</p>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img">📚</div>
+        <div class="product-body">
+          <div class="product-badge">⭐ Best Seller</div>
+          <div class="product-name">R.S. Khurmi – Theory of Machines</div>
+          <div class="product-desc">Complete guide to kinematics, mechanisms, governors and balancing</div>
+          <div class="product-footer">
+            <div class="product-price">₹595 <span>₹850</span></div>
+            <a href="https://www.amazon.in/s?k=rs+khurmi+theory+of+machines&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">🔥</div>
+        <div class="product-body">
+          <div class="product-badge">📖 Must Read</div>
+          <div class="product-name">Engineering Thermodynamics – P.K. Nag</div>
+          <div class="product-desc">Best thermodynamics book for GATE and university exams</div>
+          <div class="product-footer">
+            <div class="product-price">₹699 <span>₹999</span></div>
+            <a href="https://www.amazon.in/s?k=engineering+thermodynamics+pk+nag&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">📏</div>
+        <div class="product-body">
+          <div class="product-badge">🔧 Lab Essential</div>
+          <div class="product-name">Mitutoyo Vernier Caliper 150mm</div>
+          <div class="product-desc">Industry standard ±0.02mm accuracy measurement tool</div>
+          <div class="product-footer">
+            <div class="product-price">₹2,499 <span>₹3,200</span></div>
+            <a href="https://www.amazon.in/s?k=mitutoyo+vernier+caliper&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">🧮</div>
+        <div class="product-body">
+          <div class="product-badge">⭐ Top Pick</div>
+          <div class="product-name">Casio FX-991EX Scientific Calculator</div>
+          <div class="product-desc">552 functions, spreadsheet mode, best for all ME subjects</div>
+          <div class="product-footer">
+            <div class="product-price">₹1,299 <span>₹1,750</span></div>
+            <a href="https://www.amazon.in/s?k=casio+fx+991ex&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">💧</div>
+        <div class="product-body">
+          <div class="product-badge">📚 Classic</div>
+          <div class="product-name">Fluid Mechanics – R.K. Bansal</div>
+          <div class="product-desc">500+ solved problems, most widely used FM book in India</div>
+          <div class="product-footer">
+            <div class="product-price">₹549 <span>₹799</span></div>
+            <a href="https://www.amazon.in/s?k=fluid+mechanics+rk+bansal&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">📐</div>
+        <div class="product-body">
+          <div class="product-badge">🎯 GATE Prep</div>
+          <div class="product-name">GATE ME – 30 Years Solved Papers</div>
+          <div class="product-desc">Complete GATE ME question bank with detailed solutions</div>
+          <div class="product-footer">
+            <div class="product-price">₹449 <span>₹650</span></div>
+            <a href="https://www.amazon.in/s?k=gate+mechanical+engineering+solved+papers&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:20px; font-size:12px; color:var(--muted); text-align:center;">
+      * As an Amazon Associate (taskjunction-21), this site earns from qualifying purchases. Prices shown are approximate.
+    </p>
+  </div>
+</div>
+
+<!-- PRIVACY -->
+<div id="privacy" style="background: var(--surface); padding: 64px 0; border-top: 1px solid var(--border);">
+  <div class="section" style="padding-top:0; padding-bottom:0;">
+    <h2 class="section-title">Privacy Policy</h2>
+    <p class="section-sub">Last updated: May 2025 &nbsp;|&nbsp; MechEngg Pro by TaskJunction</p>
+    <div class="privacy-card">
+      <h3>1. Information We Collect</h3>
+      <p>This website does <strong>not collect any personal information</strong> from visitors. No registration or login is required to read the eBook content.</p>
+    </div>
+    <div class="privacy-card">
+      <h3>2. Amazon Affiliate Disclosure</h3>
+      <p>This site participates in the <strong>Amazon Associates Program</strong>. We earn a small commission on qualifying purchases at no extra cost to you. Our Store ID is <strong>taskjunction-21</strong>. All affiliate links are clearly labelled "Amazon ↗" throughout this site.</p>
+    </div>
+    <div class="privacy-card">
+      <h3>3. Cookies & Tracking</h3>
+      <p>We do not use our own cookies. When you click Amazon links, Amazon may set cookies per their own privacy policy. Google Fonts (fonts.googleapis.com) is loaded for typography — Google may collect anonymous usage data.</p>
+    </div>
+    <div class="privacy-card">
+      <h3>4. Content Disclaimer</h3>
+      <p>All engineering content is provided <strong>for educational purposes only</strong>. Always verify critical calculations with a qualified engineer before real-world application. We are not liable for errors or damages from use of this content.</p>
+    </div>
+    <div class="privacy-card">
+      <h3>5. Contact</h3>
+      <p>👤 <strong>Vaibhav Dhokpande</strong><br>
+      🌐 <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:var(--blue);">vaibhavdhokpande-ai.github.io</a><br>
+      🏢 <strong>TaskJunction</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="margin-bottom:14px;">
+    <strong style="font-size:18px; font-family:'Playfair Display',serif; color:var(--accent);">MechEngg Pro</strong>
+    <span style="color:rgba(255,255,255,0.3); margin:0 10px;">|</span>
+    <span style="font-size:14px;">Free Mechanical Engineering eBook</span>
+  </div>
+  <div style="display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin-bottom:16px;">
+    <a href="#topics" style="color:rgba(255,255,255,0.45); text-decoration:none; font-size:13px;">Topics</a>
+    <a href="#chapters" style="color:rgba(255,255,255,0.45); text-decoration:none; font-size:13px;">Chapters</a>
+    <a href="#products" style="color:rgba(255,255,255,0.45); text-decoration:none; font-size:13px;">Shop</a>
+    <a href="#privacy" style="color:rgba(255,255,255,0.45); text-decoration:none; font-size:13px;">Privacy Policy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:rgba(255,255,255,0.45); text-decoration:none; font-size:13px;">Home</a>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;">
+    <p style="color:rgba(255,255,255,0.3); font-size:12px; margin-bottom:8px;">
+      Amazon affiliate links present (Store ID: taskjunction-21). Commission earned on qualifying purchases at no extra cost to you.
+    </p>
+    <p style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.6);">
+      Made with ❤️ by <strong style="color:var(--accent);">Vaibhav Dhokpande</strong> &nbsp;&amp;&nbsp; <strong style="color:#5BA4E5;">TaskJunction</strong>
+    </p>
+    <p style="color:rgba(255,255,255,0.2); font-size:11px; margin-top:6px;">© 2025 TaskJunction. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  function switchTab(id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+  function setTab(num) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === num));
+  }
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
