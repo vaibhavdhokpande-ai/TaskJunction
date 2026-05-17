@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cable & Wire Sizing — ElecCalc Pro</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+<div class="calc-header">
+  <div class="calc-tag">// CALCULATOR 02 OF 08</div>
+  <h1 class="calc-title"><span class="icon">🔋</span>Cable & Wire Sizing</h1>
+  <p class="calc-desc">IS 3961 compliant cable sizing. Calculates minimum cross-section, voltage drop, and checks thermal rating.</p>
+</div>
+
+<div class="calc-body">
+  <div class="panel">
+    <div class="panel-title">⚙ System Parameters</div>
+    <div class="field">
+      <label>System Type</label>
+      <select id="sys-type" onchange="updateFields()">
+        <option value="1ph">Single Phase (1Φ AC)</option>
+        <option value="3ph">Three Phase (3Φ AC)</option>
+        <option value="dc">DC System</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Conductor Material</label>
+      <select id="conductor">
+        <option value="cu">Copper (Cu)</option>
+        <option value="al">Aluminium (Al)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Supply Voltage (V) <span class="unit">[ Volts ]</span></label>
+      <input type="number" id="voltage" placeholder="230 / 415 / 11000" value="415">
+    </div>
+    <div class="field">
+      <label>Design Current (I<sub>B</sub>) <span class="unit">[ Amperes ]</span></label>
+      <input type="number" id="current" placeholder="e.g. 50" step="any">
+    </div>
+    <div class="field">
+      <label>Cable Run Length (L) <span class="unit">[ Metres ]</span></label>
+      <input type="number" id="length" placeholder="e.g. 100" step="any">
+    </div>
+    <div class="field">
+      <label>Allowable Voltage Drop <span class="unit">[ % ]</span></label>
+      <input type="number" id="vdrop-pct" value="3" step="0.5" min="1" max="10">
+    </div>
+    <div class="field">
+      <label>Ambient Temperature <span class="unit">[ °C ]</span></label>
+      <input type="number" id="temp" value="40" min="20" max="60">
+    </div>
+    <button class="btn" onclick="sizeCalc()">CALCULATE CABLE SIZE</button>
+    <button class="btn btn-outline" onclick="clearCable()">CLEAR</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">📊 Sizing Results</div>
+    <div class="result-grid">
+      <div class="result-item" id="r-Ib"><div class="result-label">Design Current</div><div class="result-value" id="rv-Ib">—</div><div class="result-unit">A</div></div>
+      <div class="result-item" id="r-Iz"><div class="result-label">Cable Rating Required</div><div class="result-value" id="rv-Iz">—</div><div class="result-unit">A</div></div>
+      <div class="result-item full" id="r-sz"><div class="result-label">Recommended Cable Size (IS 3961)</div><div class="result-value" id="rv-sz">—</div><div class="result-unit">mm²</div></div>
+      <div class="result-item" id="r-vd"><div class="result-label">Voltage Drop</div><div class="result-value" id="rv-vd">—</div><div class="result-unit">V</div></div>
+      <div class="result-item" id="r-vdp"><div class="result-label">Drop %</div><div class="result-value" id="rv-vdp">—</div><div class="result-unit">%</div></div>
+      <div class="result-item full" id="r-stat"><div class="result-label">Status</div><div class="result-value" id="rv-stat">—</div></div>
+      <div class="result-item full" id="r-res"><div class="result-label">Cable Resistance (@ length)</div><div class="result-value" id="rv-res">—</div><div class="result-unit">Ω</div></div>
+    </div>
+
+    <div class="formula-box">
+      <strong>VOLTAGE DROP (1Φ):</strong> ΔV = 2 × I × R × L / 1000<br>
+      <strong>VOLTAGE DROP (3Φ):</strong> ΔV = √3 × I × R × L / 1000<br>
+      <strong>ρ(Cu)</strong> = 0.0172 Ω·mm²/m<br>
+      <strong>ρ(Al)</strong> = 0.0282 Ω·mm²/m
+    </div>
+  </div>
+
+  <div class="panel panel-full">
+    <div class="panel-title">📋 IS 3961 — Standard Cable Sizes & Current Ratings</div>
+    <table class="ref-table">
+      <thead><tr><th>Size (mm²)</th><th>Cu Rating (A)</th><th>Al Rating (A)</th><th>Cu R (Ω/km)</th><th>Al R (Ω/km)</th><th>Application</th></tr></thead>
+      <tbody>
+        <tr><td>1.5</td><td>15</td><td>—</td><td>12.1</td><td>—</td><td>Lighting circuits</td></tr>
+        <tr><td>2.5</td><td>21</td><td>16</td><td>7.41</td><td>12.1</td><td>Lighting/socket circuits</td></tr>
+        <tr><td>4</td><td>28</td><td>21</td><td>4.61</td><td>7.41</td><td>Socket/small motors</td></tr>
+        <tr><td>6</td><td>36</td><td>28</td><td>3.08</td><td>4.91</td><td>Cookers, water heaters</td></tr>
+        <tr><td>10</td><td>50</td><td>38</td><td>1.83</td><td>3.08</td><td>Sub-mains</td></tr>
+        <tr><td>16</td><td>66</td><td>52</td><td>1.15</td><td>1.91</td><td>Sub-mains, motors</td></tr>
+        <tr><td>25</td><td>84</td><td>65</td><td>0.727</td><td>1.20</td><td>Feeders, motors</td></tr>
+        <tr><td>35</td><td>104</td><td>80</td><td>0.524</td><td>0.868</td><td>Feeders</td></tr>
+        <tr><td>50</td><td>125</td><td>96</td><td>0.387</td><td>0.641</td><td>Main feeders</td></tr>
+        <tr><td>70</td><td>160</td><td>125</td><td>0.268</td><td>0.443</td><td>Main feeders</td></tr>
+        <tr><td>95</td><td>194</td><td>150</td><td>0.193</td><td>0.320</td><td>HT connections</td></tr>
+        <tr><td>120</td><td>222</td><td>172</td><td>0.153</td><td>0.253</td><td>Main incomer</td></tr>
+        <tr><td>150</td><td>250</td><td>196</td><td>0.124</td><td>0.206</td><td>Main incomer</td></tr>
+        <tr><td>185</td><td>280</td><td>220</td><td>0.0991</td><td>0.164</td><td>Large feeders</td></tr>
+        <tr><td>240</td><td>324</td><td>253</td><td>0.0754</td><td>0.125</td><td>Transformers</td></tr>
+        <tr><td>300</td><td>365</td><td>283</td><td>0.0601</td><td>0.100</td><td>Transformers</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">// ELECCALC PRO · CABLE & WIRE SIZING · IS 3961</div>
+
+<script>
+const cables = [
+  {sz:1.5, cu:15, al:0, rCu:12.1, rAl:0},
+  {sz:2.5, cu:21, al:16, rCu:7.41, rAl:12.1},
+  {sz:4, cu:28, al:21, rCu:4.61, rAl:7.41},
+  {sz:6, cu:36, al:28, rCu:3.08, rAl:4.91},
+  {sz:10, cu:50, al:38, rCu:1.83, rAl:3.08},
+  {sz:16, cu:66, al:52, rCu:1.15, rAl:1.91},
+  {sz:25, cu:84, al:65, rCu:0.727, rAl:1.20},
+  {sz:35, cu:104, al:80, rCu:0.524, rAl:0.868},
+  {sz:50, cu:125, al:96, rCu:0.387, rAl:0.641},
+  {sz:70, cu:160, al:125, rCu:0.268, rAl:0.443},
+  {sz:95, cu:194, al:150, rCu:0.193, rAl:0.320},
+  {sz:120, cu:222, al:172, rCu:0.153, rAl:0.253},
+  {sz:150, cu:250, al:196, rCu:0.124, rAl:0.206},
+  {sz:185, cu:280, al:220, rCu:0.0991, rAl:0.164},
+  {sz:240, cu:324, al:253, rCu:0.0754, rAl:0.125},
+  {sz:300, cu:365, al:283, rCu:0.0601, rAl:0.100},
+];
+
+function tempDerating(t) { return t<=30?1: t<=35?0.97: t<=40?0.94: t<=45?0.91: t<=50?0.87: 0.82; }
+
+function sizeCalc() {
+  const sysType = document.getElementById('sys-type').value;
+  const mat = document.getElementById('conductor').value;
+  const V = parseFloat(document.getElementById('voltage').value);
+  const Ib = parseFloat(document.getElementById('current').value);
+  const L = parseFloat(document.getElementById('length').value);
+  const vdPct = parseFloat(document.getElementById('vdrop-pct').value);
+  const T = parseFloat(document.getElementById('temp').value);
+
+  if ([V,Ib,L,vdPct,T].some(isNaN)) { alert('Fill all fields.'); return; }
+
+  const kT = tempDerating(T);
+  const Iz_req = Ib / kT;
+
+  const maxVdrop = V * vdPct / 100;
+  const factor = sysType === '3ph' ? Math.sqrt(3) : 2;
+
+  let chosen = null;
+  for (const c of cables) {
+    const rating = mat === 'cu' ? c.cu : c.al;
+    if (rating === 0) continue;
+    if (rating < Iz_req) continue;
+    const R_km = mat === 'cu' ? c.rCu : c.rAl;
+    const vd = factor * Ib * R_km * L / 1000000;
+    if (vd <= maxVdrop) { chosen = {c, vd, R_km}; break; }
+  }
+
+  if (!chosen) {
+    // pick by current rating only
+    for (const c of cables) {
+      const rating = mat === 'cu' ? c.cu : c.al;
+      if (rating >= Iz_req) { 
+        const R_km = mat === 'cu' ? c.rCu : c.rAl;
+        const vd = factor * Ib * R_km * L / 1000000;
+        chosen = {c, vd, R_km};
+        break;
+      }
+    }
+  }
+
+  document.getElementById('rv-Ib').textContent = Ib.toFixed(1);
+  document.getElementById('rv-Iz').textContent = Iz_req.toFixed(1);
+  document.getElementById('r-Ib').classList.add('active');
+  document.getElementById('r-Iz').classList.add('active');
+
+  if (chosen) {
+    const rating = mat === 'cu' ? chosen.c.cu : chosen.c.al;
+    const vdPctActual = (chosen.vd / V * 100);
+    const ok = vdPctActual <= vdPct;
+    const cableRes = chosen.R_km * L / 1000;
+
+    document.getElementById('rv-sz').textContent = chosen.c.sz + ' mm²  (Rated: ' + rating + ' A)';
+    document.getElementById('rv-vd').textContent = chosen.vd.toFixed(3);
+    document.getElementById('rv-vdp').textContent = vdPctActual.toFixed(2);
+    document.getElementById('rv-res').textContent = cableRes.toFixed(4);
+    document.getElementById('rv-stat').innerHTML = ok
+      ? '<span class="status-ok">✔ PASS — Within voltage drop limit</span>'
+      : '<span class="status-warn">⚠ Increase size — VD exceeds limit</span>';
+    ['r-sz','r-vd','r-vdp','r-stat','r-res'].forEach(id => document.getElementById(id).classList.add('active'));
+  } else {
+    document.getElementById('rv-sz').textContent = 'EXCEEDS 300 mm²';
+    document.getElementById('rv-stat').innerHTML = '<span class="status-err">✘ Use parallel cables</span>';
+  }
+}
+function clearCable() {
+  ['current','length'].forEach(id => document.getElementById(id).value = '');
+  ['rv-Ib','rv-Iz','rv-sz','rv-vd','rv-vdp','rv-stat','rv-res'].forEach(id => document.getElementById(id).textContent = '—');
+  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
+}
+</script>
+</body>
+</html>

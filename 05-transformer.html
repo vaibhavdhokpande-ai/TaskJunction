@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformer Design — ElecCalc Pro</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+<div class="calc-header">
+  <div class="calc-tag">// CALCULATOR 05 OF 08</div>
+  <h1 class="calc-title"><span class="icon">🔆</span>Transformer Design Calculator</h1>
+  <p class="calc-desc">Turns ratio, primary/secondary currents, efficiency, regulation, and loss analysis. IS 2026 / IEC 60076 compliant.</p>
+</div>
+
+<div class="calc-body">
+  <div class="panel">
+    <div class="panel-title">⚙ Transformer Parameters</div>
+    <div class="field">
+      <label>kVA Rating <span class="unit">[ kVA ]</span></label>
+      <input type="number" id="kva" placeholder="e.g. 100" step="any">
+    </div>
+    <div class="field">
+      <label>Primary Voltage (V<sub>1</sub>) <span class="unit">[ Volts ]</span></label>
+      <input type="number" id="v1" placeholder="e.g. 11000" step="any">
+    </div>
+    <div class="field">
+      <label>Secondary Voltage (V<sub>2</sub>) <span class="unit">[ Volts ]</span></label>
+      <input type="number" id="v2" placeholder="e.g. 415" step="any">
+    </div>
+    <div class="field">
+      <label>Transformer Type</label>
+      <select id="tftype">
+        <option value="1ph">Single Phase</option>
+        <option value="3ph">Three Phase</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Core Loss (P<sub>c</sub>) <span class="unit">[ Watts ]</span></label>
+      <input type="number" id="pcore" placeholder="e.g. 400" step="any">
+    </div>
+    <div class="field">
+      <label>Copper Loss at FL (P<sub>cu</sub>) <span class="unit">[ Watts ]</span></label>
+      <input type="number" id="pcu" placeholder="e.g. 1200" step="any">
+    </div>
+    <div class="field">
+      <label>Load Power Factor <span class="unit">[ 0–1 ]</span></label>
+      <input type="number" id="pftf" value="0.85" step="0.01" min="0" max="1">
+    </div>
+    <div class="field">
+      <label>%Impedance (Z%) <span class="unit">[ % ]</span></label>
+      <input type="number" id="zimp" placeholder="e.g. 4.5" step="any">
+    </div>
+    <button class="btn" onclick="calcTx()">CALCULATE</button>
+    <button class="btn btn-outline" onclick="clrTx()">CLEAR</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">📊 Transformer Performance</div>
+    <div class="result-grid">
+      <div class="result-item" id="rt-ratio"><div class="result-label">Turns Ratio (a)</div><div class="result-value" id="rv-ratio">—</div></div>
+      <div class="result-item" id="rt-I1"><div class="result-label">Primary Current</div><div class="result-value" id="rv-I1">—</div><div class="result-unit">A</div></div>
+      <div class="result-item" id="rt-I2"><div class="result-label">Secondary Current</div><div class="result-value" id="rv-I2">—</div><div class="result-unit">A</div></div>
+      <div class="result-item" id="rt-eta"><div class="result-label">Efficiency (FL)</div><div class="result-value" id="rv-eta">—</div><div class="result-unit">%</div></div>
+      <div class="result-item" id="rt-reg"><div class="result-label">Voltage Regulation</div><div class="result-value" id="rv-reg">—</div><div class="result-unit">%</div></div>
+      <div class="result-item" id="rt-maxeta"><div class="result-label">Max. Efficiency at</div><div class="result-value" id="rv-maxeta">—</div><div class="result-unit">of FL</div></div>
+      <div class="result-item full" id="rt-Isc"><div class="result-label">Short Circuit Current (V<sub>2</sub> side)</div><div class="result-value" id="rv-Isc">—</div><div class="result-unit">A</div></div>
+    </div>
+    <div class="formula-box">
+      <strong>η</strong> = kVA × PF / (kVA × PF + P<sub>c</sub> + P<sub>cu</sub>)<br>
+      <strong>Max η</strong> at x = √(P<sub>c</sub> / P<sub>cu</sub>)<br>
+      <strong>VR%</strong> ≈ ε<sub>R</sub>cosφ + ε<sub>X</sub>sinφ<br>
+      <strong>I<sub>sc</sub></strong> = I<sub>rated</sub> × 100 / Z%
+    </div>
+  </div>
+
+  <div class="panel panel-full">
+    <div class="panel-title">📋 Standard Distribution Transformer Ratings — IS 2026</div>
+    <table class="ref-table">
+      <thead><tr><th>Rating (kVA)</th><th>HV (kV)</th><th>LV (V)</th><th>%Z</th><th>Core Loss (W)</th><th>Cu Loss (W)</th></tr></thead>
+      <tbody>
+        <tr><td>25</td><td>11</td><td>415</td><td>4.0</td><td>100</td><td>480</td></tr>
+        <tr><td>63</td><td>11</td><td>415</td><td>4.0</td><td>200</td><td>900</td></tr>
+        <tr><td>100</td><td>11</td><td>415</td><td>4.5</td><td>280</td><td>1380</td></tr>
+        <tr><td>160</td><td>11</td><td>415</td><td>4.5</td><td>390</td><td>2000</td></tr>
+        <tr><td>200</td><td>11</td><td>415</td><td>4.5</td><td>480</td><td>2600</td></tr>
+        <tr><td>250</td><td>11</td><td>415</td><td>4.5</td><td>560</td><td>3100</td></tr>
+        <tr><td>315</td><td>11</td><td>415</td><td>4.5</td><td>700</td><td>3800</td></tr>
+        <tr><td>400</td><td>11</td><td>415</td><td>4.5</td><td>840</td><td>4800</td></tr>
+        <tr><td>500</td><td>11</td><td>415</td><td>5.0</td><td>1000</td><td>5800</td></tr>
+        <tr><td>630</td><td>11</td><td>415</td><td>5.0</td><td>1200</td><td>7200</td></tr>
+        <tr><td>1000</td><td>11</td><td>415</td><td>5.0</td><td>1750</td><td>11000</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">// ELECCALC PRO · TRANSFORMER DESIGN · IS 2026</div>
+<script>
+function calcTx() {
+  const kva = parseFloat(document.getElementById('kva').value);
+  const v1 = parseFloat(document.getElementById('v1').value);
+  const v2 = parseFloat(document.getElementById('v2').value);
+  const type = document.getElementById('tftype').value;
+  const Pc = parseFloat(document.getElementById('pcore').value);
+  const Pcu = parseFloat(document.getElementById('pcu').value);
+  const pf = parseFloat(document.getElementById('pftf').value);
+  const zimp = parseFloat(document.getElementById('zimp').value);
+  if ([kva,v1,v2,Pc,Pcu,pf].some(isNaN)) { alert('Fill all required fields.'); return; }
+
+  const a = v1 / v2;
+  const S = kva * 1000;
+  const div = type === '1ph' ? 1 : Math.sqrt(3);
+  const I1 = S / (div * v1);
+  const I2 = S / (div * v2);
+  const Pout = S * pf;
+  const eta = Pout / (Pout + Pc + Pcu) * 100;
+  const xLoad = Math.sqrt(Pc / Pcu);
+  const Isc = isNaN(zimp) ? null : I2 * 100 / zimp;
+  // VR approx: (Pcu/S)*cosφ + 0 for simple case
+  const epsilonR = Pcu / S * 100;
+  const epsilonX = zimp ? Math.sqrt(zimp * zimp - epsilonR * epsilonR) : epsilonR * 0.6;
+  const reg = epsilonR * pf + epsilonX * Math.sqrt(1 - pf*pf);
+
+  const s = (id, val) => { document.getElementById('rv-'+id).textContent = val; document.getElementById('rt-'+id).classList.add('active'); };
+  s('ratio', a.toFixed(2) + ' : 1');
+  s('I1', I1.toFixed(2));
+  s('I2', I2.toFixed(2));
+  s('eta', eta.toFixed(2));
+  s('reg', reg.toFixed(2));
+  s('maxeta', (xLoad * 100).toFixed(1) + '%');
+  s('Isc', Isc ? Isc.toFixed(1) : 'Enter Z%');
+}
+function clrTx() {
+  ['kva','v1','v2','pcore','pcu','zimp'].forEach(id => document.getElementById(id).value = '');
+  ['ratio','I1','I2','eta','reg','maxeta','Isc'].forEach(id => { document.getElementById('rv-'+id).textContent='—'; document.getElementById('rt-'+id).classList.remove('active'); });
+}
+</script>
+</body>
+</html>

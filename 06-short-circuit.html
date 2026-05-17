@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Short Circuit & Fault — ElecCalc Pro</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+<div class="calc-header">
+  <div class="calc-tag">// CALCULATOR 06 OF 08</div>
+  <h1 class="calc-title"><span class="icon">🛡️</span>Short Circuit & Fault Calculator</h1>
+  <p class="calc-desc">IEC 60909 / IS 13234 — Symmetrical fault current, peak current, and protective device selection for LV/MV systems.</p>
+</div>
+
+<div class="calc-body">
+  <div class="panel">
+    <div class="panel-title">⚙ System Data</div>
+    <div class="field">
+      <label>System Voltage (V<sub>n</sub>) <span class="unit">[ Volts ]</span></label>
+      <input type="number" id="vn" placeholder="415 / 11000" value="415" step="any">
+    </div>
+    <div class="field">
+      <label>Voltage Factor (c)</label>
+      <select id="cfact">
+        <option value="1.1">1.1 — Max fault (LV ≤1kV)</option>
+        <option value="1.05">1.05 — Max fault (MV >1kV)</option>
+        <option value="0.95">0.95 — Min fault (LV)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Source: System Fault Level <span class="unit">[ MVA ]</span></label>
+      <input type="number" id="mva" placeholder="e.g. 500" step="any">
+    </div>
+    <div class="field">
+      <label>Transformer kVA <span class="unit">[ kVA ]</span></label>
+      <input type="number" id="txkva" placeholder="e.g. 500" step="any">
+    </div>
+    <div class="field">
+      <label>Transformer Z% <span class="unit">[ % ]</span></label>
+      <input type="number" id="txz" placeholder="e.g. 4.5" step="5" value="4.5" step="any">
+    </div>
+    <div class="field">
+      <label>Cable Impedance (R+jX) <span class="unit">[ mΩ ]</span></label>
+      <input type="number" id="Rcable" placeholder="R e.g. 5" step="any">
+      <input type="number" id="Xcable" placeholder="X e.g. 2" step="any" style="margin-top:6px">
+    </div>
+    <div class="field">
+      <label>X/R Ratio of Source</label>
+      <input type="number" id="xr" placeholder="e.g. 10" value="10" step="any">
+    </div>
+    <button class="btn" onclick="calcSC()">CALCULATE FAULT</button>
+    <button class="btn btn-outline" onclick="clrSC()">CLEAR</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">📊 Fault Analysis Results</div>
+    <div class="result-grid">
+      <div class="result-item" id="rsc-Zs"><div class="result-label">Source Impedance</div><div class="result-value" id="rv-Zs">—</div><div class="result-unit">mΩ</div></div>
+      <div class="result-item" id="rsc-Ztx"><div class="result-label">Transformer Impedance</div><div class="result-value" id="rv-Ztx">—</div><div class="result-unit">mΩ</div></div>
+      <div class="result-item" id="rsc-Ztot"><div class="result-label">Total Impedance</div><div class="result-value" id="rv-Ztot">—</div><div class="result-unit">mΩ</div></div>
+      <div class="result-item" id="rsc-Ik"><div class="result-label">Symmetrical Fault (I"k)</div><div class="result-value" id="rv-Ik">—</div><div class="result-unit">kA</div></div>
+      <div class="result-item" id="rsc-ip"><div class="result-label">Peak Current (i<sub>p</sub>)</div><div class="result-value" id="rv-ip">—</div><div class="result-unit">kA</div></div>
+      <div class="result-item" id="rsc-Sk"><div class="result-label">Fault Level (S"k)</div><div class="result-value" id="rv-Sk">—</div><div class="result-unit">MVA</div></div>
+      <div class="result-item full" id="rsc-breaker"><div class="result-label">Min. Breaker Rating</div><div class="result-value" id="rv-breaker">—</div><div class="result-unit">kA</div></div>
+    </div>
+    <div class="formula-box">
+      <strong>IEC 60909:</strong><br>
+      I"k = c × Vn / (√3 × |Ztotal|)<br>
+      i<sub>p</sub> = κ × √2 × I"k &nbsp;&nbsp; κ = 1.02 + 0.98e^(−3R/X)<br>
+      Z<sub>tx</sub> = (Z% × V²) / (100 × S<sub>tx</sub>)
+    </div>
+  </div>
+
+  <div class="panel panel-full">
+    <div class="panel-title">📋 Typical Fault Levels — LV/MV Systems</div>
+    <table class="ref-table">
+      <thead><tr><th>Voltage Level</th><th>Typical Fault (kA)</th><th>Standard Breaker (kA)</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>415 V LT Bus</td><td>25–50 kA</td><td>50 / 65 kA</td><td>Incomer ACB</td></tr>
+        <tr><td>415 V Distribution</td><td>10–25 kA</td><td>25 / 36 kA</td><td>Outgoing MCCB</td></tr>
+        <tr><td>415 V Final Circuit</td><td>3–10 kA</td><td>10 / 16 kA</td><td>MCB</td></tr>
+        <tr><td>11 kV HT Panel</td><td>16–25 kA</td><td>25 / 31.5 kA</td><td>VCB</td></tr>
+        <tr><td>33 kV Sub-station</td><td>12–20 kA</td><td>20 / 25 kA</td><td>VCB</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">// ELECCALC PRO · SHORT CIRCUIT · IEC 60909</div>
+<script>
+function calcSC() {
+  const Vn = parseFloat(document.getElementById('vn').value);
+  const c = parseFloat(document.getElementById('cfact').value);
+  const mva = parseFloat(document.getElementById('mva').value);
+  const txkva = parseFloat(document.getElementById('txkva').value);
+  const txz = parseFloat(document.getElementById('txz').value);
+  const Rc = parseFloat(document.getElementById('Rcable').value) || 0;
+  const Xc = parseFloat(document.getElementById('Xcable').value) || 0;
+  const xr = parseFloat(document.getElementById('xr').value) || 10;
+
+  if ([Vn,c].some(isNaN)) { alert('Enter at least system voltage.'); return; }
+
+  // Source impedance from MVA fault level (mΩ)
+  let Zs = 0;
+  if (!isNaN(mva) && mva > 0) {
+    Zs = Vn * Vn / (mva * 1e6) * 1000; // mΩ
+  }
+
+  // Transformer impedance (mΩ)
+  let Ztx = 0;
+  if (!isNaN(txkva) && !isNaN(txz)) {
+    Ztx = txz / 100 * (Vn * Vn) / (txkva * 1000) * 1000; // mΩ
+  }
+
+  const Ztotal = Math.sqrt(Math.pow(Zs + Ztx + Rc, 2) + Math.pow(Xc, 2));
+  if (Ztotal === 0) { alert('Enter source MVA or transformer data.'); return; }
+
+  const Ik = c * Vn / (Math.sqrt(3) * Ztotal / 1000); // A
+  const kappa = 1.02 + 0.98 * Math.exp(-3 / xr);
+  const ip = kappa * Math.sqrt(2) * Ik;
+  const Sk = Math.sqrt(3) * Vn * Ik / 1e6; // MVA
+
+  // Standardize breaker
+  const stds = [6,10,16,25,36,50,65,80,100];
+  const IkKA = Ik / 1000;
+  const breaker = stds.find(s => s >= IkKA) || '>100';
+
+  const s = (id, val) => { document.getElementById('rv-'+id).textContent = val; document.getElementById('rsc-'+id).classList.add('active'); };
+  s('Zs', Zs.toFixed(2));
+  s('Ztx', Ztx.toFixed(2));
+  s('Ztot', Ztotal.toFixed(3));
+  s('Ik', IkKA.toFixed(2));
+  s('ip', (ip/1000).toFixed(2));
+  s('Sk', Sk.toFixed(2));
+  s('breaker', breaker + ' kA');
+}
+function clrSC() {
+  ['mva','txkva','Rcable','Xcable'].forEach(id => document.getElementById(id).value = '');
+  ['Zs','Ztx','Ztot','Ik','ip','Sk','breaker'].forEach(id => { document.getElementById('rv-'+id).textContent='—'; document.getElementById('rsc-'+id).classList.remove('active'); });
+}
+</script>
+</body>
+</html>

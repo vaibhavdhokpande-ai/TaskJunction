@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Battery Bank & UPS Sizing — ElecCalc Pro</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+<div class="calc-header">
+  <div class="calc-tag">// CALCULATOR 08 OF 08</div>
+  <h1 class="calc-title"><span class="icon">🔋</span>Battery Bank & UPS Sizing</h1>
+  <p class="calc-desc">Battery capacity, number of cells, charger sizing, autonomy time and UPS kVA rating. IEEE 485 / IS 16282 method.</p>
+</div>
+
+<div class="calc-body">
+  <div class="panel">
+    <div class="panel-title">⚙ Load & System Parameters</div>
+    <div class="field">
+      <label>UPS Type</label>
+      <select id="upstype" onchange="toggleUPS()">
+        <option value="ups">Online UPS (AC Load)</option>
+        <option value="dc">DC Battery Bank (DC Load)</option>
+      </select>
+    </div>
+    <div class="field" id="f-acload">
+      <label>Total AC Load <span class="unit">[ kVA ]</span></label>
+      <input type="number" id="acload" placeholder="e.g. 10" step="any">
+    </div>
+    <div class="field" id="f-pfups">
+      <label>Load Power Factor <span class="unit">[ 0–1 ]</span></label>
+      <input type="number" id="pfups" value="0.8" step="0.01">
+    </div>
+    <div class="field" id="f-dcload" style="display:none">
+      <label>DC Load Current <span class="unit">[ Amperes ]</span></label>
+      <input type="number" id="dcload" placeholder="e.g. 50" step="any">
+    </div>
+    <div class="field">
+      <label>Battery Voltage (System) <span class="unit">[ V ]</span></label>
+      <select id="sysvolt">
+        <option value="12">12 V</option>
+        <option value="24">24 V</option>
+        <option value="48">48 V</option>
+        <option value="110">110 V DC</option>
+        <option value="220">220 V DC</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Cell Voltage <span class="unit">[ V/cell ]</span></label>
+      <select id="vcell">
+        <option value="2.0">2.0 V — VRLA / Lead-Acid</option>
+        <option value="2.25">2.25 V — Flooded Lead-Acid</option>
+        <option value="3.2">3.2 V — LiFePO₄</option>
+        <option value="3.7">3.7 V — Li-ion NMC</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Backup Time Required <span class="unit">[ minutes ]</span></label>
+      <input type="number" id="backup" placeholder="e.g. 60" step="any">
+    </div>
+    <div class="field">
+      <label>Depth of Discharge (DoD) <span class="unit">[ % ]</span></label>
+      <select id="dod">
+        <option value="80">80% — VRLA standard</option>
+        <option value="50">50% — Conservative</option>
+        <option value="90">90% — LiFePO₄</option>
+        <option value="100">100% — Full discharge</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Temperature Correction Factor</label>
+      <select id="tcf">
+        <option value="1.0">1.0 — 25°C (nominal)</option>
+        <option value="1.11">1.11 — 15°C</option>
+        <option value="1.25">1.25 — 5°C</option>
+        <option value="0.95">0.95 — 35°C (hot climate)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>UPS Efficiency (η) <span class="unit">[ % ]</span></label>
+      <input type="number" id="upseta" value="90" step="any">
+    </div>
+    <button class="btn" onclick="calcUPS()">CALCULATE</button>
+    <button class="btn btn-outline" onclick="clrUPS()">CLEAR</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">📊 Battery & UPS Results</div>
+    <div class="result-grid">
+      <div class="result-item" id="ru-Pload"><div class="result-label">Load Power</div><div class="result-value" id="rv-Pload">—</div><div class="result-unit">kW</div></div>
+      <div class="result-item" id="ru-Idc"><div class="result-label">DC Discharge Current</div><div class="result-value" id="rv-Idc">—</div><div class="result-unit">A</div></div>
+      <div class="result-item" id="ru-Cap"><div class="result-label">Battery Capacity (Ah)</div><div class="result-value" id="rv-Cap">—</div><div class="result-unit">Ah</div></div>
+      <div class="result-item" id="ru-Ncells"><div class="result-label">No. of Cells in Series</div><div class="result-value" id="rv-Ncells">—</div></div>
+      <div class="result-item" id="ru-Npar"><div class="result-label">Strings in Parallel</div><div class="result-value" id="rv-Npar">—</div></div>
+      <div class="result-item" id="ru-Ntot"><div class="result-label">Total Battery Cells</div><div class="result-value" id="rv-Ntot">—</div></div>
+      <div class="result-item" id="ru-Ich"><div class="result-label">Charger Current</div><div class="result-value" id="rv-Ich">—</div><div class="result-unit">A</div></div>
+      <div class="result-item" id="ru-kVA"><div class="result-label">UPS kVA Rating</div><div class="result-value" id="rv-kVA">—</div><div class="result-unit">kVA</div></div>
+    </div>
+    <div class="formula-box">
+      <strong>IEEE 485 METHOD:</strong><br>
+      I<sub>dc</sub> = P<sub>load</sub> / (V<sub>bat</sub> × η)<br>
+      C = I<sub>dc</sub> × T<sub>backup</sub> / (DoD × TCF) &nbsp;[Ah]<br>
+      N<sub>series</sub> = V<sub>system</sub> / V<sub>cell</sub><br>
+      I<sub>charger</sub> = C / 10 + I<sub>load</sub>
+    </div>
+  </div>
+
+  <div class="panel panel-full">
+    <div class="panel-title">📋 Standard Battery Cell Ratings Reference</div>
+    <table class="ref-table">
+      <thead><tr><th>Technology</th><th>Cell V</th><th>DoD</th><th>Cycle Life</th><th>Application</th></tr></thead>
+      <tbody>
+        <tr><td>VRLA / AGM</td><td>2.0 V</td><td>80%</td><td>500–1000</td><td>UPS, Telecom</td></tr>
+        <tr><td>Flooded Lead-Acid</td><td>2.25 V</td><td>70–80%</td><td>1500+</td><td>Substations, SCADA</td></tr>
+        <tr><td>LiFePO₄</td><td>3.2 V</td><td>90%</td><td>3000–6000</td><td>Solar, EV, Modern UPS</td></tr>
+        <tr><td>Li-ion NMC</td><td>3.7 V</td><td>80–90%</td><td>1000–3000</td><td>Portable, data centre</td></tr>
+        <tr><td>Ni-Cd</td><td>1.2 V</td><td>80%</td><td>2000+</td><td>Emergency lighting</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">// ELECCALC PRO · BATTERY BANK & UPS · IEEE 485</div>
+<script>
+function toggleUPS() {
+  const t = document.getElementById('upstype').value;
+  document.getElementById('f-acload').style.display = t === 'ups' ? '' : 'none';
+  document.getElementById('f-pfups').style.display = t === 'ups' ? '' : 'none';
+  document.getElementById('f-dcload').style.display = t === 'dc' ? '' : 'none';
+}
+
+function calcUPS() {
+  const t = document.getElementById('upstype').value;
+  const Vbat = parseFloat(document.getElementById('sysvolt').value);
+  const Vcell = parseFloat(document.getElementById('vcell').value);
+  const Tbak = parseFloat(document.getElementById('backup').value);
+  const dod = parseFloat(document.getElementById('dod').value) / 100;
+  const tcf = parseFloat(document.getElementById('tcf').value);
+  const eta = parseFloat(document.getElementById('upseta').value) / 100;
+  const pf = parseFloat(document.getElementById('pfups').value);
+
+  let Pload_W, Idc_bat;
+  if (t === 'ups') {
+    const acload_kva = parseFloat(document.getElementById('acload').value);
+    if (isNaN(acload_kva)) { alert('Enter AC Load.'); return; }
+    Pload_W = acload_kva * 1000 * pf;
+    Idc_bat = Pload_W / (Vbat * eta);
+  } else {
+    Idc_bat = parseFloat(document.getElementById('dcload').value);
+    if (isNaN(Idc_bat)) { alert('Enter DC Load.'); return; }
+    Pload_W = Idc_bat * Vbat;
+  }
+
+  if ([Vbat,Vcell,Tbak,dod,tcf,eta].some(isNaN)) { alert('Fill all fields.'); return; }
+
+  const T_hr = Tbak / 60;
+  const C_raw = Idc_bat * T_hr / dod;
+  const C = C_raw * tcf;
+
+  const Ncells = Math.round(Vbat / Vcell);
+  // Standard Ah ratings: pick next standard size
+  const stdAh = [7, 12, 17, 24, 38, 42, 55, 65, 75, 100, 120, 150, 200];
+  const cellAh = stdAh.find(a => a >= C) || Math.ceil(C);
+  const Npar = Math.ceil(C / cellAh);
+  const Ntot = Ncells * Npar;
+
+  const Ich = C / 10 + Idc_bat; // 10-hr charge + float current
+  const kVA_ups = Pload_W / (pf * 1000);
+  const stds = [1,2,3,5,7.5,10,15,20,30,40,50,60,80,100,120,160,200];
+  const kVA_std = stds.find(s => s >= kVA_ups) || Math.ceil(kVA_ups);
+
+  const s = (id, val) => { document.getElementById('rv-'+id).textContent = val; document.getElementById('ru-'+id).classList.add('active'); };
+  s('Pload', (Pload_W/1000).toFixed(2));
+  s('Idc', Idc_bat.toFixed(1));
+  s('Cap', C.toFixed(1) + ' Ah → Use ' + cellAh + ' Ah cells');
+  s('Ncells', Ncells + ' cells × ' + Vcell + 'V');
+  s('Npar', Npar + ' string(s) in parallel');
+  s('Ntot', Ntot + ' cells total');
+  s('Ich', Ich.toFixed(1));
+  s('kVA', kVA_std + ' kVA (standard)');
+}
+function clrUPS() {
+  ['acload','dcload','backup'].forEach(id => document.getElementById(id).value = '');
+  ['Pload','Idc','Cap','Ncells','Npar','Ntot','Ich','kVA'].forEach(id => { document.getElementById('rv-'+id).textContent='—'; document.getElementById('ru-'+id).classList.remove('active'); });
+}
+</script>
+</body>
+</html>

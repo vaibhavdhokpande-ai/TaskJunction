@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lighting Design — ElecCalc Pro</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+<div class="calc-header">
+  <div class="calc-tag">// CALCULATOR 07 OF 08</div>
+  <h1 class="calc-title"><span class="icon">💡</span>Lighting Design Calculator</h1>
+  <p class="calc-desc">Lumen method for indoor lighting design. Number of luminaires, power density (LPD) and layout per IS 3646.</p>
+</div>
+
+<div class="calc-body">
+  <div class="panel">
+    <div class="panel-title">⚙ Room & Luminaire Data</div>
+    <div class="field">
+      <label>Room Length (L) <span class="unit">[ m ]</span></label>
+      <input type="number" id="rlen" placeholder="e.g. 10" step="any">
+    </div>
+    <div class="field">
+      <label>Room Width (W) <span class="unit">[ m ]</span></label>
+      <input type="number" id="rwid" placeholder="e.g. 8" step="any">
+    </div>
+    <div class="field">
+      <label>Room Height (H) <span class="unit">[ m ]</span></label>
+      <input type="number" id="rhgt" placeholder="e.g. 3" step="any">
+    </div>
+    <div class="field">
+      <label>Work Plane Height <span class="unit">[ m ]</span></label>
+      <input type="number" id="wph" value="0.8" step="any">
+    </div>
+    <div class="field">
+      <label>Space Type / Required Illuminance</label>
+      <select id="spacetype" onchange="setLux()">
+        <option value="100">Staircase / Corridor — 100 lux</option>
+        <option value="150">Storage / Warehouse — 150 lux</option>
+        <option value="200">Lobby / Reception — 200 lux</option>
+        <option value="300" selected>Office / Classroom — 300 lux</option>
+        <option value="500">Design / Drawing — 500 lux</option>
+        <option value="750">Fine Assembly — 750 lux</option>
+        <option value="1000">Inspection / Surgery — 1000 lux</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div class="field" id="luxfield" style="display:none">
+      <label>Required Illuminance (E) <span class="unit">[ lux ]</span></label>
+      <input type="number" id="elux" placeholder="e.g. 300" step="any">
+    </div>
+    <div class="field">
+      <label>Lamp Type / Output</label>
+      <select id="lamptype" onchange="setLamp()">
+        <option value="LED Panel 36W|36|3200">LED Panel 36W — 3200 lm</option>
+        <option value="LED Panel 40W|40|4000">LED Panel 40W — 4000 lm</option>
+        <option value="LED Batten 18W|18|1800">LED Batten 18W — 1800 lm</option>
+        <option value="LED Downlight 15W|15|1200">LED Downlight 15W — 1200 lm</option>
+        <option value="CFL 26W|26|1800">CFL 26W — 1800 lm</option>
+        <option value="TFL 2×36W|72|5200">Tubelight 2×36W — 5200 lm</option>
+        <option value="Metal Halide 250W|250|20000">Metal Halide 250W — 20000 lm</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div id="lampfields" style="display:none">
+      <div class="field">
+        <label>Lamp Wattage <span class="unit">[ W ]</span></label>
+        <input type="number" id="lampW" step="any">
+      </div>
+      <div class="field">
+        <label>Lamp Lumens <span class="unit">[ lm ]</span></label>
+        <input type="number" id="lampLm" step="any">
+      </div>
+    </div>
+    <div class="field">
+      <label>Ceiling Reflectance (ρ<sub>c</sub>) <span class="unit">[ % ]</span></label>
+      <select id="rhoc">
+        <option value="0.7">70% — White ceiling</option>
+        <option value="0.5" selected>50% — Light colour</option>
+        <option value="0.3">30% — Medium</option>
+        <option value="0.1">10% — Dark</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Wall Reflectance (ρ<sub>w</sub>) <span class="unit">[ % ]</span></label>
+      <select id="rhow">
+        <option value="0.5">50% — Light walls</option>
+        <option value="0.3" selected>30% — Medium</option>
+        <option value="0.1">10% — Dark walls</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Maintenance Factor (MF)</label>
+      <select id="mf">
+        <option value="0.8" selected>0.8 — Good maintenance</option>
+        <option value="0.7">0.7 — Average</option>
+        <option value="0.6">0.6 — Poor</option>
+      </select>
+    </div>
+    <button class="btn" onclick="calcLight()">CALCULATE LIGHTING</button>
+    <button class="btn btn-outline" onclick="clrLight()">CLEAR</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">📊 Lighting Results</div>
+    <div class="result-grid">
+      <div class="result-item" id="rl-A"><div class="result-label">Room Area</div><div class="result-value" id="rv-A">—</div><div class="result-unit">m²</div></div>
+      <div class="result-item" id="rl-RI"><div class="result-label">Room Index (K)</div><div class="result-value" id="rv-RI">—</div></div>
+      <div class="result-item" id="rl-UF"><div class="result-label">Utilization Factor</div><div class="result-value" id="rv-UF">—</div></div>
+      <div class="result-item" id="rl-TL"><div class="result-label">Total Lumens Req.</div><div class="result-value" id="rv-TL">—</div><div class="result-unit">lm</div></div>
+      <div class="result-item full" id="rl-N"><div class="result-label">Number of Luminaires</div><div class="result-value" id="rv-N">—</div></div>
+      <div class="result-item" id="rl-TW"><div class="result-label">Total Wattage</div><div class="result-value" id="rv-TW">—</div><div class="result-unit">W</div></div>
+      <div class="result-item" id="rl-LPD"><div class="result-label">Lighting Power Density</div><div class="result-value" id="rv-LPD">—</div><div class="result-unit">W/m²</div></div>
+      <div class="result-item full" id="rl-layout"><div class="result-label">Suggested Layout</div><div class="result-value" id="rv-layout">—</div></div>
+    </div>
+    <div class="formula-box">
+      <strong>LUMEN METHOD:</strong><br>
+      N = (E × A) / (Φ × UF × MF)<br>
+      <strong>Room Index:</strong> K = L×W / (H<sub>m</sub>×(L+W))<br>
+      <strong>H<sub>m</sub></strong> = Mounting ht − Work plane ht<br>
+      <strong>LPD</strong> = Total Watts / Area (W/m²)
+    </div>
+  </div>
+
+  <div class="panel panel-full">
+    <div class="panel-title">📋 IS 3646 — Recommended Illuminance Levels</div>
+    <table class="ref-table">
+      <thead><tr><th>Space / Task</th><th>Illuminance (lux)</th><th>LPD Limit (W/m²)</th></tr></thead>
+      <tbody>
+        <tr><td>Parking / Staircase</td><td>50–100</td><td>3</td></tr>
+        <tr><td>Lobby / Corridor</td><td>100–200</td><td>5</td></tr>
+        <tr><td>Stores / Warehouse</td><td>100–200</td><td>4</td></tr>
+        <tr><td>General Office</td><td>300–500</td><td>10</td></tr>
+        <tr><td>Classroom</td><td>300–500</td><td>9</td></tr>
+        <tr><td>Drawing Office</td><td>500–750</td><td>14</td></tr>
+        <tr><td>Hospital Ward</td><td>100–300</td><td>8</td></tr>
+        <tr><td>Operating Theatre</td><td>1000+</td><td>—</td></tr>
+        <tr><td>Fine Assembly</td><td>750–1500</td><td>20</td></tr>
+        <tr><td>Retail</td><td>300–750</td><td>15</td></tr>
+        <tr><td>Outdoor Roads</td><td>15–30</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">// ELECCALC PRO · LIGHTING DESIGN · IS 3646</div>
+<script>
+function setLux() {
+  const v = document.getElementById('spacetype').value;
+  document.getElementById('luxfield').style.display = v === 'custom' ? '' : 'none';
+  if (v !== 'custom') document.getElementById('elux').value = v;
+}
+function setLamp() {
+  const v = document.getElementById('lamptype').value;
+  const cf = document.getElementById('lampfields');
+  cf.style.display = v === 'custom' ? '' : 'none';
+  if (v !== 'custom') {
+    const parts = v.split('|');
+    document.getElementById('lampW').value = parts[1];
+    document.getElementById('lampLm').value = parts[2];
+  }
+}
+setLux();
+// init values
+document.getElementById('elux').value = '300';
+document.getElementById('lampW').value = '36';
+document.getElementById('lampLm').value = '3200';
+
+function ufFromK(K, rc, rw) {
+  // Simplified utilization factor table interpolation
+  const base = 0.3 + 0.1 * Math.min(K, 5) + 0.05 * rc + 0.02 * rw;
+  return Math.min(base, 0.75);
+}
+
+function calcLight() {
+  const L = parseFloat(document.getElementById('rlen').value);
+  const W = parseFloat(document.getElementById('rwid').value);
+  const H = parseFloat(document.getElementById('rhgt').value);
+  const wp = parseFloat(document.getElementById('wph').value);
+  const E = parseFloat(document.getElementById('elux').value) || parseFloat(document.getElementById('spacetype').value);
+  const lampW = parseFloat(document.getElementById('lampW').value);
+  const lampLm = parseFloat(document.getElementById('lampLm').value);
+  const rc = parseFloat(document.getElementById('rhoc').value);
+  const rw = parseFloat(document.getElementById('rhow').value);
+  const MF = parseFloat(document.getElementById('mf').value);
+
+  if ([L,W,H,E,lampW,lampLm].some(isNaN)) { alert('Fill all fields.'); return; }
+
+  const A = L * W;
+  const Hm = H - wp;
+  const K = (L * W) / (Hm * (L + W));
+  const UF = ufFromK(K, rc, rw);
+  const TL = (E * A) / (UF * MF);
+  const N = Math.ceil(TL / lampLm);
+  const TW = N * lampW;
+  const LPD = TW / A;
+
+  // Layout suggestion
+  const rowsL = Math.round(Math.sqrt(N * L / W));
+  const rowsW = Math.ceil(N / rowsL);
+  const layout = `${rowsL} × ${rowsW} = ${rowsL * rowsW} (spacing: ${(L/rowsL).toFixed(1)}m × ${(W/rowsW).toFixed(1)}m)`;
+
+  const s = (id, val) => { document.getElementById('rv-'+id).textContent = val; document.getElementById('rl-'+id).classList.add('active'); };
+  s('A', A.toFixed(1));
+  s('RI', K.toFixed(2));
+  s('UF', UF.toFixed(2));
+  s('TL', Math.round(TL).toLocaleString());
+  s('N', N + ' luminaires');
+  s('TW', TW.toFixed(0));
+  s('LPD', LPD.toFixed(2));
+  s('layout', layout);
+}
+function clrLight() {
+  ['rlen','rwid','rhgt'].forEach(id => document.getElementById(id).value = '');
+  ['A','RI','UF','TL','N','TW','LPD','layout'].forEach(id => { document.getElementById('rv-'+id).textContent='—'; document.getElementById('rl-'+id).classList.remove('active'); });
+}
+</script>
+</body>
+</html>

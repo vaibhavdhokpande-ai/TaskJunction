@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Induction Motor — ElecCalc Pro</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+<div class="calc-header">
+  <div class="calc-tag">// CALCULATOR 04 OF 08</div>
+  <h1 class="calc-title"><span class="icon">🔄</span>Induction Motor Calculator</h1>
+  <p class="calc-desc">Synchronous speed, slip, rotor speed, full load torque, starting current, and efficiency analysis for 3Φ induction motors. IS 325 / IEC 60034.</p>
+</div>
+
+<div class="calc-body">
+  <div class="panel">
+    <div class="panel-title">⚙ Motor Nameplate Data</div>
+    <div class="field">
+      <label>Rated Power <span class="unit">[ kW ]</span></label>
+      <input type="number" id="prated" placeholder="e.g. 15" step="any">
+    </div>
+    <div class="field">
+      <label>Supply Frequency <span class="unit">[ Hz ]</span></label>
+      <select id="freq">
+        <option value="50">50 Hz (India / Europe)</option>
+        <option value="60">60 Hz (USA)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Number of Poles</label>
+      <select id="poles">
+        <option value="2">2 Poles</option>
+        <option value="4" selected>4 Poles</option>
+        <option value="6">6 Poles</option>
+        <option value="8">8 Poles</option>
+        <option value="10">10 Poles</option>
+        <option value="12">12 Poles</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Rated Speed (N<sub>r</sub>) <span class="unit">[ RPM ]</span></label>
+      <input type="number" id="nr" placeholder="e.g. 1450" step="any">
+    </div>
+    <div class="field">
+      <label>Rated Voltage <span class="unit">[ V ]</span></label>
+      <input type="number" id="vmot" value="415" step="any">
+    </div>
+    <div class="field">
+      <label>Full Load Efficiency (η) <span class="unit">[ % ]</span></label>
+      <input type="number" id="eta" placeholder="e.g. 90" value="90" step="any">
+    </div>
+    <div class="field">
+      <label>Full Load Power Factor <span class="unit">[ 0–1 ]</span></label>
+      <input type="number" id="pfmot" placeholder="e.g. 0.85" value="0.85" step="0.01">
+    </div>
+    <div class="field">
+      <label>Starting Current Multiplier (I<sub>start</sub>/I<sub>FL</sub>)</label>
+      <select id="kstart">
+        <option value="6">6× (DOL typical)</option>
+        <option value="7">7× (large motors)</option>
+        <option value="2.5">2.5× (Star-Delta)</option>
+        <option value="1.5">1.5× (VFD)</option>
+      </select>
+    </div>
+    <button class="btn" onclick="calcMotor()">CALCULATE</button>
+    <button class="btn btn-outline" onclick="clrMotor()">CLEAR</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">📊 Motor Performance</div>
+    <div class="result-grid">
+      <div class="result-item" id="rm-ns"><div class="result-label">Synchronous Speed</div><div class="result-value" id="rv-ns">—</div><div class="result-unit">RPM</div></div>
+      <div class="result-item" id="rm-slip"><div class="result-label">Full Load Slip</div><div class="result-value" id="rv-slip">—</div><div class="result-unit">%</div></div>
+      <div class="result-item" id="rm-T"><div class="result-label">Full Load Torque</div><div class="result-value" id="rv-T">—</div><div class="result-unit">N·m</div></div>
+      <div class="result-item" id="rm-Ifl"><div class="result-label">Full Load Current</div><div class="result-value" id="rv-Ifl">—</div><div class="result-unit">A</div></div>
+      <div class="result-item" id="rm-Ist"><div class="result-label">Starting Current</div><div class="result-value" id="rv-Ist">—</div><div class="result-unit">A</div></div>
+      <div class="result-item" id="rm-Pin"><div class="result-label">Input Power</div><div class="result-value" id="rv-Pin">—</div><div class="result-unit">kW</div></div>
+      <div class="result-item" id="rm-kVA"><div class="result-label">Input kVA</div><div class="result-value" id="rv-kVA">—</div><div class="result-unit">kVA</div></div>
+      <div class="result-item" id="rm-kVAR"><div class="result-label">Reactive kVAR</div><div class="result-value" id="rv-kVAR">—</div><div class="result-unit">kVAR</div></div>
+    </div>
+  </div>
+
+  <div class="panel panel-full">
+    <div class="panel-title">📋 Standard Motor Frame Sizes — IS 325</div>
+    <table class="ref-table">
+      <thead><tr><th>kW Rating</th><th>HP</th><th>Frame (IEC)</th><th>Typical FLC (415V)</th><th>Eff. Class</th></tr></thead>
+      <tbody>
+        <tr><td>0.37</td><td>0.5</td><td>63</td><td>1.2 A</td><td>IE2</td></tr>
+        <tr><td>0.75</td><td>1</td><td>71</td><td>2.0 A</td><td>IE2</td></tr>
+        <tr><td>1.5</td><td>2</td><td>80</td><td>3.5 A</td><td>IE2</td></tr>
+        <tr><td>2.2</td><td>3</td><td>90S</td><td>5.0 A</td><td>IE2</td></tr>
+        <tr><td>3.7</td><td>5</td><td>100L</td><td>7.8 A</td><td>IE2</td></tr>
+        <tr><td>5.5</td><td>7.5</td><td>112M</td><td>11.5 A</td><td>IE2</td></tr>
+        <tr><td>7.5</td><td>10</td><td>132S</td><td>15.5 A</td><td>IE2</td></tr>
+        <tr><td>11</td><td>15</td><td>132M</td><td>22.0 A</td><td>IE2</td></tr>
+        <tr><td>15</td><td>20</td><td>160M</td><td>30.0 A</td><td>IE2</td></tr>
+        <tr><td>18.5</td><td>25</td><td>160L</td><td>36.0 A</td><td>IE3</td></tr>
+        <tr><td>22</td><td>30</td><td>180M</td><td>43.0 A</td><td>IE3</td></tr>
+        <tr><td>30</td><td>40</td><td>200L</td><td>57.0 A</td><td>IE3</td></tr>
+        <tr><td>37</td><td>50</td><td>225S</td><td>70.0 A</td><td>IE3</td></tr>
+      </tbody>
+    </table>
+    <div class="formula-box">
+      <strong>N<sub>s</sub></strong> = 120f / P &nbsp;&nbsp; <strong>Slip</strong> = (N<sub>s</sub> − N<sub>r</sub>) / N<sub>s</sub><br>
+      <strong>T<sub>FL</sub></strong> = P × 1000 / (2π × N<sub>r</sub> / 60) N·m<br>
+      <strong>I<sub>FL</sub></strong> = P × 1000 / (√3 × V × η/100 × PF)
+    </div>
+  </div>
+</div>
+<div class="footer">// ELECCALC PRO · INDUCTION MOTOR · IS 325</div>
+<script>
+function calcMotor() {
+  const Pr = parseFloat(document.getElementById('prated').value);
+  const f = parseFloat(document.getElementById('freq').value);
+  const poles = parseFloat(document.getElementById('poles').value);
+  const Nr = parseFloat(document.getElementById('nr').value);
+  const V = parseFloat(document.getElementById('vmot').value);
+  const eta = parseFloat(document.getElementById('eta').value) / 100;
+  const pf = parseFloat(document.getElementById('pfmot').value);
+  const ks = parseFloat(document.getElementById('kstart').value);
+  if ([Pr,f,poles,Nr,V,eta,pf].some(isNaN)) { alert('Fill all fields.'); return; }
+
+  const Ns = 120 * f / poles;
+  const slip = (Ns - Nr) / Ns * 100;
+  const T = Pr * 1000 / (2 * Math.PI * Nr / 60);
+  const Ifl = Pr * 1000 / (Math.sqrt(3) * V * eta * pf);
+  const Ist = Ifl * ks;
+  const Pin = Pr / eta;
+  const kVA = Math.sqrt(3) * V * Ifl / 1000;
+  const kVAR = kVA * Math.sqrt(1 - pf * pf);
+
+  const set = (id, val) => { document.getElementById(id).textContent = val; document.getElementById(id.replace('rv-','rm-')).classList.add('active'); };
+  set('rv-ns', Ns.toFixed(0));
+  set('rv-slip', slip.toFixed(2));
+  set('rv-T', T.toFixed(2));
+  set('rv-Ifl', Ifl.toFixed(2));
+  set('rv-Ist', Ist.toFixed(2));
+  set('rv-Pin', Pin.toFixed(3));
+  set('rv-kVA', kVA.toFixed(3));
+  set('rv-kVAR', kVAR.toFixed(3));
+}
+function clrMotor() {
+  ['prated','nr'].forEach(id => document.getElementById(id).value = '');
+  ['rv-ns','rv-slip','rv-T','rv-Ifl','rv-Ist','rv-Pin','rv-kVA','rv-kVAR'].forEach(id => document.getElementById(id).textContent = '—');
+  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
+}
+</script>
+</body>
+</html>

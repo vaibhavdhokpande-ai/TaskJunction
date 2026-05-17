@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three-Phase Power — ElecCalc Pro</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+<div class="calc-header">
+  <div class="calc-tag">// CALCULATOR 03 OF 08</div>
+  <h1 class="calc-title"><span class="icon">⚡</span>Three-Phase Power Calculator</h1>
+  <p class="calc-desc">Calculate active (P), reactive (Q), and apparent (S) power for balanced 3-phase systems. Star & Delta connections.</p>
+</div>
+
+<div class="calc-body">
+  <div class="panel">
+    <div class="panel-title">⚙ Input Parameters</div>
+    <div class="field">
+      <label>Connection Type</label>
+      <select id="conn">
+        <option value="star">Star (Y) — Line voltage given</option>
+        <option value="delta">Delta (Δ) — Line voltage given</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Line Voltage (V<sub>L</sub>) <span class="unit">[ Volts ]</span></label>
+      <input type="number" id="vl" placeholder="e.g. 415" value="415" step="any">
+    </div>
+    <div class="field">
+      <label>Line Current (I<sub>L</sub>) <span class="unit">[ Amperes ]</span></label>
+      <input type="number" id="il" placeholder="e.g. 50" step="any">
+    </div>
+    <div class="field">
+      <label>Power Factor (cos φ) <span class="unit">[ 0.0 – 1.0 ]</span></label>
+      <input type="number" id="pf" placeholder="e.g. 0.85" value="0.85" min="0" max="1" step="0.01">
+    </div>
+    <div class="field">
+      <label>Load Type</label>
+      <select id="loadtype">
+        <option value="lag">Inductive (Lagging)</option>
+        <option value="lead">Capacitive (Leading)</option>
+        <option value="unity">Unity Power Factor</option>
+      </select>
+    </div>
+    <button class="btn" onclick="calc3ph()">CALCULATE</button>
+    <button class="btn btn-outline" onclick="clr3()">CLEAR</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">📊 Power Analysis</div>
+    <div class="result-grid">
+      <div class="result-item" id="r-vph"><div class="result-label">Phase Voltage</div><div class="result-value" id="rv-vph">—</div><div class="result-unit">V</div></div>
+      <div class="result-item" id="r-iph"><div class="result-label">Phase Current</div><div class="result-value" id="rv-iph">—</div><div class="result-unit">A</div></div>
+      <div class="result-item" id="r-P"><div class="result-label">Active Power (P)</div><div class="result-value" id="rv-P">—</div><div class="result-unit">kW</div></div>
+      <div class="result-item" id="r-Q"><div class="result-label">Reactive Power (Q)</div><div class="result-value" id="rv-Q">—</div><div class="result-unit">kVAR</div></div>
+      <div class="result-item" id="r-S"><div class="result-label">Apparent Power (S)</div><div class="result-value" id="rv-S">—</div><div class="result-unit">kVA</div></div>
+      <div class="result-item" id="r-pfa"><div class="result-label">Power Factor Angle</div><div class="result-value" id="rv-pfa">—</div><div class="result-unit">°</div></div>
+      <div class="result-item full" id="r-hp"><div class="result-label">Power in HP / MW</div><div class="result-value" id="rv-hp">—</div></div>
+    </div>
+    <div class="formula-box">
+      <strong>BALANCED 3Φ:</strong><br>
+      S = √3 × V<sub>L</sub> × I<sub>L</sub><br>
+      P = √3 × V<sub>L</sub> × I<sub>L</sub> × cosφ<br>
+      Q = √3 × V<sub>L</sub> × I<sub>L</sub> × sinφ<br>
+      P² + Q² = S²
+    </div>
+  </div>
+
+  <!-- Power Triangle SVG -->
+  <div class="panel panel-full" id="triangle-panel" style="display:none">
+    <div class="panel-title">📐 Power Triangle</div>
+    <svg id="power-triangle" viewBox="0 0 500 200" style="width:100%;max-width:500px;display:block;margin:0 auto"></svg>
+  </div>
+
+  <div class="panel panel-full">
+    <div class="panel-title">📋 Standard 3-Phase Voltages Reference</div>
+    <table class="ref-table">
+      <thead><tr><th>System</th><th>Line Voltage</th><th>Phase Voltage</th><th>Application</th></tr></thead>
+      <tbody>
+        <tr><td>LT (India)</td><td>415 V</td><td>240 V</td><td>Industrial / Commercial</td></tr>
+        <tr><td>HT Level 1</td><td>11 kV</td><td>6.35 kV</td><td>Distribution feeders</td></tr>
+        <tr><td>HT Level 2</td><td>33 kV</td><td>19.05 kV</td><td>Sub-transmission</td></tr>
+        <tr><td>EHT</td><td>132 kV</td><td>76.2 kV</td><td>Transmission</td></tr>
+        <tr><td>EHV</td><td>220 kV / 400 kV</td><td>127 / 231 kV</td><td>Grid backbone</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">// ELECCALC PRO · THREE-PHASE POWER</div>
+
+<script>
+function calc3ph() {
+  const conn = document.getElementById('conn').value;
+  const VL = parseFloat(document.getElementById('vl').value);
+  const IL = parseFloat(document.getElementById('il').value);
+  const pf = parseFloat(document.getElementById('pf').value);
+  const lt = document.getElementById('loadtype').value;
+  if ([VL,IL,pf].some(isNaN)) { alert('Fill all fields.'); return; }
+  if (pf < 0 || pf > 1) { alert('PF must be between 0 and 1'); return; }
+
+  const Vph = conn === 'star' ? VL / Math.sqrt(3) : VL;
+  const Iph = conn === 'star' ? IL : IL / Math.sqrt(3);
+  const S = Math.sqrt(3) * VL * IL;
+  const P = S * pf;
+  const sinPhi = Math.sqrt(1 - pf*pf);
+  const Q = S * sinPhi;
+  const phi = Math.acos(pf) * 180 / Math.PI;
+  const pfAngle = lt === 'lead' ? -phi : (lt === 'unity' ? 0 : phi);
+
+  const fmt = n => n >= 1000 ? (n/1000).toFixed(3) + ' M' : n.toFixed(3);
+
+  document.getElementById('rv-vph').textContent = Vph.toFixed(1);
+  document.getElementById('rv-iph').textContent = Iph.toFixed(2);
+  document.getElementById('rv-P').textContent = (P/1000).toFixed(3);
+  document.getElementById('rv-Q').textContent = (Q/1000).toFixed(3);
+  document.getElementById('rv-S').textContent = (S/1000).toFixed(3);
+  document.getElementById('rv-pfa').textContent = Math.abs(pfAngle).toFixed(2) + (lt==='lag'?' (Lag)':lt==='lead'?' (Lead)':' (Unity)');
+  document.getElementById('rv-hp').textContent = (P/746).toFixed(2) + ' HP  /  ' + (P/1e6).toFixed(4) + ' MW';
+  document.querySelectorAll('.result-item').forEach(r => r.classList.add('active'));
+
+  drawTriangle(P/1000, Q/1000, S/1000, lt);
+  document.getElementById('triangle-panel').style.display = '';
+}
+
+function drawTriangle(P, Q, S, lt) {
+  const svg = document.getElementById('power-triangle');
+  const w=460, h=160, ox=20, oy=140;
+  const scl = Math.min((w-40)/S, (h-30)/Q);
+  const pw = P*scl, qh = Q*scl;
+  const qSign = lt === 'lead' ? 1 : -1;
+  svg.innerHTML = `
+    <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6" fill="none" stroke="#d97706" stroke-width="1.5"/></marker></defs>
+    <line x1="${ox}" y1="${oy}" x2="${ox+pw}" y2="${oy}" stroke="#d97706" stroke-width="2" marker-end="url(#arr)"/>
+    <text x="${ox+pw/2}" y="${oy+18}" fill="#d97706" font-family="'Share Tech Mono'" font-size="12" text-anchor="middle">P = ${P.toFixed(2)} kW</text>
+    <line x1="${ox+pw}" y1="${oy}" x2="${ox+pw}" y2="${oy+qSign*qh}" stroke="#f59e0b" stroke-width="2" marker-end="url(#arr)"/>
+    <text x="${ox+pw+40}" y="${oy+qSign*qh/2}" fill="#f59e0b" font-family="'Share Tech Mono'" font-size="12">Q=${Q.toFixed(2)}</text>
+    <line x1="${ox}" y1="${oy}" x2="${ox+pw}" y2="${oy+qSign*qh}" stroke="#8a7f70" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+    <text x="${ox+pw/2-20}" y="${oy+qSign*qh/2-5}" fill="#8a7f70" font-family="'Share Tech Mono'" font-size="12">S=${S.toFixed(2)} kVA</text>
+  `;
+}
+
+function clr3() {
+  document.getElementById('il').value = '';
+  ['rv-vph','rv-iph','rv-P','rv-Q','rv-S','rv-pfa','rv-hp'].forEach(id => document.getElementById(id).textContent = '—');
+  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
+  document.getElementById('triangle-panel').style.display = 'none';
+}
+</script>
+</body>
+</html>

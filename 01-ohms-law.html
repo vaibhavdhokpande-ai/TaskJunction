@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ohm's Law & Power — ElecCalc Pro</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+.mode-select { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
+.mode-btn {
+  padding:10px; background:var(--bg3); border:1px solid var(--bg4);
+  color:var(--text-dim); font-family:var(--mono); font-size:0.68rem;
+  cursor:pointer; letter-spacing:0.08em; transition:all 0.2s; text-align:center;
+}
+.mode-btn.active { background:var(--amber-glow); color:var(--amber); border-color:var(--amber); }
+.mode-btn:hover:not(.active) { background:var(--bg4); color:var(--text); }
+.triangle {
+  display:flex; align-items:center; justify-content:center;
+  margin:16px 0;
+}
+.triangle svg { width:180px; height:120px; }
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+
+<div class="calc-header">
+  <div class="calc-tag">// CALCULATOR 01 OF 08</div>
+  <h1 class="calc-title"><span class="icon">🔌</span>Ohm's Law & Power</h1>
+  <p class="calc-desc">Enter any two known values to calculate the remaining two. Applicable to DC circuits and AC resistive loads.</p>
+</div>
+
+<div class="calc-body">
+  <!-- INPUT PANEL -->
+  <div class="panel">
+    <div class="panel-title">⚙ Input Values</div>
+
+    <p style="font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);margin-bottom:14px;letter-spacing:0.08em;">SELECT KNOWN PARAMETERS:</p>
+    <div class="mode-select">
+      <div class="mode-btn active" onclick="setMode('VI')" id="m-VI">V + I</div>
+      <div class="mode-btn" onclick="setMode('VR')" id="m-VR">V + R</div>
+      <div class="mode-btn" onclick="setMode('IR')" id="m-IR">I + R</div>
+      <div class="mode-btn" onclick="setMode('PI')" id="m-PI">P + I</div>
+      <div class="mode-btn" onclick="setMode('PV')" id="m-PV">P + V</div>
+      <div class="mode-btn" onclick="setMode('PR')" id="m-PR">P + R</div>
+    </div>
+
+    <div id="inputs">
+      <div class="field" id="f-V">
+        <label>Voltage (V) <span class="unit">[ Volts ]</span></label>
+        <input type="number" id="inp-V" placeholder="e.g. 230" step="any">
+      </div>
+      <div class="field" id="f-I">
+        <label>Current (I) <span class="unit">[ Amperes ]</span></label>
+        <input type="number" id="inp-I" placeholder="e.g. 10" step="any">
+      </div>
+      <div class="field" id="f-R" style="display:none">
+        <label>Resistance (R) <span class="unit">[ Ohms ]</span></label>
+        <input type="number" id="inp-R" placeholder="e.g. 23" step="any">
+      </div>
+      <div class="field" id="f-P" style="display:none">
+        <label>Power (P) <span class="unit">[ Watts ]</span></label>
+        <input type="number" id="inp-P" placeholder="e.g. 2300" step="any">
+      </div>
+    </div>
+
+    <button class="btn" onclick="calculate()">CALCULATE</button>
+    <button class="btn btn-outline" onclick="clearAll()">CLEAR</button>
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div class="panel">
+    <div class="panel-title">📊 Results</div>
+    <div class="result-grid" id="results">
+      <div class="result-item" id="r-V">
+        <div class="result-label">Voltage</div>
+        <div class="result-value" id="rv-V">—</div>
+        <div class="result-unit">V</div>
+      </div>
+      <div class="result-item" id="r-I">
+        <div class="result-label">Current</div>
+        <div class="result-value" id="rv-I">—</div>
+        <div class="result-unit">A</div>
+      </div>
+      <div class="result-item" id="r-R">
+        <div class="result-label">Resistance</div>
+        <div class="result-value" id="rv-R">—</div>
+        <div class="result-unit">Ω</div>
+      </div>
+      <div class="result-item" id="r-P">
+        <div class="result-label">Power</div>
+        <div class="result-value" id="rv-P">—</div>
+        <div class="result-unit">W</div>
+      </div>
+      <div class="result-item full" id="r-kW">
+        <div class="result-label">Power (kW / HP)</div>
+        <div class="result-value" id="rv-kW">—</div>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <strong>OHM'S LAW:</strong><br>
+      V = I × R &nbsp;|&nbsp; I = V / R &nbsp;|&nbsp; R = V / I<br><br>
+      <strong>POWER:</strong><br>
+      P = V × I = I² × R = V² / R<br><br>
+      <strong>CONVERSIONS:</strong><br>
+      1 kW = 1000 W &nbsp;|&nbsp; 1 HP = 746 W
+    </div>
+  </div>
+
+  <!-- REFERENCE TABLE -->
+  <div class="panel panel-full">
+    <div class="panel-title">📋 Ohm's Law — All Formulas</div>
+    <table class="ref-table">
+      <thead>
+        <tr><th>Find</th><th>Known</th><th>Formula</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>V</td><td>I, R</td><td>V = I × R</td></tr>
+        <tr><td>V</td><td>P, I</td><td>V = P / I</td></tr>
+        <tr><td>V</td><td>P, R</td><td>V = √(P × R)</td></tr>
+        <tr><td>I</td><td>V, R</td><td>I = V / R</td></tr>
+        <tr><td>I</td><td>P, V</td><td>I = P / V</td></tr>
+        <tr><td>I</td><td>P, R</td><td>I = √(P / R)</td></tr>
+        <tr><td>R</td><td>V, I</td><td>R = V / I</td></tr>
+        <tr><td>R</td><td>P, I</td><td>R = P / I²</td></tr>
+        <tr><td>R</td><td>V, P</td><td>R = V² / P</td></tr>
+        <tr><td>P</td><td>V, I</td><td>P = V × I</td></tr>
+        <tr><td>P</td><td>I, R</td><td>P = I² × R</td></tr>
+        <tr><td>P</td><td>V, R</td><td>P = V² / R</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">// ELECCALC PRO · OHM'S LAW & POWER</div>
+
+<script>
+let mode = 'VI';
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('m-' + m).classList.add('active');
+  const show = m.split('').map(c => 'f-' + c);
+  ['f-V','f-I','f-R','f-P'].forEach(id => {
+    document.getElementById(id).style.display = show.includes(id) ? '' : 'none';
+    const inp = document.getElementById('inp-' + id.split('-')[1]);
+    inp.value = ''; inp.disabled = false;
+  });
+  ['rv-V','rv-I','rv-R','rv-P','rv-kW'].forEach(id => document.getElementById(id).textContent = '—');
+  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
+}
+
+function fmt(n) { return n < 0.001 ? n.toExponential(3) : (n >= 1000 ? n.toFixed(2) : n.toPrecision(5).replace(/\.?0+$/, '')); }
+
+function calculate() {
+  const v = parseFloat(document.getElementById('inp-V').value);
+  const i = parseFloat(document.getElementById('inp-I').value);
+  const r = parseFloat(document.getElementById('inp-R').value);
+  const p = parseFloat(document.getElementById('inp-P').value);
+  let V, I, R, P;
+  try {
+    if (mode === 'VI') { V=v; I=i; R=V/I; P=V*I; }
+    else if (mode === 'VR') { V=v; R=r; I=V/R; P=V*I; }
+    else if (mode === 'IR') { I=i; R=r; V=I*R; P=I*I*R; }
+    else if (mode === 'PI') { P=p; I=i; V=P/I; R=V/I; }
+    else if (mode === 'PV') { P=p; V=v; I=P/V; R=V/I; }
+    else if (mode === 'PR') { P=p; R=r; I=Math.sqrt(P/R); V=I*R; }
+    if ([V,I,R,P].some(x => !isFinite(x) || x<0)) throw new Error();
+    document.getElementById('rv-V').textContent = fmt(V);
+    document.getElementById('rv-I').textContent = fmt(I);
+    document.getElementById('rv-R').textContent = fmt(R);
+    document.getElementById('rv-P').textContent = fmt(P);
+    document.getElementById('rv-kW').textContent = (P/1000).toFixed(4) + ' kW  /  ' + (P/746).toFixed(4) + ' HP';
+    document.querySelectorAll('.result-item').forEach(r => r.classList.add('active'));
+  } catch(e) {
+    alert('Please enter valid positive numbers for both fields.');
+  }
+}
+
+function clearAll() {
+  ['inp-V','inp-I','inp-R','inp-P'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['rv-V','rv-I','rv-R','rv-P','rv-kW'].forEach(id => document.getElementById(id).textContent = '—');
+  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
+}
+</script>
+</body>
+</html>
