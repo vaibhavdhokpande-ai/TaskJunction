@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fixture Design eBook – Complete Guide to Jigs & Fixtures</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #E8611A;
+    --orange-dark: #B84D10;
+    --orange-light: #FFF3EC;
+    --yellow: #F5B800;
+    --dark: #1A1208;
+    --text: #2D1F0E;
+    --muted: #7A6450;
+    --surface: #FDFAF6;
+    --card-bg: #FFFFFF;
+    --border: #EDE5D8;
+    --radius: 16px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--dark);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    color: var(--yellow);
+    font-size: 20px;
+    letter-spacing: -0.5px;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 24px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #3D2210 100%);
+    padding: 72px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: var(--orange);
+    opacity: 0.08;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--orange);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    max-width: 700px;
+    margin-inline: auto;
+  }
+  .hero h1 span { color: var(--yellow); }
+  .hero p {
+    color: rgba(255,255,255,0.65);
+    font-size: 18px;
+    max-width: 520px;
+    margin: 0 auto 36px;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--orange);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--orange-dark); transform: translateY(-2px); }
+  .btn-outline {
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 100px;
+    font-size: 16px;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--yellow); font-family: 'Playfair Display', serif; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  /* SECTIONS */
+  .section { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .section-sub { color: var(--muted); font-size: 16px; margin-bottom: 40px; }
+
+  /* TOPICS GRID */
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .topic-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+  .topic-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--orange-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+  .topic-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .topic-card p { font-size: 13px; color: var(--muted); }
+
+  /* CHAPTERS */
+  .chapters-list { display: flex; flex-direction: column; gap: 12px; }
+  .chapter-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: border-color 0.2s;
+  }
+  .chapter-item:hover { border-color: var(--orange); }
+  .ch-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--orange);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ch-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .ch-info p { font-size: 13px; color: var(--muted); }
+  .ch-tag {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--orange-light);
+    color: var(--orange);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* AD BANNER */
+  .ad-banner {
+    background: linear-gradient(135deg, #1A1208 0%, #3D2210 100%);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 32px 0;
+  }
+  .ad-text { color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .ad-title { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .ad-sub { color: rgba(255,255,255,0.55); font-size: 14px; }
+  .ad-btn {
+    background: var(--yellow);
+    color: var(--dark);
+    padding: 12px 28px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .ad-btn:hover { opacity: 0.9; }
+
+  /* AFFILIATE PRODUCTS */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .product-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .product-img {
+    background: var(--orange-light);
+    padding: 24px;
+    text-align: center;
+    font-size: 52px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-body { padding: 18px; }
+  .product-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .product-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+  .product-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 18px; font-weight: 700; color: var(--orange); }
+  .product-price span { font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
+  .amazon-btn {
+    background: var(--yellow);
+    color: var(--dark);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s;
+  }
+  .amazon-btn:hover { opacity: 0.85; }
+
+  /* SIDEBAR AD */
+  .content-with-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .content-with-sidebar { grid-template-columns: 1fr; }
+  }
+  .sidebar-ad {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: sticky;
+    top: 72px;
+  }
+  .sidebar-ad-header {
+    background: var(--orange);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+  }
+  .sidebar-ad-body { padding: 18px; }
+  .sidebar-ad-body h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .sidebar-ad-body p { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  /* INLINE TEXT AD */
+  .inline-ad {
+    background: var(--orange-light);
+    border-left: 4px solid var(--orange);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin: 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .inline-ad-text { flex: 1; }
+  .inline-ad-text strong { font-size: 14px; color: var(--dark); display: block; margin-bottom: 3px; }
+  .inline-ad-text span { font-size: 13px; color: var(--muted); }
+
+  /* CONTENT AREA */
+  .content-area { min-width: 0; }
+  .chapter-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+  }
+  .chapter-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: var(--dark);
+  }
+  .chapter-content p {
+    font-size: 15px;
+    color: #4A3728;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .chapter-content h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 24px 0 10px;
+    color: var(--dark);
+  }
+  .formula-box {
+    background: #F8F4EE;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-family: 'DM Sans', monospace;
+    font-size: 14px;
+    color: var(--orange-dark);
+    margin: 16px 0;
+    font-weight: 500;
+  }
+  .tip-box {
+    background: #EFF8F2;
+    border-left: 4px solid #27AE60;
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .tip-box strong { color: #1E8449; font-size: 13px; display: block; margin-bottom: 4px; }
+  .tip-box p { font-size: 14px; color: #1A5C33; margin: 0; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 13px;
+  }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .tab-btn.active {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+    font-weight: 600;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">FixtureDesign Pro</div>
+  <div class="nav-links">
+    <a href="#chapters">Chapters</a>
+    <a href="#tools">Tools</a>
+    <a href="#products">Shop</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⭐ Free eBook – Updated 2025</div>
+  <h1>Master <span>Fixture Design</span> from Zero to Pro</h1>
+  <p>Complete guide covering Jigs, Fixtures, Locating Schemes, Clamping Forces, Tolerance Analysis & GD&T</p>
+  <div class="hero-btns">
+    <a href="#chapters" class="btn-primary">📖 Read Free eBook</a>
+    <a href="#products" class="btn-outline">🛒 Buy Tools on Amazon</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">12</div><div class="stat-label">Chapters</div></div>
+    <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Pages</div></div>
+    <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Case Studies</div></div>
+    <div class="stat"><div class="stat-num">Free</div><div class="stat-label">Forever</div></div>
+  </div>
+</div>
+
+<!-- TOPICS OVERVIEW -->
+<div class="section">
+  <h2 class="section-title">What You'll Learn</h2>
+  <p class="section-sub">Everything from fundamentals to advanced manufacturing techniques</p>
+  <div class="topics-grid">
+    <div class="topic-card">
+      <div class="topic-icon">🔩</div>
+      <h3>Jig Design Basics</h3>
+      <p>Types of jigs, drill bushings, leaf jigs and template jigs</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">🗜️</div>
+      <h3>Clamping Forces</h3>
+      <p>Calculating optimal clamping force, strap clamps & toggle clamps</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">📐</div>
+      <h3>Locating Principles</h3>
+      <p>3-2-1 principle, locating pins, V-blocks and nesting fixtures</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">📏</div>
+      <h3>Tolerance Analysis</h3>
+      <p>Worst case, RSS analysis, and tolerance stack-up calculations</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">⚙️</div>
+      <h3>GD&T Fundamentals</h3>
+      <p>Datums, form tolerances, position, profile and orientation</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">🏭</div>
+      <h3>Case Studies</h3>
+      <p>Real manufacturing problems and practical solutions</p>
+    </div>
+  </div>
+</div>
+
+<!-- AD BANNER 1 -->
+<div style="max-width:1100px; margin:0 auto; padding: 0 24px;">
+  <div class="ad-banner">
+    <div>
+      <div class="ad-text">🛒 Amazon Affiliate – Sponsored</div>
+      <div class="ad-title">Vernier Caliper Digital – Professional Grade</div>
+      <div class="ad-sub">High accuracy 0.001mm resolution • Used by 10,000+ engineers</div>
+    </div>
+    <a href="https://www.amazon.in/s?k=digital+vernier+caliper+mitutoyo&tag=taskjunction-21-21" target="_blank" class="ad-btn">View on Amazon ↗</a>
+  </div>
+</div>
+
+<!-- CHAPTERS with SIDEBAR -->
+<div id="chapters" class="section">
+  <h2 class="section-title">Read the eBook</h2>
+  <p class="section-sub">Click any chapter to start reading</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('toc')">📋 Table of Contents</button>
+    <button class="tab-btn" onclick="showTab('chapter1')">Chapter 1</button>
+    <button class="tab-btn" onclick="showTab('chapter2')">Chapter 2</button>
+    <button class="tab-btn" onclick="showTab('chapter3')">Chapter 3</button>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div id="toc" class="tab-content active">
+    <div class="chapters-list">
+      <div class="chapter-item" onclick="showTab('chapter1'); setActiveTab(1)">
+        <div class="ch-num">1</div>
+        <div class="ch-info">
+          <h4>Introduction to Jigs & Fixtures</h4>
+          <p>Definition, purpose, classification and economic justification</p>
+        </div>
+        <span class="ch-tag">Beginner</span>
+      </div>
+      <div class="chapter-item" onclick="showTab('chapter2'); setActiveTab(2)">
+        <div class="ch-num">2</div>
+        <div class="ch-info">
+          <h4>Locating Principles & Methods</h4>
+          <p>3-2-1 principle, degrees of freedom, locating devices</p>
+        </div>
+        <span class="ch-tag">Beginner</span>
+      </div>
+      <div class="chapter-item" onclick="showTab('chapter3'); setActiveTab(3)">
+        <div class="ch-num">3</div>
+        <div class="ch-info">
+          <h4>Clamping Forces & Devices</h4>
+          <p>Force calculations, strap clamps, toggle clamps, pneumatic</p>
+        </div>
+        <span class="ch-tag">Intermediate</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">4</div>
+        <div class="ch-info">
+          <h4>Drill Jig Design</h4>
+          <p>Drill bushings, leaf jigs, box jigs and template jigs</p>
+        </div>
+        <span class="ch-tag">Intermediate</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">5</div>
+        <div class="ch-info">
+          <h4>Milling Fixture Design</h4>
+          <p>Vise jaw, plate and angle plate milling fixtures</p>
+        </div>
+        <span class="ch-tag">Intermediate</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">6</div>
+        <div class="ch-info">
+          <h4>Tolerance Analysis & Stack-up</h4>
+          <p>Worst case, RSS, Monte Carlo simulation</p>
+        </div>
+        <span class="ch-tag">Advanced</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">7</div>
+        <div class="ch-info">
+          <h4>GD&T for Fixture Design</h4>
+          <p>Datum reference frames, flatness, position tolerances</p>
+        </div>
+        <span class="ch-tag">Advanced</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">8</div>
+        <div class="ch-info">
+          <h4>Welding Fixture Design</h4>
+          <p>Distortion control, heat effects and fixture materials</p>
+        </div>
+        <span class="ch-tag">Advanced</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 1 -->
+  <div id="chapter1" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 1: Introduction to Jigs & Fixtures</h2>
+          <p>Jigs and fixtures are work-holding devices used in manufacturing to hold, support, and locate a workpiece during machining operations. They are essential for achieving accuracy, interchangeability, and high production rates in mass manufacturing.</p>
+
+          <h3>What is a Jig?</h3>
+          <p>A <strong>jig</strong> is a device that holds the workpiece AND guides the cutting tool. The cutting tool is guided directly by the jig through hardened bushings. Jigs are primarily used in drilling, reaming, tapping and boring operations.</p>
+
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Recommended: Drill Bit Set – HSS Professional Grade</strong>
+              <span>Perfect for practicing jig drilling operations at home/workshop</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=professional+drill+bit+set+hss&tag=taskjunction-21-21" target="_blank" class="amazon-btn">
+              <span>₹</span> Amazon
+            </a>
+          </div>
+
+          <h3>What is a Fixture?</h3>
+          <p>A <strong>fixture</strong> is a device that holds and supports the workpiece in a definite position but does NOT guide the cutting tool. The tool is guided by the machine itself. Fixtures are used in milling, turning, grinding and welding operations.</p>
+
+          <h3>Key Differences</h3>
+          <div class="formula-box">
+            Jig = Workholding + Tool Guidance
+            Fixture = Workholding only (no tool guidance)
+          </div>
+
+          <h3>Economic Justification</h3>
+          <p>The cost of designing and manufacturing a jig/fixture is justified when the savings in production time, labor cost, inspection time, and scrap rate over the production run exceeds the tooling cost.</p>
+
+          <div class="formula-box">
+            Break-even Qty = Tooling Cost ÷ (Saving per part)
+            Saving per part = (Time without jig − Time with jig) × Labor Rate
+          </div>
+
+          <div class="tip-box">
+            <strong>💡 Engineering Tip</strong>
+            <p>For a production run above 1000 parts, always invest in a proper jig/fixture. The initial cost is recovered quickly and quality consistency improves dramatically.</p>
+          </div>
+
+          <h3>Classification of Jigs</h3>
+          <p>Jigs are classified based on their construction and application: Template Jig, Plate Jig, Open/Table Jig, Tumble/Box Jig, Channel Jig, and Leaf Jig. Each type has specific applications depending on the workpiece geometry and required operations.</p>
+        </div>
+      </div>
+
+      <!-- SIDEBAR ADS -->
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">BOOK RECOMMENDATION</p>
+            <h4>Jig & Fixture Design – Edward Hoffman</h4>
+            <p>The most comprehensive textbook on jig and fixture design used in engineering colleges worldwide.</p>
+            <a href="https://www.amazon.in/s?k=jig+fixture+design+edward+hoffman&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">TOOL RECOMMENDATION</p>
+            <h4>Digital Height Gauge 300mm</h4>
+            <p>Essential for fixture setup and height measurement in your workshop.</p>
+            <a href="https://www.amazon.in/s?k=digital+height+gauge+300mm&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div id="chapter2" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 2: Locating Principles & Methods</h2>
+          <p>Correct location of a workpiece is the most critical aspect of fixture design. Improper location leads to dimensional errors, scrap, and rework. The goal is to completely constrain all degrees of freedom relevant to the machining operation.</p>
+
+          <h3>Degrees of Freedom</h3>
+          <p>A rigid body in 3D space has 6 degrees of freedom: 3 translational (X, Y, Z) and 3 rotational (Rx, Ry, Rz). Fixture locators must constrain all 6 DOFs to fully define workpiece position.</p>
+
+          <div class="formula-box">
+            6 DOF = 3 Translation (X, Y, Z) + 3 Rotation (Rx, Ry, Rz)
+            3-2-1 Locating removes all 6 DOF completely
+          </div>
+
+          <h3>The 3-2-1 Principle</h3>
+          <p>The most fundamental locating scheme uses 6 locating points:</p>
+          <p>• <strong>Primary surface:</strong> 3 points → constrains Z-translation + Rx, Ry</p>
+          <p>• <strong>Secondary surface:</strong> 2 points → constrains Y-translation + Rz</p>
+          <p>• <strong>Tertiary surface:</strong> 1 point → constrains X-translation</p>
+
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 V-Block Set with Clamp – Cast Iron Precision</strong>
+              <span>For locating cylindrical workpieces accurately in your fixture</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=precision+v+block+set+cast+iron&tag=taskjunction-21-21" target="_blank" class="amazon-btn">
+              <span>₹</span> Amazon
+            </a>
+          </div>
+
+          <h3>Common Locating Devices</h3>
+          <p><strong>Locating Pins:</strong> Cylindrical and diamond pins used together to locate parts with two holes. The cylindrical pin constrains 2 DOF, diamond pin constrains 1 DOF (rotation).</p>
+          <p><strong>V-Blocks:</strong> Used for cylindrical workpieces. The V-block self-centers the component and provides two-point contact regardless of diameter variation.</p>
+
+          <div class="tip-box">
+            <strong>💡 Design Rule</strong>
+            <p>Never use more than 6 locating points. Over-location (redundant locating) causes indeterminate location — the workpiece position becomes sensitive to manufacturing errors in the fixture itself.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">MEASUREMENT TOOL</p>
+            <h4>Mitutoyo Vernier Caliper 150mm</h4>
+            <p>Industry standard precision measurement tool, ±0.02mm accuracy.</p>
+            <a href="https://www.amazon.in/s?k=mitutoyo+vernier+caliper+150mm&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div id="chapter3" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 3: Clamping Forces & Devices</h2>
+          <p>After a workpiece is located, it must be clamped securely to resist cutting forces during machining. Clamping force must be sufficient to hold the part without distorting it.</p>
+
+          <h3>Clamping Force Calculation</h3>
+          <p>The minimum clamping force is determined by the cutting force analysis. The clamp must resist the resultant cutting force plus a safety factor.</p>
+
+          <div class="formula-box">
+            Fc = Cutting Force (N)
+            Fc_clamp = Fc × Safety Factor (typically 2.5 to 3.0)
+            For milling: Fc = Kc × b × hm × ap
+            Where Kc = specific cutting force, b = width, hm = chip thickness
+          </div>
+
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Toggle Clamp Set – De-Sta-Co Style</strong>
+              <span>High-strength toggle clamps used in professional jig & fixture construction</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=toggle+clamp+set+fixture&tag=taskjunction-21-21" target="_blank" class="amazon-btn">
+              <span>₹</span> Amazon
+            </a>
+          </div>
+
+          <h3>Types of Clamping Devices</h3>
+          <p><strong>Strap Clamps:</strong> Simple, economical clamps using a strap, stud and nut. The fulcrum position determines mechanical advantage.</p>
+          <p><strong>Toggle Clamps:</strong> Over-center mechanism providing fast clamping/unclamping. Ideal for high-production fixtures where quick workpiece loading is needed.</p>
+          <p><strong>Pneumatic/Hydraulic Clamps:</strong> Power-operated clamps for automated fixtures. Provide consistent, repeatable clamping forces.</p>
+
+          <div class="formula-box">
+            Strap Clamp Force = (Applied Force × Distance to Stud) ÷ Distance to Fulcrum
+            Mechanical Advantage = L2 ÷ L1
+          </div>
+
+          <div class="tip-box">
+            <strong>💡 Rule of Thumb</strong>
+            <p>Always apply clamping force directly over a locator whenever possible. This prevents workpiece deflection and ensures the locating surfaces remain in contact during machining.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">FIXTURE MAKING TOOL</p>
+            <h4>Combination Square Set 300mm</h4>
+            <p>Essential for squaring and aligning fixture components during assembly.</p>
+            <a href="https://www.amazon.in/s?k=combination+square+set+300mm+precision&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AFFILIATE PRODUCTS SECTION -->
+<div style="background: #F5EFE6; padding: 64px 0;">
+  <div id="products" class="section" style="padding-top: 0; padding-bottom: 0;">
+    <h2 class="section-title">Recommended Engineering Tools</h2>
+    <p class="section-sub">Handpicked tools for Fixture Design & Manufacturing – Available on Amazon India</p>
+
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img">📏</div>
+        <div class="product-body">
+          <div class="product-badge">⭐ Best Seller</div>
+          <div class="product-name">Mitutoyo Digital Vernier Caliper 150mm</div>
+          <div class="product-desc">±0.02mm accuracy, large LCD display, data output port</div>
+          <div class="product-footer">
+            <div class="product-price">₹2,499 <span>₹3,200</span></div>
+            <a href="https://www.amazon.in/s?k=mitutoyo+digital+caliper+150mm&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">🔧</div>
+        <div class="product-body">
+          <div class="product-badge">🔥 Popular</div>
+          <div class="product-name">Toggle Clamp Set – 4 Types (50kg–300kg)</div>
+          <div class="product-desc">Horizontal, vertical, pull-action & latch-action toggle clamps</div>
+          <div class="product-footer">
+            <div class="product-price">₹1,850 <span>₹2,500</span></div>
+            <a href="https://www.amazon.in/s?k=toggle+clamp+set+manufacturing&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">📐</div>
+        <div class="product-body">
+          <div class="product-badge">📚 Top Rated</div>
+          <div class="product-name">GD&T Reference Card Set – Laminated</div>
+          <div class="product-desc">Complete GD&T symbols, rules and application guide</div>
+          <div class="product-footer">
+            <div class="product-price">₹599 <span>₹899</span></div>
+            <a href="https://www.amazon.in/s?k=gdt+geometric+dimensioning+tolerancing+book&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">🗜️</div>
+        <div class="product-body">
+          <div class="product-badge">⚙️ Professional</div>
+          <div class="product-name">Precision V-Block Set with Clamp – Cast Iron</div>
+          <div class="product-desc">Matched pair, precision ground, for cylindrical workholding</div>
+          <div class="product-footer">
+            <div class="product-price">₹3,200 <span>₹4,500</span></div>
+            <a href="https://www.amazon.in/s?k=precision+v+block+set+cast+iron+matched&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">📖</div>
+        <div class="product-body">
+          <div class="product-badge">📚 Recommended</div>
+          <div class="product-name">Jig & Fixture Design – Edward Hoffman (Textbook)</div>
+          <div class="product-desc">The definitive textbook used in engineering programs worldwide</div>
+          <div class="product-footer">
+            <div class="product-price">₹4,200 <span>₹5,800</span></div>
+            <a href="https://www.amazon.in/s?k=jig+fixture+design+edward+hoffman+book&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">📊</div>
+        <div class="product-body">
+          <div class="product-badge">🎯 New</div>
+          <div class="product-name">Digital Protractor Angle Finder 360°</div>
+          <div class="product-desc">±0.1° accuracy, for setting up angular fixtures and checking angles</div>
+          <div class="product-footer">
+            <div class="product-price">₹1,299 <span>₹1,800</span></div>
+            <a href="https://www.amazon.in/s?k=digital+protractor+angle+finder&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM DISCLAIMER -->
+    <p style="margin-top: 24px; font-size: 12px; color: var(--muted); text-align: center;">
+      * As an Amazon Associate, this site earns commission from qualifying purchases. Prices are approximate and may vary. Always verify on Amazon before purchasing.
+    </p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>FixtureDesign Pro – Free Engineering eBook</strong><br>
+  <span style="margin-top: 8px; display: block;">
+    This site contains Amazon affiliate links. Purchases made through these links earn a small commission at no extra cost to you.<br>
+    Store ID: taskjunction-21 &nbsp;|&nbsp; Made with ❤️ for engineering students
+  </span>
+</footer>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+  function setActiveTab(num) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', i === num);
+    });
+  }
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
