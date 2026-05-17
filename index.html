@@ -175,6 +175,25 @@ footer{background:var(--text);color:#fff;padding:56px 32px 36px;text-align:cente
 @media(max-width:768px){nav ul{display:none;}.nav-cta{display:none;}.stats{grid-template-columns:repeat(2,1fr);}.stat{border-bottom:1px solid var(--border);}.about-grid{grid-template-columns:1fr;gap:40px;}.hero h1{font-size:40px;}.sec{padding:60px 20px;}.apps-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}.mech-grid{grid-template-columns:1fr;}}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.55s ease,transform 0.55s ease;}
 .reveal.visible{opacity:1;transform:none;}
+
+/* ── Ebook Section ── */
+.ebook-sec{background:linear-gradient(160deg,#f0f4ff 0%,#eaf1ff 60%,#f5f0ff 100%);border-top:1px solid #d4ddf5;border-bottom:1px solid #d4ddf5;}
+.ebook-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;}
+.ebook-card{background:#fff;border:1px solid #dde5f8;border-radius:20px;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;cursor:default;}
+.ebook-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--eb-c1,#6366f1),var(--eb-c2,#8b5cf6));opacity:0;transition:opacity 0.22s;}
+.ebook-card:hover{border-color:rgba(99,102,241,0.45);transform:translateY(-5px);box-shadow:0 12px 40px rgba(99,102,241,0.13);}
+.ebook-card:hover::before{opacity:1;}
+.ebook-cover{height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;border-radius:16px 16px 0 0;position:relative;overflow:hidden;}
+.ebook-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.18) 0%,transparent 60%);}
+.ebook-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.ebook-badge-rec{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:9px;font-weight:700;padding:2px 10px;border-radius:20px;background:rgba(245,158,11,0.12);color:#d97706;border:1px solid rgba(245,158,11,0.28);letter-spacing:0.08em;text-transform:uppercase;width:fit-content;}
+.ebook-name{font-family:var(--font-d);font-size:15px;font-weight:700;letter-spacing:-0.01em;color:var(--text);line-height:1.25;}
+.ebook-desc{font-size:11.5px;color:var(--text3);line-height:1.5;flex:1;}
+.ebook-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;}
+.ebook-tag{font-family:var(--font-m);font-size:9.5px;font-weight:500;padding:2px 8px;border-radius:100px;letter-spacing:0.04em;}
+.ebook-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border-radius:10px;font-family:var(--font-b);font-size:12px;font-weight:700;letter-spacing:0.03em;text-decoration:none;border:none;cursor:pointer;transition:transform 0.15s,opacity 0.15s,box-shadow 0.18s;width:100%;margin-top:6px;}
+.ebook-btn:hover{transform:translateY(-1px);opacity:0.88;box-shadow:0 6px 18px rgba(99,102,241,0.22);}
+@media(max-width:768px){.ebook-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}}
 </style>
 <style id="aff-css">
 .aff-wrap{max-width:900px;margin:48px auto 0;padding:0 20px;}
@@ -206,6 +225,7 @@ footer{background:var(--text);color:#fff;padding:56px 32px 36px;text-align:cente
     <li><a href="#mechanical">⚙️ Mechanical</a></li>
     <li><a href="#apps">Apps</a></li>
     <li><a href="#games">Games</a></li>
+    <li><a href="#ebooks">📚 eBooks</a></li>
     <li><a href="#privacy">Privacy</a></li>
   </ul>
   <a href="#mechanical" class="nav-cta">Explore Tools →</a>
@@ -217,6 +237,7 @@ footer{background:var(--text);color:#fff;padding:56px 32px 36px;text-align:cente
       <div class="dd-label">Categories</div>
       <a href="#mechanical" class="dd-item dd-mech" onclick="closeMenu()"><div class="dd-icon dd-icon-mech">⚙️</div> Mechanical Design Calculation Apps <span class="badge-mech-live">● Live</span></a>
       <div class="dd-divider"></div>
+      <a href="#ebooks" class="dd-item" onclick="closeMenu()"><div class="dd-icon">📚</div> eBooks (Recommended) <span class="badge-live">Live</span></a>
       <a href="#apps" class="dd-item" onclick="closeMenu()"><div class="dd-icon">🌐</div> Web Applications <span class="badge-live">Live</span></a>
       <a href="#games" class="dd-item" onclick="closeMenu()"><div class="dd-icon">🎮</div> Web Games <span class="badge-live">Live</span></a>
       <a href="#" class="dd-item" onclick="closeMenu()"><div class="dd-icon">🤖</div> Android Apps <span class="badge-live">Live</span></a>
@@ -260,7 +281,7 @@ footer{background:var(--text);color:#fff;padding:56px 32px 36px;text-align:cente
       </div>
     </div>
     <div class="founder-card reveal">
-      <div class="founder-avatar" style="background:none;overflow:hidden;padding:0;"><img src="data:image/jpeg;base64,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" alt="Vaibhav Dhokpande" style="width:100%;height:100%;object-fit:cover;border-radius:22px;"></div>
+      <div class="founder-avatar" style="background:none;overflow:hidden;padding:0;"><img src="founder.jpg" alt="Vaibhav Dhokpande" style="width:100%;height:100%;object-fit:cover;border-radius:22px;"></div>
       <div class="founder-name">Vaibhav <span>Dhokpande</span></div>
       <span class="founder-role">Developer & Creator · TaskJunction</span>
       <p class="founder-bio">Hi! I'm Vaibhav — an indie developer passionate about building free, useful tools for everyone. TaskJunction started as a simple idea: make everyday tasks easier. Every app here is crafted with care, zero cost, and no hidden permissions.</p>
@@ -390,6 +411,153 @@ footer{background:var(--text);color:#fff;padding:56px 32px 36px;text-align:cente
   </div>
 </section>
 
+<!-- ============================================================
+     EBOOK SECTION — Recommended Engineering eBooks
+     ============================================================ -->
+<section id="ebooks" class="sec ebook-sec">
+  <div class="sec-inner">
+    <div class="sec-tag" style="color:#6366f1;">📚 Recommended Resources</div>
+    <div class="sec-title">Engineering <span style="color:#6366f1;">eBooks</span></div>
+    <p style="font-size:15px;color:var(--text2);max-width:640px;margin-bottom:44px;line-height:1.75;">
+      Handpicked engineering eBooks across every discipline — from mechanical design to software engineering. Each card links to a curated reading page. Free to explore, no login required.
+    </p>
+    <div class="ebook-grid">
+
+      <!-- Mechanical Engineering -->
+      <div class="ebook-card reveal" style="--eb-c1:#f4600c;--eb-c2:#fb923c;">
+        <div class="ebook-cover" style="background:linear-gradient(135deg,#fff0e8 0%,#ffe4cc 100%);">⚙️</div>
+        <div class="ebook-body">
+          <span class="ebook-badge-rec">⭐ Recommended</span>
+          <div class="ebook-name">Mechanical Engineering eBook</div>
+          <div class="ebook-desc">Design, manufacturing, thermodynamics, fluid mechanics & material science — all in one comprehensive guide.</div>
+          <div class="ebook-tags">
+            <span class="ebook-tag" style="background:rgba(244,96,12,0.09);color:#f4600c;border:1px solid rgba(244,96,12,0.2);">Design</span>
+            <span class="ebook-tag" style="background:rgba(244,96,12,0.09);color:#f4600c;border:1px solid rgba(244,96,12,0.2);">Thermo</span>
+            <span class="ebook-tag" style="background:rgba(244,96,12,0.09);color:#f4600c;border:1px solid rgba(244,96,12,0.2);">Fluids</span>
+          </div>
+          <a href="ebook-mechanical.html" target="_blank" class="ebook-btn" style="background:linear-gradient(90deg,#f4600c,#fb923c);color:#fff;">📖 Read eBook</a>
+        </div>
+      </div>
+
+      <!-- Fixture Design -->
+      <div class="ebook-card reveal" style="--eb-c1:#b45309;--eb-c2:#f59e0b;">
+        <div class="ebook-cover" style="background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);">🔧</div>
+        <div class="ebook-body">
+          <span class="ebook-badge-rec">⭐ Recommended</span>
+          <div class="ebook-name">Fixture Design eBook</div>
+          <div class="ebook-desc">Jig & fixture principles, locating schemes, clamping forces, tolerance analysis and case studies for manufacturing.</div>
+          <div class="ebook-tags">
+            <span class="ebook-tag" style="background:rgba(180,83,9,0.09);color:#b45309;border:1px solid rgba(180,83,9,0.2);">Jigs</span>
+            <span class="ebook-tag" style="background:rgba(180,83,9,0.09);color:#b45309;border:1px solid rgba(180,83,9,0.2);">Clamping</span>
+            <span class="ebook-tag" style="background:rgba(180,83,9,0.09);color:#b45309;border:1px solid rgba(180,83,9,0.2);">GD&T</span>
+          </div>
+          <a href="ebook-fixture.html" target="_blank" class="ebook-btn" style="background:linear-gradient(90deg,#b45309,#f59e0b);color:#fff;">📖 Read eBook</a>
+        </div>
+      </div>
+
+      <!-- BIW Design -->
+      <div class="ebook-card reveal" style="--eb-c1:#0d74ce;--eb-c2:#38bdf8;">
+        <div class="ebook-cover" style="background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 100%);">🚗</div>
+        <div class="ebook-body">
+          <span class="ebook-badge-rec">⭐ Recommended</span>
+          <div class="ebook-name">BIW Design eBook</div>
+          <div class="ebook-desc">Body-in-White design concepts — stamping, assembly, welding, structural stiffness and automotive body engineering.</div>
+          <div class="ebook-tags">
+            <span class="ebook-tag" style="background:rgba(13,116,206,0.09);color:#0d74ce;border:1px solid rgba(13,116,206,0.2);">Stamping</span>
+            <span class="ebook-tag" style="background:rgba(13,116,206,0.09);color:#0d74ce;border:1px solid rgba(13,116,206,0.2);">Welding</span>
+            <span class="ebook-tag" style="background:rgba(13,116,206,0.09);color:#0d74ce;border:1px solid rgba(13,116,206,0.2);">Automotive</span>
+          </div>
+          <a href="ebook-biw.html" target="_blank" class="ebook-btn" style="background:linear-gradient(90deg,#0d74ce,#38bdf8);color:#fff;">📖 Read eBook</a>
+        </div>
+      </div>
+
+      <!-- Civil Engineering -->
+      <div class="ebook-card reveal" style="--eb-c1:#059669;--eb-c2:#34d399;">
+        <div class="ebook-cover" style="background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);">🏗️</div>
+        <div class="ebook-body">
+          <span class="ebook-badge-rec">⭐ Recommended</span>
+          <div class="ebook-name">Civil Engineering eBook</div>
+          <div class="ebook-desc">Structural analysis, RCC design, surveying, soil mechanics, highways, water resources and construction management.</div>
+          <div class="ebook-tags">
+            <span class="ebook-tag" style="background:rgba(5,150,105,0.09);color:#059669;border:1px solid rgba(5,150,105,0.2);">Structural</span>
+            <span class="ebook-tag" style="background:rgba(5,150,105,0.09);color:#059669;border:1px solid rgba(5,150,105,0.2);">RCC</span>
+            <span class="ebook-tag" style="background:rgba(5,150,105,0.09);color:#059669;border:1px solid rgba(5,150,105,0.2);">Surveying</span>
+          </div>
+          <a href="ebook-civil.html" target="_blank" class="ebook-btn" style="background:linear-gradient(90deg,#059669,#34d399);color:#fff;">📖 Read eBook</a>
+        </div>
+      </div>
+
+      <!-- Electrical Engineering -->
+      <div class="ebook-card reveal" style="--eb-c1:#d97706;--eb-c2:#fbbf24;">
+        <div class="ebook-cover" style="background:linear-gradient(135deg,#fef9c3 0%,#fef08a 100%);">⚡</div>
+        <div class="ebook-body">
+          <span class="ebook-badge-rec">⭐ Recommended</span>
+          <div class="ebook-name">Electrical Engineering eBook</div>
+          <div class="ebook-desc">Circuits, power systems, machines, control systems, switchgear and electrical installation standards.</div>
+          <div class="ebook-tags">
+            <span class="ebook-tag" style="background:rgba(217,119,6,0.09);color:#d97706;border:1px solid rgba(217,119,6,0.2);">Circuits</span>
+            <span class="ebook-tag" style="background:rgba(217,119,6,0.09);color:#d97706;border:1px solid rgba(217,119,6,0.2);">Power</span>
+            <span class="ebook-tag" style="background:rgba(217,119,6,0.09);color:#d97706;border:1px solid rgba(217,119,6,0.2);">Control</span>
+          </div>
+          <a href="ebook-electrical.html" target="_blank" class="ebook-btn" style="background:linear-gradient(90deg,#d97706,#fbbf24);color:#fff;">📖 Read eBook</a>
+        </div>
+      </div>
+
+      <!-- Electronics Engineering -->
+      <div class="ebook-card reveal" style="--eb-c1:#7c3aed;--eb-c2:#a78bfa;">
+        <div class="ebook-cover" style="background:linear-gradient(135deg,#ede9fe 0%,#ddd6fe 100%);">📡</div>
+        <div class="ebook-body">
+          <span class="ebook-badge-rec">⭐ Recommended</span>
+          <div class="ebook-name">Electronics Engineering eBook</div>
+          <div class="ebook-desc">Analog & digital electronics, semiconductors, microcontrollers, signal processing, PCB design and communication systems.</div>
+          <div class="ebook-tags">
+            <span class="ebook-tag" style="background:rgba(124,58,237,0.09);color:#7c3aed;border:1px solid rgba(124,58,237,0.2);">Analog</span>
+            <span class="ebook-tag" style="background:rgba(124,58,237,0.09);color:#7c3aed;border:1px solid rgba(124,58,237,0.2);">Digital</span>
+            <span class="ebook-tag" style="background:rgba(124,58,237,0.09);color:#7c3aed;border:1px solid rgba(124,58,237,0.2);">PCB</span>
+          </div>
+          <a href="ebook-electronics.html" target="_blank" class="ebook-btn" style="background:linear-gradient(90deg,#7c3aed,#a78bfa);color:#fff;">📖 Read eBook</a>
+        </div>
+      </div>
+
+      <!-- IT Engineering -->
+      <div class="ebook-card reveal" style="--eb-c1:#0891b2;--eb-c2:#22d3ee;">
+        <div class="ebook-cover" style="background:linear-gradient(135deg,#cffafe 0%,#a5f3fc 100%);">💻</div>
+        <div class="ebook-body">
+          <span class="ebook-badge-rec">⭐ Recommended</span>
+          <div class="ebook-name">IT Engineering eBook</div>
+          <div class="ebook-desc">Networking, cybersecurity, cloud computing, databases, operating systems and enterprise IT infrastructure.</div>
+          <div class="ebook-tags">
+            <span class="ebook-tag" style="background:rgba(8,145,178,0.09);color:#0891b2;border:1px solid rgba(8,145,178,0.2);">Networks</span>
+            <span class="ebook-tag" style="background:rgba(8,145,178,0.09);color:#0891b2;border:1px solid rgba(8,145,178,0.2);">Cloud</span>
+            <span class="ebook-tag" style="background:rgba(8,145,178,0.09);color:#0891b2;border:1px solid rgba(8,145,178,0.2);">Security</span>
+          </div>
+          <a href="ebook-it.html" target="_blank" class="ebook-btn" style="background:linear-gradient(90deg,#0891b2,#22d3ee);color:#fff;">📖 Read eBook</a>
+        </div>
+      </div>
+
+      <!-- CS Engineering -->
+      <div class="ebook-card reveal" style="--eb-c1:#be185d;--eb-c2:#f472b6;">
+        <div class="ebook-cover" style="background:linear-gradient(135deg,#fce7f3 0%,#fbcfe8 100%);">🖥️</div>
+        <div class="ebook-body">
+          <span class="ebook-badge-rec">⭐ Recommended</span>
+          <div class="ebook-name">CS Engineering eBook</div>
+          <div class="ebook-desc">Data structures, algorithms, programming languages, software engineering, AI/ML fundamentals and system design.</div>
+          <div class="ebook-tags">
+            <span class="ebook-tag" style="background:rgba(190,24,93,0.09);color:#be185d;border:1px solid rgba(190,24,93,0.2);">DSA</span>
+            <span class="ebook-tag" style="background:rgba(190,24,93,0.09);color:#be185d;border:1px solid rgba(190,24,93,0.2);">AI/ML</span>
+            <span class="ebook-tag" style="background:rgba(190,24,93,0.09);color:#be185d;border:1px solid rgba(190,24,93,0.2);">SWE</span>
+          </div>
+          <a href="ebook-cs.html" target="_blank" class="ebook-btn" style="background:linear-gradient(90deg,#be185d,#f472b6);color:#fff;">📖 Read eBook</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     OUR APPLICATIONS SECTION — Mechanical Design, Punch & Die, Belt Drive removed
+     ============================================================ -->
 <section id="apps" class="sec" style="background:#fff;">
   <div class="sec-inner">
     <div class="sec-tag">By VD</div>
@@ -404,11 +572,6 @@ footer{background:var(--text);color:#fff;padding:56px 32px 36px;text-align:cente
       <div class="app-card reveal"><div class="app-icon" style="background:rgba(244,96,12,0.08);border:1px solid rgba(244,96,12,0.15);">💳</div><div class="app-name">Tip Calculator</div><div class="app-desc">Split bills &amp; calculate tips</div><div class="app-btn-wrap"><a href="tip-calculator.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div></div>
       <div class="app-card reveal"><div class="app-icon" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);">✅</div><div class="app-name">To-Do List</div><div class="app-desc">Plan tasks, stay productive</div><div class="app-btn-wrap"><a href="todo.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div></div>
       <div class="app-card reveal"><div class="app-icon" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);">⚖️</div><div class="app-name">BMI Calculator</div><div class="app-desc">Check your body mass index</div><div class="app-btn-wrap"><a href="bmi-calculator.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div></div>
-      <div class="app-card reveal"><div class="app-icon" style="background:rgba(180,83,9,0.10);border:1px solid rgba(180,83,9,0.2);">⚙️</div><div class="app-name">Mechanical Design</div><div class="app-desc">14+ engineering calculators</div><div class="app-btn-wrap"><a href="#mechanical" class="app-btn app-btn-open">⚙️ Explore</a></div></div>
-      <!-- NEW: Punch & Die Calculator card -->
-      <div class="app-card reveal"><div class="app-icon" style="background:rgba(180,83,9,0.08);border:1px solid rgba(180,83,9,0.18);">🔨</div><div class="app-name">Punch &amp; Die Calculator</div><div class="app-desc">Clearance, force &amp; press tonnage for sheet metal</div><div class="app-btn-wrap"><a href="punch-die-calculator.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div></div>
-      <!-- NEW: Belt Drive Calculator card -->
-      <div class="app-card reveal"><div class="app-icon" style="background:rgba(234,88,12,0.08);border:1px solid rgba(234,88,12,0.18);">🔄</div><div class="app-name">Belt Drive Calculator</div><div class="app-desc">V-belt, flat &amp; timing belt drive selection</div><div class="app-btn-wrap"><a href="belt-drive-calculator.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div></div>
       <div class="app-card disabled reveal"><div class="app-icon" style="background:#f0eeeb;border:1px solid var(--border);">📦</div><div class="app-name">More Coming</div><div class="app-desc">New apps in development</div><div class="app-btn-wrap"><span class="app-btn app-btn-soon">Coming Soon</span></div></div>
     </div>
   </div>
@@ -418,9 +581,43 @@ footer{background:var(--text);color:#fff;padding:56px 32px 36px;text-align:cente
   <div class="sec-inner">
     <div class="sec-tag">Play &amp; Learn</div>
     <div class="sec-title">Web <span>Games</span></div>
-    <div class="apps-grid" style="max-width:500px;">
-      <div class="app-card reveal"><div class="app-icon" style="background:rgba(255,140,66,0.12);border:1px solid rgba(255,140,66,0.25);">🧩</div><div class="app-name">PuzzlePals</div><div class="app-desc">Fun puzzle game for kids!</div><div class="app-btn-wrap"><a href="kids-puzzle-game.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div></div>
-      <div class="app-card disabled reveal"><div class="app-icon" style="background:#f0eeeb;border:1px solid var(--border);">🎮</div><div class="app-name">More Games</div><div class="app-desc">New games coming soon!</div><div class="app-btn-wrap"><span class="app-btn app-btn-soon">Coming Soon</span></div></div>
+    <div class="apps-grid" style="max-width:900px;">
+      <div class="app-card reveal">
+        <div class="app-icon" style="background:rgba(255,140,66,0.12);border:1px solid rgba(255,140,66,0.25);">🧩</div>
+        <div class="app-name">PuzzlePals</div>
+        <div class="app-desc">Fun puzzle game for kids!</div>
+        <div class="app-btn-wrap"><a href="kids-puzzle-game.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon" style="background:rgba(220,38,38,0.10);border:1px solid rgba(220,38,38,0.22);">🎲</div>
+        <div class="app-name">Ludo Classic</div>
+        <div class="app-desc">Classic board game for 2–4 players. Roll the dice &amp; race to the finish!</div>
+        <div class="app-btn-wrap"><a href="ludo.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon" style="background:rgba(15,23,42,0.08);border:1px solid rgba(15,23,42,0.18);">♟️</div>
+        <div class="app-name">Chess</div>
+        <div class="app-desc">Play chess vs CPU or challenge a friend. All standard rules included.</div>
+        <div class="app-btn-wrap"><a href="chess.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon" style="background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.22);">🐍</div>
+        <div class="app-name">Snake &amp; Ladder</div>
+        <div class="app-desc">Roll the dice, climb ladders &amp; avoid the snakes to reach 100!</div>
+        <div class="app-btn-wrap"><a href="snake-ladder.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon" style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);">🪃</div>
+        <div class="app-name">Carrom</div>
+        <div class="app-desc">Strike &amp; pocket coins — enjoy the classic carrom board experience online!</div>
+        <div class="app-btn-wrap"><a href="carrom.html" class="app-btn app-btn-open" target="_blank">🌐 Open</a></div>
+      </div>
+      <div class="app-card disabled reveal">
+        <div class="app-icon" style="background:#f0eeeb;border:1px solid var(--border);">🎮</div>
+        <div class="app-name">More Games</div>
+        <div class="app-desc">New games coming soon!</div>
+        <div class="app-btn-wrap"><span class="app-btn app-btn-soon">Coming Soon</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -475,6 +672,7 @@ footer{background:var(--text);color:#fff;padding:56px 32px 36px;text-align:cente
   <div class="footer-links">
     <a href="#about">About</a>
     <a href="#mechanical">⚙️ Mechanical</a>
+    <a href="#ebooks">📚 eBooks</a>
     <a href="#apps">Apps</a>
     <a href="#games">Games</a>
     <a href="#privacy">Privacy Policy</a>
