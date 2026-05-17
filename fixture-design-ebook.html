@@ -54,6 +54,17 @@
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--yellow); }
+  .home-btn {
+    background: var(--orange);
+    color: #fff !important;
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px !important;
+    font-weight: 600;
+    margin-left: 20px !important;
+    transition: background 0.2s !important;
+  }
+  .home-btn:hover { background: var(--orange-dark) !important; color: #fff !important; }
 
   /* HERO */
   .hero {
@@ -431,6 +442,8 @@
     <a href="#chapters">Chapters</a>
     <a href="#tools">Tools</a>
     <a href="#products">Shop</a>
+    <a href="#privacy">Privacy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" class="home-btn">🏠 Home</a>
   </div>
 </nav>
 
@@ -864,13 +877,80 @@
   </div>
 </div>
 
-<!-- FOOTER -->
+<!-- PRIVACY POLICY SECTION -->
+<div id="privacy" style="background: #F5EFE6; padding: 64px 0; border-top: 1px solid #EDE5D8;">
+  <div class="section" style="padding-top: 0; padding-bottom: 0;">
+    <h2 class="section-title">Privacy Policy</h2>
+    <p class="section-sub">Last updated: May 2025 &nbsp;|&nbsp; FixtureDesign Pro by TaskJunction</p>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">1. Information We Collect</h3>
+        <p style="font-size:15px; color:#4A3728; line-height:1.8;">This website does <strong>not collect any personal information</strong> directly from visitors. We do not require registration, login, or any form submission to access the eBook content. Your reading activity stays private.</p>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">2. Amazon Affiliate Disclosure</h3>
+        <p style="font-size:15px; color:#4A3728; line-height:1.8;">This website participates in the <strong>Amazon Associates Program</strong> (affiliate.amazon.in), an affiliate advertising program. We earn a small commission when you click on Amazon product links and make a purchase — at <strong>no extra cost to you</strong>. Our Store ID is <strong>taskjunction-21</strong>.</p>
+        <div style="background: var(--orange-light); border-left: 4px solid var(--orange); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-top: 14px; font-size: 14px; color: var(--orange-dark);">
+          ⚠️ Affiliate links are clearly marked with "Amazon ↗" labels throughout this site.
+        </div>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">3. Cookies & Tracking</h3>
+        <p style="font-size:15px; color:#4A3728; line-height:1.8;">We do not use our own tracking cookies. However, when you click on Amazon affiliate links, <strong>Amazon may set cookies</strong> on your browser as per their own Privacy Policy. These cookies help Amazon track referrals and are governed by Amazon's terms, not ours. You can review Amazon's Privacy Policy at <a href="https://www.amazon.in/gp/help/customer/display.html?nodeId=200534380" target="_blank" style="color:var(--orange);">amazon.in/privacy</a>.</p>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">4. Third-Party Services</h3>
+        <p style="font-size:15px; color:#4A3728; line-height:1.8;">This website loads fonts from <strong>Google Fonts</strong> (fonts.googleapis.com). Google may collect anonymous usage data as per their privacy policy. No other third-party analytics, advertising SDKs, or tracking scripts are used on this site.</p>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">5. Content Disclaimer</h3>
+        <p style="font-size:15px; color:#4A3728; line-height:1.8;">All engineering content, formulas, and case studies on this website are provided <strong>for educational purposes only</strong>. While we strive for accuracy, always verify critical engineering calculations with a qualified professional before use in real manufacturing applications. We are not liable for any errors or damages arising from use of this content.</p>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">6. Contact Us</h3>
+        <p style="font-size:15px; color:#4A3728; line-height:1.8;">If you have any questions about this Privacy Policy or the content on this website, feel free to reach out:</p>
+        <p style="margin-top:10px; font-size:15px; color:#4A3728;">
+          👤 <strong>Vaibhav Dhokpande</strong><br>
+          🌐 Website: <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:var(--orange);">vaibhavdhokpande-ai.github.io</a><br>
+          🏢 Platform: <strong>TaskJunction</strong>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 <footer>
-  <strong>FixtureDesign Pro – Free Engineering eBook</strong><br>
-  <span style="margin-top: 8px; display: block;">
-    This site contains Amazon affiliate links. Purchases made through these links earn a small commission at no extra cost to you.<br>
-    Store ID: taskjunction-21 &nbsp;|&nbsp; Made with ❤️ for engineering students
-  </span>
+  <div style="margin-bottom: 16px;">
+    <strong style="font-size:18px; font-family:'Playfair Display',serif; color:var(--yellow);">FixtureDesign Pro</strong>
+    <span style="color:rgba(255,255,255,0.4); margin: 0 10px;">|</span>
+    <span style="color:rgba(255,255,255,0.6); font-size:14px;">Free Engineering eBook</span>
+  </div>
+  <div style="display:flex; justify-content:center; gap:32px; flex-wrap:wrap; margin-bottom:16px;">
+    <a href="#chapters" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Chapters</a>
+    <a href="#products" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Shop</a>
+    <a href="#privacy" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Privacy Policy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Home</a>
+  </div>
+  <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top:16px; margin-top:8px;">
+    <p style="color:rgba(255,255,255,0.35); font-size:12px; margin-bottom:8px;">
+      This site contains Amazon affiliate links (Store ID: taskjunction-21). Purchases through these links earn a small commission at no extra cost to you.
+    </p>
+    <p style="color:rgba(255,255,255,0.55); font-size:13px; font-weight:500;">
+      Made with ❤️ by <strong style="color:var(--yellow);">Vaibhav Dhokpande</strong>
+      &nbsp;&amp;&nbsp;
+      <strong style="color:var(--orange);">TaskJunction</strong>
+    </p>
+    <p style="color:rgba(255,255,255,0.25); font-size:11px; margin-top:6px;">© 2025 TaskJunction. All rights reserved.</p>
+  </div>
 </footer>
 
 <script>
