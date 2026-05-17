@@ -485,33 +485,47 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
 .reveal.visible { opacity: 1; transform: none; }
 
 /* ══════════════════════════════════════
-   MOBILE NAV DRAWER
-   (hamburger → full-screen on phones)
+   MOBILE NAV OVERLAY + DRAWER  ← FIXED
 ══════════════════════════════════════ */
 .mobile-nav-overlay {
   display: none;
-  position: fixed; inset: 0; z-index: 98;
-  background: rgba(15,14,12,0.45);
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: rgba(15,14,12,0.5);
   backdrop-filter: blur(4px);
-  opacity: 0; transition: opacity 0.25s;
-  pointer-events: none; /* ✅ FIX */
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
 }
 .mobile-nav-overlay.show {
   opacity: 1;
-  pointer-events: all; /* ✅ FIX */
+  pointer-events: all;
 }
 
 .mobile-nav-drawer {
   display: none;
-  position: fixed; top: 0; left: 0; bottom: 0;
-  width: min(280px, 82vw); z-index: 99;
-  background: var(--white); border-right: 1px solid var(--border);
-  padding: 80px 16px 32px;
-  flex-direction: column; gap: 4px;
-  transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(300px, 85vw);
+  height: 100%;
+  z-index: 999;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  box-shadow: 4px 0 24px rgba(15,14,12,0.12);
+  padding: 80px 16px 40px;
+  flex-direction: column;
+  gap: 4px;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
-.mobile-nav-drawer.show { transform: translateX(0); }
+.mobile-nav-drawer.show {
+  transform: translateX(0);
+}
 
 .mob-nav-link {
   display: flex; align-items: center; gap: 12px; padding: 12px 16px;
@@ -552,7 +566,7 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
   .nav-cta { display: none; }
   nav { padding: 0 16px; gap: 12px; }
 
-  /* Show mobile drawer */
+  /* Show mobile drawer + overlay */
   .mobile-nav-overlay { display: block; }
   .mobile-nav-drawer { display: flex; }
 
@@ -643,7 +657,7 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
   .ebook-cover { height: 80px; font-size: 32px; }
   .ebook-body { padding: 10px 12px 12px; gap: 6px; }
   .ebook-name { font-size: 12px; }
-  .ebook-desc { display: none; } /* hide desc on tiny screens to save space */
+  .ebook-desc { display: none; }
   .ebook-btn { font-size: 11px; padding: 8px 10px; }
 
   /* Founder */
@@ -707,7 +721,7 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
   </ul>
   <a href="#mechanical" class="nav-cta">Explore Tools →</a>
   <div class="menu-wrap">
-    <button class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+    <button class="menu-btn" id="menuBtn">
       <span></span><span></span><span></span>
     </button>
     <div class="dropdown" id="dropdown">
@@ -1085,17 +1099,22 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
 </footer>
 
 <script>
-/* ── Desktop dropdown ── */
+/* ── Desktop dropdown (768px+ screens only) ── */
 function toggleMenu() {
-  document.getElementById('menuBtn').classList.toggle('open');
-  document.getElementById('dropdown').classList.toggle('show');
+  if (window.innerWidth > 768) {
+    document.getElementById('menuBtn').classList.toggle('open');
+    document.getElementById('dropdown').classList.toggle('show');
+  }
 }
 function closeMenu() {
   document.getElementById('menuBtn').classList.remove('open');
   document.getElementById('dropdown').classList.remove('show');
 }
+
+/* Close desktop dropdown on outside click */
 document.addEventListener('click', e => {
-  if (!document.querySelector('.menu-wrap').contains(e.target)) closeMenu();
+  const menuWrap = document.querySelector('.menu-wrap');
+  if (menuWrap && !menuWrap.contains(e.target)) closeMenu();
 });
 
 /* ── Mobile drawer ── */
@@ -1110,12 +1129,14 @@ function closeMobNav() {
   document.body.style.overflow = '';
 }
 
-/* Make hamburger open mobile drawer on small screens */
+/* Hamburger: mobile → drawer, desktop → dropdown */
 document.getElementById('menuBtn').addEventListener('click', function(e) {
+  e.stopPropagation();
   if (window.innerWidth <= 768) {
-    e.stopPropagation();
-    closeMenu(); /* close dropdown if open */
+    closeMobNav();   /* if somehow open, close first */
     openMobNav();
+  } else {
+    toggleMenu();
   }
 });
 
