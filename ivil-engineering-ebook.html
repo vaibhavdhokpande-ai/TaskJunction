@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civil Engineering eBook – Complete Guide to Structures, RCC & Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #1A5FA8;
+    --blue-dark: #124282;
+    --blue-light: #EBF3FD;
+    --yellow: #F5B800;
+    --dark: #0D1F35;
+    --text: #1A2D40;
+    --muted: #5A7A99;
+    --surface: #F5F8FC;
+    --card-bg: #FFFFFF;
+    --border: #D8E5F0;
+    --radius: 16px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--dark);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    color: var(--yellow);
+    font-size: 20px;
+    letter-spacing: -0.5px;
+  }
+  .nav-links { display: flex; align-items: center; flex-wrap: wrap; }
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 24px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+  .home-btn {
+    background: var(--blue);
+    color: #fff !important;
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px !important;
+    font-weight: 600;
+    margin-left: 20px !important;
+    transition: background 0.2s !important;
+  }
+  .home-btn:hover { background: var(--blue-dark) !important; color: #fff !important; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #0E2D50 60%, #1A3D6B 100%);
+    padding: 72px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: var(--blue);
+    opacity: 0.15;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: var(--yellow);
+    opacity: 0.06;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  .hero h1 span { color: var(--yellow); }
+  .hero p {
+    color: rgba(255,255,255,0.65);
+    font-size: 18px;
+    max-width: 540px;
+    margin: 0 auto 36px;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--blue-dark); transform: translateY(-2px); }
+  .btn-outline {
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 100px;
+    font-size: 16px;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--yellow); font-family: 'Playfair Display', serif; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  /* SECTIONS */
+  .section { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .section-sub { color: var(--muted); font-size: 16px; margin-bottom: 40px; }
+
+  /* TOPICS GRID */
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .topic-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+  .topic-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--blue-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+  .topic-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .topic-card p { font-size: 13px; color: var(--muted); }
+
+  /* CHAPTERS */
+  .chapters-list { display: flex; flex-direction: column; gap: 12px; }
+  .chapter-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .chapter-item:hover { border-color: var(--blue); }
+  .ch-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ch-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .ch-info p { font-size: 13px; color: var(--muted); }
+  .ch-tag {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--blue-light);
+    color: var(--blue);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* AD BANNER */
+  .ad-banner {
+    background: linear-gradient(135deg, #0D1F35 0%, #0E2D50 100%);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 32px 0;
+  }
+  .ad-text { color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .ad-title { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .ad-sub { color: rgba(255,255,255,0.55); font-size: 14px; }
+  .ad-btn {
+    background: var(--yellow);
+    color: var(--dark);
+    padding: 12px 28px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .ad-btn:hover { opacity: 0.9; }
+
+  /* AFFILIATE PRODUCTS */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .product-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .product-img {
+    background: var(--blue-light);
+    padding: 24px;
+    text-align: center;
+    font-size: 52px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-body { padding: 18px; }
+  .product-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .product-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+  .product-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 18px; font-weight: 700; color: var(--blue); }
+  .product-price span { font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
+  .amazon-btn {
+    background: var(--yellow);
+    color: var(--dark);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s;
+  }
+  .amazon-btn:hover { opacity: 0.85; }
+
+  /* SIDEBAR AD */
+  .content-with-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .content-with-sidebar { grid-template-columns: 1fr; }
+    .nav-links a { margin-left: 12px; font-size: 12px; }
+  }
+  .sidebar-ad {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: sticky;
+    top: 72px;
+  }
+  .sidebar-ad-header {
+    background: var(--blue);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+  }
+  .sidebar-ad-body { padding: 18px; }
+  .sidebar-ad-body h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .sidebar-ad-body p { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  /* INLINE TEXT AD */
+  .inline-ad {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin: 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .inline-ad-text { flex: 1; }
+  .inline-ad-text strong { font-size: 14px; color: var(--dark); display: block; margin-bottom: 3px; }
+  .inline-ad-text span { font-size: 13px; color: var(--muted); }
+
+  /* CONTENT AREA */
+  .content-area { min-width: 0; }
+  .chapter-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+  }
+  .chapter-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: var(--dark);
+  }
+  .chapter-content p {
+    font-size: 15px;
+    color: #2A3D52;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .chapter-content h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 24px 0 10px;
+    color: var(--dark);
+  }
+  .formula-box {
+    background: #EEF4FA;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-family: 'DM Sans', monospace;
+    font-size: 14px;
+    color: var(--blue-dark);
+    margin: 16px 0;
+    font-weight: 500;
+    white-space: pre-line;
+  }
+  .tip-box {
+    background: #EFF8F2;
+    border-left: 4px solid #27AE60;
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .tip-box strong { color: #1E8449; font-size: 13px; display: block; margin-bottom: 4px; }
+  .tip-box p { font-size: 14px; color: #1A5C33; margin: 0; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 13px;
+  }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .tab-btn.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+    font-weight: 600;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* WARNING BOX */
+  .warn-box {
+    background: #FFF8E1;
+    border-left: 4px solid #F5B800;
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .warn-box strong { color: #B8860B; font-size: 13px; display: block; margin-bottom: 4px; }
+  .warn-box p { font-size: 14px; color: #7A5C00; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CivilPro eBook</div>
+  <div class="nav-links">
+    <a href="#chapters">Chapters</a>
+    <a href="#tools">Tools</a>
+    <a href="#products">Shop</a>
+    <a href="#privacy">Privacy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" class="home-btn">🏠 Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⭐ Free eBook – Updated 2025</div>
+  <h1>Master <span>Civil Engineering</span> from Zero to Pro</h1>
+  <p>Complete guide covering RCC Design, Structural Analysis, Soil Mechanics, Fluid Mechanics, Surveying & IS Codes</p>
+  <div class="hero-btns">
+    <a href="#chapters" class="btn-primary">📖 Read Free eBook</a>
+    <a href="#products" class="btn-outline">🛒 Buy Books on Amazon</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">14</div><div class="stat-label">Chapters</div></div>
+    <div class="stat"><div class="stat-num">250+</div><div class="stat-label">Pages</div></div>
+    <div class="stat"><div class="stat-num">60+</div><div class="stat-label">Case Studies</div></div>
+    <div class="stat"><div class="stat-num">Free</div><div class="stat-label">Forever</div></div>
+  </div>
+</div>
+
+<!-- TOPICS OVERVIEW -->
+<div class="section">
+  <h2 class="section-title">What You'll Learn</h2>
+  <p class="section-sub">From foundational principles to advanced structural and geotechnical engineering</p>
+  <div class="topics-grid">
+    <div class="topic-card">
+      <div class="topic-icon">🏗️</div>
+      <h3>RCC Design</h3>
+      <p>Beam, column, slab and footing design as per IS 456:2000</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">📐</div>
+      <h3>Structural Analysis</h3>
+      <p>BMD, SFD, trusses, moment distribution and matrix methods</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">🌍</div>
+      <h3>Soil Mechanics</h3>
+      <p>Soil classification, consolidation, bearing capacity and shear strength</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">💧</div>
+      <h3>Fluid Mechanics</h3>
+      <p>Bernoulli's theorem, pipe flow, open channel and hydraulic jump</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">🔭</div>
+      <h3>Surveying</h3>
+      <p>Levelling, theodolite, total station and contour mapping</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon">🛣️</div>
+      <h3>Transportation Engg.</h3>
+      <p>Highway design, pavement types, CBR and geometric design</p>
+    </div>
+  </div>
+</div>
+
+<!-- AD BANNER 1 -->
+<div style="max-width:1100px; margin:0 auto; padding: 0 24px;">
+  <div class="ad-banner">
+    <div>
+      <div class="ad-text">🛒 Amazon Affiliate – Sponsored</div>
+      <div class="ad-title">Auto Level Surveying Instrument – Professional Grade</div>
+      <div class="ad-sub">Magnification 32x • Accuracy 1.5mm/km • Used by civil engineers & surveyors</div>
+    </div>
+    <a href="https://www.amazon.in/s?k=auto+level+surveying+instrument+professional&tag=taskjunction-21" target="_blank" class="ad-btn">View on Amazon ↗</a>
+  </div>
+</div>
+
+<!-- CHAPTERS with SIDEBAR -->
+<div id="chapters" class="section">
+  <h2 class="section-title">Read the eBook</h2>
+  <p class="section-sub">Click any chapter to start reading</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('toc'); setActiveTabBtn(0)">📋 Table of Contents</button>
+    <button class="tab-btn" onclick="showTab('chapter1'); setActiveTabBtn(1)">Chapter 1</button>
+    <button class="tab-btn" onclick="showTab('chapter2'); setActiveTabBtn(2)">Chapter 2</button>
+    <button class="tab-btn" onclick="showTab('chapter3'); setActiveTabBtn(3)">Chapter 3</button>
+    <button class="tab-btn" onclick="showTab('chapter4'); setActiveTabBtn(4)">Chapter 4</button>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div id="toc" class="tab-content active">
+    <div class="chapters-list">
+      <div class="chapter-item" onclick="showTab('chapter1'); setActiveTabBtn(1)">
+        <div class="ch-num">1</div>
+        <div class="ch-info">
+          <h4>Introduction to RCC Design</h4>
+          <p>Limit state method, IS 456:2000, materials and cover requirements</p>
+        </div>
+        <span class="ch-tag">Beginner</span>
+      </div>
+      <div class="chapter-item" onclick="showTab('chapter2'); setActiveTabBtn(2)">
+        <div class="ch-num">2</div>
+        <div class="ch-info">
+          <h4>Structural Analysis – Beams & Frames</h4>
+          <p>SFD, BMD, moment distribution method and slope deflection</p>
+        </div>
+        <span class="ch-tag">Beginner</span>
+      </div>
+      <div class="chapter-item" onclick="showTab('chapter3'); setActiveTabBtn(3)">
+        <div class="ch-num">3</div>
+        <div class="ch-info">
+          <h4>Soil Mechanics & Foundation Design</h4>
+          <p>Soil classification, Terzaghi's equation, safe bearing capacity</p>
+        </div>
+        <span class="ch-tag">Intermediate</span>
+      </div>
+      <div class="chapter-item" onclick="showTab('chapter4'); setActiveTabBtn(4)">
+        <div class="ch-num">4</div>
+        <div class="ch-info">
+          <h4>Fluid Mechanics & Hydraulics</h4>
+          <p>Bernoulli's equation, pipe networks, open channel flow</p>
+        </div>
+        <span class="ch-tag">Intermediate</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">5</div>
+        <div class="ch-info">
+          <h4>Surveying Techniques</h4>
+          <p>Levelling, traversing, theodolite and modern total station</p>
+        </div>
+        <span class="ch-tag">Intermediate</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">6</div>
+        <div class="ch-info">
+          <h4>Transportation Engineering</h4>
+          <p>Highway geometric design, pavement design, IRC standards</p>
+        </div>
+        <span class="ch-tag">Intermediate</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">7</div>
+        <div class="ch-info">
+          <h4>Steel Structure Design</h4>
+          <p>IS 800:2007, tension members, compression members, connections</p>
+        </div>
+        <span class="ch-tag">Advanced</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">8</div>
+        <div class="ch-info">
+          <h4>Environmental Engineering</h4>
+          <p>Water treatment, sewage design, STP and BOD/COD calculations</p>
+        </div>
+        <span class="ch-tag">Advanced</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">9</div>
+        <div class="ch-info">
+          <h4>Earthquake Resistant Design</h4>
+          <p>IS 1893, seismic zones, base shear and ductile detailing</p>
+        </div>
+        <span class="ch-tag">Advanced</span>
+      </div>
+      <div class="chapter-item">
+        <div class="ch-num">10</div>
+        <div class="ch-info">
+          <h4>Construction Management & Estimation</h4>
+          <p>BOQ, rate analysis, CPM/PERT and project scheduling</p>
+        </div>
+        <span class="ch-tag">Advanced</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 1 -->
+  <div id="chapter1" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 1: Introduction to RCC Design</h2>
+          <p>Reinforced Cement Concrete (RCC) is a composite material consisting of concrete and steel reinforcement. Concrete is strong in compression but weak in tension, while steel is strong in both. Together they form an ideal structural material used in beams, slabs, columns and foundations.</p>
+
+          <h3>Design Philosophy – Limit State Method (LSM)</h3>
+          <p>IS 456:2000 adopts the <strong>Limit State Method</strong> of design, which ensures the structure satisfies two limit states: Ultimate Limit State (strength) and Serviceability Limit State (deflection, cracking).</p>
+
+          <div class="formula-box">Design Load = DL × 1.5 + LL × 1.5    (IS 456 Load Combinations)
+Factored Moment Mu = 1.5 × (Moment due to DL + LL)
+Design is safe if: Mu ≤ Moment of Resistance (Mur)</div>
+
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Recommended: IS 456:2000 – Plain & Reinforced Concrete Code of Practice</strong>
+              <span>Official BIS standard used in all RCC design calculations across India</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=IS+456+2000+RCC+design+book&tag=taskjunction-21" target="_blank" class="amazon-btn">
+              <span>₹</span> Amazon
+            </a>
+          </div>
+
+          <h3>Grades of Concrete & Steel</h3>
+          <p><strong>Concrete Grades:</strong> M20, M25, M30 are most common for structural work. The number denotes characteristic compressive strength (fck) in N/mm² at 28 days.</p>
+          <p><strong>Steel Grades:</strong> Fe415 and Fe500 HYSD bars are standard. Fe500D is preferred for seismic zones due to better ductility.</p>
+
+          <div class="formula-box">Effective Depth (d) = Overall depth (D) – Clear cover – Bar radius
+For beams: Clear cover = 25mm to 40mm (as per exposure condition)
+For slabs: Clear cover = 15mm (mild) to 30mm (severe)</div>
+
+          <h3>Nominal Cover Requirements (IS 456)</h3>
+          <p>Cover protects reinforcement from corrosion. IS 456 specifies minimum cover based on exposure conditions ranging from <strong>15mm (mild)</strong> to <strong>75mm (extreme)</strong> environments.</p>
+
+          <div class="tip-box">
+            <strong>💡 Design Tip</strong>
+            <p>Always add 5mm to the nominal cover to arrive at the minimum cover for durability. For coastal areas (severe exposure), use minimum M30 concrete and 45mm cover to avoid corrosion of rebars.</p>
+          </div>
+
+          <h3>Economic Span Ratios</h3>
+          <p>As a thumb rule, the effective depth of a simply supported beam should be approximately L/12 to L/15 where L is the span. For slabs: overall depth D ≈ L/25 (simply supported) to L/32 (continuous).</p>
+
+          <div class="formula-box">Simply Supported Beam: d = L / 12 to L / 15
+Continuous Beam:     d = L / 15 to L / 18
+One-way Slab:        D = L / 25 (SS), L / 32 (continuous)
+Two-way Slab:        Designed using bending moment coefficients from IS 456 Table 26</div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR ADS -->
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">BOOK RECOMMENDATION</p>
+            <h4>RCC Design – Dr. B.C. Punmia</h4>
+            <p>Most widely used RCC design textbook in Indian engineering colleges. Covers IS 456 completely.</p>
+            <a href="https://www.amazon.in/s?k=rcc+design+bc+punmia&tag=taskjunction-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">TOOL RECOMMENDATION</p>
+            <h4>Scientific Calculator – Casio fx-991ES Plus</h4>
+            <p>Essential for structural calculations, used in GATE and competitive exams.</p>
+            <a href="https://www.amazon.in/s?k=casio+fx-991es+plus+scientific+calculator&tag=taskjunction-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div id="chapter2" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 2: Structural Analysis – Beams & Frames</h2>
+          <p>Structural analysis determines the internal forces (bending moment, shear force, axial force) in structural members under applied loads. This is the foundation of any structural design process.</p>
+
+          <h3>Shear Force & Bending Moment Diagrams</h3>
+          <p>SFD and BMD are graphical representations of shear force and bending moment variation along the length of a beam. They are essential for identifying critical sections for design.</p>
+
+          <div class="formula-box">Simply Supported Beam (UDL w per m, span L):
+Max Shear Force    = wL/2  (at supports)
+Max Bending Moment = wL²/8 (at midspan)
+
+Cantilever Beam (UDL w per m, span L):
+Max Shear Force    = wL   (at fixed end)
+Max Bending Moment = wL²/2 (at fixed end)</div>
+
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Structural Analysis – R.C. Hibbeler (10th Edition)</strong>
+              <span>International standard textbook for structural analysis used across universities</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=structural+analysis+rc+hibbeler&tag=taskjunction-21" target="_blank" class="amazon-btn">
+              <span>₹</span> Amazon
+            </a>
+          </div>
+
+          <h3>Moment Distribution Method</h3>
+          <p>The Moment Distribution Method (Hardy Cross) is an iterative method for analyzing indeterminate beams and frames. It distributes unbalanced moments at joints using distribution factors.</p>
+
+          <div class="formula-box">Distribution Factor (DF) = Stiffness of member / Sum of stiffness at joint
+For fixed far end:   K = 4EI/L
+For pinned far end:  K = 3EI/L
+Carry-over Factor = 0.5 (for fixed far end), 0 (for pinned far end)</div>
+
+          <h3>Slope Deflection Method</h3>
+          <p>The Slope Deflection Method expresses end moments in terms of end rotations and chord rotation. It results in a set of simultaneous equations solved for unknown rotations.</p>
+
+          <div class="formula-box">MAB = (2EI/L)(2θA + θB − 3ψ) + MFAB
+MBA = (2EI/L)(2θB + θA − 3ψ) + MFBA
+Where: ψ = Sway (chord rotation), MFAB = Fixed End Moment</div>
+
+          <div class="tip-box">
+            <strong>💡 Analysis Tip</strong>
+            <p>For quick exam solutions, always draw the free body diagram first, apply equilibrium equations, and verify using ΣFx=0, ΣFy=0, ΣM=0. A correctly drawn BMD has zero moment at pinned/roller supports and zero shear where moment is maximum.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">STUDY MATERIAL</p>
+            <h4>Theory of Structures – B.C. Punmia</h4>
+            <p>Comprehensive structural analysis guide covering all classical methods.</p>
+            <a href="https://www.amazon.in/s?k=theory+of+structures+bc+punmia&tag=taskjunction-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">DIGITAL TOOL</p>
+            <h4>Drawing Board A2 with Parallel Motion</h4>
+            <p>For drafting BMD, SFD and structural drawings by hand.</p>
+            <a href="https://www.amazon.in/s?k=drawing+board+a2+parallel+motion&tag=taskjunction-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div id="chapter3" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 3: Soil Mechanics & Foundation Design</h2>
+          <p>Soil Mechanics is the branch of civil engineering that studies the engineering behavior of soil. Foundation design involves selecting and sizing the foundation so that the load from the structure is safely transmitted to the soil without excessive settlement or shear failure.</p>
+
+          <h3>Soil Classification (IS 1498)</h3>
+          <p>Soils are classified using the <strong>Unified Soil Classification System (USCS)</strong> based on particle size distribution and Atterberg limits. Key categories: Gravel (G), Sand (S), Silt (M), Clay (C), Organic (O), and Peat (Pt).</p>
+
+          <div class="formula-box">Gravel: particle size > 4.75mm
+Sand:   0.075mm to 4.75mm
+Silt:   0.002mm to 0.075mm
+Clay:   < 0.002mm
+Plasticity Index (PI) = Liquid Limit (LL) − Plastic Limit (PL)</div>
+
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Soil Testing Equipment – Atterberg Limits Kit</strong>
+              <span>Casagrande apparatus, shrinkage limit set – for lab soil testing</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=atterberg+limit+soil+testing+apparatus&tag=taskjunction-21" target="_blank" class="amazon-btn">
+              <span>₹</span> Amazon
+            </a>
+          </div>
+
+          <h3>Terzaghi's Bearing Capacity Equation</h3>
+          <p>Terzaghi (1943) proposed the classical bearing capacity equation for strip footings on homogeneous soil. It is still the most widely used method for shallow foundation design in India.</p>
+
+          <div class="formula-box">qu = c·Nc + q·Nq + 0.5·γ·B·Nγ    (Strip Footing)
+qu = 1.3·c·Nc + q·Nq + 0.4·γ·B·Nγ  (Square Footing)
+qu = 1.3·c·Nc + q·Nq + 0.3·γ·B·Nγ  (Circular Footing)
+Where: Nc, Nq, Nγ = Bearing capacity factors
+       q = Overburden pressure = γ·Df</div>
+
+          <h3>Safe Bearing Capacity</h3>
+          <p>The gross safe bearing capacity (q_safe) is the ultimate bearing capacity divided by a factor of safety. IS 1904 recommends a factor of safety of 3 for shear failure and 2 for settlement.</p>
+
+          <div class="formula-box">q_safe (shear) = qu / FoS = qu / 3
+Net Safe Bearing Capacity = (qu − γ·Df) / 3 + γ·Df</div>
+
+          <div class="tip-box">
+            <strong>💡 Foundation Design Rule</strong>
+            <p>In clayey soils, always check for long-term consolidation settlement in addition to bearing capacity. Terzaghi's equation gives the shear failure load — settlement can govern design in soft clays even when bearing capacity is adequate.</p>
+          </div>
+
+          <div class="warn-box">
+            <strong>⚠️ Important IS Code Reference</strong>
+            <p>Foundation design in India must comply with IS 1904 (Design of Foundations), IS 8009 (Settlement Calculations), and IS 6403 (Bearing Capacity). Always refer to latest amendments.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">BOOK RECOMMENDATION</p>
+            <h4>Soil Mechanics & Foundation Engg. – K.R. Arora</h4>
+            <p>Most comprehensive Indian textbook covering IS codes for soil mechanics and foundations.</p>
+            <a href="https://www.amazon.in/s?k=soil+mechanics+foundation+engineering+kr+arora&tag=taskjunction-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">FIELD EQUIPMENT</p>
+            <h4>Digital Pocket Penetrometer – Soil Strength</h4>
+            <p>Quick field measurement of unconfined compressive strength of cohesive soils.</p>
+            <a href="https://www.amazon.in/s?k=pocket+penetrometer+soil+strength&tag=taskjunction-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 4 -->
+  <div id="chapter4" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 4: Fluid Mechanics & Hydraulics</h2>
+          <p>Fluid Mechanics deals with the behavior of fluids (liquids and gases) at rest and in motion. In Civil Engineering, it is applied to water supply, drainage, dams, irrigation, and coastal engineering projects.</p>
+
+          <h3>Bernoulli's Equation</h3>
+          <p>Bernoulli's theorem states that for steady, incompressible, inviscid flow, the total energy per unit weight remains constant along a streamline.</p>
+
+          <div class="formula-box">P/γ + V²/2g + Z = Constant (Total Head)
+Where: P = Pressure (N/m²)
+       γ = Specific weight of fluid (N/m³)
+       V = Velocity of flow (m/s)
+       g = 9.81 m/s² (acceleration due to gravity)
+       Z = Datum head (m)</div>
+
+          <div class="inline-ad">
+            <div class="inline-ad-text">
+              <strong>📦 Fluid Mechanics by R.K. Bansal – Standard Edition</strong>
+              <span>Most popular fluid mechanics textbook for civil engineering in India</span>
+            </div>
+            <a href="https://www.amazon.in/s?k=fluid+mechanics+rk+bansal+civil+engineering&tag=taskjunction-21" target="_blank" class="amazon-btn">
+              <span>₹</span> Amazon
+            </a>
+          </div>
+
+          <h3>Manning's Equation – Open Channel Flow</h3>
+          <p>Manning's equation is used to estimate velocity and discharge in open channels such as rivers, canals and drainage channels.</p>
+
+          <div class="formula-box">V = (1/n) × R^(2/3) × S^(1/2)
+Q = A × V
+Where: n = Manning's roughness coefficient
+       R = Hydraulic Radius = A/P (m)
+       S = Bed slope (dimensionless)
+       A = Cross-sectional area (m²)
+       P = Wetted perimeter (m)</div>
+
+          <h3>Hydraulic Jump</h3>
+          <p>A hydraulic jump is the abrupt transition from supercritical to subcritical flow in an open channel. It dissipates energy and is deliberately created downstream of sluice gates and spillways.</p>
+
+          <div class="formula-box">Sequent Depth Ratio: y2/y1 = (1/2)(√(1 + 8Fr1²) − 1)
+Where Fr1 = V1/√(g·y1) = Froude Number at section 1
+Energy Loss: ΔE = (y2 − y1)³ / (4·y1·y2)</div>
+
+          <div class="tip-box">
+            <strong>💡 Hydraulics Tip</strong>
+            <p>For design of irrigation canals, Kennedy's theory (silt theory) and Lacey's regime theory are used in India. Lacey's regime equations give the most reliable results for alluvial channels designed for non-silting, non-scouring conditions.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">BOOK RECOMMENDATION</p>
+            <h4>Irrigation Engineering – B.C. Punmia</h4>
+            <p>Covers canal design, hydraulic structures, dams and flood control.</p>
+            <a href="https://www.amazon.in/s?k=irrigation+engineering+bc+punmia&tag=taskjunction-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">FIELD INSTRUMENT</p>
+            <h4>Digital Flow Meter – Water Velocity</h4>
+            <p>Electromagnetic flow meter for accurate field water flow measurement.</p>
+            <a href="https://www.amazon.in/s?k=digital+flow+meter+water+velocity&tag=taskjunction-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AFFILIATE PRODUCTS SECTION -->
+<div style="background: #E8F0F8; padding: 64px 0;">
+  <div id="products" class="section" style="padding-top: 0; padding-bottom: 0;">
+    <h2 class="section-title">Recommended Civil Engineering Books & Tools</h2>
+    <p class="section-sub">Handpicked books & instruments for Civil Engineering – Available on Amazon India</p>
+
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img">📖</div>
+        <div class="product-body">
+          <div class="product-badge">⭐ Best Seller</div>
+          <div class="product-name">RCC Design – Dr. B.C. Punmia (IS 456)</div>
+          <div class="product-desc">Comprehensive RCC design book covering all IS code provisions</div>
+          <div class="product-footer">
+            <div class="product-price">₹695 <span>₹950</span></div>
+            <a href="https://www.amazon.in/s?k=rcc+design+bc+punmia+book&tag=taskjunction-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">🔭</div>
+        <div class="product-body">
+          <div class="product-badge">🔥 Popular</div>
+          <div class="product-name">Auto Level – Dumpy Level Instrument 32x</div>
+          <div class="product-desc">Professional surveying instrument with tripod and levelling staff</div>
+          <div class="product-footer">
+            <div class="product-price">₹6,499 <span>₹9,000</span></div>
+            <a href="https://www.amazon.in/s?k=auto+level+dumpy+level+32x+surveying&tag=taskjunction-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">📐</div>
+        <div class="product-body">
+          <div class="product-badge">📚 Top Rated</div>
+          <div class="product-name">IS Code Books Set – IS 456, IS 800, IS 1893</div>
+          <div class="product-desc">Official BIS codes for RCC, steel and earthquake design</div>
+          <div class="product-footer">
+            <div class="product-price">₹1,200 <span>₹1,800</span></div>
+            <a href="https://www.amazon.in/s?k=IS+code+civil+engineering+BIS+456+800+1893&tag=taskjunction-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">🧮</div>
+        <div class="product-body">
+          <div class="product-badge">⚙️ Essential</div>
+          <div class="product-name">Casio fx-991ES Plus Scientific Calculator</div>
+          <div class="product-desc">Approved for GATE, ESE and university exams, 417 functions</div>
+          <div class="product-footer">
+            <div class="product-price">₹1,150 <span>₹1,500</span></div>
+            <a href="https://www.amazon.in/s?k=casio+fx991es+plus+scientific+calculator&tag=taskjunction-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">🌍</div>
+        <div class="product-body">
+          <div class="product-badge">📚 Recommended</div>
+          <div class="product-name">Soil Mechanics & Foundation Engg. – K.R. Arora</div>
+          <div class="product-desc">Complete coverage of soil classification, testing and foundation design</div>
+          <div class="product-footer">
+            <div class="product-price">₹750 <span>₹1,100</span></div>
+            <a href="https://www.amazon.in/s?k=soil+mechanics+foundation+engineering+kr+arora&tag=taskjunction-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">📏</div>
+        <div class="product-body">
+          <div class="product-badge">🎯 New</div>
+          <div class="product-name">Digital Vernier Caliper 150mm – Stainless Steel</div>
+          <div class="product-desc">±0.02mm accuracy, for concrete core sampling and lab use</div>
+          <div class="product-footer">
+            <div class="product-price">₹499 <span>₹799</span></div>
+            <a href="https://www.amazon.in/s?k=digital+vernier+caliper+150mm+stainless&tag=taskjunction-21" target="_blank" class="amazon-btn">Buy ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top: 24px; font-size: 12px; color: var(--muted); text-align: center;">
+      * As an Amazon Associate, this site earns commission from qualifying purchases. Prices are approximate and may vary. Always verify on Amazon before purchasing.
+    </p>
+  </div>
+</div>
+
+<!-- SECOND AD BANNER -->
+<div style="max-width:1100px; margin:0 auto; padding: 32px 24px 0;">
+  <div class="ad-banner">
+    <div>
+      <div class="ad-text">🛒 Amazon Affiliate – Sponsored</div>
+      <div class="ad-title">GATE Civil Engineering – Previous Year Solved Papers</div>
+      <div class="ad-sub">Last 30 years solved papers with detailed solutions – Best for GATE 2026 prep</div>
+    </div>
+    <a href="https://www.amazon.in/s?k=GATE+civil+engineering+previous+year+solved+papers&tag=taskjunction-21" target="_blank" class="ad-btn">View on Amazon ↗</a>
+  </div>
+</div>
+
+<!-- PRIVACY POLICY SECTION -->
+<div id="privacy" style="background: #E8F0F8; padding: 64px 0; border-top: 1px solid #D8E5F0; margin-top: 32px;">
+  <div class="section" style="padding-top: 0; padding-bottom: 0;">
+    <h2 class="section-title">Privacy Policy</h2>
+    <p class="section-sub">Last updated: May 2025 &nbsp;|&nbsp; CivilPro eBook by TaskJunction</p>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">1. Information We Collect</h3>
+        <p style="font-size:15px; color:#2A3D52; line-height:1.8;">This website does <strong>not collect any personal information</strong> directly from visitors. We do not require registration, login, or any form submission to access the eBook content. Your reading activity stays private and no account is needed.</p>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">2. Amazon Affiliate Disclosure</h3>
+        <p style="font-size:15px; color:#2A3D52; line-height:1.8;">This website participates in the <strong>Amazon Associates Program</strong> (affiliate.amazon.in), an affiliate advertising program. We earn a small commission when you click on Amazon product links and make a purchase — at <strong>no extra cost to you</strong>. Our Store ID is <strong>taskjunction-21</strong>.</p>
+        <div style="background: var(--blue-light); border-left: 4px solid var(--blue); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-top: 14px; font-size: 14px; color: var(--blue-dark);">
+          ⚠️ Affiliate links are clearly marked with "Amazon ↗" labels throughout this site.
+        </div>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">3. Cookies & Tracking</h3>
+        <p style="font-size:15px; color:#2A3D52; line-height:1.8;">We do not use our own tracking cookies. However, when you click on Amazon affiliate links, <strong>Amazon may set cookies</strong> on your browser as per their own Privacy Policy. These cookies help Amazon track referrals and are governed by Amazon's terms, not ours. You can review Amazon's Privacy Policy at <a href="https://www.amazon.in/gp/help/customer/display.html?nodeId=200534380" target="_blank" style="color:var(--blue);">amazon.in/privacy</a>.</p>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">4. Third-Party Services</h3>
+        <p style="font-size:15px; color:#2A3D52; line-height:1.8;">This website loads fonts from <strong>Google Fonts</strong> (fonts.googleapis.com). Google may collect anonymous usage data as per their privacy policy. No other third-party analytics, advertising SDKs, or tracking scripts are used on this site.</p>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">5. Content Disclaimer</h3>
+        <p style="font-size:15px; color:#2A3D52; line-height:1.8;">All engineering content, formulas, IS code references and case studies on this website are provided <strong>for educational purposes only</strong>. While we strive for accuracy, always verify critical engineering calculations with a qualified licensed civil engineer or structural consultant before use in real construction projects. We are not liable for any errors or damages arising from use of this content.</p>
+      </div>
+
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px;">
+        <h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">6. Contact Us</h3>
+        <p style="font-size:15px; color:#2A3D52; line-height:1.8;">If you have any questions about this Privacy Policy or the content on this website, feel free to reach out:</p>
+        <p style="margin-top:10px; font-size:15px; color:#2A3D52;">
+          👤 <strong>Vaibhav Dhokpande</strong><br>
+          🌐 Website: <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:var(--blue);">vaibhavdhokpande-ai.github.io</a><br>
+          🏢 Platform: <strong>TaskJunction</strong>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="margin-bottom: 16px;">
+    <strong style="font-size:18px; font-family:'Playfair Display',serif; color:var(--yellow);">CivilPro eBook</strong>
+    <span style="color:rgba(255,255,255,0.4); margin: 0 10px;">|</span>
+    <span style="color:rgba(255,255,255,0.6); font-size:14px;">Free Civil Engineering eBook</span>
+  </div>
+  <div style="display:flex; justify-content:center; gap:32px; flex-wrap:wrap; margin-bottom:16px;">
+    <a href="#chapters" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Chapters</a>
+    <a href="#products" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Shop</a>
+    <a href="#privacy" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Privacy Policy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Home</a>
+  </div>
+  <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top:16px; margin-top:8px;">
+    <p style="color:rgba(255,255,255,0.35); font-size:12px; margin-bottom:8px;">
+      This site contains Amazon affiliate links (Store ID: taskjunction-21). Purchases through these links earn a small commission at no extra cost to you.
+    </p>
+    <p style="color:rgba(255,255,255,0.55); font-size:13px; font-weight:500;">
+      Made by <strong style="color:var(--yellow);">Vaibhav Dhokpande</strong>
+      &nbsp;&amp;&nbsp;
+      <strong style="color:#5B9BD5;">TaskJunction</strong>
+    </p>
+    <p style="color:rgba(255,255,255,0.25); font-size:11px; margin-top:6px;">© 2025 TaskJunction. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+  function setActiveTabBtn(index) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', i === index);
+    });
+  }
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
