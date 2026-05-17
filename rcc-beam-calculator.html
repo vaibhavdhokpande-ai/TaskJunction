@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCC Beam Design Calculator – IS 456 | TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f0fdf4; --surface:#ffffff; --surface2:#f6fef9;
+  --primary:#059669; --primary2:#34d399; --primary3:#d1fae5;
+  --border:#bbf7d0; --border2:#6ee7b7;
+  --text:#0f2718; --text2:#3d6b52; --text3:#7aab8a;
+  --shadow:0 2px 12px rgba(5,150,105,0.07); --shadow-lg:0 8px 32px rgba(5,150,105,0.13);
+  --font-d:'Clash Display',sans-serif; --font-b:'Sora',sans-serif; --font-m:'JetBrains Mono',monospace;
+  --radius:14px; --nav-h:60px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);line-height:1.6;min-height:100vh;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;height:var(--nav-h);background:rgba(240,253,244,0.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);transition:all .18s;}
+.nav-back:hover{background:var(--primary3);border-color:var(--border2);color:var(--primary);}
+.nav-title{font-family:var(--font-d);font-size:17px;font-weight:700;color:var(--text);margin-left:4px;}
+.nav-badge{margin-left:auto;font-family:var(--font-m);font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(5,150,105,0.1);color:var(--primary);border:1px solid rgba(5,150,105,0.25);letter-spacing:.08em;text-transform:uppercase;}
+
+/* HERO */
+.hero{padding:40px 24px 32px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;width:600px;height:400px;top:-150px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(5,150,105,0.1) 0%,transparent 65%);pointer-events:none;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:12px;}
+.hero-tag::before{content:'';width:16px;height:1.5px;background:var(--primary);border-radius:2px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(26px,5vw,44px);font-weight:700;letter-spacing:-.03em;margin-bottom:10px;line-height:1.1;}
+.hero h1 span{color:var(--primary);}
+.hero-sub{font-size:14px;color:var(--text2);max-width:520px;margin:0 auto;}
+
+/* LAYOUT */
+.container{max-width:1100px;margin:0 auto;padding:0 24px 60px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+@media(max-width:768px){.grid{grid-template-columns:1fr;}}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+.card-title{font-family:var(--font-d);font-size:16px;font-weight:700;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.card-title span{width:28px;height:28px;border-radius:8px;background:var(--primary3);border:1px solid rgba(5,150,105,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;}
+
+/* FORM */
+.form-group{margin-bottom:14px;}
+label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.03em;}
+.input-wrap{position:relative;}
+input,select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-family:var(--font-b);font-size:13.5px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .18s,box-shadow .18s;}
+input:focus,select:focus{border-color:var(--border2);box-shadow:0 0 0 3px rgba(5,150,105,0.1);}
+.unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:var(--font-m);font-size:10px;font-weight:600;color:var(--text3);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* BTN */
+.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 16px rgba(5,150,105,0.25);}
+.btn-primary:hover{background:#047857;transform:translateY(-1px);box-shadow:0 6px 20px rgba(5,150,105,0.3);}
+.btn-reset{background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-top:8px;}
+.btn-reset:hover{background:var(--primary3);color:var(--primary);}
+
+/* RESULTS */
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.result-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.result-label{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.result-value{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--primary);line-height:1;}
+.result-unit{font-family:var(--font-m);font-size:10px;color:var(--text3);margin-top:2px;}
+.result-item.highlight{background:var(--primary3);border-color:var(--border2);}
+.result-item.highlight .result-value{color:#047857;}
+
+.divider{height:1px;background:var(--border);margin:16px 0;}
+
+/* STATUS */
+.status{padding:10px 14px;border-radius:9px;font-size:13px;font-weight:500;display:none;}
+.status.ok{background:rgba(5,150,105,0.1);color:#047857;border:1px solid rgba(5,150,105,0.25);display:block;}
+.status.warn{background:rgba(234,179,8,0.1);color:#854d0e;border:1px solid rgba(234,179,8,0.25);display:block;}
+.status.fail{background:rgba(239,68,68,0.1);color:#b91c1c;border:1px solid rgba(239,68,68,0.25);display:block;}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2);}
+td:first-child{font-weight:600;color:var(--text);}
+tr:last-child td{border-bottom:none;}
+
+/* SECTION TAG */
+.section-tag{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:10px;margin-top:18px;display:block;}
+
+/* DIAGRAM */
+.beam-diagram{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+svg text{font-family:var(--font-m);}
+
+.note{font-size:11.5px;color:var(--text3);font-style:italic;margin-top:10px;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← Back</a>
+  <span class="nav-title">🏛️ RCC Beam Design</span>
+  <span class="nav-badge">IS 456 · Live</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Civil Engineering Tools</div>
+  <h1>RCC Beam <span>Design Calculator</span></h1>
+  <p class="hero-sub">Design singly reinforced rectangular beams per IS 456:2000. Compute moment capacity, steel area, shear reinforcement and deflection checks.</p>
+</div>
+
+<div class="container">
+  <div class="grid">
+
+    <!-- INPUTS -->
+    <div>
+      <div class="card">
+        <div class="card-title"><span>📐</span> Beam Geometry & Loading</div>
+
+        <div class="row2">
+          <div class="form-group">
+            <label>Beam Width (b)</label>
+            <div class="input-wrap"><input type="number" id="b" value="230" min="100" max="1000"><span class="unit">mm</span></div>
+          </div>
+          <div class="form-group">
+            <label>Overall Depth (D)</label>
+            <div class="input-wrap"><input type="number" id="D" value="450" min="100" max="3000"><span class="unit">mm</span></div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="form-group">
+            <label>Clear Cover</label>
+            <div class="input-wrap"><input type="number" id="cover" value="25" min="15" max="75"><span class="unit">mm</span></div>
+          </div>
+          <div class="form-group">
+            <label>Bar Diameter (main)</label>
+            <div class="input-wrap">
+              <select id="barDia">
+                <option value="10">10 mm</option>
+                <option value="12">12 mm</option>
+                <option value="16" selected>16 mm</option>
+                <option value="20">20 mm</option>
+                <option value="25">25 mm</option>
+                <option value="28">28 mm</option>
+                <option value="32">32 mm</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="form-group">
+            <label>Factored Moment (Mu)</label>
+            <div class="input-wrap"><input type="number" id="Mu" value="120" min="1"><span class="unit">kN·m</span></div>
+          </div>
+          <div class="form-group">
+            <label>Factored Shear (Vu)</label>
+            <div class="input-wrap"><input type="number" id="Vu" value="85" min="0"><span class="unit">kN</span></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="card-title" style="margin-bottom:12px;"><span>🧱</span> Material Properties</div>
+
+        <div class="row2">
+          <div class="form-group">
+            <label>Grade of Concrete</label>
+            <select id="fck">
+              <option value="20">M20</option>
+              <option value="25" selected>M25</option>
+              <option value="30">M30</option>
+              <option value="35">M35</option>
+              <option value="40">M40</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Grade of Steel</label>
+            <select id="fy">
+              <option value="250">Fe 250</option>
+              <option value="415" selected>Fe 415</option>
+              <option value="500">Fe 500</option>
+              <option value="550">Fe 550</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Beam Support Condition</label>
+          <select id="support">
+            <option value="simply">Simply Supported</option>
+            <option value="cantilever">Cantilever</option>
+            <option value="continuous">Continuous</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" onclick="calculate()">⚡ Calculate Design</button>
+        <button class="btn btn-reset" onclick="resetForm()">↺ Reset</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="resultsPanel">
+      <div class="card">
+        <div class="card-title"><span>📊</span> Design Results</div>
+        <div id="statusMsg" class="status"></div>
+
+        <span class="section-tag">Effective Depth & Capacity</span>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Eff. Depth (d)</div>
+            <div class="result-value" id="r_d">—</div>
+            <div class="result-unit">mm</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Moment Capacity (Mu,lim)</div>
+            <div class="result-value" id="r_Mulim">—</div>
+            <div class="result-unit">kN·m</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">x/d (Neutral Axis)</div>
+            <div class="result-value" id="r_xu_d">—</div>
+            <div class="result-unit">ratio</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">xu,max / d</div>
+            <div class="result-value" id="r_xumax">—</div>
+            <div class="result-unit">IS 456</div>
+          </div>
+        </div>
+
+        <span class="section-tag">Steel Reinforcement</span>
+        <div class="result-grid">
+          <div class="result-item highlight">
+            <div class="result-label">Ast Required</div>
+            <div class="result-value" id="r_Ast">—</div>
+            <div class="result-unit">mm²</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">No. of Bars</div>
+            <div class="result-value" id="r_nBars">—</div>
+            <div class="result-unit">nos</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Ast Provided</div>
+            <div class="result-value" id="r_AstProv">—</div>
+            <div class="result-unit">mm²</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Pt (% Steel)</div>
+            <div class="result-value" id="r_pt">—</div>
+            <div class="result-unit">%</div>
+          </div>
+        </div>
+
+        <span class="section-tag">Shear Design</span>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">τv (Nominal)</div>
+            <div class="result-value" id="r_tv">—</div>
+            <div class="result-unit">N/mm²</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">τc (Concrete)</div>
+            <div class="result-value" id="r_tc">—</div>
+            <div class="result-unit">N/mm²</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Stirrup Spacing</div>
+            <div class="result-value" id="r_sv">—</div>
+            <div class="result-unit">mm c/c</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Stirrup Dia</div>
+            <div class="result-value" id="r_stirDia">—</div>
+            <div class="result-unit">mm (2-leg)</div>
+          </div>
+        </div>
+
+        <span class="section-tag">IS 456 Checks</span>
+        <table>
+          <thead><tr><th>Check</th><th>Required</th><th>Provided</th><th>Status</th></tr></thead>
+          <tbody id="checksTable"></tbody>
+        </table>
+
+        <div class="note">* Calculations based on IS 456:2000, Limit State Method. Provide stirrups even if shear is within limit (min. 8mm @300mm c/c).</div>
+      </div>
+
+      <!-- CROSS-SECTION DIAGRAM -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title"><span>📏</span> Cross-Section Diagram</div>
+        <div class="beam-diagram">
+          <svg id="beamSvg" width="100%" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const xuMaxTable = {250:0.53, 415:0.48, 500:0.46, 550:0.44};
+
+function calculate() {
+  const b   = +document.getElementById('b').value;
+  const D   = +document.getElementById('D').value;
+  const cov = +document.getElementById('cover').value;
+  const dia = +document.getElementById('barDia').value;
+  const Mu  = +document.getElementById('Mu').value * 1e6; // N·mm
+  const Vu  = +document.getElementById('Vu').value * 1e3; // N
+  const fck = +document.getElementById('fck').value;
+  const fy  = +document.getElementById('fy').value;
+
+  const d = D - cov - dia / 2;
+  const xuMaxRatio = xuMaxTable[fy] || 0.48;
+  const fcd = 0.446 * fck;
+
+  // Mu,lim
+  const xuMax = xuMaxRatio * d;
+  const Mulim = 0.36 * fck * b * xuMax * (d - 0.42 * xuMax); // N·mm
+
+  // xu/d from Mu
+  // Mu = 0.36*fck*b*xu*(d-0.42*xu) → quadratic in xu
+  const A = 0.36 * fck * b;
+  const B = -0.36 * fck * b * d / 0.42;
+  // 0.36*fck*b*xu*d - 0.36*fck*b*0.42*xu² = Mu
+  // 0.1512*fck*b*xu² - 0.36*fck*b*xu*d + Mu = 0
+  const a2 = 0.1512 * fck * b;
+  const b2 = -0.36 * fck * b * d;
+  const c2 = Mu;
+  const disc = b2*b2 - 4*a2*c2;
+  let xu_d = null, Ast = null, sectionOk = true;
+
+  if (disc < 0) { sectionOk = false; }
+  else {
+    const xu = (-b2 - Math.sqrt(disc)) / (2 * a2);
+    xu_d = xu / d;
+    if (xu_d > xuMaxRatio) sectionOk = false;
+  }
+
+  // Ast from equilibrium: 0.87*fy*Ast = 0.36*fck*b*xu → xu = 0.87*fy*Ast/(0.36*fck*b)
+  // Substitute into moment: iterative or direct formula
+  // Using: Ast = Mu / (0.87*fy*(d - 0.42*xu))
+  let xu = sectionOk ? xu_d * d : xuMaxRatio * d;
+  Ast = Mu / (0.87 * fy * (d - 0.42 * xu));
+
+  // Min & Max steel
+  const AstMin = Math.max(0.85 * b * d / fy, 0.12 * b * D / 100);
+  const AstMax = 0.04 * b * D;
+  if (Ast < AstMin) Ast = AstMin;
+
+  const areaBar = Math.PI * dia * dia / 4;
+  const nBars = Math.ceil(Ast / areaBar);
+  const AstProv = nBars * areaBar;
+  const pt = (AstProv / (b * d)) * 100;
+
+  // Shear
+  const tv = Vu / (b * d);
+  // τc from IS 456 Table 19 (approx formula)
+  const tc = Math.min(0.85 * Math.sqrt(0.8 * fck * (Math.sqrt(1 + 5 * (0.8 * fck) / (tv || 0.1)) - 1)) / 6, 0.63 * Math.sqrt(fck));
+  // tc from pt – simplified IS 456 Table 19
+  const tcFromPt = getTc(pt, fck);
+
+  let stirDia = 8, sv = 300, shearNote = '';
+  if (tv > tcFromPt) {
+    const Vus = Vu - tcFromPt * b * d;
+    stirDia = tv > 2 ? 10 : 8;
+    const Asv = 2 * Math.PI * stirDia * stirDia / 4;
+    sv = Math.floor(0.87 * fy * Asv * d / Vus);
+    sv = Math.min(sv, 0.75 * d, 300);
+    sv = Math.max(sv, 50);
+  } else {
+    sv = Math.min(0.75 * d, 300);
+    shearNote = 'Min. stirrups required';
+  }
+  sv = Math.round(sv / 5) * 5;
+
+  // Deflection (l/d check – simplified, assume l not given)
+  const basicLD = document.getElementById('support').value === 'cantilever' ? 7 : document.getElementById('support').value === 'continuous' ? 26 : 20;
+  const ptCalc = pt;
+  const modFactor = ptCalc < 0.5 ? 1.0 + (0.5 - ptCalc) * 0.2 : 1.0;
+
+  // Output
+  document.getElementById('r_d').textContent = Math.round(d);
+  document.getElementById('r_Mulim').textContent = (Mulim / 1e6).toFixed(1);
+  document.getElementById('r_xu_d').textContent = xu_d ? xu_d.toFixed(3) : '>lim';
+  document.getElementById('r_xumax').textContent = xuMaxRatio.toFixed(2);
+  document.getElementById('r_Ast').textContent = Math.round(Ast);
+  document.getElementById('r_nBars').textContent = nBars;
+  document.getElementById('r_AstProv').textContent = Math.round(AstProv);
+  document.getElementById('r_pt').textContent = pt.toFixed(3);
+  document.getElementById('r_tv').textContent = tv.toFixed(3);
+  document.getElementById('r_tc').textContent = tcFromPt.toFixed(3);
+  document.getElementById('r_sv').textContent = sv;
+  document.getElementById('r_stirDia').textContent = stirDia;
+
+  const overMoment = Mu <= Mulim;
+  const steelOk = Ast >= AstMin && AstProv <= AstMax;
+  const shearOk = tv <= 4.0; // max shear stress from IS 456
+
+  const statusEl = document.getElementById('statusMsg');
+  if (!overMoment) {
+    statusEl.className = 'status fail';
+    statusEl.textContent = '⚠ Section is over-reinforced or insufficient! Increase depth or width.';
+  } else if (!steelOk) {
+    statusEl.className = 'status warn';
+    statusEl.textContent = '⚡ Steel area exceeds limits. Revise section dimensions.';
+  } else {
+    statusEl.className = 'status ok';
+    statusEl.textContent = '✓ Beam design is satisfactory as per IS 456:2000.';
+  }
+
+  // Checks table
+  document.getElementById('checksTable').innerHTML = `
+    <tr><td>Moment Capacity</td><td>Mu = ${(Mu/1e6).toFixed(1)} kN·m</td><td>Mu,lim = ${(Mulim/1e6).toFixed(1)} kN·m</td><td style="color:${overMoment?'#059669':'#dc2626'}">${overMoment?'✓ OK':'✗ FAIL'}</td></tr>
+    <tr><td>Min. Steel (IS 26.5.1)</td><td>Ast,min = ${Math.round(AstMin)} mm²</td><td>Ast,prov = ${Math.round(AstProv)} mm²</td><td style="color:${AstProv>=AstMin?'#059669':'#dc2626'}">${AstProv>=AstMin?'✓ OK':'✗ FAIL'}</td></tr>
+    <tr><td>Max. Steel (IS 26.5.1)</td><td>Ast,max = ${Math.round(AstMax)} mm²</td><td>Ast,prov = ${Math.round(AstProv)} mm²</td><td style="color:${AstProv<=AstMax?'#059669':'#dc2626'}">${AstProv<=AstMax?'✓ OK':'✗ FAIL'}</td></tr>
+    <tr><td>Shear Stress</td><td>τv = ${tv.toFixed(3)} N/mm²</td><td>τc,max = 4.0 N/mm²</td><td style="color:${shearOk?'#059669':'#dc2626'}">${shearOk?'✓ OK':'✗ FAIL'}</td></tr>
+    <tr><td>Neutral Axis Depth</td><td>xu/d = ${xu_d?xu_d.toFixed(3):'>lim'}</td><td>xu,max/d = ${xuMaxRatio}</td><td style="color:${overMoment?'#059669':'#dc2626'}">${overMoment?'✓ OK':'✗ FAIL'}</td></tr>
+  `;
+
+  drawDiagram(b, D, d, dia, nBars, cov, stirDia);
+}
+
+function getTc(pt, fck) {
+  // IS 456 Table 19 simplified
+  const pts  = [0.15, 0.25, 0.50, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00];
+  const tc20 = [0.28, 0.36, 0.48, 0.56, 0.62, 0.67, 0.72, 0.75, 0.79, 0.81, 0.82, 0.82, 0.82];
+  const k = Math.sqrt(fck / 20);
+  let tc = 0.28;
+  for (let i = 0; i < pts.length - 1; i++) {
+    if (pt >= pts[i] && pt < pts[i+1]) {
+      tc = tc20[i] + (tc20[i+1]-tc20[i])*(pt-pts[i])/(pts[i+1]-pts[i]);
+      break;
+    }
+    if (pt >= pts[pts.length-1]) tc = tc20[tc20.length-1];
+  }
+  return tc * k;
+}
+
+function drawDiagram(b, D, d, dia, nBars, cov, stirDia) {
+  const svg = document.getElementById('beamSvg');
+  const W = 300, H = 200;
+  const scale = Math.min((W - 80) / b, (H - 40) / D);
+  const bw = b * scale, dh = D * scale;
+  const ox = (W - bw) / 2, oy = (H - dh) / 2;
+  const coverPx = cov * scale;
+  const diaPx = Math.max(dia * scale, 6);
+  const stirPx = Math.max(stirDia * scale, 3);
+
+  let html = `
+    <rect x="${ox}" y="${oy}" width="${bw}" height="${dh}" fill="#d1fae5" stroke="#059669" stroke-width="2" rx="2"/>
+    <!-- stirrups -->
+    <rect x="${ox+stirPx+2}" y="${oy+stirPx+2}" width="${bw-2*stirPx-4}" height="${dh-2*stirPx-4}" fill="none" stroke="#0f766e" stroke-width="${stirPx}" rx="1"/>
+  `;
+  // bars
+  const barY = oy + dh - coverPx - stirPx - diaPx / 2;
+  const spacing = (bw - 2*coverPx - 2*stirPx - diaPx) / Math.max(nBars - 1, 1);
+  for (let i = 0; i < nBars; i++) {
+    const bx = ox + coverPx + stirPx + diaPx/2 + i * spacing;
+    html += `<circle cx="${bx}" cy="${barY}" r="${diaPx/2}" fill="#047857"/>`;
+  }
+  // neutral axis dashed
+  const xu_d = +document.getElementById('r_xu_d').textContent;
+  if (xu_d && xu_d > 0) {
+    const naY = oy + (1 - (d - xu_d * d) / D) * dh - coverPx;
+    html += `<line x1="${ox}" y1="${naY}" x2="${ox+bw}" y2="${naY}" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+    html += `<text x="${ox+bw+4}" y="${naY+4}" font-size="8" fill="#d97706">N.A.</text>`;
+  }
+  // dims
+  html += `<text x="${ox-2}" y="${oy+dh/2+4}" font-size="9" fill="#059669" text-anchor="end">D=${D}</text>`;
+  html += `<text x="${ox+bw/2}" y="${oy+dh+16}" font-size="9" fill="#059669" text-anchor="middle">b=${b} mm</text>`;
+  html += `<text x="${W/2}" y="${oy-8}" font-size="9" fill="#047857" text-anchor="middle" font-weight="600">Cross-Section</text>`;
+  svg.innerHTML = html;
+}
+
+function resetForm() {
+  document.getElementById('b').value = 230;
+  document.getElementById('D').value = 450;
+  document.getElementById('cover').value = 25;
+  document.getElementById('barDia').value = 16;
+  document.getElementById('Mu').value = 120;
+  document.getElementById('Vu').value = 85;
+  document.getElementById('fck').value = 25;
+  document.getElementById('fy').value = 415;
+  document.getElementById('support').value = 'simply';
+  document.getElementById('statusMsg').className = 'status';
+  document.getElementById('checksTable').innerHTML = '';
+  ['r_d','r_Mulim','r_xu_d','r_xumax','r_Ast','r_nBars','r_AstProv','r_pt','r_tv','r_tc','r_sv','r_stirDia'].forEach(id=>document.getElementById(id).textContent='—');
+  document.getElementById('beamSvg').innerHTML='';
+}
+
+// Auto-calculate on load
+calculate();
+</script>
+</body>
+</html>

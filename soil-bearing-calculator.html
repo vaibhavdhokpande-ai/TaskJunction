@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soil Bearing Capacity Calculator | TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0fdf4;--surface:#fff;--surface2:#f6fef9;--primary:#059669;--primary3:#d1fae5;--border:#bbf7d0;--border2:#6ee7b7;--text:#0f2718;--text2:#3d6b52;--text3:#7aab8a;--font-d:'Clash Display',sans-serif;--font-b:'Sora',sans-serif;--font-m:'JetBrains Mono',monospace;--radius:14px;--nav-h:60px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);line-height:1.6;}
+nav{position:sticky;top:0;z-index:50;height:var(--nav-h);background:rgba(240,253,244,0.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);transition:all .18s;}
+.nav-back:hover{background:var(--primary3);color:var(--primary);}
+.nav-title{font-family:var(--font-d);font-size:17px;font-weight:700;color:var(--text);}
+.nav-badge{margin-left:auto;font-family:var(--font-m);font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(5,150,105,0.1);color:var(--primary);border:1px solid rgba(5,150,105,0.25);letter-spacing:.08em;text-transform:uppercase;}
+.hero{padding:40px 24px 32px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;width:600px;height:400px;top:-150px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(5,150,105,0.1) 0%,transparent 65%);pointer-events:none;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:12px;}
+.hero-tag::before{content:'';width:16px;height:1.5px;background:var(--primary);border-radius:2px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(24px,5vw,42px);font-weight:700;letter-spacing:-.03em;margin-bottom:10px;}
+.hero h1 span{color:var(--primary);}
+.hero-sub{font-size:14px;color:var(--text2);max-width:520px;margin:0 auto;}
+.container{max-width:1100px;margin:0 auto;padding:0 24px 60px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+@media(max-width:768px){.grid{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:0 2px 12px rgba(5,150,105,0.07);}
+.card+.card{margin-top:20px;}
+.card-title{font-family:var(--font-d);font-size:16px;font-weight:700;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.card-title span{width:28px;height:28px;border-radius:8px;background:var(--primary3);border:1px solid rgba(5,150,105,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.form-group{margin-bottom:14px;}
+label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;}
+.input-wrap{position:relative;}
+input,select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-family:var(--font-b);font-size:13.5px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .18s;}
+input:focus,select:focus{border-color:var(--border2);box-shadow:0 0 0 3px rgba(5,150,105,0.1);}
+.unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:var(--font-m);font-size:10px;font-weight:600;color:var(--text3);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 16px rgba(5,150,105,0.25);}
+.btn-primary:hover{background:#047857;transform:translateY(-1px);}
+.btn-reset{background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-top:8px;}
+.btn-reset:hover{background:var(--primary3);color:var(--primary);}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.result-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.result-label{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.result-value{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--primary);line-height:1;}
+.result-unit{font-family:var(--font-m);font-size:10px;color:var(--text3);margin-top:2px;}
+.result-item.highlight{background:var(--primary3);border-color:var(--border2);}
+.result-item.highlight .result-value{color:#047857;}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+.status{padding:10px 14px;border-radius:9px;font-size:13px;font-weight:500;display:none;margin-bottom:12px;}
+.status.ok{background:rgba(5,150,105,0.1);color:#047857;border:1px solid rgba(5,150,105,0.25);display:block;}
+.status.warn{background:rgba(234,179,8,0.1);color:#854d0e;border:1px solid rgba(234,179,8,0.25);display:block;}
+.section-tag{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:10px;margin-top:18px;display:block;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2);}
+td:first-child{font-weight:600;color:var(--text);}
+tr:last-child td{border-bottom:none;}
+.note{font-size:11.5px;color:var(--text3);font-style:italic;margin-top:10px;line-height:1.5;}
+.method-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.tab{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);font-family:var(--font-b);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;text-align:center;color:var(--text2);}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back">← Back</a>
+  <span class="nav-title">🪨 Soil Bearing Capacity</span>
+  <span class="nav-badge">Geotechnical · Live</span>
+</nav>
+<div class="hero">
+  <div class="hero-tag">Civil Engineering Tools</div>
+  <h1>Soil <span>Bearing Capacity</span> Calculator</h1>
+  <p class="hero-sub">Calculate ultimate and safe bearing capacity using Terzaghi's and Meyerhof's equations for strip, square, circular and rectangular footings.</p>
+</div>
+<div class="container">
+  <div class="grid">
+    <div>
+      <div class="card">
+        <div class="card-title"><span>⚙️</span> Calculation Method</div>
+        <div class="method-tabs">
+          <div class="tab active" id="tab1" onclick="setMethod('terzaghi')">Terzaghi</div>
+          <div class="tab" id="tab2" onclick="setMethod('meyerhof')">Meyerhof</div>
+        </div>
+        <div class="card-title" style="margin-bottom:12px;"><span>🪨</span> Soil Properties</div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Cohesion (c)</label>
+            <div class="input-wrap"><input type="number" id="c" value="20" min="0"><span class="unit">kN/m²</span></div>
+          </div>
+          <div class="form-group">
+            <label>Friction Angle (φ)</label>
+            <div class="input-wrap"><input type="number" id="phi" value="25" min="0" max="45"><span class="unit">deg</span></div>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Unit Weight (γ)</label>
+            <div class="input-wrap"><input type="number" id="gamma" value="18" min="14" max="24"><span class="unit">kN/m³</span></div>
+          </div>
+          <div class="form-group">
+            <label>Unit Weight (γ') — sat</label>
+            <div class="input-wrap"><input type="number" id="gammaSat" value="9" min="0" max="14"><span class="unit">kN/m³</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-title" style="margin-bottom:12px;"><span>📐</span> Footing Details</div>
+        <div class="form-group">
+          <label>Footing Shape</label>
+          <select id="shape" onchange="toggleRect()">
+            <option value="strip">Strip Footing</option>
+            <option value="square" selected>Square Footing</option>
+            <option value="circular">Circular Footing</option>
+            <option value="rectangular">Rectangular Footing</option>
+          </select>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Width / Diameter (B)</label>
+            <div class="input-wrap"><input type="number" id="B" value="1.5" min="0.3" step="0.1"><span class="unit">m</span></div>
+          </div>
+          <div class="form-group" id="lenGrp">
+            <label>Length (L)</label>
+            <div class="input-wrap"><input type="number" id="L" value="2.0" min="0.3" step="0.1"><span class="unit">m</span></div>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Depth of Foundation (Df)</label>
+            <div class="input-wrap"><input type="number" id="Df" value="1.5" min="0.3" step="0.1"><span class="unit">m</span></div>
+          </div>
+          <div class="form-group">
+            <label>Water Table Depth (dw)</label>
+            <div class="input-wrap"><input type="number" id="dw" value="3.0" min="0" step="0.1"><span class="unit">m</span></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Factor of Safety (FOS)</label>
+          <div class="input-wrap"><input type="number" id="FOS" value="3" min="1.5" max="5" step="0.5"></div>
+        </div>
+        <button class="btn btn-primary" onclick="calculate()">⚡ Calculate Bearing Capacity</button>
+        <button class="btn btn-reset" onclick="resetAll()">↺ Reset</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title"><span>📊</span> Results</div>
+        <div id="statusMsg" class="status"></div>
+        <span class="section-tag">Bearing Capacity Factors</span>
+        <div class="result-grid">
+          <div class="result-item"><div class="result-label">Nc</div><div class="result-value" id="r_Nc">—</div></div>
+          <div class="result-item"><div class="result-label">Nq</div><div class="result-value" id="r_Nq">—</div></div>
+          <div class="result-item"><div class="result-label">Nγ</div><div class="result-value" id="r_Ng">—</div></div>
+          <div class="result-item"><div class="result-label">Overburden (q)</div><div class="result-value" id="r_q">—</div><div class="result-unit">kN/m²</div></div>
+        </div>
+        <span class="section-tag">Bearing Capacity</span>
+        <div class="result-grid">
+          <div class="result-item"><div class="result-label">Ultimate (qu)</div><div class="result-value" id="r_qu">—</div><div class="result-unit">kN/m²</div></div>
+          <div class="result-item highlight"><div class="result-label">Safe (qs = qu/FOS)</div><div class="result-value" id="r_qs">—</div><div class="result-unit">kN/m²</div></div>
+          <div class="result-item highlight"><div class="result-label">Net Safe SBC</div><div class="result-value" id="r_qnet">—</div><div class="result-unit">kN/m²</div></div>
+          <div class="result-item"><div class="result-label">FOS Applied</div><div class="result-value" id="r_fos">—</div></div>
+        </div>
+        <span class="section-tag">Bearing Capacity Factors Breakdown</span>
+        <table>
+          <thead><tr><th>Term</th><th>Formula Component</th><th>Value (kN/m²)</th></tr></thead>
+          <tbody id="breakTable"></tbody>
+        </table>
+        <div class="note" id="methodNote"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let method = 'terzaghi';
+function setMethod(m) {
+  method = m;
+  document.getElementById('tab1').className = 'tab' + (m==='terzaghi'?' active':'');
+  document.getElementById('tab2').className = 'tab' + (m==='meyerhof'?' active':'');
+  calculate();
+}
+function toggleRect() {
+  const s = document.getElementById('shape').value;
+  document.getElementById('lenGrp').style.display = (s === 'rectangular') ? '' : 'none';
+  if (s !== 'rectangular') document.getElementById('L').value = document.getElementById('B').value;
+}
+toggleRect();
+
+function calculate() {
+  const c     = +document.getElementById('c').value;
+  const phi   = +document.getElementById('phi').value;
+  const gamma = +document.getElementById('gamma').value;
+  const gammaSat = +document.getElementById('gammaSat').value;
+  const B     = +document.getElementById('B').value;
+  const shape = document.getElementById('shape').value;
+  const L     = shape === 'rectangular' ? +document.getElementById('L').value : B;
+  const Df    = +document.getElementById('Df').value;
+  const dw    = +document.getElementById('dw').value;
+  const FOS   = +document.getElementById('FOS').value;
+
+  const phiRad = phi * Math.PI / 180;
+
+  let Nc, Nq, Ng;
+  if (method === 'terzaghi') {
+    // Terzaghi's factors
+    Nq = Math.exp(2 * (0.75 * Math.PI - phiRad / 2) * Math.tan(phiRad)) / (2 * Math.cos(Math.PI / 4 + phiRad / 2) ** 2);
+    Nc = (Nq - 1) / Math.tan(phiRad) || 5.7;
+    Ng = (Nq - 1) * Math.tan(1.4 * phiRad);
+  } else {
+    // Meyerhof's factors
+    Nq = Math.exp(Math.PI * Math.tan(phiRad)) * Math.tan(Math.PI / 4 + phiRad / 2) ** 2;
+    Nc = phi > 0 ? (Nq - 1) / Math.tan(phiRad) : 5.14;
+    Ng = (Nq - 1) * Math.tan(phiRad);
+  }
+
+  // Shape factors (Terzaghi modified / Meyerhof)
+  let sc = 1, sq = 1, sg = 1;
+  if (shape === 'square') { sc = 1.3; sq = 1; sg = 0.8; }
+  else if (shape === 'circular') { sc = 1.3; sq = 1; sg = 0.6; }
+  else if (shape === 'rectangular') {
+    sc = 1 + 0.2 * B / L;
+    sq = 1 + 0.1 * B / L;
+    sg = 1 - 0.1 * B / L;
+  }
+
+  // Water table correction
+  let gammaEff = gamma;
+  let qEff = gamma * Df;
+  if (dw <= Df) { qEff = gammaSat * dw + gamma * (Df - dw); gammaEff = gammaSat; }
+  else if (dw < Df + B) { gammaEff = gammaSat + (gamma - gammaSat) * (dw - Df) / B; }
+
+  const q = qEff;
+  const term1 = c * Nc * sc;
+  const term2 = q * Nq * sq;
+  const term3 = 0.5 * gammaEff * B * Ng * sg;
+  const qu = term1 + term2 + term3;
+  const qs = qu / FOS;
+  const qnet = qs - q;
+
+  document.getElementById('r_Nc').textContent = Nc.toFixed(2);
+  document.getElementById('r_Nq').textContent = Nq.toFixed(2);
+  document.getElementById('r_Ng').textContent = Ng.toFixed(2);
+  document.getElementById('r_q').textContent = q.toFixed(2);
+  document.getElementById('r_qu').textContent = qu.toFixed(2);
+  document.getElementById('r_qs').textContent = qs.toFixed(2);
+  document.getElementById('r_qnet').textContent = Math.max(qnet,0).toFixed(2);
+  document.getElementById('r_fos').textContent = FOS;
+
+  const statusEl = document.getElementById('statusMsg');
+  if (qnet < 100) { statusEl.className='status warn'; statusEl.textContent='⚡ Net safe SBC is low (<100 kN/m²). Consider deeper foundation or ground improvement.'; }
+  else { statusEl.className='status ok'; statusEl.textContent=`✓ Net safe bearing capacity = ${Math.max(qnet,0).toFixed(1)} kN/m² (${method.charAt(0).toUpperCase()+method.slice(1)}'s method).`; }
+
+  document.getElementById('breakTable').innerHTML = `
+    <tr><td>Cohesion (c·Nc·sc)</td><td>${c.toFixed(1)} × ${Nc.toFixed(2)} × ${sc.toFixed(2)}</td><td>${term1.toFixed(2)}</td></tr>
+    <tr><td>Surcharge (q·Nq·sq)</td><td>${q.toFixed(2)} × ${Nq.toFixed(2)} × ${sq.toFixed(2)}</td><td>${term2.toFixed(2)}</td></tr>
+    <tr><td>Unit weight (½γBNγsγ)</td><td>0.5 × ${gammaEff.toFixed(1)} × ${B} × ${Ng.toFixed(2)} × ${sg.toFixed(2)}</td><td>${term3.toFixed(2)}</td></tr>
+    <tr><td><strong>Total qu</strong></td><td></td><td><strong>${qu.toFixed(2)}</strong></td></tr>
+  `;
+  document.getElementById('methodNote').textContent = `* ${method==='terzaghi'?"Terzaghi's (1943) general bearing capacity equation used. Shape factors for "+shape+" footing applied.":"Meyerhof's (1963) bearing capacity equation used. Depth and inclination factors ignored for vertical central load."}`;
+}
+
+function resetAll() {
+  document.getElementById('c').value=20; document.getElementById('phi').value=25;
+  document.getElementById('gamma').value=18; document.getElementById('gammaSat').value=9;
+  document.getElementById('B').value=1.5; document.getElementById('L').value=2.0;
+  document.getElementById('Df').value=1.5; document.getElementById('dw').value=3.0;
+  document.getElementById('FOS').value=3; document.getElementById('shape').value='square';
+  toggleRect();
+  document.getElementById('statusMsg').className='status';
+  document.getElementById('breakTable').innerHTML='';
+  ['r_Nc','r_Nq','r_Ng','r_q','r_qu','r_qs','r_qnet','r_fos'].forEach(id=>document.getElementById(id).textContent='—');
+}
+calculate();
+</script>
+</body>
+</html>

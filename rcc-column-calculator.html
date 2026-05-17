@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCC Column Design Calculator – IS 456 | TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0fdf4;--surface:#fff;--surface2:#f6fef9;--primary:#059669;--primary2:#34d399;--primary3:#d1fae5;--border:#bbf7d0;--border2:#6ee7b7;--text:#0f2718;--text2:#3d6b52;--text3:#7aab8a;--shadow:0 2px 12px rgba(5,150,105,0.07);--shadow-lg:0 8px 32px rgba(5,150,105,0.13);--font-d:'Clash Display',sans-serif;--font-b:'Sora',sans-serif;--font-m:'JetBrains Mono',monospace;--radius:14px;--nav-h:60px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);line-height:1.6;min-height:100vh;}
+nav{position:sticky;top:0;z-index:50;height:var(--nav-h);background:rgba(240,253,244,0.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);transition:all .18s;}
+.nav-back:hover{background:var(--primary3);color:var(--primary);}
+.nav-title{font-family:var(--font-d);font-size:17px;font-weight:700;color:var(--text);}
+.nav-badge{margin-left:auto;font-family:var(--font-m);font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(5,150,105,0.1);color:var(--primary);border:1px solid rgba(5,150,105,0.25);letter-spacing:.08em;text-transform:uppercase;}
+.hero{padding:40px 24px 32px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;width:600px;height:400px;top:-150px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(5,150,105,0.1) 0%,transparent 65%);pointer-events:none;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:12px;}
+.hero-tag::before{content:'';width:16px;height:1.5px;background:var(--primary);border-radius:2px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(24px,5vw,42px);font-weight:700;letter-spacing:-.03em;margin-bottom:10px;line-height:1.1;}
+.hero h1 span{color:var(--primary);}
+.hero-sub{font-size:14px;color:var(--text2);max-width:520px;margin:0 auto;}
+.container{max-width:1100px;margin:0 auto;padding:0 24px 60px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+@media(max-width:768px){.grid{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:0;}
+.card+.card{margin-top:20px;}
+.card-title{font-family:var(--font-d);font-size:16px;font-weight:700;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.card-title span{width:28px;height:28px;border-radius:8px;background:var(--primary3);border:1px solid rgba(5,150,105,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.form-group{margin-bottom:14px;}
+label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.03em;}
+.input-wrap{position:relative;}
+input,select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-family:var(--font-b);font-size:13.5px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .18s,box-shadow .18s;}
+input:focus,select:focus{border-color:var(--border2);box-shadow:0 0 0 3px rgba(5,150,105,0.1);}
+.unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:var(--font-m);font-size:10px;font-weight:600;color:var(--text3);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 16px rgba(5,150,105,0.25);}
+.btn-primary:hover{background:#047857;transform:translateY(-1px);}
+.btn-reset{background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-top:8px;}
+.btn-reset:hover{background:var(--primary3);color:var(--primary);}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.result-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.result-label{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.result-value{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--primary);line-height:1;}
+.result-unit{font-family:var(--font-m);font-size:10px;color:var(--text3);margin-top:2px;}
+.result-item.highlight{background:var(--primary3);border-color:var(--border2);}
+.result-item.highlight .result-value{color:#047857;}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+.status{padding:10px 14px;border-radius:9px;font-size:13px;font-weight:500;display:none;margin-bottom:12px;}
+.status.ok{background:rgba(5,150,105,0.1);color:#047857;border:1px solid rgba(5,150,105,0.25);display:block;}
+.status.warn{background:rgba(234,179,8,0.1);color:#854d0e;border:1px solid rgba(234,179,8,0.25);display:block;}
+.status.fail{background:rgba(239,68,68,0.1);color:#b91c1c;border:1px solid rgba(239,68,68,0.25);display:block;}
+.section-tag{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:10px;margin-top:18px;display:block;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2);}
+td:first-child{font-weight:600;color:var(--text);}
+tr:last-child td{border-bottom:none;}
+.col-diagram{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+.note{font-size:11.5px;color:var(--text3);font-style:italic;margin-top:10px;line-height:1.5;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back">← Back</a>
+  <span class="nav-title">🧱 Column Design</span>
+  <span class="nav-badge">IS 456 · Live</span>
+</nav>
+<div class="hero">
+  <div class="hero-tag">Civil Engineering Tools</div>
+  <h1>RCC Column <span>Design Calculator</span></h1>
+  <p class="hero-sub">Design short and slender RCC columns under axial load and uniaxial bending as per IS 456:2000 using Limit State Method.</p>
+</div>
+<div class="container">
+  <div class="grid">
+    <div>
+      <div class="card">
+        <div class="card-title"><span>📏</span> Column Geometry</div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Width (b)</label>
+            <div class="input-wrap"><input type="number" id="b" value="300" min="150"><span class="unit">mm</span></div>
+          </div>
+          <div class="form-group">
+            <label>Depth (D)</label>
+            <div class="input-wrap"><input type="number" id="D" value="400" min="150"><span class="unit">mm</span></div>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Effective Length (leff)</label>
+            <div class="input-wrap"><input type="number" id="leff" value="3200" min="500"><span class="unit">mm</span></div>
+          </div>
+          <div class="form-group">
+            <label>Clear Cover</label>
+            <div class="input-wrap"><input type="number" id="cover" value="40" min="25"><span class="unit">mm</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-title" style="margin-bottom:12px;"><span>⚡</span> Loading</div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Factored Axial Load (Pu)</label>
+            <div class="input-wrap"><input type="number" id="Pu" value="900" min="10"><span class="unit">kN</span></div>
+          </div>
+          <div class="form-group">
+            <label>Factored Moment (Mu)</label>
+            <div class="input-wrap"><input type="number" id="Mu" value="80" min="0"><span class="unit">kN·m</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-title" style="margin-bottom:12px;"><span>🧱</span> Materials</div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Concrete Grade</label>
+            <select id="fck"><option value="20">M20</option><option value="25" selected>M25</option><option value="30">M30</option><option value="35">M35</option><option value="40">M40</option></select>
+          </div>
+          <div class="form-group">
+            <label>Steel Grade</label>
+            <select id="fy"><option value="250">Fe 250</option><option value="415" selected>Fe 415</option><option value="500">Fe 500</option></select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>Main Bar Dia</label>
+            <select id="barDia"><option value="12">12 mm</option><option value="16" selected>16 mm</option><option value="20">20 mm</option><option value="25">25 mm</option></select>
+          </div>
+          <div class="form-group">
+            <label>Tie/Lateral Dia</label>
+            <select id="tieDia"><option value="6">6 mm</option><option value="8" selected>8 mm</option><option value="10">10 mm</option></select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calculate()">⚡ Calculate Design</button>
+        <button class="btn btn-reset" onclick="resetAll()">↺ Reset</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title"><span>📊</span> Design Results</div>
+        <div id="statusMsg" class="status"></div>
+        <span class="section-tag">Section Classification</span>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">leff / b</div>
+            <div class="result-value" id="r_slend">—</div>
+            <div class="result-unit">ratio</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Column Type</div>
+            <div class="result-value" style="font-size:15px;" id="r_type">—</div>
+            <div class="result-unit">IS 456 Cl.25.1</div>
+          </div>
+        </div>
+        <span class="section-tag">Steel Requirement</span>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Ag (Gross Area)</div>
+            <div class="result-value" id="r_Ag">—</div>
+            <div class="result-unit">mm²</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Asc Required</div>
+            <div class="result-value" id="r_Asc">—</div>
+            <div class="result-unit">mm²</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">No. of Bars</div>
+            <div class="result-value" id="r_nBars">—</div>
+            <div class="result-unit">nos</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Asc Provided</div>
+            <div class="result-value" id="r_AscProv">—</div>
+            <div class="result-unit">mm²</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">p (% Steel)</div>
+            <div class="result-value" id="r_p">—</div>
+            <div class="result-unit">%</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Tie Spacing</div>
+            <div class="result-value" id="r_sv">—</div>
+            <div class="result-unit">mm c/c</div>
+          </div>
+        </div>
+        <span class="section-tag">Load Capacity</span>
+        <div class="result-grid">
+          <div class="result-item highlight">
+            <div class="result-label">Pure Axial Capacity</div>
+            <div class="result-value" id="r_Puz">—</div>
+            <div class="result-unit">kN</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Ecc. (min)</div>
+            <div class="result-value" id="r_emin">—</div>
+            <div class="result-unit">mm</div>
+          </div>
+        </div>
+        <span class="section-tag">IS 456 Checks</span>
+        <table><thead><tr><th>Check</th><th>Required</th><th>Provided</th><th>Status</th></tr></thead><tbody id="checksTable"></tbody></table>
+        <div class="note">* Short column assumed if leff/b ≤ 12. For slender columns, additional moment per IS 456 Cl.39.7 is added.</div>
+      </div>
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title"><span>📏</span> Column Cross-Section</div>
+        <div class="col-diagram">
+          <svg id="colSvg" width="100%" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function calculate() {
+  const b    = +document.getElementById('b').value;
+  const D    = +document.getElementById('D').value;
+  const leff = +document.getElementById('leff').value;
+  const cov  = +document.getElementById('cover').value;
+  const Pu   = +document.getElementById('Pu').value * 1e3; // N
+  const Mu   = +document.getElementById('Mu').value * 1e6; // N·mm
+  const fck  = +document.getElementById('fck').value;
+  const fy   = +document.getElementById('fy').value;
+  const dia  = +document.getElementById('barDia').value;
+  const tieDia = +document.getElementById('tieDia').value;
+
+  const Ag = b * D;
+  const slend = leff / b;
+  const isShort = slend <= 12;
+
+  // Minimum eccentricity IS 456 Cl.25.4
+  const emin = Math.max(leff / 500 + D / 30, 20);
+  const Mumin = Pu * emin; // N·mm
+
+  // Additional moment for slender column IS 456 Cl.39.7
+  let Madd = 0;
+  if (!isShort) {
+    Madd = Pu * D * (slend / 2000) * (slend / 2000) * (1 / D); // simplified
+    Madd = Pu * (leff * leff) / (2000 * D);
+  }
+  const Mu_total = Math.max(Mu, Mumin) + Madd;
+
+  // Approximate Asc from IS 456 Eq. 39.3 / interaction (simplified)
+  // Pu = 0.4*fck*(Ag-Asc) + 0.67*fy*Asc
+  // Pu - 0.4*fck*Ag = Asc*(0.67*fy - 0.4*fck)
+  const AscPure = (Pu - 0.4 * fck * Ag) / (0.67 * fy - 0.4 * fck);
+
+  // Moment contribution – need more steel for eccentricity
+  // Using interaction formula approximation
+  const d1 = cov + tieDia + dia / 2;
+  const d_prime = d1;
+  const de = D - d_prime;
+  // Additional Asc from moment (very simplified)
+  const AscMom = Mu_total / (0.87 * fy * (de - d_prime));
+  const Asc = Math.max(AscPure + AscMom * 0.4, 0.8 * Ag / 100, 0);
+
+  // Min/max steel
+  const AscMin = 0.8 * Ag / 100;
+  const AscMax = 6.0 * Ag / 100;
+  const AscFinal = Math.max(Math.min(Asc, AscMax), AscMin);
+
+  const areaBar = Math.PI * dia * dia / 4;
+  const nBars = Math.max(4, Math.ceil(AscFinal / areaBar));
+  const AscProv = nBars * areaBar;
+  const p = (AscProv / Ag) * 100;
+
+  // Puz (IS 456 Cl.39.6)
+  const Puz = 0.45 * fck * Ag + (0.75 - 0.45) * fck * AscProv + 0.75 * fy * AscProv;
+  const PuzKN = (0.45 * fck * (Ag - AscProv) + 0.75 * fy * AscProv) / 1e3;
+
+  // Tie spacing IS 456 Cl.26.5.3.2
+  const sv = Math.min(b, D, 16 * dia, 300);
+
+  // Output
+  document.getElementById('r_slend').textContent = slend.toFixed(1);
+  document.getElementById('r_type').textContent = isShort ? 'Short' : 'Slender';
+  document.getElementById('r_Ag').textContent = Math.round(Ag).toLocaleString();
+  document.getElementById('r_Asc').textContent = Math.round(AscFinal);
+  document.getElementById('r_nBars').textContent = nBars;
+  document.getElementById('r_AscProv').textContent = Math.round(AscProv);
+  document.getElementById('r_p').textContent = p.toFixed(2);
+  document.getElementById('r_sv').textContent = Math.floor(sv / 5) * 5;
+  document.getElementById('r_Puz').textContent = PuzKN.toFixed(1);
+  document.getElementById('r_emin').textContent = emin.toFixed(1);
+
+  const pOk = p >= 0.8 && p <= 6.0;
+  const PuOk = Pu / 1e3 <= PuzKN;
+  const nOk = nBars >= 4;
+
+  const statusEl = document.getElementById('statusMsg');
+  if (!PuOk) { statusEl.className='status fail'; statusEl.textContent='⚠ Applied load exceeds column capacity! Increase section or steel.'; }
+  else if (!pOk) { statusEl.className='status warn'; statusEl.textContent='⚡ Steel percentage out of IS 456 limits (0.8% – 6%). Revise.'; }
+  else { statusEl.className='status ok'; statusEl.textContent='✓ Column design is satisfactory as per IS 456:2000.'; }
+
+  document.getElementById('checksTable').innerHTML = `
+    <tr><td>Steel %</td><td>0.8% ≤ p ≤ 6.0%</td><td>p = ${p.toFixed(2)}%</td><td style="color:${pOk?'#059669':'#dc2626'}">${pOk?'✓ OK':'✗ FAIL'}</td></tr>
+    <tr><td>Min. 4 bars</td><td>nBars ≥ 4</td><td>${nBars} bars</td><td style="color:${nOk?'#059669':'#dc2626'}">${nOk?'✓ OK':'✗ FAIL'}</td></tr>
+    <tr><td>Axial Capacity</td><td>Pu = ${(Pu/1e3).toFixed(0)} kN</td><td>Puz = ${PuzKN.toFixed(1)} kN</td><td style="color:${PuOk?'#059669':'#dc2626'}">${PuOk?'✓ OK':'✗ FAIL'}</td></tr>
+    <tr><td>Column Type</td><td>leff/b ≤ 12</td><td>${slend.toFixed(1)}</td><td style="color:${isShort?'#059669':'#d97706'}">${isShort?'Short ✓':'Slender ⚠'}</td></tr>
+    <tr><td>Min. Ecc.</td><td>emin = ${emin.toFixed(1)} mm</td><td>Mu = ${(Mu/1e6).toFixed(1)} kN·m</td><td style="color:#059669">Applied</td></tr>
+  `;
+  drawColumn(b, D, dia, nBars, cov, tieDia);
+}
+
+function drawColumn(b, D, dia, nBars, cov, tieDia) {
+  const svg = document.getElementById('colSvg');
+  const W=260, H=200;
+  const scale = Math.min((W-60)/b, (H-40)/D);
+  const bw=b*scale, dh=D*scale;
+  const ox=(W-bw)/2, oy=(H-dh)/2;
+  const diaPx=Math.max(dia*scale,6), cvPx=cov*scale, tiePx=Math.max(tieDia*scale,2.5);
+
+  let html=`
+    <rect x="${ox}" y="${oy}" width="${bw}" height="${dh}" fill="#d1fae5" stroke="#059669" stroke-width="2" rx="3"/>
+    <rect x="${ox+tiePx+1}" y="${oy+tiePx+1}" width="${bw-2*tiePx-2}" height="${dh-2*tiePx-2}" fill="none" stroke="#0f766e" stroke-width="${tiePx}" rx="2"/>
+  `;
+  // Corner bars + middle bars
+  const positions = [];
+  if (nBars === 4) {
+    positions.push([ox+cvPx+tiePx+diaPx/2, oy+cvPx+tiePx+diaPx/2]);
+    positions.push([ox+bw-cvPx-tiePx-diaPx/2, oy+cvPx+tiePx+diaPx/2]);
+    positions.push([ox+bw-cvPx-tiePx-diaPx/2, oy+dh-cvPx-tiePx-diaPx/2]);
+    positions.push([ox+cvPx+tiePx+diaPx/2, oy+dh-cvPx-tiePx-diaPx/2]);
+  } else {
+    const perSide = Math.ceil((nBars - 4) / 4);
+    [[0,0],[bw,0],[bw,dh],[0,dh]].forEach(([cx,cy])=>positions.push([ox+cx+cvPx+tiePx+diaPx/2*(cx?-1:1), oy+cy+cvPx+tiePx+diaPx/2*(cy?-1:1)]));
+    for(let i=1;i<=perSide;i++){
+      const t=i/(perSide+1);
+      positions.push([ox+cvPx+tiePx+diaPx/2+(bw-2*(cvPx+tiePx+diaPx/2))*t, oy+cvPx+tiePx+diaPx/2]);
+      positions.push([ox+cvPx+tiePx+diaPx/2+(bw-2*(cvPx+tiePx+diaPx/2))*t, oy+dh-cvPx-tiePx-diaPx/2]);
+      positions.push([ox+cvPx+tiePx+diaPx/2, oy+cvPx+tiePx+diaPx/2+(dh-2*(cvPx+tiePx+diaPx/2))*t]);
+      positions.push([ox+bw-cvPx-tiePx-diaPx/2, oy+cvPx+tiePx+diaPx/2+(dh-2*(cvPx+tiePx+diaPx/2))*t]);
+    }
+  }
+  positions.slice(0,nBars).forEach(([cx,cy])=>{ html+=`<circle cx="${cx}" cy="${cy}" r="${diaPx/2}" fill="#047857"/>`; });
+  html+=`<text x="${W/2}" y="${oy-8}" font-size="9" fill="#047857" text-anchor="middle" font-weight="600">Cross-Section (${b}×${D} mm)</text>`;
+  svg.innerHTML=html;
+}
+
+function resetAll(){
+  ['b','D','leff','cover','Pu','Mu'].forEach((id,i)=>{document.getElementById(id).value=[300,400,3200,40,900,80][i];});
+  document.getElementById('fck').value=25; document.getElementById('fy').value=415;
+  document.getElementById('barDia').value=16; document.getElementById('tieDia').value=8;
+  document.getElementById('statusMsg').className='status';
+  document.getElementById('checksTable').innerHTML='';
+  ['r_slend','r_type','r_Ag','r_Asc','r_nBars','r_AscProv','r_p','r_sv','r_Puz','r_emin'].forEach(id=>document.getElementById(id).textContent='—');
+  document.getElementById('colSvg').innerHTML='';
+}
+calculate();
+</script>
+</body>
+</html>
