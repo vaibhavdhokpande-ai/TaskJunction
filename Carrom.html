@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrom</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --board-color: #c8a96e;
+    --board-dark: #a07840;
+    --board-border: #6b4f2a;
+    --pocket-color: #1a0f05;
+    --striker-color: #e8d5a3;
+    --black-coin: #1c1c1c;
+    --white-coin: #f0ece0;
+    --red-coin: #c0392b;
+    --queen-red: #e74c3c;
+    --bg: #1a1208;
+    --text-gold: #d4a843;
+    --text-light: #f0e8d0;
+    --shadow: rgba(0,0,0,0.6);
+  }
+
+  body {
+    background: var(--bg);
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(100,70,20,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(80,50,10,0.3) 0%, transparent 60%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Crimson Pro', serif;
+    color: var(--text-light);
+    gap: 20px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--text-gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 20px rgba(212,168,67,0.4);
+  }
+
+  .scoreboard {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,168,67,0.2);
+    padding: 10px 30px;
+    border-radius: 4px;
+  }
+
+  .player-score {
+    text-align: center;
+  }
+
+  .player-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,232,208,0.5);
+  }
+
+  .score-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--text-gold);
+    line-height: 1;
+  }
+
+  .player-score.active .player-label { color: var(--text-gold); }
+  .player-score.active .score-val { text-shadow: 0 0 20px rgba(212,168,67,0.6); }
+
+  .divider { width: 1px; height: 40px; background: rgba(212,168,67,0.2); }
+
+  #game-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  canvas {
+    border-radius: 6px;
+    box-shadow: 
+      0 0 0 8px var(--board-border),
+      0 0 0 16px #3d2b0f,
+      0 0 60px rgba(0,0,0,0.8),
+      inset 0 0 40px rgba(0,0,0,0.2);
+    cursor: crosshair;
+  }
+
+  .info-bar {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    font-size: 0.9rem;
+    color: rgba(240,232,208,0.6);
+    letter-spacing: 0.05em;
+    min-height: 24px;
+  }
+
+  .info-bar span { color: var(--text-gold); }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+  }
+
+  button {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    background: transparent;
+    border: 1px solid rgba(212,168,67,0.4);
+    color: var(--text-gold);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  button:hover {
+    background: rgba(212,168,67,0.1);
+    border-color: var(--text-gold);
+    box-shadow: 0 0 15px rgba(212,168,67,0.2);
+  }
+
+  .turn-indicator {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 2px;
+    color: var(--text-gold);
+  }
+
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,7,2,0.92);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  #overlay.show { display: flex; }
+  #overlay h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--text-gold);
+    letter-spacing: 0.2em;
+  }
+  #overlay p { color: rgba(240,232,208,0.7); font-size: 1.1rem; }
+</style>
+</head>
+<body>
+
+<h1>Carrom</h1>
+
+<div class="scoreboard">
+  <div class="player-score active" id="p1score">
+    <div class="player-label">Player 1</div>
+    <div class="score-val" id="s1">0</div>
+  </div>
+  <div class="divider"></div>
+  <div class="turn-indicator" id="turn-ind">Your Turn</div>
+  <div class="divider"></div>
+  <div class="player-score" id="p2score">
+    <div class="player-label">Player 2</div>
+    <div class="score-val" id="s2">0</div>
+  </div>
+</div>
+
+<div id="game-wrap">
+  <canvas id="c"></canvas>
+</div>
+
+<div class="info-bar">
+  <span id="msg">Drag striker to aim — release to shoot</span>
+</div>
+
+<div class="controls">
+  <button onclick="newGame()">New Game</button>
+</div>
+
+<div id="overlay">
+  <h2 id="win-text">Player 1 Wins!</h2>
+  <p id="win-sub">All coins pocketed</p>
+  <button onclick="newGame()">Play Again</button>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+// Responsive board size
+const SIZE = Math.min(window.innerWidth - 40, window.innerHeight - 220, 540);
+canvas.width = SIZE;
+canvas.height = SIZE;
+
+const S = SIZE;
+const POCKET_R = S * 0.047;
+const BOARD_PAD = S * 0.07;
+const INNER = S - BOARD_PAD * 2;
+const COIN_R = S * 0.037;
+const STRIKER_R = S * 0.048;
+const FRICTION = 0.982;
+const RESTITUTION = 0.75;
+const MAX_FORCE = S * 0.28;
+
+let coins = [], striker = {}, state = 'aim', dragging = false;
+let dragStart = {x:0,y:0}, aimLine = null;
+let currentPlayer = 0, scores = [0,0];
+let queenPocketed = false, queenHolder = -1;
+let animFrame;
+let strikerLane = [0]; // slider value 0-1
+
+// Striker Y position (bottom or top lane based on player)
+function strikerX() {
+  const laneW = INNER * 0.55;
+  const laneStart = BOARD_PAD + (INNER - laneW) / 2;
+  return laneStart + strikerLane[0] * laneW;
+}
+
+function strikerY() {
+  const offset = S * 0.1;
+  return currentPlayer === 0 ? S - BOARD_PAD - offset : BOARD_PAD + offset;
+}
+
+function initStriker() {
+  striker = {
+    x: strikerX(),
+    y: strikerY(),
+    vx: 0, vy: 0,
+    r: STRIKER_R,
+    color: '#e8d5a3',
+    moving: false
+  };
+}
+
+function newGame() {
+  scores = [0, 0];
+  currentPlayer = 0;
+  queenPocketed = false;
+  queenHolder = -1;
+  document.getElementById('s1').textContent = '0';
+  document.getElementById('s2').textContent = '0';
+  document.getElementById('overlay').classList.remove('show');
+  setupCoins();
+  initStriker();
+  state = 'aim';
+  strikerLane[0] = 0.5;
+  updateUI();
+  render();
+}
+
+function setupCoins() {
+  coins = [];
+  const cx = S/2, cy = S/2;
+  const ring1 = COIN_R * 2.6;
+  const ring2 = COIN_R * 5.1;
+
+  // Center queen
+  coins.push({ x: cx, y: cy, r: COIN_R, vx:0, vy:0, color: '#e74c3c', type:'queen', pocketed:false });
+
+  // Inner ring: alternating 6 coins
+  for (let i = 0; i < 6; i++) {
+    const a = i * Math.PI / 3;
+    const col = i % 2 === 0 ? '#f0ece0' : '#1c1c1c';
+    coins.push({ x: cx + Math.cos(a)*ring1, y: cy + Math.sin(a)*ring1, r: COIN_R, vx:0, vy:0, color: col, type: i%2===0?'white':'black', pocketed:false });
+  }
+
+  // Outer ring: 12 coins
+  for (let i = 0; i < 12; i++) {
+    const a = i * Math.PI / 6;
+    const col = i % 2 === 0 ? '#1c1c1c' : '#f0ece0';
+    coins.push({ x: cx + Math.cos(a)*ring2, y: cy + Math.sin(a)*ring2, r: COIN_R, vx:0, vy:0, color: col, type: i%2===0?'black':'white', pocketed:false });
+  }
+}
+
+function pockets() {
+  return [
+    {x: BOARD_PAD, y: BOARD_PAD},
+    {x: S - BOARD_PAD, y: BOARD_PAD},
+    {x: BOARD_PAD, y: S - BOARD_PAD},
+    {x: S - BOARD_PAD, y: S - BOARD_PAD},
+  ];
+}
+
+function dist(a, b) { return Math.hypot(a.x-b.x, a.y-b.y); }
+
+function drawBoard() {
+  // Wood grain background
+  const grad = ctx.createRadialGradient(S/2,S/2,0, S/2,S/2,S*0.7);
+  grad.addColorStop(0, '#d4ad6e');
+  grad.addColorStop(0.5, '#c09050');
+  grad.addColorStop(1, '#9a7035');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, S, S);
+
+  // Wood grain lines
+  ctx.save();
+  ctx.globalAlpha = 0.06;
+  for (let i = 0; i < 20; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * S/10, 0);
+    ctx.lineTo(i * S/10 + S * 0.15, S);
+    ctx.strokeStyle = '#5a3010';
+    ctx.lineWidth = S * 0.008;
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Outer border lines
+  ctx.strokeStyle = '#6b4f2a';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(BOARD_PAD*0.5, BOARD_PAD*0.5, S - BOARD_PAD, S - BOARD_PAD);
+
+  // Inner play area border
+  ctx.strokeStyle = 'rgba(107,79,42,0.8)';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(BOARD_PAD, BOARD_PAD, INNER, INNER);
+
+  // Diagonal corner lines
+  const pc = BOARD_PAD * 1.5;
+  ctx.strokeStyle = 'rgba(107,79,42,0.5)';
+  ctx.lineWidth = 1;
+  [[pc,BOARD_PAD,BOARD_PAD,pc],[S-pc,BOARD_PAD,S-BOARD_PAD,pc],
+   [BOARD_PAD,S-pc,pc,S-BOARD_PAD],[S-BOARD_PAD,S-pc,S-pc,S-BOARD_PAD]].forEach(([x1,y1,x2,y2]) => {
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  });
+
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(S/2, S/2, COIN_R*4, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(107,79,42,0.6)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Center dot
+  ctx.beginPath();
+  ctx.arc(S/2, S/2, 3, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(107,79,42,0.5)';
+  ctx.fill();
+
+  // Striker lanes (top and bottom)
+  [0, 1].forEach(p => {
+    const y = p === 0 ? S - BOARD_PAD - S*0.1 : BOARD_PAD + S*0.1;
+    const laneW = INNER * 0.55;
+    const laneX = BOARD_PAD + (INNER - laneW) / 2;
+    ctx.strokeStyle = p === currentPlayer ? 'rgba(212,168,67,0.6)' : 'rgba(107,79,42,0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(laneX, y); ctx.lineTo(laneX + laneW, y); ctx.stroke();
+    // end caps
+    [-COIN_R*0.5, COIN_R*0.5].forEach(dx => {
+      ctx.beginPath(); ctx.arc(laneX + dx + (dx>0?laneW-COIN_R:0), y, COIN_R*0.5, 0, Math.PI*2);
+      ctx.stroke();
+    });
+  });
+
+  // Pockets
+  pockets().forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, POCKET_R, 0, Math.PI*2);
+    ctx.fillStyle = '#0d0803';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(107,79,42,0.8)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+}
+
+function drawCoin(c) {
+  if (c.pocketed) return;
+  ctx.save();
+
+  // Shadow
+  ctx.beginPath();
+  ctx.arc(c.x+2, c.y+3, c.r, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.fill();
+
+  // Main coin
+  ctx.beginPath();
+  ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+
+  if (c.type === 'queen') {
+    const qg = ctx.createRadialGradient(c.x-c.r*0.3, c.y-c.r*0.3, 1, c.x, c.y, c.r);
+    qg.addColorStop(0, '#f05a4a');
+    qg.addColorStop(1, '#8b1a10');
+    ctx.fillStyle = qg;
+  } else if (c.type === 'white') {
+    const wg = ctx.createRadialGradient(c.x-c.r*0.3, c.y-c.r*0.3, 1, c.x, c.y, c.r);
+    wg.addColorStop(0, '#faf6ec');
+    wg.addColorStop(1, '#c8bfa0');
+    ctx.fillStyle = wg;
+  } else {
+    const bg = ctx.createRadialGradient(c.x-c.r*0.3, c.y-c.r*0.3, 1, c.x, c.y, c.r);
+    bg.addColorStop(0, '#383838');
+    bg.addColorStop(1, '#0d0d0d');
+    ctx.fillStyle = bg;
+  }
+  ctx.fill();
+
+  // Rim
+  ctx.strokeStyle = c.type==='white' ? 'rgba(180,160,100,0.6)' : c.type==='queen' ? 'rgba(200,80,60,0.6)' : 'rgba(60,60,60,0.6)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Queen symbol
+  if (c.type === 'queen') {
+    ctx.fillStyle = 'rgba(255,220,150,0.9)';
+    ctx.font = `bold ${c.r}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('♛', c.x, c.y);
+  }
+
+  // Highlight
+  ctx.beginPath();
+  ctx.arc(c.x - c.r*0.28, c.y - c.r*0.28, c.r*0.22, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawStriker() {
+  if (striker.pocketed) return;
+  const {x,y,r} = striker;
+  ctx.save();
+
+  // Shadow
+  ctx.beginPath();
+  ctx.arc(x+2, y+3, r, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+  ctx.fill();
+
+  // Body
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI*2);
+  const sg = ctx.createRadialGradient(x-r*0.3, y-r*0.3, 1, x, y, r);
+  sg.addColorStop(0, '#fffae8');
+  sg.addColorStop(0.6, '#d4b870');
+  sg.addColorStop(1, '#8a6020');
+  ctx.fillStyle = sg;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(100,70,20,0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Inner ring
+  ctx.beginPath();
+  ctx.arc(x, y, r*0.6, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(100,70,20,0.4)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Highlight
+  ctx.beginPath();
+  ctx.arc(x-r*0.25, y-r*0.25, r*0.2, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawAimLine() {
+  if (!aimLine || state !== 'aim') return;
+  const {sx, sy, ex, ey} = aimLine;
+  const dx = ex-sx, dy = ey-sy;
+  const len = Math.hypot(dx,dy);
+  if (len < 5) return;
+
+  const force = Math.min(len, MAX_FORCE);
+  const nx = dx/len, ny = dy/len;
+
+  // Direction arrow
+  ctx.save();
+  ctx.globalAlpha = 0.7;
+  ctx.strokeStyle = '#d4a843';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 5]);
+  ctx.beginPath();
+  ctx.moveTo(sx, sy);
+  // Draw predicted path
+  const steps = 8;
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    ctx.lineTo(sx - nx*force*t*0.4, sy - ny*force*t*0.4);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Force indicator arc
+  const pct = force / MAX_FORCE;
+  ctx.beginPath();
+  ctx.arc(sx, sy, STRIKER_R + 4, -Math.PI/2, -Math.PI/2 + Math.PI*2*pct);
+  ctx.strokeStyle = pct > 0.7 ? '#e74c3c' : '#d4a843';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function render() {
+  ctx.clearRect(0,0,S,S);
+  drawBoard();
+  coins.forEach(drawCoin);
+  drawAimLine();
+  drawStriker();
+}
+
+function anyMoving() {
+  if (striker.moving) return true;
+  return coins.some(c => !c.pocketed && (Math.abs(c.vx)>0.1 || Math.abs(c.vy)>0.1));
+}
+
+function physics() {
+  const all = [striker, ...coins.filter(c=>!c.pocketed)];
+
+  all.forEach(c => {
+    if (c === striker && !striker.moving) return;
+    c.x += c.vx; c.y += c.vy;
+    c.vx *= FRICTION; c.vy *= FRICTION;
+    if (Math.abs(c.vx)<0.08) c.vx=0;
+    if (Math.abs(c.vy)<0.08) c.vy=0;
+
+    // Wall bounce
+    if (c.x - c.r < BOARD_PAD) { c.x = BOARD_PAD + c.r; c.vx = Math.abs(c.vx)*RESTITUTION; }
+    if (c.x + c.r > S-BOARD_PAD) { c.x = S-BOARD_PAD-c.r; c.vx = -Math.abs(c.vx)*RESTITUTION; }
+    if (c.y - c.r < BOARD_PAD) { c.y = BOARD_PAD+c.r; c.vy = Math.abs(c.vy)*RESTITUTION; }
+    if (c.y + c.r > S-BOARD_PAD) { c.y = S-BOARD_PAD-c.r; c.vy = -Math.abs(c.vy)*RESTITUTION; }
+  });
+
+  // Coin-coin collisions
+  for (let i=0; i<all.length; i++) {
+    for (let j=i+1; j<all.length; j++) {
+      const a=all[i], b=all[j];
+      const dx=b.x-a.x, dy=b.y-a.y;
+      const d=Math.hypot(dx,dy);
+      const minD=a.r+b.r;
+      if (d<minD && d>0.01) {
+        const nx=dx/d, ny=dy/d;
+        const overlap=(minD-d)/2;
+        a.x -= nx*overlap; a.y -= ny*overlap;
+        b.x += nx*overlap; b.y += ny*overlap;
+        const rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+        if (rv<0) {
+          const imp=rv*(1+RESTITUTION);
+          a.vx += imp*nx*0.5; a.vy += imp*ny*0.5;
+          b.vx -= imp*nx*0.5; b.vy -= imp*ny*0.5;
+        }
+      }
+    }
+  }
+
+  // Check pocketing
+  let pocketedThisTurn = [];
+  pockets().forEach(p => {
+    // Striker in pocket
+    if (!striker.pocketed && dist(striker,p)<POCKET_R*0.9) {
+      striker.pocketed = true; striker.moving = false;
+      striker.vx=0; striker.vy=0;
+      // Penalty: lose a coin
+      scores[currentPlayer] = Math.max(0, scores[currentPlayer]-1);
+      setMsg('Striker pocketed! -1 point');
+    }
+    // Coins in pocket
+    coins.forEach(c => {
+      if (!c.pocketed && dist(c,p)<POCKET_R*0.85) {
+        c.pocketed=true; c.vx=0; c.vy=0;
+        pocketedThisTurn.push(c);
+      }
+    });
+  });
+
+  pocketedThisTurn.forEach(c => {
+    if (c.type==='queen') {
+      queenPocketed=true;
+      queenHolder=currentPlayer;
+      setMsg('Queen pocketed! Cover it with another coin.');
+    } else {
+      scores[currentPlayer]++;
+      if (queenPocketed && queenHolder===currentPlayer) {
+        scores[currentPlayer]+=3; // bonus for queen
+        queenPocketed=false;
+        setMsg('+1 coin + Queen covered! (+3 bonus)');
+      } else {
+        setMsg(`+1 point!`);
+      }
+    }
+    updateScoreboard();
+  });
+}
+
+function updateScoreboard() {
+  document.getElementById('s1').textContent = scores[0];
+  document.getElementById('s2').textContent = scores[1];
+}
+
+function checkWin() {
+  const remaining = coins.filter(c=>!c.pocketed && c.type!=='queen').length;
+  if (remaining === 0) {
+    const winner = scores[0]>=scores[1] ? 1 : 2;
+    document.getElementById('win-text').textContent = `Player ${winner} Wins!`;
+    document.getElementById('win-sub').textContent = `Final: ${scores[0]} – ${scores[1]}`;
+    document.getElementById('overlay').classList.add('show');
+  }
+}
+
+function endTurn(scored) {
+  striker.pocketed = false;
+  if (!scored) {
+    currentPlayer = 1 - currentPlayer;
+  }
+  strikerLane[0] = 0.5;
+  initStriker();
+  state = 'aim';
+  updateUI();
+  checkWin();
+}
+
+function updateUI() {
+  document.getElementById('p1score').classList.toggle('active', currentPlayer===0);
+  document.getElementById('p2score').classList.toggle('active', currentPlayer===1);
+  document.getElementById('turn-ind').textContent = `Player ${currentPlayer+1}'s Turn`;
+}
+
+function setMsg(m) {
+  document.getElementById('msg').textContent = m;
+}
+
+let gameLoop;
+function startPhysics() {
+  let scored = false;
+  let prevCoinCount = coins.filter(c=>!c.pocketed).length;
+
+  function step() {
+    physics();
+    render();
+    if (!anyMoving()) {
+      striker.moving = false;
+      let newCoinCount = coins.filter(c=>!c.pocketed).length;
+      scored = newCoinCount < prevCoinCount;
+      endTurn(scored);
+      setMsg(scored ? 'Great shot! Shoot again.' : 'Drag striker to aim — release to shoot');
+    } else {
+      gameLoop = requestAnimationFrame(step);
+    }
+  }
+  gameLoop = requestAnimationFrame(step);
+}
+
+// Input handling
+let dragStrikerX = false;
+let dragOffsetX = 0;
+
+canvas.addEventListener('mousedown', e => {
+  if (state !== 'aim') return;
+  const {x,y} = pos(e);
+
+  // Check if clicking on the lane endpoint to slide striker
+  const sy = strikerY();
+  const laneW = INNER * 0.55;
+  const laneX = BOARD_PAD + (INNER - laneW) / 2;
+
+  // Clicking on striker to drag aim
+  if (dist({x,y},striker) < STRIKER_R * 1.8) {
+    dragging = true;
+    dragStart = {x: striker.x, y: striker.y};
+    aimLine = {sx: striker.x, sy: striker.y, ex: x, ey: y};
+  }
+  // Clicking on lane line to reposition striker
+  else if (Math.abs(y - sy) < STRIKER_R*1.5 && x >= laneX && x <= laneX+laneW) {
+    dragStrikerX = true;
+    strikerLane[0] = (x - laneX) / laneW;
+    striker.x = x;
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  if (state !== 'aim') return;
+  const {x,y} = pos(e);
+
+  if (dragging) {
+    aimLine = {sx: striker.x, sy: striker.y, ex: x, ey: y};
+    render();
+  } else if (dragStrikerX) {
+    const laneW = INNER * 0.55;
+    const laneX = BOARD_PAD + (INNER - laneW) / 2;
+    strikerLane[0] = Math.max(0, Math.min(1, (x - laneX) / laneW));
+    striker.x = laneX + strikerLane[0] * laneW;
+    render();
+  }
+});
+
+canvas.addEventListener('mouseup', e => {
+  if (!dragging) { dragStrikerX = false; return; }
+  dragging = false;
+  dragStrikerX = false;
+  if (!aimLine) return;
+  const {sx,sy,ex,ey} = aimLine;
+  const dx=ex-sx, dy=ey-sy;
+  const len=Math.hypot(dx,dy);
+  aimLine = null;
+  if (len < 8) { render(); return; }
+
+  const force = Math.min(len, MAX_FORCE);
+  const nx=dx/len, ny=dy/len;
+  striker.vx = -nx * force * 0.18;
+  striker.vy = -ny * force * 0.18;
+  striker.moving = true;
+  state = 'shooting';
+  startPhysics();
+});
+
+// Touch support
+canvas.addEventListener('touchstart', e => { e.preventDefault(); canvas.dispatchEvent(new MouseEvent('mousedown', toMouseEvt(e))); });
+canvas.addEventListener('touchmove', e => { e.preventDefault(); canvas.dispatchEvent(new MouseEvent('mousemove', toMouseEvt(e))); });
+canvas.addEventListener('touchend', e => { e.preventDefault(); canvas.dispatchEvent(new MouseEvent('mouseup', toMouseEvt(e))); });
+
+function toMouseEvt(e) {
+  const t = e.touches[0] || e.changedTouches[0];
+  return { clientX: t.clientX, clientY: t.clientY };
+}
+
+function pos(e) {
+  const r = canvas.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
+
+// Init
+newGame();
+</script>
+</body>
+</html>
