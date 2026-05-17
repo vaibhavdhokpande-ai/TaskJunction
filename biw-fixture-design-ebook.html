@@ -8,56 +8,57 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
+    --orange: #E8611A;
+    --orange-dark: #B84D10;
+    --orange-light: #FFF3EC;
+    --yellow: #F5B800;
+    --dark: #1A1208;
+    --text: #2D1F0E;
+    --muted: #7A6450;
+    --surface: #FDFAF6;
+    --card-bg: #FFFFFF;
+    --border: #EDE5D8;
+    --radius: 16px;
+
     --red: #C0392B;
     --red-dark: #922B21;
     --red-light: #FDEDEC;
     --steel: #2C3E50;
-    --steel-light: #ECF0F1;
     --accent: #F39C12;
-    --silver: #BDC3C7;
-    --dark: #1A252F;
-    --text: #1C2833;
-    --muted: #626567;
-    --surface: #F8F9FA;
-    --card-bg: #FFFFFF;
-    --border: #D5D8DC;
-    --radius: 16px;
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); line-height: 1.6; }
 
-  /* NAV */
+  /* ── NAV (Fixture Design style) ── */
   nav {
     background: var(--dark);
-    padding: 13px 24px;
+    padding: 14px 24px;
     display: flex; align-items: center; justify-content: space-between;
     position: sticky; top: 0; z-index: 100;
-    border-bottom: 2px solid var(--red);
   }
   .nav-logo {
     font-family: 'Playfair Display', serif;
-    color: #fff; font-size: 19px; letter-spacing: -0.3px;
-    display: flex; align-items: center; gap: 8px;
+    color: var(--yellow); font-size: 20px; letter-spacing: -0.5px;
   }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
   .nav-links a {
-    color: rgba(255,255,255,0.65); text-decoration: none;
-    font-size: 13px; padding: 6px 12px; border-radius: 8px; transition: all 0.2s;
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 14px; margin-left: 24px; transition: color 0.2s;
   }
-  .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .nav-links a:hover { color: var(--yellow); }
   .home-btn {
-    background: var(--red) !important; color: #fff !important;
-    font-weight: 600 !important; border-radius: 100px !important; padding: 7px 18px !important;
+    background: var(--orange); color: #fff !important;
+    padding: 8px 18px; border-radius: 100px;
+    font-size: 13px !important; font-weight: 600;
+    margin-left: 20px !important; transition: background 0.2s !important;
   }
-  .home-btn:hover { background: var(--red-dark) !important; }
+  .home-btn:hover { background: var(--orange-dark) !important; color: #fff !important; }
 
   /* HERO */
   .hero {
     background: linear-gradient(140deg, #1A252F 0%, #2C3E50 50%, #922B21 100%);
     padding: 80px 24px 90px; text-align: center; position: relative; overflow: hidden;
   }
-  .hero-gear1 { position: absolute; top: -30px; left: -30px; font-size: 160px; opacity: 0.04; }
-  .hero-gear2 { position: absolute; bottom: -20px; right: -20px; font-size: 130px; opacity: 0.04; }
+  .hero-gear1 { position: absolute; top: -30px; left: -30px; font-size: 160px; opacity: 0.04; pointer-events:none; }
+  .hero-gear2 { position: absolute; bottom: -20px; right: -20px; font-size: 130px; opacity: 0.04; pointer-events:none; }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 6px;
     background: var(--accent); color: var(--dark);
@@ -86,57 +87,53 @@
   .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
   .hero-stats { display: flex; justify-content: center; gap: 48px; margin-top: 52px; flex-wrap: wrap; }
   .stat { text-align: center; }
-  .stat-num { font-size: 28px; font-weight: 700; color: var(--accent); font-family: 'Playfair Display', serif; }
-  .stat-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--yellow); font-family: 'Playfair Display', serif; }
+  .stat-label { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.6px; }
 
   /* PROCESS STRIP */
   .process-strip {
     background: var(--steel); padding: 18px 24px;
     display: flex; justify-content: center; align-items: center; gap: 0; flex-wrap: wrap;
   }
-  .process-step {
-    display: flex; align-items: center; gap: 10px;
-    color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500;
-    padding: 8px 16px;
-  }
+  .process-step { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500; padding: 8px 16px; }
   .process-step .icon { font-size: 18px; }
   .process-arrow { color: rgba(255,255,255,0.25); font-size: 18px; }
 
   /* SECTIONS */
-  .section { padding: 60px 24px; max-width: 1100px; margin: 0 auto; }
-  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 38px); color: var(--dark); margin-bottom: 8px; }
-  .section-sub { color: var(--muted); font-size: 15px; margin-bottom: 38px; }
+  .section { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 40px); color: var(--dark); margin-bottom: 8px; }
+  .section-sub { color: var(--muted); font-size: 16px; margin-bottom: 40px; }
 
   /* TOPICS */
-  .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 16px; }
+  .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 18px; }
   .topic-card {
     background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 20px 16px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
+    padding: 22px 18px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
   }
-  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(192,57,43,0.1); }
+  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
   .topic-icon {
-    width: 42px; height: 42px; border-radius: 11px; background: var(--red-light);
-    display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 11px;
+    width: 44px; height: 44px; border-radius: 12px; background: var(--red-light);
+    display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px;
   }
-  .topic-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .topic-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
   .topic-card p { font-size: 12px; color: var(--muted); }
 
   /* CHAPTERS LIST */
-  .chapters-list { display: flex; flex-direction: column; gap: 10px; }
+  .chapters-list { display: flex; flex-direction: column; gap: 12px; }
   .chapter-item {
     background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
-    padding: 17px 20px; display: flex; align-items: center; gap: 15px;
+    padding: 20px 24px; display: flex; align-items: center; gap: 18px;
     transition: border-color 0.2s, box-shadow 0.2s; cursor: pointer;
   }
   .chapter-item:hover { border-color: var(--red); box-shadow: 0 4px 16px rgba(192,57,43,0.08); }
   .ch-num {
-    width: 34px; height: 34px; border-radius: 50%; background: var(--red); color: #fff;
-    font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    width: 36px; height: 36px; border-radius: 50%; background: var(--red); color: #fff;
+    font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-  .ch-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-  .ch-info p { font-size: 12px; color: var(--muted); }
+  .ch-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .ch-info p { font-size: 13px; color: var(--muted); }
   .ch-tag {
-    margin-left: auto; font-size: 11px; font-weight: 600; padding: 3px 10px;
+    margin-left: auto; font-size: 11px; font-weight: 600; padding: 4px 10px;
     border-radius: 100px; background: var(--red-light); color: var(--red);
     white-space: nowrap; flex-shrink: 0;
   }
@@ -146,107 +143,106 @@
   /* AD BANNER */
   .ad-banner {
     background: linear-gradient(135deg, #1A252F 0%, #2C3E50 100%);
-    border-radius: var(--radius); padding: 24px 30px;
-    display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin: 24px 0;
+    border-radius: var(--radius); padding: 28px 32px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 32px 0;
     border-left: 4px solid var(--red);
   }
-  .ad-label { color: rgba(255,255,255,0.35); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-  .ad-title { color: #fff; font-size: 16px; font-weight: 600; margin-bottom: 3px; }
-  .ad-sub { color: rgba(255,255,255,0.45); font-size: 13px; }
+  .ad-label { color: rgba(255,255,255,0.5); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .ad-title { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .ad-sub { color: rgba(255,255,255,0.5); font-size: 14px; }
   .ad-btn {
-    background: var(--accent); color: var(--dark); padding: 10px 24px;
-    border-radius: 100px; font-weight: 700; font-size: 13px; text-decoration: none; transition: opacity 0.2s; white-space: nowrap;
+    background: var(--yellow); color: var(--dark); padding: 12px 28px;
+    border-radius: 100px; font-weight: 700; font-size: 14px; text-decoration: none; transition: opacity 0.2s; white-space: nowrap;
   }
-  .ad-btn:hover { opacity: 0.88; }
+  .ad-btn:hover { opacity: 0.9; }
 
   /* PRODUCTS */
-  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(245px, 1fr)); gap: 16px; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
   .product-card {
     background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
     overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
   }
-  .product-card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,0.1); }
-  .product-img {
-    background: var(--red-light); padding: 20px; text-align: center;
-    font-size: 48px; height: 120px; display: flex; align-items: center; justify-content: center;
-  }
-  .product-body { padding: 15px; }
-  .product-badge { font-size: 10px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
-  .product-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.4; }
-  .product-desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .product-img { background: var(--red-light); padding: 24px; text-align: center; font-size: 52px; height: 140px; display: flex; align-items: center; justify-content: center; }
+  .product-body { padding: 18px; }
+  .product-badge { font-size: 11px; font-weight: 600; color: var(--red); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .product-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+  .product-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
   .product-footer { display: flex; align-items: center; justify-content: space-between; }
-  .product-price { font-size: 16px; font-weight: 700; color: var(--red); }
-  .product-price span { font-size: 11px; color: var(--muted); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
-  .amz-btn {
-    background: var(--accent); color: var(--dark); font-size: 12px; font-weight: 700;
-    padding: 7px 13px; border-radius: 7px; text-decoration: none; transition: opacity 0.2s;
+  .product-price { font-size: 18px; font-weight: 700; color: var(--red); }
+  .product-price span { font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
+  .amazon-btn {
+    background: var(--yellow); color: var(--dark); font-size: 13px; font-weight: 700;
+    padding: 8px 16px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;
   }
-  .amz-btn:hover { opacity: 0.85; }
+  .amazon-btn:hover { opacity: 0.85; }
 
   /* SIDEBAR */
-  .content-with-sidebar { display: grid; grid-template-columns: 1fr 265px; gap: 26px; align-items: start; }
+  .content-with-sidebar { display: grid; grid-template-columns: 1fr 280px; gap: 32px; align-items: start; }
   @media (max-width: 768px) { .content-with-sidebar { grid-template-columns: 1fr; } }
-  .sidebar-ad { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: sticky; top: 66px; }
-  .sidebar-ad-hdr { background: var(--red); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 8px 14px; }
-  .sidebar-ad-body { padding: 14px; }
-  .sidebar-ad-body h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-  .sidebar-ad-body p { font-size: 12px; color: var(--muted); margin-bottom: 11px; }
+  .sidebar-ad { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: sticky; top: 72px; }
+  .sidebar-ad-header { background: var(--red); color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 8px 14px; }
+  .sidebar-ad-body { padding: 18px; }
+  .sidebar-ad-body h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .sidebar-ad-body p { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
 
   /* INLINE AD */
   .inline-ad {
     background: var(--red-light); border-left: 4px solid var(--red);
-    border-radius: 0 10px 10px 0; padding: 13px 16px; margin: 18px 0;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
   }
   .inline-ad-text { flex: 1; }
-  .inline-ad-text strong { font-size: 13px; color: var(--dark); display: block; margin-bottom: 2px; }
-  .inline-ad-text span { font-size: 12px; color: var(--muted); }
+  .inline-ad-text strong { font-size: 14px; color: var(--dark); display: block; margin-bottom: 3px; }
+  .inline-ad-text span { font-size: 13px; color: var(--muted); }
 
   /* CONTENT */
   .content-area { min-width: 0; }
-  .chapter-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
-  .chapter-content h2 { font-family: 'Playfair Display', serif; font-size: 21px; margin-bottom: 13px; color: var(--dark); }
-  .chapter-content p { font-size: 14px; color: #2C3E50; line-height: 1.85; margin-bottom: 13px; }
-  .chapter-content h3 { font-size: 15px; font-weight: 600; margin: 20px 0 8px; color: var(--dark); border-left: 3px solid var(--red); padding-left: 10px; }
+  .chapter-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+  .chapter-content h2 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 16px; color: var(--dark); }
+  .chapter-content p { font-size: 15px; color: #2C3E50; line-height: 1.85; margin-bottom: 14px; }
+  .chapter-content h3 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; color: var(--dark); border-left: 3px solid var(--red); padding-left: 10px; }
   .formula-box {
-    background: #F9EBEA; border: 1px solid #F1948A; border-radius: 9px;
-    padding: 14px 16px; font-size: 13px; color: var(--red-dark); margin: 13px 0; font-weight: 500; white-space: pre-line;
-    font-family: 'DM Sans', monospace;
+    background: #F9EBEA; border: 1px solid #F1948A; border-radius: 10px;
+    padding: 16px 20px; font-size: 14px; color: var(--red-dark); margin: 16px 0; font-weight: 500;
+    white-space: pre-line; font-family: 'DM Sans', monospace;
   }
-  .tip-box { background: #EAFAF1; border-left: 4px solid #27AE60; border-radius: 0 9px 9px 0; padding: 11px 15px; margin: 13px 0; }
-  .tip-box strong { color: #1E8449; font-size: 12px; display: block; margin-bottom: 3px; }
-  .tip-box p { font-size: 13px; color: #1A5C33; margin: 0; }
-  .warn-box { background: #FEF9E7; border-left: 4px solid #F39C12; border-radius: 0 9px 9px 0; padding: 11px 15px; margin: 13px 0; }
-  .warn-box strong { color: #B7770D; font-size: 12px; display: block; margin-bottom: 3px; }
-  .warn-box p { font-size: 13px; color: #7D6608; margin: 0; }
-  .info-box { background: #EBF5FB; border-left: 4px solid #2E86C1; border-radius: 0 9px 9px 0; padding: 11px 15px; margin: 13px 0; }
-  .info-box strong { color: #1A5276; font-size: 12px; display: block; margin-bottom: 3px; }
-  .info-box p { font-size: 13px; color: #1B4F72; margin: 0; }
+  .tip-box { background: #EFF8F2; border-left: 4px solid #27AE60; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; }
+  .tip-box strong { color: #1E8449; font-size: 13px; display: block; margin-bottom: 4px; }
+  .tip-box p { font-size: 14px; color: #1A5C33; margin: 0; }
+  .warn-box { background: #FEF9E7; border-left: 4px solid #F39C12; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; }
+  .warn-box strong { color: #B7770D; font-size: 13px; display: block; margin-bottom: 4px; }
+  .warn-box p { font-size: 14px; color: #7D6608; margin: 0; }
+  .info-box { background: #EBF5FB; border-left: 4px solid #2E86C1; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; }
+  .info-box strong { color: #1A5276; font-size: 13px; display: block; margin-bottom: 4px; }
+  .info-box p { font-size: 14px; color: #1B4F72; margin: 0; }
 
   /* DATA TABLE */
   .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0; }
-  .data-table th { background: var(--steel); color: #fff; padding: 9px 12px; text-align: left; font-weight: 600; }
-  .data-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
-  .data-table tr:nth-child(even) td { background: #F8F9FA; }
+  .data-table th { background: var(--steel); color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; }
+  .data-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  .data-table tr:nth-child(even) td { background: #F8F6F3; }
 
   /* TABS */
-  .tabs { display: flex; gap: 5px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
   .tab-btn {
     background: none; border: 1px solid var(--border); border-radius: 100px;
-    padding: 7px 16px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+    padding: 8px 20px; font-size: 14px; font-family: 'DM Sans', sans-serif;
     cursor: pointer; color: var(--muted); transition: all 0.15s;
   }
-  .tab-btn.active { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
+  .tab-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; font-weight: 600; }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
-  /* PRIVACY */
-  .privacy-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 14px; }
-  .privacy-card h3 { font-size: 15px; font-weight: 600; color: var(--dark); margin-bottom: 9px; padding-left: 10px; border-left: 3px solid var(--red); }
-  .privacy-card p { font-size: 14px; color: #2C3E50; line-height: 1.8; }
-
-  /* FOOTER */
-  footer { background: var(--dark); color: rgba(255,255,255,0.45); text-align: center; padding: 40px 24px; font-size: 13px; border-top: 3px solid var(--red); }
+  /* ── FOOTER (Fixture Design style) ── */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 13px;
+  }
+  footer strong { color: rgba(255,255,255,0.8); }
 
   @media (max-width: 600px) {
     .process-strip { flex-direction: column; gap: 8px; }
@@ -256,9 +252,9 @@
 </head>
 <body>
 
-<!-- NAV -->
+<!-- ── NAV (Fixture Design ebook style) ── -->
 <nav>
-  <div class="nav-logo">🚗 BIW <span>Fixture Pro</span></div>
+  <div class="nav-logo">BIW Fixture Pro</div>
   <div class="nav-links">
     <a href="#topics">Topics</a>
     <a href="#chapters">Chapters</a>
@@ -272,7 +268,7 @@
 <div class="hero">
   <div class="hero-gear1">⚙️</div>
   <div class="hero-gear2">🔩</div>
-  <div class="hero-badge">⭐ Recommended – Free eBook 2025</div>
+  <div class="hero-badge">⭐ Free eBook – Updated 2025</div>
   <h1><span class="highlight">BIW Fixture Design</span> —<br>Complete <span class="highlight2">Automotive Body</span> Guide</h1>
   <p>Body-in-White design concepts — Stamping, Assembly, Welding, Structural Stiffness & Automotive Body Engineering</p>
   <div class="hero-btns">
@@ -313,7 +309,7 @@
     <div class="topic-card"><div class="topic-icon">🔥</div><h3>Welding</h3><p>Spot welding, MIG, laser & resistance welding</p></div>
     <div class="topic-card"><div class="topic-icon">📐</div><h3>GD&T / Datums</h3><p>Automotive datum systems, RPS, GD&T symbols</p></div>
     <div class="topic-card"><div class="topic-icon">🏗️</div><h3>Structural Stiffness</h3><p>Torsional, bending stiffness & NVH design</p></div>
-    <div class="topic-card"><div class="topic-icon">📏</div><h3>Dimensional Control</h3><p>CMM, variation simulation, tolerance stack-up</div></div>
+    <div class="topic-card"><div class="topic-icon">📏</div><h3>Dimensional Control</h3><p>CMM, variation simulation, tolerance stack-up</p></div>
     <div class="topic-card"><div class="topic-icon">🛡️</div><h3>Crash Safety</h3><p>Crash zones, side intrusion, roof crush strength</p></div>
   </div>
 </div>
@@ -336,13 +332,13 @@
   <p class="section-sub">14 industry-focused chapters — click any to start reading</p>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('toc')">📋 Contents</button>
-    <button class="tab-btn" onclick="switchTab('ch1')">Ch 1</button>
-    <button class="tab-btn" onclick="switchTab('ch2')">Ch 2</button>
-    <button class="tab-btn" onclick="switchTab('ch3')">Ch 3</button>
-    <button class="tab-btn" onclick="switchTab('ch4')">Ch 4</button>
-    <button class="tab-btn" onclick="switchTab('ch5')">Ch 5</button>
-    <button class="tab-btn" onclick="switchTab('ch6')">Ch 6</button>
+    <button class="tab-btn active" onclick="switchTab('toc')">📋 Table of Contents</button>
+    <button class="tab-btn" onclick="switchTab('ch1')">Chapter 1</button>
+    <button class="tab-btn" onclick="switchTab('ch2')">Chapter 2</button>
+    <button class="tab-btn" onclick="switchTab('ch3')">Chapter 3</button>
+    <button class="tab-btn" onclick="switchTab('ch4')">Chapter 4</button>
+    <button class="tab-btn" onclick="switchTab('ch5')">Chapter 5</button>
+    <button class="tab-btn" onclick="switchTab('ch6')">Chapter 6</button>
   </div>
 
   <!-- TOC -->
@@ -372,7 +368,6 @@
         <div class="chapter-content">
           <h2>Chapter 1: Introduction to Body-in-White (BIW)</h2>
           <p>Body-in-White (BIW) refers to the stage in automotive manufacturing where a car body's sheet metal components have been welded together — but before painting, moving parts (doors, hoods, trunk), chassis, and trim components have been added. It forms the primary structural skeleton of the vehicle.</p>
-
           <h3>BIW Structure Zones</h3>
           <p>A typical BIW is divided into three main structural zones, each designed to perform specific safety and structural roles:</p>
           <table class="data-table">
@@ -381,17 +376,11 @@
             <tr><td><strong>Passenger Zone</strong></td><td>A/B/C pillars, roof, floor, sills</td><td>Rigid survival cell — protect occupants</td></tr>
             <tr><td><strong>Rear Zone</strong></td><td>Rear rails, trunk floor, rear panel</td><td>Crumple in rear impact</td></tr>
           </table>
-
           <div class="inline-ad">
-            <div class="inline-ad-text">
-              <strong>📦 Automotive Body Engineering – Reimpell (Textbook)</strong>
-              <span>Complete reference for BIW design, suspension and chassis engineering</span>
-            </div>
-            <a href="https://www.amazon.in/s?k=automotive+chassis+engineering+reimpell&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+            <div class="inline-ad-text"><strong>📦 Automotive Body Engineering – Reimpell (Textbook)</strong><span>Complete reference for BIW design, suspension and chassis engineering</span></div>
+            <a href="https://www.amazon.in/s?k=automotive+chassis+engineering+reimpell&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
           </div>
-
           <h3>BIW Materials</h3>
-          <p>Modern BIW uses a mix of materials to balance weight, strength, cost and formability:</p>
           <table class="data-table">
             <tr><th>Material</th><th>Grade</th><th>Typical Use</th><th>Thickness</th></tr>
             <tr><td>Mild Steel</td><td>DC04, DC05</td><td>Outer panels, roof</td><td>0.65–0.8mm</td></tr>
@@ -400,31 +389,19 @@
             <tr><td>Ultra HSS / PHS</td><td>22MnB5 (Boron)</td><td>B-pillar, rocker</td><td>1.2–1.8mm</td></tr>
             <tr><td>Aluminium</td><td>5xxx, 6xxx</td><td>Hood, door, EV floor</td><td>1.0–3.0mm</td></tr>
           </table>
-
-          <div class="tip-box"><strong>💡 Industry Tip</strong><p>The shift from mild steel to AHSS (Advanced High Strength Steel) reduces BIW weight by 20–30% while maintaining or improving crash performance. This is critical for EV range optimization.</p></div>
-
+          <div class="tip-box"><strong>💡 Industry Tip</strong><p>The shift from mild steel to AHSS reduces BIW weight by 20–30% while maintaining or improving crash performance. This is critical for EV range optimization.</p></div>
           <h3>Key BIW Subassemblies</h3>
           <p>BIW is built through sequential welding of subassemblies: <strong>Underbody → Side Frame → Front/Rear Module → Framing → Roof → Closures.</strong> Each subassembly has its own fixture line before the final body framing station.</p>
         </div>
       </div>
       <div>
         <div class="sidebar-ad">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">REFERENCE BOOK</p>
-            <h4>Fundamentals of Vehicle Body Structure</h4>
-            <p>Industry-level BIW design concepts used by OEM engineers worldwide.</p>
-            <a href="https://www.amazon.in/s?k=vehicle+body+structure+fundamentals+book&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">REFERENCE BOOK</p><h4>Fundamentals of Vehicle Body Structure</h4><p>Industry-level BIW design concepts used by OEM engineers worldwide.</p><a href="https://www.amazon.in/s?k=vehicle+body+structure+fundamentals+book&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
-        <div class="sidebar-ad" style="margin-top:12px;">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">MEASUREMENT</p>
-            <h4>Digital Vernier Caliper 150mm</h4>
-            <p>Precision measurement for sheet metal and fixture setup.</p>
-            <a href="https://www.amazon.in/s?k=digital+vernier+caliper+150mm&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">MEASUREMENT</p><h4>Digital Vernier Caliper 150mm</h4><p>Precision measurement for sheet metal and fixture setup.</p><a href="https://www.amazon.in/s?k=digital+vernier+caliper+150mm&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
       </div>
     </div>
@@ -436,50 +413,36 @@
       <div class="content-area">
         <div class="chapter-content">
           <h2>Chapter 2: Automotive Datum System & GD&T</h2>
-          <p>The datum system is the foundation of BIW dimensional control. Every hole, surface, and feature on a BIW panel is measured and controlled relative to a fixed datum reference system. Without a well-defined datum strategy, dimensional variation cannot be managed across the assembly line.</p>
-
+          <p>The datum system is the foundation of BIW dimensional control. Every hole, surface, and feature on a BIW panel is measured and controlled relative to a fixed datum reference system.</p>
           <h3>Global Vehicle Datum System</h3>
           <p>Every vehicle has a global coordinate system defined by the OEM at concept stage. All body panels, fixtures, and measurement reports reference this same coordinate system.</p>
           <div class="formula-box">X-axis = Longitudinal (front to rear)  → X=0 at front axle centre
 Y-axis = Lateral (left to right)     → Y=0 at vehicle centreline
 Z-axis = Vertical (up)               → Z=0 at ground level
 All BIW measurements reported in mm relative to this origin</div>
-
           <div class="inline-ad">
-            <div class="inline-ad-text">
-              <strong>📦 GD&T: The Language of Engineering – Alex Krulikowski</strong>
-              <span>Best GD&T book for automotive engineers — ASME Y14.5 standard</span>
-            </div>
-            <a href="https://www.amazon.in/s?k=gdt+geometric+dimensioning+tolerancing+automotive&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+            <div class="inline-ad-text"><strong>📦 GD&T: The Language of Engineering – Alex Krulikowski</strong><span>Best GD&T book for automotive engineers — ASME Y14.5 standard</span></div>
+            <a href="https://www.amazon.in/s?k=gdt+geometric+dimensioning+tolerancing+automotive&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
           </div>
-
           <h3>RPS – Reference Point System</h3>
-          <p>The RPS (Reference Point System) is the automotive industry's application of the 3-2-1 locating principle. Each part has exactly 6 reference points (RPS points) that define its position and orientation in 3D space.</p>
+          <p>The RPS is the automotive industry's application of the 3-2-1 locating principle. Each part has exactly 6 reference points that define its position and orientation in 3D space.</p>
           <table class="data-table">
             <tr><th>RPS Point</th><th>Constrains DOF</th><th>Typical Location</th></tr>
             <tr><td>RPS 1, 2, 3</td><td>Z, Rx, Ry (Primary plane)</td><td>Body mounting holes / flange surfaces</td></tr>
             <tr><td>RPS 4, 5</td><td>X, Rz (Secondary)</td><td>Round hole (4-way) + slot (2-way)</td></tr>
             <tr><td>RPS 6</td><td>Y (Tertiary)</td><td>Stop face / edge</td></tr>
           </table>
-
           <h3>Hole-Slot System in BIW</h3>
-          <p>In automotive body panels, location is typically achieved using a <strong>round hole + elongated slot</strong> combination. The round hole locates in both X and Y directions (4-way), while the slot locates in only one direction (2-way) to avoid over-constraint.</p>
           <div class="formula-box">Round Hole (4-way locator): Constrains X and Y translation
-Elongated Slot (2-way locator): Constrains only perpendicular to slot direction
-This combination = 3 DOF constrained (+ Z constrained by surface)
+Elongated Slot (2-way locator): Constrains only perpendicular to slot
 Standard BIW locating hole diameter: ⌀12H7, ⌀16H7, ⌀20H7</div>
-          <div class="tip-box"><strong>💡 Design Rule</strong><p>Locating holes in BIW fixtures should always use hardened steel bushings (HRC 58–62) to prevent wear over thousands of production cycles. Replace bushings every 50,000–100,000 parts.</p></div>
+          <div class="tip-box"><strong>💡 Design Rule</strong><p>Locating holes in BIW fixtures should always use hardened steel bushings (HRC 58–62) to prevent wear over thousands of production cycles. Replace every 50,000–100,000 parts.</p></div>
         </div>
       </div>
       <div>
         <div class="sidebar-ad">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">PRECISION TOOL</div>
-            <h4>Mitutoyo Dial Gauge 0.001mm</h4>
-            <p>For BIW fixture verification and panel gap measurement.</p>
-            <a href="https://www.amazon.in/s?k=mitutoyo+dial+gauge+0.001mm&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">PRECISION TOOL</p><h4>Mitutoyo Dial Gauge 0.001mm</h4><p>For BIW fixture verification and panel gap measurement.</p><a href="https://www.amazon.in/s?k=mitutoyo+dial+gauge+0.001mm&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
       </div>
     </div>
@@ -491,8 +454,7 @@ Standard BIW locating hole diameter: ⌀12H7, ⌀16H7, ⌀20H7</div>
       <div class="content-area">
         <div class="chapter-content">
           <h2>Chapter 3: BIW Fixture Design Fundamentals</h2>
-          <p>BIW fixtures (also called checking fixtures, assembly fixtures, or gauges) are precision tooling used to hold, locate, and clamp sheet metal panels during welding and assembly operations. Fixture accuracy directly determines the dimensional quality of the assembled body.</p>
-
+          <p>BIW fixtures are precision tooling used to hold, locate, and clamp sheet metal panels during welding and assembly. Fixture accuracy directly determines the dimensional quality of the assembled body.</p>
           <h3>Types of BIW Fixtures</h3>
           <table class="data-table">
             <tr><th>Fixture Type</th><th>Purpose</th><th>Accuracy</th></tr>
@@ -501,55 +463,33 @@ Standard BIW locating hole diameter: ⌀12H7, ⌀16H7, ⌀20H7</div>
             <tr><td>Framing Fixture</td><td>Final body framing / geo station</td><td>±0.15 mm</td></tr>
             <tr><td>Sub-assembly Jig</td><td>Small assemblies — door, hood, etc.</td><td>±0.1 mm</td></tr>
           </table>
-
           <div class="inline-ad">
-            <div class="inline-ad-text">
-              <strong>📦 Jig & Fixture Design – Edward Hoffman (5th Ed)</strong>
-              <span>Classic fixture design textbook — fundamentals applicable to BIW tooling</span>
-            </div>
-            <a href="https://www.amazon.in/s?k=jig+fixture+design+edward+hoffman&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+            <div class="inline-ad-text"><strong>📦 Jig & Fixture Design – Edward Hoffman (5th Ed)</strong><span>Classic fixture design textbook — fundamentals applicable to BIW tooling</span></div>
+            <a href="https://www.amazon.in/s?k=jig+fixture+design+edward+hoffman&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
           </div>
-
-          <h3>BIW Fixture Components</h3>
-          <p><strong>Base Frame:</strong> Welded steel or cast iron base, stress relieved and precision machined. Provides the reference surface for all fixture elements.</p>
-          <p><strong>Locating Pins:</strong> Round (⌀12–⌀20) and diamond pins locate panels via RPS holes. Hardened and ground to h6 tolerance.</p>
-          <p><strong>Rest Pads / Contact Blocks:</strong> Define Z-datum surfaces. Ground to ±0.02mm. Made from hardened tool steel or POM/Delrin for painted parts.</p>
-          <p><strong>Toggle Clamps:</strong> Pneumatic or manual toggle clamps hold panels against locators. Force: 200N to 2000N depending on panel size.</p>
-
           <h3>Clamping Sequence</h3>
           <div class="formula-box">Step 1: Load panel → locate on RPS pins (do not force)
 Step 2: Engage primary datum surface (Z locators)
 Step 3: Apply clamps near locators first → then at extremities
 Step 4: Verify all panel contacts before welding
 ⚠️  Never clamp before all locators are engaged</div>
-          <div class="warn-box"><strong>⚠️ Critical Rule</strong><p>Clamp sequence matters. Clamping at extremities first creates internal stress and panel distortion. Always clamp near the RPS datum first and move outward progressively.</p></div>
-
+          <div class="warn-box"><strong>⚠️ Critical Rule</strong><p>Clamping at extremities first creates internal stress and panel distortion. Always clamp near the RPS datum first and move outward progressively.</p></div>
           <h3>Fixture Tolerance Budget</h3>
           <div class="formula-box">Panel tolerance: ±0.5mm
 Fixture tolerance: 20% of panel tolerance = ±0.1mm
-Locating pin tolerance: ⌀12 +0/-0.011 (h6)
-Locating hole tolerance: ⌀12 +0.018/0 (H7)
+Locating pin: ⌀12 +0/-0.011 (h6)
+Locating hole: ⌀12 +0.018/0 (H7)
 Min clearance = 0.007mm | Max clearance = 0.029mm</div>
         </div>
       </div>
       <div>
         <div class="sidebar-ad">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">FIXTURE TOOL</p>
-            <h4>Toggle Clamp Set – Pneumatic Style</h4>
-            <p>Professional toggle clamps used in BIW fixture construction.</p>
-            <a href="https://www.amazon.in/s?k=toggle+clamp+pneumatic+fixture&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">FIXTURE TOOL</p><h4>Toggle Clamp Set – Pneumatic Style</h4><p>Professional toggle clamps used in BIW fixture construction.</p><a href="https://www.amazon.in/s?k=toggle+clamp+pneumatic+fixture&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
-        <div class="sidebar-ad" style="margin-top:12px;">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">PRECISION PINS</p>
-            <h4>Dowel Pin Set – Hardened H6 Grade</h4>
-            <p>Precision ground dowel pins for fixture and BIW jig assembly.</p>
-            <a href="https://www.amazon.in/s?k=hardened+dowel+pin+set+precision&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">PRECISION PINS</p><h4>Dowel Pin Set – Hardened H6 Grade</h4><p>Precision ground dowel pins for fixture and BIW jig assembly.</p><a href="https://www.amazon.in/s?k=hardened+dowel+pin+set+precision&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
       </div>
     </div>
@@ -561,8 +501,7 @@ Min clearance = 0.007mm | Max clearance = 0.029mm</div>
       <div class="content-area">
         <div class="chapter-content">
           <h2>Chapter 4: Stamping Process & Die Design</h2>
-          <p>Stamping (or pressing) is the primary manufacturing process for BIW sheet metal panels. A flat metal blank is placed in a press die and formed into the required 3D shape in one or more press strokes. Understanding stamping is essential for BIW fixture design because stamped parts carry inherent variation that fixtures must accommodate.</p>
-
+          <p>Stamping is the primary manufacturing process for BIW sheet metal panels. A flat blank is placed in a press die and formed into the required 3D shape in one or more press strokes.</p>
           <h3>Stamping Operations</h3>
           <table class="data-table">
             <tr><th>Operation</th><th>Description</th><th>BIW Use</th></tr>
@@ -573,39 +512,27 @@ Min clearance = 0.007mm | Max clearance = 0.029mm</div>
             <tr><td>Flanging</td><td>Bends edge for hemming/sealing</td><td>Door, hood edges</td></tr>
             <tr><td>Restrike</td><td>Sharpens/corrects formed features</td><td>Character lines</td></tr>
           </table>
-
           <div class="inline-ad">
-            <div class="inline-ad-text">
-              <strong>📦 Sheet Metal Forming Processes – Kurt Lange</strong>
-              <span>Standard reference for stamping, deep drawing and sheet metal forming</span>
-            </div>
-            <a href="https://www.amazon.in/s?k=sheet+metal+forming+processes+stamping+book&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+            <div class="inline-ad-text"><strong>📦 Sheet Metal Forming Processes – Kurt Lange</strong><span>Standard reference for stamping, deep drawing and sheet metal forming</span></div>
+            <a href="https://www.amazon.in/s?k=sheet+metal+forming+processes+stamping+book&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
           </div>
-
           <h3>Springback in Stamping</h3>
-          <p>When a panel is removed from the die, elastic recovery causes it to partially return toward its original shape — this is called <strong>springback</strong>. It is the single biggest source of dimensional variation in stamped BIW panels.</p>
           <div class="formula-box">Springback Angle = θ_final - θ_die
 Springback Ratio = R_final / R_die
 For steel DP600: Springback = 3–8° per 90° bend
 Compensation: Overbend die by springback amount</div>
-
           <h3>Die Clearance</h3>
           <div class="formula-box">Die Clearance (c) = 5–10% of sheet thickness per side
 For t = 1.0mm mild steel: c = 0.05–0.10mm per side
 For HSLA steel: c = 8–12% of thickness
 Total die gap = Punch size + 2c</div>
-          <div class="tip-box"><strong>💡 Key Rule</strong><p>Piercing holes for RPS locating features should always be done in the same die station as the final trim operation. This ensures positional accuracy between holes and part edges critical for fixture loading.</p></div>
+          <div class="tip-box"><strong>💡 Key Rule</strong><p>Piercing holes for RPS locating features should always be done in the same die station as the final trim operation to ensure positional accuracy critical for fixture loading.</p></div>
         </div>
       </div>
       <div>
         <div class="sidebar-ad">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">SHEET METAL TOOL</p>
-            <h4>Sheet Metal Hand Nibbler Tool</h4>
-            <p>For trimming and modifying sheet metal panels in prototype stage.</p>
-            <a href="https://www.amazon.in/s?k=sheet+metal+nibbler+tool&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">SHEET METAL TOOL</p><h4>Sheet Metal Hand Nibbler Tool</h4><p>For trimming and modifying sheet metal panels in prototype stage.</p><a href="https://www.amazon.in/s?k=sheet+metal+nibbler+tool&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
       </div>
     </div>
@@ -617,23 +544,16 @@ Total die gap = Punch size + 2c</div>
       <div class="content-area">
         <div class="chapter-content">
           <h2>Chapter 5: Spot Welding & Resistance Welding</h2>
-          <p>Spot welding (Resistance Spot Welding – RSW) is the most widely used joining process in BIW manufacturing. A typical passenger car body contains 3,000 to 5,000 spot welds. Understanding weld parameters is essential for fixture design — fixtures must position panels accurately and provide access for welding guns.</p>
-
+          <p>Spot welding (RSW) is the most widely used joining process in BIW. A typical passenger car body contains 3,000–5,000 spot welds. Fixtures must position panels accurately and provide full access for welding guns.</p>
           <h3>Spot Welding Principle</h3>
-          <p>Two overlapping metal sheets are squeezed between copper alloy electrodes and a high current is passed through them. The resistance at the interface generates localized heat, melting the metal and forming a weld nugget upon solidification.</p>
           <div class="formula-box">Heat Generated: Q = I² × R × t
 I = Welding current (kA), R = Resistance (Ω), t = Weld time (ms)
 Nugget Diameter: d = 5√t  (t = sheet thickness in mm)
 For t = 1.0mm: d = 5mm minimum nugget diameter</div>
-
           <div class="inline-ad">
-            <div class="inline-ad-text">
-              <strong>📦 MIG Welding Machine 200A – Inverter Type</strong>
-              <span>Professional welding machine for automotive body repair and BIW prototype work</span>
-            </div>
-            <a href="https://www.amazon.in/s?k=mig+welding+machine+200a+inverter&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+            <div class="inline-ad-text"><strong>📦 MIG Welding Machine 200A – Inverter Type</strong><span>For automotive body repair and BIW prototype welding</span></div>
+            <a href="https://www.amazon.in/s?k=mig+welding+machine+200a+inverter&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
           </div>
-
           <h3>Spot Weld Parameters</h3>
           <table class="data-table">
             <tr><th>Parameter</th><th>Mild Steel (1mm)</th><th>HSLA (1.5mm)</th><th>Aluminium (1mm)</th></tr>
@@ -643,24 +563,18 @@ For t = 1.0mm: d = 5mm minimum nugget diameter</div>
             <tr><td>Min Nugget dia (mm)</td><td>5.0</td><td>6.5</td><td>7.0</td></tr>
             <tr><td>Min Pitch (mm)</td><td>25</td><td>30</td><td>25</td></tr>
           </table>
-
           <h3>Weld Pitch & Edge Distance</h3>
           <div class="formula-box">Minimum weld pitch = 25mm (to prevent shunting)
 Minimum edge distance = 1.5 × nugget diameter
 For d = 5mm: min edge distance = 7.5mm
 Flange width for spot welding = min 14–16mm</div>
-          <div class="warn-box"><strong>⚠️ Fixture Design Note</strong><p>Spot welding guns require electrode access from both sides of the panel. BIW fixtures must provide gun throat clearance (min 150–200mm) and electrode stroke space. Gun approach path must be modelled in 3D before fixture design is finalised.</p></div>
+          <div class="warn-box"><strong>⚠️ Fixture Design Note</strong><p>Spot welding guns require electrode access from both sides. BIW fixtures must provide gun throat clearance (min 150–200mm) and electrode stroke space. Model gun approach path in 3D before finalising fixture design.</p></div>
         </div>
       </div>
       <div>
         <div class="sidebar-ad">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">WELDING TOOL</p>
-            <h4>Welding Helmet Auto Darkening</h4>
-            <p>Solar powered, adjustable shade 9–13 for MIG/TIG/spot welding.</p>
-            <a href="https://www.amazon.in/s?k=welding+helmet+auto+darkening&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">WELDING SAFETY</p><h4>Welding Helmet Auto Darkening</h4><p>Solar powered, adjustable shade 9–13 for MIG/TIG/spot welding.</p><a href="https://www.amazon.in/s?k=welding+helmet+auto+darkening&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
       </div>
     </div>
@@ -672,56 +586,37 @@ Flange width for spot welding = min 14–16mm</div>
       <div class="content-area">
         <div class="chapter-content">
           <h2>Chapter 6: Dimensional Control & CMM Inspection</h2>
-          <p>Dimensional Control (DC) in BIW is the systematic process of measuring, monitoring, and improving the dimensional accuracy of body panels and assemblies. It bridges the gap between design intent and manufactured reality.</p>
-
+          <p>Dimensional Control in BIW is the systematic process of measuring, monitoring, and improving the dimensional accuracy of body panels and assemblies. It bridges design intent and manufactured reality.</p>
           <h3>CMM – Coordinate Measuring Machine</h3>
-          <p>CMM is the primary tool for BIW dimensional inspection. It measures the 3D coordinates of points on a panel and compares them to the CAD nominal. Modern CMMs achieve accuracy of ±0.003mm.</p>
           <div class="formula-box">Measurement Uncertainty = ±(A + BL/1000) μm
 A = 0.5–2.5 μm (constant)
 B = 0.5–2.5 (length-dependent coefficient)
 L = Measured length in mm
 For BIW: Typical CMM accuracy ±0.01–0.03mm</div>
-
           <div class="inline-ad">
-            <div class="inline-ad-text">
-              <strong>📦 Geometric Dimensioning and Tolerancing – Krulikowski</strong>
-              <span>Best GD&T book for automotive dimensional engineers and CMM operators</span>
-            </div>
-            <a href="https://www.amazon.in/s?k=geometric+dimensioning+tolerancing+krulikowski&tag=taskjunction-21-21" target="_blank" class="amz-btn">₹ Amazon</a>
+            <div class="inline-ad-text"><strong>📦 Geometric Dimensioning and Tolerancing – Krulikowski</strong><span>Best GD&T book for automotive dimensional engineers and CMM operators</span></div>
+            <a href="https://www.amazon.in/s?k=geometric+dimensioning+tolerancing+krulikowski&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
           </div>
-
           <h3>Process Capability – Cp & Cpk</h3>
-          <p>Process capability indices measure how well a manufacturing process meets tolerance requirements. In BIW, Cpk ≥ 1.33 is the minimum acceptable for production approval.</p>
           <div class="formula-box">Cp = (USL - LSL) / (6σ)      [Potential capability]
 Cpk = min[(USL-μ)/3σ, (μ-LSL)/3σ]  [Actual capability]
 Cpk ≥ 1.67 → World class
 Cpk ≥ 1.33 → Acceptable for production
 Cpk < 1.00 → Process needs improvement
 For BIW: Target Cpk = 1.67 for safety critical features</div>
-
           <h3>Variation Simulation Analysis (VSA)</h3>
-          <p>VSA (also called Dimensional Management) is performed during design stage to predict assembly variation before tooling is built. Software tools like 3DCS, VisVSA, or CETOL simulate the effect of part tolerances on assembly dimensions.</p>
-          <div class="tip-box"><strong>💡 Key Metric</strong><p>In BIW, gap & flush (GF) between closures (door, hood, trunk) is the most visible quality indicator to customers. Target: Gap = 4.5±0.5mm, Flush = ±0.5mm. CMM measures these at 50+ points per vehicle on final audit.</p></div>
+          <p>VSA is performed during design stage to predict assembly variation before tooling is built. Software tools like 3DCS, VisVSA, or CETOL simulate the effect of part tolerances on assembly dimensions.</p>
+          <div class="tip-box"><strong>💡 Key Metric</strong><p>Gap & flush between closures is the most visible quality indicator to customers. Target: Gap = 4.5±0.5mm, Flush = ±0.5mm. CMM measures these at 50+ points per vehicle on final audit.</p></div>
         </div>
       </div>
       <div>
         <div class="sidebar-ad">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">MEASUREMENT</p>
-            <h4>Feeler Gauge Set – 25 Blades</h4>
-            <p>For measuring panel gaps, flush, and clearance in BIW assemblies.</p>
-            <a href="https://www.amazon.in/s?k=feeler+gauge+set+25+blades&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">MEASUREMENT</p><h4>Feeler Gauge Set – 25 Blades</h4><p>For measuring panel gaps, flush, and clearance in BIW assemblies.</p><a href="https://www.amazon.in/s?k=feeler+gauge+set+25+blades&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
-        <div class="sidebar-ad" style="margin-top:12px;">
-          <div class="sidebar-ad-hdr">🛒 Sponsored – Amazon</div>
-          <div class="sidebar-ad-body">
-            <p style="font-size:11px;color:var(--muted);margin-bottom:5px;">CALIPER</p>
-            <h4>Digital Caliper 300mm – Large Range</h4>
-            <p>For checking larger BIW panel dimensions and assembly gaps.</p>
-            <a href="https://www.amazon.in/s?k=digital+caliper+300mm&tag=taskjunction-21-21" target="_blank" class="amz-btn" style="display:block;text-align:center;padding:9px;">Buy on Amazon ↗</a>
-          </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body"><p style="font-size:11px;color:var(--muted);margin-bottom:6px;">CALIPER</p><h4>Digital Caliper 300mm – Large Range</h4><p>For checking larger BIW panel dimensions and assembly gaps.</p><a href="https://www.amazon.in/s?k=digital+caliper+300mm&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center;padding:10px;">Buy on Amazon ↗</a></div>
         </div>
       </div>
     </div>
@@ -741,149 +636,61 @@ For BIW: Target Cpk = 1.67 for safety critical features</div>
 </div>
 
 <!-- PRODUCTS -->
-<div id="products" style="background: #F2F3F4; padding: 60px 0;">
+<div id="products" style="background: #F5EFE6; padding: 64px 0;">
   <div class="section" style="padding-top:0; padding-bottom:0;">
     <h2 class="section-title">Recommended BIW Books & Tools</h2>
     <p class="section-sub">Handpicked books, tools and instruments for BIW & Automotive engineers — on Amazon India</p>
     <div class="products-grid">
-
-      <div class="product-card">
-        <div class="product-img">📚</div>
-        <div class="product-body">
-          <div class="product-badge">⭐ Top Pick</div>
-          <div class="product-name">Vehicle Body Engineering – J. Powloski</div>
-          <div class="product-desc">Comprehensive BIW design, panels, crash, and body stiffness guide</div>
-          <div class="product-footer">
-            <div class="product-price">₹3,499 <span>₹4,800</span></div>
-            <a href="https://www.amazon.in/s?k=vehicle+body+engineering+automotive&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img">🔥</div>
-        <div class="product-body">
-          <div class="product-badge">🔧 Professional</div>
-          <div class="product-name">MIG Welding Machine 200A Inverter</div>
-          <div class="product-desc">For BIW prototype welding, fixture fabrication and body repair</div>
-          <div class="product-footer">
-            <div class="product-price">₹8,500 <span>₹12,000</span></div>
-            <a href="https://www.amazon.in/s?k=mig+welding+machine+200a+inverter&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img">📏</div>
-        <div class="product-body">
-          <div class="product-badge">🎯 Lab Essential</div>
-          <div class="product-name">Mitutoyo Dial Gauge 0.001mm</div>
-          <div class="product-desc">For BIW checking fixture verification and surface measurement</div>
-          <div class="product-footer">
-            <div class="product-price">₹2,800 <span>₹3,800</span></div>
-            <a href="https://www.amazon.in/s?k=mitutoyo+dial+gauge+0.001&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img">🛡️</div>
-        <div class="product-body">
-          <div class="product-badge">⚙️ Safety</div>
-          <div class="product-name">Auto Darkening Welding Helmet</div>
-          <div class="product-desc">Shade 9–13, solar powered, for MIG/TIG/spot welding safety</div>
-          <div class="product-footer">
-            <div class="product-price">₹1,299 <span>₹1,999</span></div>
-            <a href="https://www.amazon.in/s?k=welding+helmet+auto+darkening&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img">📐</div>
-        <div class="product-body">
-          <div class="product-badge">📖 Reference</div>
-          <div class="product-name">GD&T for Automotive Engineers – ASME Y14.5</div>
-          <div class="product-desc">Automotive GD&T standard, RPS datums, tolerance symbols</div>
-          <div class="product-footer">
-            <div class="product-price">₹2,200 <span>₹3,000</span></div>
-            <a href="https://www.amazon.in/s?k=gdt+automotive+asme+y14.5+book&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img">🔩</div>
-        <div class="product-body">
-          <div class="product-badge">🔧 Fixture Part</div>
-          <div class="product-name">Toggle Clamp Set – 4 Types Heavy Duty</div>
-          <div class="product-desc">Horizontal, vertical & pull-action clamps for BIW fixture assembly</div>
-          <div class="product-footer">
-            <div class="product-price">₹1,850 <span>₹2,600</span></div>
-            <a href="https://www.amazon.in/s?k=toggle+clamp+set+heavy+duty&tag=taskjunction-21-21" target="_blank" class="amz-btn">Buy ↗</a>
-          </div>
-        </div>
-      </div>
-
+      <div class="product-card"><div class="product-img">📚</div><div class="product-body"><div class="product-badge">⭐ Top Pick</div><div class="product-name">Vehicle Body Engineering – J. Powloski</div><div class="product-desc">Comprehensive BIW design, panels, crash, and body stiffness guide</div><div class="product-footer"><div class="product-price">₹3,499 <span>₹4,800</span></div><a href="https://www.amazon.in/s?k=vehicle+body+engineering+automotive&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">🔥</div><div class="product-body"><div class="product-badge">🔧 Professional</div><div class="product-name">MIG Welding Machine 200A Inverter</div><div class="product-desc">For BIW prototype welding, fixture fabrication and body repair</div><div class="product-footer"><div class="product-price">₹8,500 <span>₹12,000</span></div><a href="https://www.amazon.in/s?k=mig+welding+machine+200a+inverter&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">📏</div><div class="product-body"><div class="product-badge">🎯 Lab Essential</div><div class="product-name">Mitutoyo Dial Gauge 0.001mm</div><div class="product-desc">For BIW checking fixture verification and surface measurement</div><div class="product-footer"><div class="product-price">₹2,800 <span>₹3,800</span></div><a href="https://www.amazon.in/s?k=mitutoyo+dial+gauge+0.001&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">🛡️</div><div class="product-body"><div class="product-badge">⚙️ Safety</div><div class="product-name">Auto Darkening Welding Helmet</div><div class="product-desc">Shade 9–13, solar powered, for MIG/TIG/spot welding safety</div><div class="product-footer"><div class="product-price">₹1,299 <span>₹1,999</span></div><a href="https://www.amazon.in/s?k=welding+helmet+auto+darkening&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">📐</div><div class="product-body"><div class="product-badge">📖 Reference</div><div class="product-name">GD&T for Automotive Engineers – ASME Y14.5</div><div class="product-desc">Automotive GD&T standard, RPS datums, tolerance symbols</div><div class="product-footer"><div class="product-price">₹2,200 <span>₹3,000</span></div><a href="https://www.amazon.in/s?k=gdt+automotive+asme+y14.5+book&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">🔩</div><div class="product-body"><div class="product-badge">🔧 Fixture Part</div><div class="product-name">Toggle Clamp Set – 4 Types Heavy Duty</div><div class="product-desc">Horizontal, vertical & pull-action clamps for BIW fixture assembly</div><div class="product-footer"><div class="product-price">₹1,850 <span>₹2,600</span></div><a href="https://www.amazon.in/s?k=toggle+clamp+set+heavy+duty&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
     </div>
-    <p style="margin-top:18px; font-size:12px; color:var(--muted); text-align:center;">
-      * As an Amazon Associate (Store ID: taskjunction-21), this site earns from qualifying purchases. Prices are approximate — verify on Amazon before purchasing.
-    </p>
+    <p style="margin-top: 24px; font-size: 12px; color: var(--muted); text-align: center;">* As an Amazon Associate (Store ID: taskjunction-21), this site earns from qualifying purchases. Prices are approximate — verify on Amazon before purchasing.</p>
   </div>
 </div>
 
 <!-- PRIVACY -->
-<div id="privacy" style="background: var(--surface); padding: 60px 0; border-top: 1px solid var(--border);">
+<div id="privacy" style="background: #F5EFE6; padding: 64px 0; border-top: 1px solid var(--border);">
   <div class="section" style="padding-top:0; padding-bottom:0;">
     <h2 class="section-title">Privacy Policy</h2>
     <p class="section-sub">Last updated: May 2025 &nbsp;|&nbsp; BIW Fixture Pro by TaskJunction</p>
-    <div class="privacy-card">
-      <h3>1. Information We Collect</h3>
-      <p>This website <strong>does not collect any personal information</strong> from visitors. No registration, login, or form submission is required to access the eBook content.</p>
-    </div>
-    <div class="privacy-card">
-      <h3>2. Amazon Affiliate Disclosure</h3>
-      <p>This site participates in the <strong>Amazon Associates Program</strong>. We earn a small commission on qualifying purchases via Amazon affiliate links at no extra cost to you. Our Store ID is <strong>taskjunction-21</strong>. All affiliate links are labelled "Amazon ↗" throughout this site.</p>
-    </div>
-    <div class="privacy-card">
-      <h3>3. Cookies & Tracking</h3>
-      <p>We do not use our own cookies or analytics scripts. Amazon may set cookies when you click affiliate links, as per their privacy policy. Google Fonts (fonts.googleapis.com) is loaded for typography purposes only.</p>
-    </div>
-    <div class="privacy-card">
-      <h3>4. Content Disclaimer</h3>
-      <p>All BIW engineering content is provided <strong>for educational purposes only</strong>. Always verify engineering parameters and calculations with qualified OEM engineers or standards before use in production. We are not liable for errors, omissions or damages from use of this content.</p>
-    </div>
-    <div class="privacy-card">
-      <h3>5. Contact</h3>
-      <p>👤 <strong>Vaibhav Dhokpande</strong><br>
-      🌐 <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:var(--red);">vaibhavdhokpande-ai.github.io</a><br>
-      🏢 <strong>TaskJunction</strong></p>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px; padding-left:10px; border-left:3px solid var(--red);">1. Information We Collect</h3><p style="font-size:15px; color:#2C3E50; line-height:1.8;">This website does <strong>not collect any personal information</strong> directly from visitors. No registration, login, or form submission is required to access the eBook content.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px; padding-left:10px; border-left:3px solid var(--red);">2. Amazon Affiliate Disclosure</h3><p style="font-size:15px; color:#2C3E50; line-height:1.8;">This website participates in the <strong>Amazon Associates Program</strong> (affiliate.amazon.in). We earn a small commission when you click on Amazon product links and make a purchase — at <strong>no extra cost to you</strong>. Our Store ID is <strong>taskjunction-21</strong>.</p><div style="background:var(--red-light); border-left:4px solid var(--red); border-radius:0 8px 8px 0; padding:12px 16px; margin-top:14px; font-size:14px; color:var(--red-dark);">⚠️ All affiliate links are labelled "Amazon ↗" throughout this site.</div></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px; padding-left:10px; border-left:3px solid var(--red);">3. Cookies & Tracking</h3><p style="font-size:15px; color:#2C3E50; line-height:1.8;">We do not use our own tracking cookies. When you click Amazon affiliate links, <strong>Amazon may set cookies</strong> per their own Privacy Policy. Google Fonts is loaded for typography. No other third-party scripts are used. Review Amazon's policy at <a href="https://www.amazon.in/gp/help/customer/display.html?nodeId=200534380" target="_blank" style="color:var(--red);">amazon.in/privacy</a>.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px; padding-left:10px; border-left:3px solid var(--red);">4. Content Disclaimer</h3><p style="font-size:15px; color:#2C3E50; line-height:1.8;">All BIW engineering content, formulas and case studies are provided <strong>for educational purposes only</strong>. Always verify engineering parameters with qualified OEM engineers before use in production. We are not liable for errors or damages from use of this content.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px; padding-left:10px; border-left:3px solid var(--red);">5. Contact Us</h3><p style="font-size:15px; color:#2C3E50; line-height:1.8;">👤 <strong>Vaibhav Dhokpande</strong><br>🌐 Website: <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:var(--red);">vaibhavdhokpande-ai.github.io</a><br>🏢 Platform: <strong>TaskJunction</strong></p></div>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
+<!-- ── FOOTER (Fixture Design ebook style) ── -->
 <footer>
-  <div style="margin-bottom:14px;">
-    <strong style="font-size:18px; font-family:'Playfair Display',serif; color:var(--accent);">BIW Fixture Pro</strong>
-    <span style="color:rgba(255,255,255,0.25); margin:0 10px;">|</span>
-    <span style="font-size:14px;">Free Automotive Body Engineering eBook</span>
+  <div style="margin-bottom: 16px;">
+    <strong style="font-size:18px; font-family:'Playfair Display',serif; color:var(--yellow);">BIW Fixture Pro</strong>
+    <span style="color:rgba(255,255,255,0.4); margin: 0 10px;">|</span>
+    <span style="color:rgba(255,255,255,0.6); font-size:14px;">Free Automotive Body Engineering eBook</span>
   </div>
-  <div style="display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-bottom:16px;">
-    <a href="#topics" style="color:rgba(255,255,255,0.4); text-decoration:none; font-size:13px;">Topics</a>
-    <a href="#chapters" style="color:rgba(255,255,255,0.4); text-decoration:none; font-size:13px;">Chapters</a>
-    <a href="#products" style="color:rgba(255,255,255,0.4); text-decoration:none; font-size:13px;">Shop</a>
-    <a href="#privacy" style="color:rgba(255,255,255,0.4); text-decoration:none; font-size:13px;">Privacy Policy</a>
-    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:rgba(255,255,255,0.4); text-decoration:none; font-size:13px;">Home</a>
+  <div style="display:flex; justify-content:center; gap:32px; flex-wrap:wrap; margin-bottom:16px;">
+    <a href="#topics" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Topics</a>
+    <a href="#chapters" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Chapters</a>
+    <a href="#products" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Shop</a>
+    <a href="#privacy" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Privacy Policy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Home</a>
   </div>
-  <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:16px;">
-    <p style="color:rgba(255,255,255,0.25); font-size:12px; margin-bottom:8px;">
-      Amazon affiliate links present (Store ID: taskjunction-21). Commission earned on qualifying purchases at no extra cost to you.
+  <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top:16px; margin-top:8px;">
+    <p style="color:rgba(255,255,255,0.35); font-size:12px; margin-bottom:8px;">
+      This site contains Amazon affiliate links (Store ID: taskjunction-21). Purchases through these links earn a small commission at no extra cost to you.
     </p>
-    <p style="font-size:13px; font-weight:500; color:rgba(255,255,255,0.55);">
-      Made by <strong style="color:var(--accent);">Vaibhav Dhokpande</strong> &nbsp;&amp;&nbsp; <strong style="color:#E74C3C;">TaskJunction</strong>
+    <p style="color:rgba(255,255,255,0.55); font-size:13px; font-weight:500;">
+      Made by <strong style="color:var(--yellow);">Vaibhav Dhokpande</strong>
+      &nbsp;&amp;&nbsp;
+      <strong style="color:var(--orange);">TaskJunction</strong>
     </p>
-    <p style="color:rgba(255,255,255,0.18); font-size:11px; margin-top:6px;">© 2025 TaskJunction. All rights reserved.</p>
+    <p style="color:rgba(255,255,255,0.25); font-size:11px; margin-top:6px;">© 2025 TaskJunction. All rights reserved.</p>
   </div>
 </footer>
 
