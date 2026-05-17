@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electrical Engineering eBook – Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #E8611A;
+    --primary-dark: #B84D10;
+    --primary-light: #FFF3EC;
+    --yellow: #F5B800;
+    --dark: #1A1208;
+    --text: #2D1F0E;
+    --muted: #7A6450;
+    --surface: #FDFAF6;
+    --card-bg: #FFFFFF;
+    --border: #EDE5D8;
+    --radius: 16px;
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); line-height: 1.6; }
+
+  nav {
+    background: var(--dark); padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; color: var(--yellow); font-size: 20px; letter-spacing: -0.5px; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; margin-left: 24px; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--yellow); }
+  .home-btn { background: var(--primary); color: #fff !important; padding: 8px 18px; border-radius: 100px; font-size: 13px !important; font-weight: 600; margin-left: 20px !important; transition: background 0.2s !important; }
+  .home-btn:hover { background: var(--primary-dark) !important; }
+
+  .hero {
+    background: linear-gradient(135deg, #0A1628 0%, #1A2D4A 60%, #0D2137 100%);
+    padding: 72px 24px 80px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 320px; height: 320px; border-radius: 50%; background: #F5B800; opacity: 0.07; }
+  .hero::after { content: '⚡'; position: absolute; left: 8%; top: 20%; font-size: 120px; opacity: 0.05; pointer-events: none; }
+  .hero-badge { display: inline-block; background: #F5B800; color: #1A1208; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: clamp(36px, 6vw, 64px); line-height: 1.1; margin-bottom: 20px; max-width: 700px; margin-inline: auto; }
+  .hero h1 span { color: #F5B800; }
+  .hero p { color: rgba(255,255,255,0.65); font-size: 18px; max-width: 520px; margin: 0 auto 36px; }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary { background: var(--primary); color: #fff; padding: 14px 32px; border-radius: 100px; font-weight: 600; font-size: 16px; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-block; }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+  .btn-outline { border: 1.5px solid rgba(255,255,255,0.3); color: #fff; padding: 14px 32px; border-radius: 100px; font-size: 16px; text-decoration: none; transition: border-color 0.2s; display: inline-block; }
+  .btn-outline:hover { border-color: var(--yellow); color: var(--yellow); }
+  .hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 48px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--yellow); font-family: 'Playfair Display', serif; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  .section { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 40px); color: var(--dark); margin-bottom: 8px; }
+  .section-sub { color: var(--muted); font-size: 16px; margin-bottom: 40px; }
+
+  .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  .topic-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 20px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+  .topic-icon { width: 44px; height: 44px; border-radius: 12px; background: #EFF4FF; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
+  .topic-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .topic-card p { font-size: 13px; color: var(--muted); }
+
+  .chapters-list { display: flex; flex-direction: column; gap: 12px; }
+  .chapter-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; gap: 18px; transition: border-color 0.2s; cursor: pointer; }
+  .chapter-item:hover { border-color: #1A6FC4; }
+  .ch-num { width: 36px; height: 36px; border-radius: 50%; background: #1A6FC4; color: #fff; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ch-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .ch-info p { font-size: 13px; color: var(--muted); }
+  .ch-tag { margin-left: auto; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; background: #EFF4FF; color: #1A6FC4; white-space: nowrap; flex-shrink: 0; }
+
+  .ad-banner { background: linear-gradient(135deg, #0A1628 0%, #1A2D4A 100%); border-radius: var(--radius); padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 32px 0; }
+  .ad-text { color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .ad-title { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .ad-sub { color: rgba(255,255,255,0.55); font-size: 14px; }
+  .ad-btn { background: var(--yellow); color: var(--dark); padding: 12px 28px; border-radius: 100px; font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap; transition: opacity 0.2s; }
+  .ad-btn:hover { opacity: 0.9; }
+
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .product-img { background: #EFF4FF; padding: 24px; text-align: center; font-size: 52px; height: 140px; display: flex; align-items: center; justify-content: center; }
+  .product-body { padding: 18px; }
+  .product-badge { font-size: 11px; font-weight: 600; color: #1A6FC4; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .product-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+  .product-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 18px; font-weight: 700; color: #1A6FC4; }
+  .product-price span { font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
+  .amazon-btn { background: var(--yellow); color: var(--dark); font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; }
+  .amazon-btn:hover { opacity: 0.85; }
+
+  .content-with-sidebar { display: grid; grid-template-columns: 1fr 280px; gap: 32px; align-items: start; }
+  @media (max-width: 768px) { .content-with-sidebar { grid-template-columns: 1fr; } }
+  .sidebar-ad { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: sticky; top: 72px; }
+  .sidebar-ad-header { background: #1A6FC4; color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 8px 14px; }
+  .sidebar-ad-body { padding: 18px; }
+  .sidebar-ad-body h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .sidebar-ad-body p { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  .inline-ad { background: #EFF4FF; border-left: 4px solid #1A6FC4; border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .inline-ad-text { flex: 1; }
+  .inline-ad-text strong { font-size: 14px; color: var(--dark); display: block; margin-bottom: 3px; }
+  .inline-ad-text span { font-size: 13px; color: var(--muted); }
+
+  .content-area { min-width: 0; }
+  .chapter-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+  .chapter-content h2 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 16px; color: var(--dark); }
+  .chapter-content p { font-size: 15px; color: #4A3728; line-height: 1.8; margin-bottom: 16px; }
+  .chapter-content h3 { font-size: 17px; font-weight: 600; margin: 24px 0 10px; color: var(--dark); }
+  .formula-box { background: #F0F4FA; border: 1px solid #D0DDEF; border-radius: 10px; padding: 18px 20px; font-family: 'DM Sans', monospace; font-size: 14px; color: #1A4A80; margin: 16px 0; font-weight: 500; }
+  .tip-box { background: #EFF8F2; border-left: 4px solid #27AE60; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; }
+  .tip-box strong { color: #1E8449; font-size: 13px; display: block; margin-bottom: 4px; }
+  .tip-box p { font-size: 14px; color: #1A5C33; margin: 0; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.5); text-align: center; padding: 32px 24px; font-size: 13px; }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab-btn { background: none; border: 1px solid var(--border); border-radius: 100px; padding: 8px 20px; font-size: 14px; font-family: 'DM Sans', sans-serif; cursor: pointer; color: var(--muted); transition: all 0.15s; }
+  .tab-btn.active { background: #1A6FC4; border-color: #1A6FC4; color: #fff; font-weight: 600; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ElectricalEng Pro</div>
+  <div class="nav-links">
+    <a href="#chapters">Chapters</a>
+    <a href="#tools">Tools</a>
+    <a href="#products">Shop</a>
+    <a href="#privacy">Privacy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" class="home-btn">🏠 Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⚡ Free eBook – Updated 2025</div>
+  <h1>Master <span>Electrical Engineering</span> from Zero to Pro</h1>
+  <p>Complete guide covering Circuits, Power Systems, Machines, Control Systems, Switchgear & Electrical Standards</p>
+  <div class="hero-btns">
+    <a href="#chapters" class="btn-primary">📖 Read Free eBook</a>
+    <a href="#products" class="btn-outline">🛒 Buy Tools on Amazon</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">14</div><div class="stat-label">Chapters</div></div>
+    <div class="stat"><div class="stat-num">250+</div><div class="stat-label">Pages</div></div>
+    <div class="stat"><div class="stat-num">60+</div><div class="stat-label">Examples</div></div>
+    <div class="stat"><div class="stat-num">Free</div><div class="stat-label">Forever</div></div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="section">
+  <h2 class="section-title">What You'll Learn</h2>
+  <p class="section-sub">From DC circuits to advanced power systems and control theory</p>
+  <div class="topics-grid">
+    <div class="topic-card"><div class="topic-icon">⚡</div><h3>Circuit Analysis</h3><p>KVL, KCL, Thevenin, Norton, Superposition theorems</p></div>
+    <div class="topic-card"><div class="topic-icon">🔌</div><h3>AC Circuits</h3><p>Phasors, impedance, resonance, power factor correction</p></div>
+    <div class="topic-card"><div class="topic-icon">🏭</div><h3>Electrical Machines</h3><p>Transformers, induction motors, synchronous generators</p></div>
+    <div class="topic-card"><div class="topic-icon">🔋</div><h3>Power Systems</h3><p>Transmission, distribution, load flow, fault analysis</p></div>
+    <div class="topic-card"><div class="topic-icon">🎛️</div><h3>Control Systems</h3><p>Transfer functions, Bode plots, PID controllers, stability</p></div>
+    <div class="topic-card"><div class="topic-icon">🛡️</div><h3>Protection & Switchgear</h3><p>Relays, circuit breakers, fuses, earthing systems</p></div>
+  </div>
+</div>
+
+<!-- AD BANNER -->
+<div style="max-width:1100px; margin:0 auto; padding: 0 24px;">
+  <div class="ad-banner">
+    <div>
+      <div class="ad-text">🛒 Amazon Affiliate – Sponsored</div>
+      <div class="ad-title">Digital Multimeter – Fluke 117 Professional Grade</div>
+      <div class="ad-sub">True RMS • CAT III 600V • Used by 50,000+ electricians & engineers</div>
+    </div>
+    <a href="https://www.amazon.in/s?k=fluke+digital+multimeter&tag=taskjunction-21-21" target="_blank" class="ad-btn">View on Amazon ↗</a>
+  </div>
+</div>
+
+<!-- CHAPTERS -->
+<div id="chapters" class="section">
+  <h2 class="section-title">Read the eBook</h2>
+  <p class="section-sub">Click any chapter to start reading</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('toc')">📋 Table of Contents</button>
+    <button class="tab-btn" onclick="showTab('ch1')">Chapter 1</button>
+    <button class="tab-btn" onclick="showTab('ch2')">Chapter 2</button>
+    <button class="tab-btn" onclick="showTab('ch3')">Chapter 3</button>
+  </div>
+
+  <!-- TOC -->
+  <div id="toc" class="tab-content active">
+    <div class="chapters-list">
+      <div class="chapter-item" onclick="showTab('ch1'); setActiveTab(1)"><div class="ch-num">1</div><div class="ch-info"><h4>DC Circuit Analysis</h4><p>Ohm's law, KVL, KCL, mesh & node analysis, Thevenin/Norton</p></div><span class="ch-tag">Beginner</span></div>
+      <div class="chapter-item" onclick="showTab('ch2'); setActiveTab(2)"><div class="ch-num">2</div><div class="ch-info"><h4>AC Circuits & Phasors</h4><p>Sinusoidal signals, impedance, power factor, resonance</p></div><span class="ch-tag">Beginner</span></div>
+      <div class="chapter-item" onclick="showTab('ch3'); setActiveTab(3)"><div class="ch-num">3</div><div class="ch-info"><h4>Transformers</h4><p>Construction, EMF equation, efficiency, regulation, tests</p></div><span class="ch-tag">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">4</div><div class="ch-info"><h4>Induction Motors</h4><p>Rotating field, slip, torque-speed curve, starting methods</p></div><span class="ch-tag">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">5</div><div class="ch-info"><h4>Synchronous Machines</h4><p>Alternators, excitation, parallel operation, V-curves</p></div><span class="ch-tag">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">6</div><div class="ch-info"><h4>Power Systems</h4><p>Transmission lines, load flow, per-unit system, symmetrical components</p></div><span class="ch-tag">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">7</div><div class="ch-info"><h4>Control Systems</h4><p>Transfer functions, root locus, Bode plot, PID design</p></div><span class="ch-tag">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">8</div><div class="ch-info"><h4>Protection & Switchgear</h4><p>Relay types, circuit breakers, earthing, arc flash analysis</p></div><span class="ch-tag">Advanced</span></div>
+    </div>
+  </div>
+
+  <!-- CH 1 -->
+  <div id="ch1" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 1: DC Circuit Analysis</h2>
+          <p>DC circuit analysis forms the foundation of all electrical engineering. Understanding how current flows, how voltage distributes, and how resistance affects a circuit is essential before studying any advanced topic.</p>
+          <h3>Ohm's Law</h3>
+          <p>Ohm's Law states that current through a conductor is directly proportional to the voltage and inversely proportional to resistance, provided temperature remains constant.</p>
+          <div class="formula-box">V = I × R &nbsp;&nbsp;|&nbsp;&nbsp; I = V / R &nbsp;&nbsp;|&nbsp;&nbsp; R = V / I<br>Power: P = V × I = I²R = V²/R</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text"><strong>📦 Recommended: Digital Multimeter – Auto-Ranging</strong><span>Perfect for measuring voltage, current, and resistance in circuits</span></div>
+            <a href="https://www.amazon.in/s?k=digital+multimeter+auto+ranging&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
+          </div>
+          <h3>Kirchhoff's Laws</h3>
+          <p><strong>KCL (Current Law):</strong> The algebraic sum of all currents entering and leaving a node equals zero. Current in = Current out.</p>
+          <p><strong>KVL (Voltage Law):</strong> The algebraic sum of all voltages around any closed loop equals zero.</p>
+          <div class="formula-box">KCL: ΣI_in = ΣI_out (at any node)<br>KVL: ΣV = 0 (around any closed loop)</div>
+          <h3>Thevenin's Theorem</h3>
+          <p>Any linear circuit with voltage/current sources can be replaced by a single voltage source (Vth) in series with a single resistance (Rth) from the perspective of any two terminals.</p>
+          <div class="formula-box">Vth = Open circuit voltage across terminals<br>Rth = Resistance with all independent sources deactivated<br>I_load = Vth / (Rth + R_load)</div>
+          <div class="tip-box"><strong>💡 Engineering Tip</strong><p>Norton's theorem is the current-source equivalent of Thevenin's. Convert between them using: Vth = In × Rth. Use whichever simplifies your circuit analysis.</p></div>
+          <h3>Mesh & Node Analysis</h3>
+          <p>Mesh analysis applies KVL to each independent loop. Node analysis applies KCL at each node. For circuits with n nodes, node analysis gives (n−1) equations; for m meshes, mesh analysis gives m equations. Choose based on which gives fewer equations.</p>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">BOOK RECOMMENDATION</p>
+            <h4>Electrical Engineering – Hayt & Kemmerly</h4>
+            <p>Classic textbook on circuit analysis used worldwide in engineering programs.</p>
+            <a href="https://www.amazon.in/s?k=engineering+circuit+analysis+hayt+kemmerly&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">LAB ESSENTIAL</p>
+            <h4>Breadboard + Jumper Wire Kit</h4>
+            <p>840-point solderless breadboard ideal for prototyping DC circuits.</p>
+            <a href="https://www.amazon.in/s?k=breadboard+jumper+wire+kit+electronics&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH 2 -->
+  <div id="ch2" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 2: AC Circuits & Phasors</h2>
+          <p>Alternating current circuits involve sinusoidally varying voltages and currents. Phasor analysis converts differential equations into algebraic ones, making AC circuit analysis tractable.</p>
+          <h3>Sinusoidal Signals</h3>
+          <p>A sinusoidal voltage is represented as v(t) = Vm sin(ωt + φ), where Vm is peak voltage, ω is angular frequency, and φ is phase angle.</p>
+          <div class="formula-box">v(t) = Vm sin(ωt + φ)<br>ω = 2πf &nbsp;&nbsp;|&nbsp;&nbsp; f = 1/T<br>VRMS = Vm / √2 &nbsp;≈&nbsp; 0.707 × Vm</div>
+          <h3>Impedance</h3>
+          <p>Impedance (Z) is the AC equivalent of resistance. Resistors have real impedance; inductors and capacitors have imaginary (reactive) impedance.</p>
+          <div class="formula-box">ZR = R &nbsp;&nbsp;|&nbsp;&nbsp; ZL = jωL &nbsp;&nbsp;|&nbsp;&nbsp; ZC = 1/(jωC) = -j/(ωC)<br>|Z| = √(R² + X²) &nbsp;&nbsp;|&nbsp;&nbsp; φ = arctan(X/R)</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text"><strong>📦 Function Generator – 15MHz Signal Generator</strong><span>Generate AC waveforms for circuit testing and lab experiments</span></div>
+            <a href="https://www.amazon.in/s?k=function+generator+signal+generator+lab&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
+          </div>
+          <h3>Power Factor</h3>
+          <p>Power factor (PF) is the cosine of the phase angle between voltage and current. Unity PF means all power is real (resistive load). Capacitors are used to correct lagging PF in inductive loads.</p>
+          <div class="formula-box">PF = cos(φ) = R/|Z|<br>Real Power P = V×I×cos(φ) (Watts)<br>Reactive Power Q = V×I×sin(φ) (VAR)<br>Apparent Power S = V×I (VA)</div>
+          <div class="tip-box"><strong>💡 Key Insight</strong><p>Low power factor increases line current for the same real power delivery, causing more I²R losses. Utilities charge penalty for PF below 0.85. Always correct PF in industrial installations.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">MEASUREMENT TOOL</p>
+            <h4>Clamp Meter Digital – AC/DC</h4>
+            <p>Measure AC/DC current without breaking the circuit. Essential for power analysis.</p>
+            <a href="https://www.amazon.in/s?k=digital+clamp+meter+ac+dc&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH 3 -->
+  <div id="ch3" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 3: Transformers</h2>
+          <p>Transformers are static electromagnetic devices that transfer electrical energy between circuits through magnetic induction. They are fundamental to power transmission and distribution systems.</p>
+          <h3>EMF Equation</h3>
+          <p>The EMF induced in a transformer winding depends on the number of turns, core cross-section, flux density, and frequency.</p>
+          <div class="formula-box">E = 4.44 × f × N × Φm<br>Turns Ratio: a = N1/N2 = V1/V2 = I2/I1<br>Where: f = frequency, N = turns, Φm = max flux</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text"><strong>📦 Transformer Design Book – Chapman</strong><span>Electric Machinery Fundamentals – most used EE textbook globally</span></div>
+            <a href="https://www.amazon.in/s?k=electric+machinery+fundamentals+chapman&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
+          </div>
+          <h3>Efficiency & Regulation</h3>
+          <p>Transformer efficiency is the ratio of output power to input power. Voltage regulation is the change in secondary terminal voltage from no-load to full-load conditions.</p>
+          <div class="formula-box">η = (Output Power / Input Power) × 100%<br>η_max when: Iron Loss = Copper Loss<br>VR% = (VNL - VFL) / VFL × 100%</div>
+          <h3>Tests on Transformers</h3>
+          <p><strong>Open Circuit Test:</strong> Conducted on LV side with HV open. Determines core loss (iron loss) and no-load current.</p>
+          <p><strong>Short Circuit Test:</strong> Conducted on HV side with LV shorted. Determines copper loss and equivalent impedance at full load.</p>
+          <div class="tip-box"><strong>💡 Design Rule</strong><p>Maximum efficiency of a transformer occurs when variable losses (copper losses) equal fixed losses (iron losses). Design core and winding to achieve this at the expected average load, not necessarily full load.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">LAB INSTRUMENT</div>
+            <h4>LCR Meter Digital – Component Tester</h4>
+            <p>Measure inductance, capacitance, and resistance. Essential for transformer testing.</p>
+            <a href="https://www.amazon.in/s?k=lcr+meter+digital+inductance&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div style="background: #F0F4FA; padding: 64px 0;">
+  <div id="products" class="section" style="padding-top:0; padding-bottom:0;">
+    <h2 class="section-title">Recommended Electrical Engineering Tools</h2>
+    <p class="section-sub">Handpicked instruments for Electrical Engineering – Available on Amazon India</p>
+    <div class="products-grid">
+      <div class="product-card"><div class="product-img">🔌</div><div class="product-body"><div class="product-badge">⭐ Best Seller</div><div class="product-name">Fluke 117 True-RMS Digital Multimeter</div><div class="product-desc">CAT III 600V, non-contact voltage detection, auto-ranging</div><div class="product-footer"><div class="product-price">₹12,499 <span>₹15,000</span></div><a href="https://www.amazon.in/s?k=fluke+117+multimeter&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">📡</div><div class="product-body"><div class="product-badge">🔥 Popular</div><div class="product-name">Oscilloscope 100MHz – Rigol DS1054Z</div><div class="product-desc">4 channels, 1GSa/s, 12Mpts memory depth</div><div class="product-footer"><div class="product-price">₹28,999 <span>₹35,000</span></div><a href="https://www.amazon.in/s?k=rigol+oscilloscope+100mhz&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">⚡</div><div class="product-body"><div class="product-badge">📚 Top Rated</div><div class="product-name">Electric Machinery Fundamentals – Chapman</div><div class="product-desc">6th edition, definitive EE machines textbook</div><div class="product-footer"><div class="product-price">₹5,499 <span>₹7,200</span></div><a href="https://www.amazon.in/s?k=electric+machinery+fundamentals+chapman&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">🔋</div><div class="product-body"><div class="product-badge">⚙️ Professional</div><div class="product-name">DC Power Supply Variable 30V 5A</div><div class="product-desc">Dual display, adjustable voltage & current, short-circuit protection</div><div class="product-footer"><div class="product-price">₹3,299 <span>₹4,500</span></div><a href="https://www.amazon.in/s?k=dc+power+supply+variable+30v+5a&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">🎛️</div><div class="product-body"><div class="product-badge">🎯 Essential</div><div class="product-name">Clamp Meter – Digital AC/DC 1000A</div><div class="product-desc">True RMS, NCV, temperature measurement, data hold</div><div class="product-footer"><div class="product-price">₹2,199 <span>₹3,000</span></div><a href="https://www.amazon.in/s?k=clamp+meter+digital+1000a+true+rms&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">📊</div><div class="product-body"><div class="product-badge">🆕 New</div><div class="product-name">Insulation Resistance Tester – 1000V Megger</div><div class="product-desc">Test motor windings, cables & transformer insulation</div><div class="product-footer"><div class="product-price">₹6,499 <span>₹8,500</span></div><a href="https://www.amazon.in/s?k=insulation+resistance+tester+megger+1000v&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+    </div>
+    <p style="margin-top: 24px; font-size: 12px; color: var(--muted); text-align: center;">* As an Amazon Associate, this site earns commission from qualifying purchases. Prices are approximate and may vary.</p>
+  </div>
+</div>
+
+<!-- PRIVACY -->
+<div id="privacy" style="background: #F0F4FA; padding: 64px 0; border-top: 1px solid #D0DDEF;">
+  <div class="section" style="padding-top:0; padding-bottom:0;">
+    <h2 class="section-title">Privacy Policy</h2>
+    <p class="section-sub">Last updated: May 2025 &nbsp;|&nbsp; ElectricalEng Pro by TaskJunction</p>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">1. Information We Collect</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">This website does <strong>not collect any personal information</strong> directly from visitors. No registration or login is required to read the eBook content.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">2. Amazon Affiliate Disclosure</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">This website participates in the <strong>Amazon Associates Program</strong> (affiliate.amazon.in). We earn a small commission when you purchase through our Amazon links — at <strong>no extra cost to you</strong>. Our Store ID is <strong>taskjunction-21</strong>.</p><div style="background:#EFF4FF; border-left:4px solid #1A6FC4; border-radius:0 8px 8px 0; padding:12px 16px; margin-top:14px; font-size:14px; color:#1A4A80;">⚠️ Affiliate links are clearly marked with "Amazon ↗" labels throughout this site.</div></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">3. Cookies & Tracking</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">We do not use our own tracking cookies. When you click Amazon affiliate links, <strong>Amazon may set cookies</strong> per their own Privacy Policy. Review Amazon's policy at <a href="https://www.amazon.in/gp/help/customer/display.html?nodeId=200534380" target="_blank" style="color:#1A6FC4;">amazon.in/privacy</a>.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">4. Third-Party Services</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">This website loads fonts from <strong>Google Fonts</strong>. No other third-party analytics, advertising SDKs, or tracking scripts are used.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">5. Content Disclaimer</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">All engineering content, formulas, and examples are provided <strong>for educational purposes only</strong>. Always verify critical calculations with a qualified engineer before use in real applications.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">6. Contact Us</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">👤 <strong>Vaibhav Dhokpande</strong><br>🌐 <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:#1A6FC4;">vaibhavdhokpande-ai.github.io</a><br>🏢 Platform: <strong>TaskJunction</strong></p></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="margin-bottom:16px;"><strong style="font-size:18px; font-family:'Playfair Display',serif; color:var(--yellow);">ElectricalEng Pro</strong><span style="color:rgba(255,255,255,0.4); margin:0 10px;">|</span><span style="color:rgba(255,255,255,0.6); font-size:14px;">Free Engineering eBook</span></div>
+  <div style="display:flex; justify-content:center; gap:32px; flex-wrap:wrap; margin-bottom:16px;">
+    <a href="#chapters" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Chapters</a>
+    <a href="#products" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Shop</a>
+    <a href="#privacy" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Privacy Policy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Home</a>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; margin-top:8px;">
+    <p style="color:rgba(255,255,255,0.35); font-size:12px; margin-bottom:8px;">This site contains Amazon affiliate links (Store ID: taskjunction-21). Purchases through these links earn a small commission at no extra cost to you.</p>
+    <p style="color:rgba(255,255,255,0.55); font-size:13px; font-weight:500;">Made with ❤️ by <strong style="color:var(--yellow);">Vaibhav Dhokpande</strong> &nbsp;&amp;&nbsp; <strong style="color:var(--primary);">TaskJunction</strong></p>
+    <p style="color:rgba(255,255,255,0.25); font-size:11px; margin-top:6px;">© 2025 TaskJunction. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+  function setActiveTab(num) { document.querySelectorAll('.tab-btn').forEach((btn, i) => { btn.classList.toggle('active', i === num); }); }
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => { btn.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }); });
+</script>
+</body>
+</html>

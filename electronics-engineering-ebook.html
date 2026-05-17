@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electronics Engineering eBook – Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #E8611A;
+    --primary-dark: #B84D10;
+    --primary-light: #FFF3EC;
+    --yellow: #F5B800;
+    --accent: #7C3AED;
+    --accent-dark: #5B21B6;
+    --accent-light: #F3EEFF;
+    --dark: #1A1208;
+    --text: #2D1F0E;
+    --muted: #7A6450;
+    --surface: #FDFAF6;
+    --card-bg: #FFFFFF;
+    --border: #EDE5D8;
+    --radius: 16px;
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); line-height: 1.6; }
+
+  nav {
+    background: var(--dark); padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; color: var(--yellow); font-size: 20px; letter-spacing: -0.5px; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; margin-left: 24px; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--yellow); }
+  .home-btn { background: var(--primary); color: #fff !important; padding: 8px 18px; border-radius: 100px; font-size: 13px !important; font-weight: 600; margin-left: 20px !important; transition: background 0.2s !important; }
+  .home-btn:hover { background: var(--primary-dark) !important; }
+
+  .hero {
+    background: linear-gradient(135deg, #160A2A 0%, #2D1457 60%, #1A0A3A 100%);
+    padding: 72px 24px 80px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 320px; height: 320px; border-radius: 50%; background: #7C3AED; opacity: 0.12; }
+  .hero::after { content: '📡'; position: absolute; left: 8%; top: 20%; font-size: 120px; opacity: 0.05; pointer-events: none; }
+  .hero-badge { display: inline-block; background: #7C3AED; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: clamp(36px, 6vw, 64px); line-height: 1.1; margin-bottom: 20px; max-width: 700px; margin-inline: auto; }
+  .hero h1 span { color: #F5B800; }
+  .hero p { color: rgba(255,255,255,0.65); font-size: 18px; max-width: 520px; margin: 0 auto 36px; }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary { background: #7C3AED; color: #fff; padding: 14px 32px; border-radius: 100px; font-weight: 600; font-size: 16px; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-block; }
+  .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); }
+  .btn-outline { border: 1.5px solid rgba(255,255,255,0.3); color: #fff; padding: 14px 32px; border-radius: 100px; font-size: 16px; text-decoration: none; transition: border-color 0.2s; display: inline-block; }
+  .btn-outline:hover { border-color: var(--yellow); color: var(--yellow); }
+  .hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 48px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--yellow); font-family: 'Playfair Display', serif; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  .section { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 40px); color: var(--dark); margin-bottom: 8px; }
+  .section-sub { color: var(--muted); font-size: 16px; margin-bottom: 40px; }
+
+  .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  .topic-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 20px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+  .topic-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
+  .topic-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .topic-card p { font-size: 13px; color: var(--muted); }
+
+  .chapters-list { display: flex; flex-direction: column; gap: 12px; }
+  .chapter-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; gap: 18px; transition: border-color 0.2s; cursor: pointer; }
+  .chapter-item:hover { border-color: var(--accent); }
+  .ch-num { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ch-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .ch-info p { font-size: 13px; color: var(--muted); }
+  .ch-tag { margin-left: auto; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; background: var(--accent-light); color: var(--accent); white-space: nowrap; flex-shrink: 0; }
+
+  .ad-banner { background: linear-gradient(135deg, #160A2A 0%, #2D1457 100%); border-radius: var(--radius); padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 32px 0; }
+  .ad-text { color: rgba(255,255,255,0.6); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .ad-title { color: #fff; font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .ad-sub { color: rgba(255,255,255,0.55); font-size: 14px; }
+  .ad-btn { background: var(--yellow); color: var(--dark); padding: 12px 28px; border-radius: 100px; font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap; transition: opacity 0.2s; }
+  .ad-btn:hover { opacity: 0.9; }
+
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .product-img { background: var(--accent-light); padding: 24px; text-align: center; font-size: 52px; height: 140px; display: flex; align-items: center; justify-content: center; }
+  .product-body { padding: 18px; }
+  .product-badge { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .product-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+  .product-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .product-price span { font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
+  .amazon-btn { background: var(--yellow); color: var(--dark); font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; }
+  .amazon-btn:hover { opacity: 0.85; }
+
+  .content-with-sidebar { display: grid; grid-template-columns: 1fr 280px; gap: 32px; align-items: start; }
+  @media (max-width: 768px) { .content-with-sidebar { grid-template-columns: 1fr; } }
+  .sidebar-ad { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: sticky; top: 72px; }
+  .sidebar-ad-header { background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 8px 14px; }
+  .sidebar-ad-body { padding: 18px; }
+  .sidebar-ad-body h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .sidebar-ad-body p { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  .inline-ad { background: var(--accent-light); border-left: 4px solid var(--accent); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .inline-ad-text { flex: 1; }
+  .inline-ad-text strong { font-size: 14px; color: var(--dark); display: block; margin-bottom: 3px; }
+  .inline-ad-text span { font-size: 13px; color: var(--muted); }
+
+  .content-area { min-width: 0; }
+  .chapter-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+  .chapter-content h2 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 16px; color: var(--dark); }
+  .chapter-content p { font-size: 15px; color: #4A3728; line-height: 1.8; margin-bottom: 16px; }
+  .chapter-content h3 { font-size: 17px; font-weight: 600; margin: 24px 0 10px; color: var(--dark); }
+  .formula-box { background: #F5F0FF; border: 1px solid #D8C8F8; border-radius: 10px; padding: 18px 20px; font-family: 'DM Sans', monospace; font-size: 14px; color: #4A1D96; margin: 16px 0; font-weight: 500; }
+  .tip-box { background: #EFF8F2; border-left: 4px solid #27AE60; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; }
+  .tip-box strong { color: #1E8449; font-size: 13px; display: block; margin-bottom: 4px; }
+  .tip-box p { font-size: 14px; color: #1A5C33; margin: 0; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.5); text-align: center; padding: 32px 24px; font-size: 13px; }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab-btn { background: none; border: 1px solid var(--border); border-radius: 100px; padding: 8px 20px; font-size: 14px; font-family: 'DM Sans', sans-serif; cursor: pointer; color: var(--muted); transition: all 0.15s; }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ElectronicsEng Pro</div>
+  <div class="nav-links">
+    <a href="#chapters">Chapters</a>
+    <a href="#tools">Tools</a>
+    <a href="#products">Shop</a>
+    <a href="#privacy">Privacy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" class="home-btn">🏠 Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📡 Free eBook – Updated 2025</div>
+  <h1>Master <span>Electronics Engineering</span> from Zero to Pro</h1>
+  <p>Complete guide covering Analog & Digital Electronics, Semiconductors, Microcontrollers, Signal Processing & PCB Design</p>
+  <div class="hero-btns">
+    <a href="#chapters" class="btn-primary">📖 Read Free eBook</a>
+    <a href="#products" class="btn-outline">🛒 Buy Tools on Amazon</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">15</div><div class="stat-label">Chapters</div></div>
+    <div class="stat"><div class="stat-num">280+</div><div class="stat-label">Pages</div></div>
+    <div class="stat"><div class="stat-num">70+</div><div class="stat-label">Circuits</div></div>
+    <div class="stat"><div class="stat-num">Free</div><div class="stat-label">Forever</div></div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="section">
+  <h2 class="section-title">What You'll Learn</h2>
+  <p class="section-sub">From diodes and transistors to microcontrollers and PCB design</p>
+  <div class="topics-grid">
+    <div class="topic-card"><div class="topic-icon">💡</div><h3>Semiconductor Devices</h3><p>Diodes, BJT, MOSFET, IGBT characteristics and biasing</p></div>
+    <div class="topic-card"><div class="topic-icon">🔊</div><h3>Analog Electronics</h3><p>Op-amps, amplifiers, filters, oscillators and signal conditioning</p></div>
+    <div class="topic-card"><div class="topic-icon">🔢</div><h3>Digital Electronics</h3><p>Logic gates, flip-flops, counters, ADC/DAC and memory</p></div>
+    <div class="topic-card"><div class="topic-icon">🖥️</div><h3>Microcontrollers</h3><p>Arduino, STM32, ESP32 programming and interfacing</p></div>
+    <div class="topic-card"><div class="topic-icon">📶</div><h3>Signal Processing</h3><p>FFT, filters, sampling theorem, DSP fundamentals</p></div>
+    <div class="topic-card"><div class="topic-icon">🟢</div><h3>PCB Design</h3><p>Schematic capture, layout rules, DRC, manufacturing files</p></div>
+  </div>
+</div>
+
+<!-- AD BANNER -->
+<div style="max-width:1100px; margin:0 auto; padding: 0 24px;">
+  <div class="ad-banner">
+    <div>
+      <div class="ad-text">🛒 Amazon Affiliate – Sponsored</div>
+      <div class="ad-title">Arduino Uno R4 WiFi – Official Starter Kit</div>
+      <div class="ad-sub">Complete beginner kit with sensors, LEDs, motors • Trusted by 2M+ makers</div>
+    </div>
+    <a href="https://www.amazon.in/s?k=arduino+uno+starter+kit+official&tag=taskjunction-21-21" target="_blank" class="ad-btn">View on Amazon ↗</a>
+  </div>
+</div>
+
+<!-- CHAPTERS -->
+<div id="chapters" class="section">
+  <h2 class="section-title">Read the eBook</h2>
+  <p class="section-sub">Click any chapter to start reading</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('toc')">📋 Table of Contents</button>
+    <button class="tab-btn" onclick="showTab('ch1')">Chapter 1</button>
+    <button class="tab-btn" onclick="showTab('ch2')">Chapter 2</button>
+    <button class="tab-btn" onclick="showTab('ch3')">Chapter 3</button>
+  </div>
+
+  <!-- TOC -->
+  <div id="toc" class="tab-content active">
+    <div class="chapters-list">
+      <div class="chapter-item" onclick="showTab('ch1'); setActiveTab(1)"><div class="ch-num">1</div><div class="ch-info"><h4>Semiconductor Devices – Diodes & BJTs</h4><p>PN junction, diode equation, BJT biasing, operating regions</p></div><span class="ch-tag">Beginner</span></div>
+      <div class="chapter-item" onclick="showTab('ch2'); setActiveTab(2)"><div class="ch-num">2</div><div class="ch-info"><h4>Operational Amplifiers</h4><p>Ideal op-amp, inverting/non-inverting, integrator, differentiator</p></div><span class="ch-tag">Beginner</span></div>
+      <div class="chapter-item" onclick="showTab('ch3'); setActiveTab(3)"><div class="ch-num">3</div><div class="ch-info"><h4>Digital Logic & Combinational Circuits</h4><p>Boolean algebra, Karnaugh maps, adders, multiplexers</p></div><span class="ch-tag">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">4</div><div class="ch-info"><h4>Sequential Circuits & Flip-Flops</h4><p>SR, D, JK, T flip-flops, registers, counters, FSMs</p></div><span class="ch-tag">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">5</div><div class="ch-info"><h4>MOSFETs & Power Electronics</h4><p>MOSFET structure, switching, power converters, gate drivers</p></div><span class="ch-tag">Intermediate</span></div>
+      <div class="chapter-item"><div class="ch-num">6</div><div class="ch-info"><h4>Analog Filters & Signal Conditioning</h4><p>Low-pass, high-pass, bandpass Butterworth & Chebyshev filters</p></div><span class="ch-tag">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">7</div><div class="ch-info"><h4>Microcontroller Programming</h4><p>Arduino IDE, GPIO, PWM, UART, I2C, SPI protocols</p></div><span class="ch-tag">Advanced</span></div>
+      <div class="chapter-item"><div class="ch-num">8</div><div class="ch-info"><h4>PCB Design & Manufacturing</h4><p>KiCad schematic, layout rules, Gerber files, DFM</p></div><span class="ch-tag">Advanced</span></div>
+    </div>
+  </div>
+
+  <!-- CH 1 -->
+  <div id="ch1" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 1: Semiconductor Devices – Diodes & BJTs</h2>
+          <p>Semiconductors are materials with electrical conductivity between conductors and insulators. Silicon is the dominant semiconductor material used in modern electronics. Understanding PN junctions is the foundation of all semiconductor device theory.</p>
+          <h3>PN Junction Diode</h3>
+          <p>A PN junction is formed by joining P-type (hole-rich) and N-type (electron-rich) semiconductor materials. A depletion region forms at the junction, creating a built-in potential barrier (~0.7V for silicon).</p>
+          <div class="formula-box">Diode Equation: I = Is × (e^(V/nVT) − 1)<br>VT = kT/q ≈ 26mV at room temperature<br>Forward bias: V > 0.7V (Si), 0.3V (Ge)<br>Reverse bias: I ≈ −Is (leakage current)</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text"><strong>📦 Component Kit – Resistors, Capacitors, Diodes, Transistors 1000pc</strong><span>Complete starter component kit for building and testing semiconductor circuits</span></div>
+            <a href="https://www.amazon.in/s?k=electronic+component+kit+resistors+capacitors+transistors&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
+          </div>
+          <h3>BJT – Bipolar Junction Transistor</h3>
+          <p>A BJT has three regions: Emitter, Base, and Collector. In NPN type, small base current controls large collector current. BJTs operate in three regions: Active (amplification), Saturation (switch ON), and Cutoff (switch OFF).</p>
+          <div class="formula-box">IC = β × IB &nbsp;&nbsp;(Active Region)<br>IE = IB + IC = IB(1 + β)<br>VCE(sat) ≈ 0.2V &nbsp;&nbsp;|&nbsp;&nbsp; VBE ≈ 0.7V<br>β (hFE) typically 50–500 for common BJTs</div>
+          <h3>BJT Biasing</h3>
+          <p><strong>Fixed Bias:</strong> Simple but sensitive to β variations. <strong>Voltage Divider Bias:</strong> Most stable, used in amplifier circuits. The Q-point must be set in the middle of the load line for maximum signal swing.</p>
+          <div class="tip-box"><strong>💡 Design Tip</strong><p>For stable BJT biasing, use emitter degeneration resistance RE. This introduces negative feedback that stabilizes the operating point against temperature changes and β variations. Rule: VE ≈ 10% of VCC.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">BOOK RECOMMENDATION</p>
+            <h4>Electronic Devices – Floyd</h4>
+            <p>Most popular electronics textbook for understanding semiconductor devices and circuits.</p>
+            <a href="https://www.amazon.in/s?k=electronic+devices+floyd+textbook&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+        <div class="sidebar-ad" style="margin-top:16px;">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">LAB ESSENTIAL</p>
+            <h4>Soldering Iron Station – 60W</h4>
+            <p>Temperature-controlled soldering station for circuit assembly and repair.</p>
+            <a href="https://www.amazon.in/s?k=soldering+iron+station+temperature+controlled&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH 2 -->
+  <div id="ch2" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 2: Operational Amplifiers</h2>
+          <p>The operational amplifier (op-amp) is the most versatile building block in analog electronics. Integrated circuit op-amps like the LM741, TL071, and LM358 are used in millions of applications from audio amplifiers to precision instrumentation.</p>
+          <h3>Ideal Op-Amp Properties</h3>
+          <p>An ideal op-amp has infinite open-loop gain, infinite input impedance, zero output impedance, infinite bandwidth, and zero offset voltage. Real op-amps approach these properties but have finite limitations.</p>
+          <div class="formula-box">Inverting Amplifier: Vout = −(Rf/Rin) × Vin<br>Non-Inverting Amplifier: Vout = (1 + Rf/R1) × Vin<br>Unity Gain Buffer: Vout = Vin (Rf = 0, no R1)<br>Summing Amplifier: Vout = −Rf(V1/R1 + V2/R2 + ...)</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text"><strong>📦 Op-Amp IC Kit – LM741, LM358, TL071 Assortment</strong><span>Essential IC assortment for building op-amp circuits and filters</span></div>
+            <a href="https://www.amazon.in/s?k=op+amp+ic+kit+lm741+lm358&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
+          </div>
+          <h3>Integrator & Differentiator</h3>
+          <p>An op-amp integrator produces an output proportional to the integral of the input (capacitor in feedback). A differentiator produces output proportional to the derivative of the input (capacitor in input path).</p>
+          <div class="formula-box">Integrator: Vout = −(1/RC) ∫Vin dt<br>Differentiator: Vout = −RC × (dVin/dt)<br>Low-pass filter: fc = 1/(2πRC)</div>
+          <div class="tip-box"><strong>💡 Stability Warning</strong><p>Pure differentiators are inherently unstable due to high gain at high frequencies. Always add a series resistor (Rs) at the input to limit gain at high frequencies: Rs ≈ Rf/10. This prevents oscillation due to noise amplification.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">MEASUREMENT TOOL</p>
+            <h4>Oscilloscope – Hantek 2D72</h4>
+            <p>Portable 70MHz dual-channel oscilloscope with waveform generator.</p>
+            <a href="https://www.amazon.in/s?k=hantek+oscilloscope+portable&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH 3 -->
+  <div id="ch3" class="tab-content">
+    <div class="content-with-sidebar">
+      <div class="content-area">
+        <div class="chapter-content">
+          <h2>Chapter 3: Digital Logic & Combinational Circuits</h2>
+          <p>Digital electronics deals with circuits that process binary signals (0 and 1). Boolean algebra provides the mathematical foundation for analyzing and designing digital circuits.</p>
+          <h3>Boolean Algebra & Logic Gates</h3>
+          <p>The fundamental logic gates — AND, OR, NOT — can be combined to implement any Boolean function. NAND and NOR are universal gates because any other gate can be built from them alone.</p>
+          <div class="formula-box">AND: Y = A·B &nbsp;&nbsp;|&nbsp;&nbsp; OR: Y = A+B &nbsp;&nbsp;|&nbsp;&nbsp; NOT: Y = Ā<br>NAND: Y = (A·B)' &nbsp;|&nbsp; NOR: Y = (A+B)'<br>XOR: Y = A⊕B = A'B + AB'<br>De Morgan: (A·B)' = A'+B' &nbsp;&nbsp;|&nbsp;&nbsp; (A+B)' = A'·B'</div>
+          <div class="inline-ad">
+            <div class="inline-ad-text"><strong>📦 Arduino Nano + Logic Level Converter Kit</strong><span>Perfect for building and testing digital logic circuits with microcontrollers</span></div>
+            <a href="https://www.amazon.in/s?k=arduino+nano+logic+level+converter&tag=taskjunction-21-21" target="_blank" class="amazon-btn"><span>₹</span> Amazon</a>
+          </div>
+          <h3>Karnaugh Maps (K-Maps)</h3>
+          <p>K-maps provide a visual method to minimize Boolean expressions. Group adjacent 1s in powers of 2 (1, 2, 4, 8...) to find the minimized Sum of Products (SOP) expression.</p>
+          <div class="formula-box">2-variable K-map: 4 cells (AB layout)<br>3-variable K-map: 8 cells (rows: A, columns: BC in Gray code)<br>4-variable K-map: 16 cells (wrap-around groupings allowed)<br>Larger group → fewer literals → simpler circuit</div>
+          <h3>Combinational Circuits</h3>
+          <p><strong>Half Adder:</strong> Adds two bits. Sum = A⊕B, Carry = A·B. <strong>Full Adder:</strong> Adds three bits (two inputs + carry-in). Used in cascaded multi-bit adders. <strong>Multiplexer (MUX):</strong> Selects one of N inputs based on select lines.</p>
+          <div class="tip-box"><strong>💡 Design Insight</strong><p>Modern FPGA design uses Hardware Description Languages (VHDL/Verilog) rather than manual gate-level design. Learning K-maps still matters because synthesis tools apply the same minimization algorithms internally — understanding them helps you write better, more efficient HDL code.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-ad">
+          <div class="sidebar-ad-header">🛒 Sponsored – Amazon</div>
+          <div class="sidebar-ad-body">
+            <p style="font-size:11px; color:var(--muted); margin-bottom:8px;">PROJECT KIT</p>
+            <h4>ESP32 Development Board + Sensor Kit</h4>
+            <p>WiFi + Bluetooth MCU with 30+ sensors for IoT projects.</p>
+            <a href="https://www.amazon.in/s?k=esp32+development+board+sensor+kit&tag=taskjunction-21-21" target="_blank" class="amazon-btn" style="justify-content:center; padding:10px;">Buy on Amazon ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div style="background: #F5F0FF; padding: 64px 0;">
+  <div id="products" class="section" style="padding-top:0; padding-bottom:0;">
+    <h2 class="section-title">Recommended Electronics Tools & Kits</h2>
+    <p class="section-sub">Handpicked tools for Electronics Engineering – Available on Amazon India</p>
+    <div class="products-grid">
+      <div class="product-card"><div class="product-img">🔬</div><div class="product-body"><div class="product-badge">⭐ Best Seller</div><div class="product-name">Rigol DS1054Z Oscilloscope 50MHz</div><div class="product-desc">4 channels, 1GSa/s, 12Mpts memory, 50MHz bandwidth</div><div class="product-footer"><div class="product-price">₹24,999 <span>₹32,000</span></div><a href="https://www.amazon.in/s?k=rigol+ds1054z+oscilloscope&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">🖥️</div><div class="product-body"><div class="product-badge">🔥 Popular</div><div class="product-name">Arduino Uno R3 Official Starter Kit</div><div class="product-desc">Genuine Arduino + 15 projects book + all components</div><div class="product-footer"><div class="product-price">₹3,499 <span>₹4,800</span></div><a href="https://www.amazon.in/s?k=arduino+uno+r3+official+starter+kit&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">📡</div><div class="product-body"><div class="product-badge">📚 Top Rated</div><div class="product-name">The Art of Electronics – Horowitz & Hill</div><div class="product-desc">The definitive electronics reference book for engineers</div><div class="product-footer"><div class="product-price">₹6,999 <span>₹9,500</span></div><a href="https://www.amazon.in/s?k=art+of+electronics+horowitz+hill&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">🟢</div><div class="product-body"><div class="product-badge">⚙️ Professional</div><div class="product-name">PCB Prototyping Kit – FR4 Double-Sided</div><div class="product-desc">20x PCB blanks, etchant, resist pen, drill bits</div><div class="product-footer"><div class="product-price">₹899 <span>₹1,400</span></div><a href="https://www.amazon.in/s?k=pcb+prototyping+kit+fr4+etchant&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">🔧</div><div class="product-body"><div class="product-badge">🎯 Essential</div><div class="product-name">Soldering Station – Hakko FX-888D</div><div class="product-desc">Digital temperature control, 70W, stable for SMD work</div><div class="product-footer"><div class="product-price">₹8,499 <span>₹11,000</span></div><a href="https://www.amazon.in/s?k=soldering+station+hakko+temperature+controlled&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+      <div class="product-card"><div class="product-img">💾</div><div class="product-body"><div class="product-badge">🆕 New</div><div class="product-name">Raspberry Pi 5 – 4GB RAM</div><div class="product-desc">Latest Pi with PCIe, dual 4K output, ARM Cortex-A76</div><div class="product-footer"><div class="product-price">₹7,499 <span>₹9,000</span></div><a href="https://www.amazon.in/s?k=raspberry+pi+5+4gb&tag=taskjunction-21-21" target="_blank" class="amazon-btn">Buy ↗</a></div></div></div>
+    </div>
+    <p style="margin-top: 24px; font-size: 12px; color: var(--muted); text-align: center;">* As an Amazon Associate, this site earns commission from qualifying purchases. Prices are approximate and may vary.</p>
+  </div>
+</div>
+
+<!-- PRIVACY -->
+<div id="privacy" style="background: #F5F0FF; padding: 64px 0; border-top: 1px solid #D8C8F8;">
+  <div class="section" style="padding-top:0; padding-bottom:0;">
+    <h2 class="section-title">Privacy Policy</h2>
+    <p class="section-sub">Last updated: May 2025 &nbsp;|&nbsp; ElectronicsEng Pro by TaskJunction</p>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">1. Information We Collect</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">This website does <strong>not collect any personal information</strong> directly from visitors. No registration or login is required to access the eBook content. Your reading activity stays private.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">2. Amazon Affiliate Disclosure</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">This website participates in the <strong>Amazon Associates Program</strong> (affiliate.amazon.in). We earn a small commission when you click on Amazon product links and make a purchase — at <strong>no extra cost to you</strong>. Our Store ID is <strong>taskjunction-21</strong>.</p><div style="background:var(--accent-light); border-left:4px solid var(--accent); border-radius:0 8px 8px 0; padding:12px 16px; margin-top:14px; font-size:14px; color:#4A1D96;">⚠️ Affiliate links are clearly marked with "Amazon ↗" labels throughout this site.</div></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">3. Cookies & Tracking</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">We do not use our own tracking cookies. When you click Amazon affiliate links, <strong>Amazon may set cookies</strong> per their own Privacy Policy. Review at <a href="https://www.amazon.in/gp/help/customer/display.html?nodeId=200534380" target="_blank" style="color:var(--accent);">amazon.in/privacy</a>.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">4. Third-Party Services</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">This website loads fonts from <strong>Google Fonts</strong>. No other third-party analytics, advertising SDKs, or tracking scripts are used.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">5. Content Disclaimer</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">All engineering content, circuits, and code examples are provided <strong>for educational purposes only</strong>. Always verify critical designs before use in real applications. We are not liable for any errors or damages.</p></div>
+      <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:28px 32px;"><h3 style="font-size:17px; font-weight:600; color:var(--dark); margin-bottom:10px;">6. Contact Us</h3><p style="font-size:15px; color:#4A3728; line-height:1.8;">👤 <strong>Vaibhav Dhokpande</strong><br>🌐 <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:var(--accent);">vaibhavdhokpande-ai.github.io</a><br>🏢 Platform: <strong>TaskJunction</strong></p></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="margin-bottom:16px;"><strong style="font-size:18px; font-family:'Playfair Display',serif; color:var(--yellow);">ElectronicsEng Pro</strong><span style="color:rgba(255,255,255,0.4); margin:0 10px;">|</span><span style="color:rgba(255,255,255,0.6); font-size:14px;">Free Engineering eBook</span></div>
+  <div style="display:flex; justify-content:center; gap:32px; flex-wrap:wrap; margin-bottom:16px;">
+    <a href="#chapters" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Chapters</a>
+    <a href="#products" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Shop</a>
+    <a href="#privacy" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Privacy Policy</a>
+    <a href="https://vaibhavdhokpande-ai.github.io" target="_blank" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:13px;">Home</a>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; margin-top:8px;">
+    <p style="color:rgba(255,255,255,0.35); font-size:12px; margin-bottom:8px;">This site contains Amazon affiliate links (Store ID: taskjunction-21). Purchases through these links earn a small commission at no extra cost to you.</p>
+    <p style="color:rgba(255,255,255,0.55); font-size:13px; font-weight:500;">Made with ❤️ by <strong style="color:var(--yellow);">Vaibhav Dhokpande</strong> &nbsp;&amp;&nbsp; <strong style="color:var(--primary);">TaskJunction</strong></p>
+    <p style="color:rgba(255,255,255,0.25); font-size:11px; margin-top:6px;">© 2025 TaskJunction. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+  function setActiveTab(num) { document.querySelectorAll('.tab-btn').forEach((btn, i) => { btn.classList.toggle('active', i === num); }); }
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => { btn.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }); });
+</script>
+</body>
+</html>
