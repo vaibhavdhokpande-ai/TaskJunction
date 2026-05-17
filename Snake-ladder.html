@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snakes & Ladders</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #1a0a2e;
+  --bg2: #2d1152;
+  --card: #ffffff0d;
+  --border: rgba(255,255,255,0.1);
+  --gold: #ffd700;
+  --gold2: #ffaa00;
+  --green: #00e676;
+  --red: #ff4444;
+  --teal: #00bcd4;
+  --pink: #ff6ec7;
+  --text: #f0e6ff;
+  --text-dim: rgba(240,230,255,0.5);
+
+  /* Player colors */
+  --p1: #ff6ec7;
+  --p2: #00e5ff;
+  --p3: #69ff47;
+  --p4: #ffb300;
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 100% 60% at 20% 0%, rgba(120,40,200,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 80% 100%, rgba(0,120,200,0.25) 0%, transparent 60%),
+    var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px 24px;
+  gap: 16px;
+}
+
+/* HEADER */
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #ffd700 0%, #ff6ec7 50%, #00e5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 12px rgba(255,110,199,0.4));
+}
+.emoji-head { font-size: 2rem; animation: wobble 3s ease-in-out infinite; }
+@keyframes wobble { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(8deg)} }
+
+/* LAYOUT */
+.game-layout {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* BOARD */
+.board-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+#board-canvas {
+  display: block;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 3px rgba(255,215,0,0.3),
+    0 0 0 6px rgba(255,110,199,0.15),
+    0 20px 80px rgba(0,0,0,0.7);
+}
+
+/* SIDE PANEL */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 190px;
+  max-width: 210px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  backdrop-filter: blur(10px);
+}
+
+.card-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+/* DICE */
+.dice-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+#dice {
+  width: 70px;
+  height: 70px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.8);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 10px;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  position: relative;
+}
+#dice:hover:not(.rolling) { transform: scale(1.06) rotate(3deg); }
+#dice.rolling { animation: diceRoll 0.5s ease-in-out; }
+@keyframes diceRoll {
+  0%   { transform: rotate(0deg) scale(1); }
+  20%  { transform: rotate(-15deg) scale(1.1); }
+  50%  { transform: rotate(20deg) scale(0.95); }
+  80%  { transform: rotate(-10deg) scale(1.05); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.dot {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #1a1a2e;
+  display: none;
+}
+.dot.show { display: block; }
+
+#roll-btn {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #ff6ec7, #aa44ff);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255,110,199,0.4);
+  transition: all 0.18s;
+}
+#roll-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255,110,199,0.55);
+}
+#roll-btn:active:not(:disabled) { transform: translateY(0); }
+#roll-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+.dice-result {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.6rem;
+  color: var(--gold);
+  min-height: 36px;
+  text-align: center;
+  text-shadow: 0 0 20px rgba(255,215,0,0.5);
+}
+
+/* PLAYERS */
+.player-list { display: flex; flex-direction: column; gap: 8px; }
+.player-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+.player-row.active {
+  border-color: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 0 16px rgba(255,215,0,0.15);
+}
+.player-token-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  font-weight: 800;
+  border: 2px solid rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+.player-info { flex: 1; min-width: 0; }
+.player-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.player-pos {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.turn-arrow {
+  color: var(--gold);
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.player-row.active .turn-arrow { opacity: 1; }
+
+/* COUNT SELECTOR */
+.count-btns { display: flex; gap: 6px; }
+.count-btn {
+  flex: 1;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.95rem;
+  padding: 7px 4px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.count-btn.active {
+  background: rgba(255,215,0,0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.count-btn:hover:not(.active) {
+  border-color: rgba(255,255,255,0.3);
+  color: var(--text);
+}
+
+/* LOG */
+#log {
+  max-height: 140px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+.log-entry {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  padding: 3px 6px;
+  border-radius: 5px;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; } }
+.log-entry.snake { background: rgba(255,68,68,0.12); color: #ff8888; }
+.log-entry.ladder { background: rgba(0,230,118,0.1); color: #66ffaa; }
+.log-entry.normal { color: var(--text-dim); }
+.log-entry.win { background: rgba(255,215,0,0.18); color: var(--gold); font-weight: 700; }
+
+/* NEW GAME */
+#new-game-btn {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  padding: 10px;
+  background: linear-gradient(135deg, #00bcd4, #0066ff);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(0,188,212,0.3);
+  transition: all 0.18s;
+}
+#new-game-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,188,212,0.45); }
+
+/* WIN OVERLAY */
+#win-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,0,30,0.92);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+#win-overlay.show { display: flex; }
+.win-box {
+  background: linear-gradient(135deg, #2d1152, #1a0a2e);
+  border: 2px solid rgba(255,215,0,0.4);
+  border-radius: 20px;
+  padding: 40px 50px;
+  text-align: center;
+  box-shadow: 0 0 80px rgba(255,215,0,0.2);
+  animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes popIn { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+.win-trophy { font-size: 4rem; animation: bounce 1s infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+.win-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2.2rem;
+  background: linear-gradient(135deg, #ffd700, #ff6ec7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 8px 0 4px;
+}
+.win-sub { color: var(--text-dim); font-size: 1rem; margin-bottom: 20px; }
+.win-btn {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #ffd700, #ff6ec7);
+  border: none;
+  border-radius: 30px;
+  color: #1a0a2e;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255,215,0,0.4);
+  transition: all 0.18s;
+}
+.win-btn:hover { transform: scale(1.06); }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .game-layout { flex-direction: column; align-items: center; }
+  .panel { flex-direction: row; flex-wrap: wrap; max-width: min(500px, 100%); min-width: unset; width: 100%; }
+  .panel .card { flex: 1 1 160px; }
+  #log { max-height: 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="title-row">
+  <span class="emoji-head">🐍</span>
+  <h1>Snakes & Ladders</h1>
+  <span class="emoji-head" style="animation-delay:1s">🪜</span>
+</div>
+
+<div class="game-layout">
+  <div class="board-container">
+    <canvas id="board-canvas"></canvas>
+  </div>
+
+  <div class="panel">
+    <!-- Players count -->
+    <div class="card">
+      <div class="card-title">Players</div>
+      <div class="count-btns">
+        <button class="count-btn" onclick="setPlayerCount(2)">2</button>
+        <button class="count-btn active" onclick="setPlayerCount(3)">3</button>
+        <button class="count-btn" onclick="setPlayerCount(4)">4</button>
+      </div>
+    </div>
+
+    <!-- Dice -->
+    <div class="card dice-area">
+      <div class="card-title">Roll the Dice</div>
+      <div id="dice">
+        <div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div>
+        <div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div>
+        <div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div>
+      </div>
+      <div class="dice-result" id="dice-result">—</div>
+      <button id="roll-btn" onclick="rollDice()">🎲 Roll!</button>
+    </div>
+
+    <!-- Players -->
+    <div class="card">
+      <div class="card-title">Scoreboard</div>
+      <div class="player-list" id="player-list"></div>
+    </div>
+
+    <!-- Log -->
+    <div class="card">
+      <div class="card-title">Game Log</div>
+      <div id="log"></div>
+    </div>
+
+    <button id="new-game-btn" onclick="newGame()">↺ New Game</button>
+  </div>
+</div>
+
+<div id="win-overlay">
+  <div class="win-box">
+    <div class="win-trophy">🏆</div>
+    <div class="win-title" id="win-name">Player 1 Wins!</div>
+    <div class="win-sub">Congratulations!</div>
+    <button class="win-btn" onclick="newGame()">Play Again</button>
+  </div>
+</div>
+
+<script>
+// ─── BOARD SIZE ───────────────────────────────────────────────────────────────
+const canvas = document.getElementById('board-canvas');
+const ctx = canvas.getContext('2d');
+const SIZE = Math.min(window.innerWidth - 220, window.innerHeight - 140, 500);
+const GRID = 10;
+const CELL = SIZE / GRID;
+canvas.width = SIZE;
+canvas.height = SIZE;
+
+// ─── SNAKES & LADDERS ─────────────────────────────────────────────────────────
+const SNAKES  = { 98:78, 95:72, 87:36, 62:18, 54:34, 49:11, 17:7 };
+const LADDERS = { 4:14, 9:31, 20:38, 28:84, 40:59, 51:67, 63:81, 71:91 };
+
+// ─── PLAYER SETUP ─────────────────────────────────────────────────────────────
+const PLAYER_DATA = [
+  { name:'Player 1', color:'#ff6ec7', emoji:'🦊', darkColor:'#cc3399' },
+  { name:'Player 2', color:'#00e5ff', emoji:'🐸', darkColor:'#0099bb' },
+  { name:'Player 3', color:'#69ff47', emoji:'🦁', darkColor:'#33aa00' },
+  { name:'Player 4', color:'#ffb300', emoji:'🐼', darkColor:'#cc8800' },
+];
+
+let playerCount = 3, players = [], currentPlayer = 0, rolling = false, gameOver = false;
+
+// ─── CELL COORDINATES ────────────────────────────────────────────────────────
+function cellToXY(cell) {
+  // cell 1..100, serpentine from bottom-left
+  const idx = cell - 1;
+  const row = Math.floor(idx / 10);       // 0=bottom … 9=top
+  const col = idx % 10;
+  const displayRow = 9 - row;             // invert: row0 = bottom
+  const displayCol = row % 2 === 0 ? col : 9 - col;
+  return {
+    x: displayCol * CELL + CELL / 2,
+    y: displayRow * CELL + CELL / 2,
+  };
+}
+
+// ─── DRAW BOARD ───────────────────────────────────────────────────────────────
+const CELL_COLORS = [
+  ['#3d2b6b','#4a3480','#3d2b6b','#4a3480','#3d2b6b','#4a3480','#3d2b6b','#4a3480','#3d2b6b','#4a3480'],
+  ['#4a3480','#3d2b6b','#4a3480','#3d2b6b','#4a3480','#3d2b6b','#4a3480','#3d2b6b','#4a3480','#3d2b6b'],
+];
+
+function drawBoard() {
+  ctx.clearRect(0, 0, SIZE, SIZE);
+
+  // Background
+  ctx.fillStyle = '#2a1a50';
+  ctx.fillRect(0, 0, SIZE, SIZE);
+
+  // Cells
+  for (let r = 0; r < GRID; r++) {
+    for (let c = 0; c < GRID; c++) {
+      const x = c * CELL, y = r * CELL;
+      ctx.fillStyle = (r + c) % 2 === 0 ? '#2e1f5e' : '#3d2b74';
+      ctx.fillRect(x, y, CELL, CELL);
+
+      // subtle inner border
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(x+0.5, y+0.5, CELL-1, CELL-1);
+
+      // Cell number
+      const row = 9 - r;
+      const col = row % 2 === 0 ? c : 9 - c;
+      const num = row * 10 + col + 1;
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.font = `${CELL * 0.22}px Nunito`;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText(num, x + 4, y + 3);
+
+      // Start/end markers
+      if (num === 100) {
+        ctx.fillStyle = 'rgba(255,215,0,0.15)';
+        ctx.fillRect(x, y, CELL, CELL);
+        ctx.font = `${CELL*0.4}px serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('⭐', x+CELL/2, y+CELL/2+2);
+      }
+      if (num === 1) {
+        ctx.fillStyle = 'rgba(0,230,118,0.08)';
+        ctx.fillRect(x, y, CELL, CELL);
+      }
+    }
+  }
+
+  // Draw ladders
+  drawLadders();
+  // Draw snakes
+  drawSnakes();
+}
+
+function drawLadders() {
+  Object.entries(LADDERS).forEach(([from, to]) => {
+    const f = cellToXY(+from), t = cellToXY(+to);
+    const color1 = '#ffd700', color2 = '#ffaa00';
+    const angle = Math.atan2(t.y - f.y, t.x - f.x);
+    const perp = angle + Math.PI/2;
+    const hw = CELL * 0.08;
+
+    // Rails
+    [[-1,1],[1,-1]].forEach(([s1,s2]) => {
+      const grd = ctx.createLinearGradient(f.x, f.y, t.x, t.y);
+      grd.addColorStop(0, '#ffd700');
+      grd.addColorStop(1, '#ff9500');
+      ctx.beginPath();
+      ctx.moveTo(f.x + Math.cos(perp)*hw*s1, f.y + Math.sin(perp)*hw*s1);
+      ctx.lineTo(t.x + Math.cos(perp)*hw*s2, t.y + Math.sin(perp)*hw*s2);
+      ctx.strokeStyle = grd;
+      ctx.lineWidth = CELL * 0.07;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    });
+
+    // Rungs
+    const dist = Math.hypot(t.x-f.x, t.y-f.y);
+    const steps = Math.floor(dist / (CELL * 0.5));
+    for (let i = 1; i < steps; i++) {
+      const t2 = i / steps;
+      const rx = f.x + (t.x-f.x)*t2, ry = f.y + (t.y-f.y)*t2;
+      ctx.beginPath();
+      ctx.moveTo(rx + Math.cos(perp)*hw*1.1, ry + Math.sin(perp)*hw*1.1);
+      ctx.lineTo(rx - Math.cos(perp)*hw*1.1, ry - Math.sin(perp)*hw*1.1);
+      ctx.strokeStyle = 'rgba(255,200,50,0.7)';
+      ctx.lineWidth = CELL * 0.045;
+      ctx.stroke();
+    }
+
+    // Arrow
+    drawArrowHead(t.x, t.y, angle, '#ffd700', CELL*0.13);
+
+    // Label
+    ctx.fillStyle = '#ffd700';
+    ctx.font = `bold ${CELL*0.2}px Nunito`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowBlur = 4;
+    ctx.fillText('🪜', f.x, f.y + CELL*0.2);
+    ctx.shadowBlur = 0;
+  });
+}
+
+function drawSnakes() {
+  Object.entries(SNAKES).forEach(([from, to]) => {
+    const f = cellToXY(+from), t = cellToXY(+to);
+
+    // Draw curvy snake body
+    const segments = 18;
+    const dx = t.x - f.x, dy = t.y - f.y;
+    const len = Math.hypot(dx, dy);
+    const nx = dx/len, ny = dy/len;
+
+    // Gradient
+    const grd = ctx.createLinearGradient(f.x, f.y, t.x, t.y);
+    grd.addColorStop(0, '#ff4444');
+    grd.addColorStop(0.5, '#cc2288');
+    grd.addColorStop(1, '#8833cc');
+
+    ctx.beginPath();
+    for (let i = 0; i <= segments; i++) {
+      const tt = i / segments;
+      const wave = Math.sin(tt * Math.PI * 3.5) * CELL * 0.18;
+      const px = f.x + dx*tt + (-ny)*wave;
+      const py = f.y + dy*tt + nx*wave;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = grd;
+    ctx.lineWidth = CELL * 0.1;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Outline
+    ctx.beginPath();
+    for (let i = 0; i <= segments; i++) {
+      const tt = i / segments;
+      const wave = Math.sin(tt * Math.PI * 3.5) * CELL * 0.18;
+      const px = f.x + dx*tt + (-ny)*wave;
+      const py = f.y + dy*tt + nx*wave;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = 'rgba(255,150,150,0.3)';
+    ctx.lineWidth = CELL * 0.13;
+    ctx.stroke();
+
+    // Scale pattern dots
+    for (let i = 2; i < segments - 1; i += 3) {
+      const tt = i / segments;
+      const wave = Math.sin(tt * Math.PI * 3.5) * CELL * 0.18;
+      const px = f.x + dx*tt + (-ny)*wave;
+      const py = f.y + dy*tt + nx*wave;
+      ctx.beginPath();
+      ctx.arc(px, py, CELL*0.035, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,200,200,0.5)';
+      ctx.fill();
+    }
+
+    // Snake head
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, CELL*0.13, 0, Math.PI*2);
+    ctx.fillStyle = '#ff3333';
+    ctx.fill();
+    ctx.strokeStyle = '#ff8888';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Eyes
+    const eyeAngle = Math.atan2(dy, dx) + Math.PI;
+    const eyeOff = CELL*0.06;
+    [[-1,1],[1,-1]].forEach(([s]) => {
+      ctx.beginPath();
+      ctx.arc(f.x + Math.cos(eyeAngle+s*0.5)*eyeOff, f.y + Math.sin(eyeAngle+s*0.5)*eyeOff, CELL*0.025, 0, Math.PI*2);
+      ctx.fillStyle = 'yellow';
+      ctx.fill();
+    });
+
+    // Label
+    ctx.fillStyle = '#ff6666';
+    ctx.font = `bold ${CELL*0.2}px Nunito`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowBlur = 4;
+    ctx.fillText('🐍', f.x, f.y - CELL*0.22);
+    ctx.shadowBlur = 0;
+  });
+}
+
+function drawArrowHead(x, y, angle, color, size) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(size, 0);
+  ctx.lineTo(-size, size*0.6);
+  ctx.lineTo(-size, -size*0.6);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.restore();
+}
+
+// ─── DRAW TOKENS ──────────────────────────────────────────────────────────────
+function drawTokens() {
+  const groups = {};
+  players.forEach((p, i) => {
+    if (!groups[p.pos]) groups[p.pos] = [];
+    groups[p.pos].push(i);
+  });
+
+  Object.entries(groups).forEach(([pos, pidxs]) => {
+    if (+pos === 0) return;
+    const {x, y} = cellToXY(+pos);
+    const n = pidxs.length;
+    const offsets = getOffsets(n);
+
+    pidxs.forEach((pi, oi) => {
+      const p = PLAYER_DATA[pi];
+      const ox = offsets[oi][0] * CELL * 0.22;
+      const oy = offsets[oi][1] * CELL * 0.22;
+      const tx = x + ox, ty = y + oy;
+      const r = CELL * 0.18;
+
+      // Shadow
+      ctx.beginPath();
+      ctx.arc(tx+1, ty+2, r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fill();
+
+      // Token
+      ctx.beginPath();
+      ctx.arc(tx, ty, r, 0, Math.PI*2);
+      const grd = ctx.createRadialGradient(tx-r*0.3, ty-r*0.3, r*0.1, tx, ty, r);
+      grd.addColorStop(0, lighten(p.color));
+      grd.addColorStop(1, p.darkColor);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Emoji
+      ctx.font = `${r*1.2}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.emoji, tx, ty+1);
+
+      // Highlight ring for current player
+      if (pi === currentPlayer) {
+        ctx.beginPath();
+        ctx.arc(tx, ty, r+3, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4,3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    });
+  });
+}
+
+function getOffsets(n) {
+  if (n === 1) return [[0,0]];
+  if (n === 2) return [[-0.5,0],[0.5,0]];
+  if (n === 3) return [[0,-0.5],[-0.5,0.5],[0.5,0.5]];
+  return [[-0.5,-0.5],[0.5,-0.5],[-0.5,0.5],[0.5,0.5]];
+}
+
+function lighten(hex) {
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgb(${Math.min(255,r+60)},${Math.min(255,g+60)},${Math.min(255,b+60)})`;
+}
+
+function render() {
+  drawBoard();
+  drawTokens();
+}
+
+// ─── DICE ─────────────────────────────────────────────────────────────────────
+const DOT_POSITIONS = {
+  1: [5],
+  2: [1,9], 3: [1,5,9], 4: [1,3,7,9],
+  5: [1,3,5,7,9], 6: [1,3,4,6,7,9]
+};
+
+function showDice(val) {
+  for (let i=1;i<=9;i++) {
+    document.getElementById('d'+i).classList.toggle('show', DOT_POSITIONS[val].includes(i));
+  }
+}
+
+// ─── GAME LOGIC ───────────────────────────────────────────────────────────────
+function initPlayers() {
+  players = PLAYER_DATA.slice(0, playerCount).map(p => ({ ...p, pos: 0 }));
+}
+
+function newGame() {
+  gameOver = false;
+  currentPlayer = 0;
+  initPlayers();
+  document.getElementById('win-overlay').classList.remove('show');
+  document.getElementById('log').innerHTML = '';
+  document.getElementById('dice-result').textContent = '—';
+  document.getElementById('roll-btn').disabled = false;
+  showDice(1);
+  updatePlayerUI();
+  render();
+  addLog(`🎮 Game started! ${players.length} players. Good luck!`, 'normal');
+}
+
+function setPlayerCount(n) {
+  playerCount = n;
+  document.querySelectorAll('.count-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i+2 === n);
+  });
+  newGame();
+}
+
+async function rollDice() {
+  if (rolling || gameOver) return;
+  rolling = true;
+  document.getElementById('roll-btn').disabled = true;
+
+  // Animate dice
+  const dice = document.getElementById('dice');
+  dice.classList.add('rolling');
+  let ticks = 0;
+  const tickInterval = setInterval(() => {
+    showDice(Math.ceil(Math.random()*6));
+    ticks++;
+  }, 60);
+
+  await wait(500);
+  clearInterval(tickInterval);
+  dice.classList.remove('rolling');
+
+  const roll = Math.ceil(Math.random() * 6);
+  showDice(roll);
+  document.getElementById('dice-result').textContent = `🎲 ${roll}`;
+
+  await wait(350);
+  await movePlayer(currentPlayer, roll);
+
+  rolling = false;
+}
+
+async function movePlayer(pi, steps) {
+  const p = players[pi];
+  const pd = PLAYER_DATA[pi];
+  let pos = p.pos;
+  const target = pos + steps;
+
+  if (target > 100) {
+    addLog(`${pd.emoji} ${pd.name} rolled ${steps} — needs exact roll to win!`, 'normal');
+    nextTurn();
+    return;
+  }
+
+  // Animate step by step
+  for (let s = 1; s <= steps; s++) {
+    pos++;
+    p.pos = pos;
+    render();
+    await wait(120);
+  }
+
+  // Check snake or ladder
+  if (SNAKES[pos]) {
+    const end = SNAKES[pos];
+    addLog(`🐍 ${pd.emoji} ${pd.name} landed on ${pos} — bitten by a snake! Down to ${end}`, 'snake');
+    await wait(400);
+    // Slide down
+    const frames = 12;
+    for (let i = 1; i <= frames; i++) {
+      p.pos = Math.round(pos + (end-pos)*i/frames);
+      render();
+      await wait(60);
+    }
+    p.pos = end;
+    render();
+
+  } else if (LADDERS[pos]) {
+    const end = LADDERS[pos];
+    addLog(`🪜 ${pd.emoji} ${pd.name} landed on ${pos} — climbed a ladder! Up to ${end}`, 'ladder');
+    await wait(400);
+    const frames = 12;
+    for (let i = 1; i <= frames; i++) {
+      p.pos = Math.round(pos + (end-pos)*i/frames);
+      render();
+      await wait(60);
+    }
+    p.pos = end;
+    render();
+
+  } else {
+    addLog(`${pd.emoji} ${pd.name} moved to square ${pos}`, 'normal');
+  }
+
+  // Check win
+  if (p.pos === 100) {
+    addLog(`🏆 ${pd.emoji} ${pd.name} WINS! Congratulations!`, 'win');
+    gameOver = true;
+    document.getElementById('win-name').textContent = `${pd.emoji} ${pd.name} Wins!`;
+    await wait(600);
+    document.getElementById('win-overlay').classList.add('show');
+    return;
+  }
+
+  nextTurn();
+}
+
+function nextTurn() {
+  currentPlayer = (currentPlayer + 1) % playerCount;
+  updatePlayerUI();
+  document.getElementById('roll-btn').disabled = false;
+  render();
+}
+
+function updatePlayerUI() {
+  const list = document.getElementById('player-list');
+  list.innerHTML = '';
+  players.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'player-row' + (i === currentPlayer ? ' active' : '');
+    const pd = PLAYER_DATA[i];
+    row.innerHTML = `
+      <div class="player-token-icon" style="background:${pd.darkColor};color:white">${pd.emoji}</div>
+      <div class="player-info">
+        <div class="player-name" style="color:${pd.color}">${pd.name}</div>
+        <div class="player-pos">Square: ${p.pos || 'Start'}</div>
+      </div>
+      <div class="turn-arrow">▶</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function addLog(msg, type) {
+  const log = document.getElementById('log');
+  const el = document.createElement('div');
+  el.className = 'log-entry ' + type;
+  el.textContent = msg;
+  log.insertBefore(el, log.firstChild);
+  // Keep max 20 entries
+  while (log.children.length > 20) log.removeChild(log.lastChild);
+}
+
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── START ────────────────────────────────────────────────────────────────────
+newGame();
+</script>
+</body>
+</html>
