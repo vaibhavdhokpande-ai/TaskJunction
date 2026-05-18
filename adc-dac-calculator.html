@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADC / DAC Bit Resolution Tool – TaskJunction</title>
+<meta name="description" content="Calculate ADC/DAC resolution, LSB step size, SNR and dynamic range for 8 to 24-bit converters. Free online tool by TaskJunction.">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:#ffffff; --off:#faf9f7; --cream:#f5f0e8; --border:#e8e2d9; --border2:#d4cdc2;
+  --orange:#f4600c; --orange2:#ff7a2e; --orange3:#fff0e8; --orange4:rgba(244,96,12,0.08);
+  --text:#0f0e0c; --text2:#5a5650; --text3:#9e9890; --green:#1a9952; --blue:#0d74ce;
+  --purple:#7c3aed; --purple2:#8b5cf6; --purple3:#ede9fe; --purple4:rgba(124,58,237,0.08);
+  --shadow:0 2px 12px rgba(15,14,12,0.06); --shadow-lg:0 8px 40px rgba(15,14,12,0.10);
+  --font-d:'Clash Display',sans-serif; --font-b:'Sora',sans-serif; --font-m:'JetBrains Mono',monospace;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:15px;}
+body{background:var(--off);color:var(--text);font-family:var(--font-b);line-height:1.7;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(250,249,247,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:24px;}
+.logo{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.02em;flex-shrink:0;}
+.logo em{color:var(--orange);font-style:normal;}
+.nav-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--white);transition:all 0.18s;margin-left:auto;}
+.nav-back:hover{border-color:var(--purple2);color:var(--purple);background:var(--purple3);}
+.nav-badge{font-family:var(--font-m);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(124,58,237,0.10);color:var(--purple);border:1px solid rgba(124,58,237,0.25);letter-spacing:0.08em;text-transform:uppercase;}
+
+/* HERO */
+.hero{padding:60px 32px 48px;position:relative;overflow:hidden;background:linear-gradient(160deg,#f5f3ff 0%,#ede9fe 100%);border-bottom:1px solid #ddd6fe;}
+.hero::before{content:'';position:absolute;width:700px;height:500px;top:-180px;right:-100px;background:radial-gradient(ellipse,rgba(124,58,237,0.10) 0%,transparent 65%);pointer-events:none;}
+.hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(124,58,237,0.07) 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(ellipse 90% 90% at 70% 30%,black 10%,transparent 80%);mask-image:radial-gradient(ellipse 90% 90% at 70% 30%,black 10%,transparent 80%);pointer-events:none;}
+.hero-inner{position:relative;z-index:1;max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:48px;flex-wrap:wrap;}
+.hero-text{flex:1;min-width:280px;}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid rgba(124,58,237,0.2);border-radius:100px;padding:5px 14px 5px 7px;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:20px;box-shadow:var(--shadow);}
+.hero-pill-dot{width:22px;height:22px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:11px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(28px,4.5vw,52px);font-weight:700;letter-spacing:-0.03em;line-height:1.1;margin-bottom:14px;}
+.hero h1 span{color:var(--purple);}
+.hero-sub{font-size:15px;color:var(--text2);line-height:1.8;max-width:500px;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.hero-chip{font-family:var(--font-m);font-size:10.5px;font-weight:500;padding:4px 12px;border-radius:100px;background:rgba(124,58,237,0.08);color:var(--purple);border:1px solid rgba(124,58,237,0.2);letter-spacing:0.04em;}
+.hero-visual{flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.hero-icon-wrap{width:120px;height:120px;border-radius:32px;background:linear-gradient(135deg,var(--purple3),#ddd6fe);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:center;font-size:56px;box-shadow:0 12px 40px rgba(124,58,237,0.18);}
+
+/* MAIN LAYOUT */
+.main{max-width:1120px;margin:0 auto;padding:48px 32px 80px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;}
+
+/* CARD BASE */
+.card{background:var(--white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);}
+.card-header{padding:20px 24px 0;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);padding-bottom:16px;}
+.card-icon{width:38px;height:38px;border-radius:10px;background:var(--purple3);border:1px solid rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.card-title{font-family:var(--font-d);font-size:16px;font-weight:600;letter-spacing:-0.01em;}
+.card-sub{font-size:11.5px;color:var(--text3);}
+.card-body{padding:24px;}
+
+/* FORM ELEMENTS */
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--text2);margin-bottom:7px;letter-spacing:0.01em;}
+.field label span{font-family:var(--font-m);font-size:10px;color:var(--text3);font-weight:400;}
+.input-wrap{position:relative;}
+.input-wrap input,.input-wrap select{width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--off);font-family:var(--font-b);font-size:14px;color:var(--text);outline:none;transition:border-color 0.18s,box-shadow 0.18s;-webkit-appearance:none;appearance:none;}
+.input-wrap input:focus,.input-wrap select:focus{border-color:var(--purple2);box-shadow:0 0 0 3px rgba(124,58,237,0.10);}
+.input-wrap .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--font-m);font-size:10.5px;color:var(--text3);pointer-events:none;}
+.input-wrap select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239e9890' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;}
+
+/* RANGE SLIDER */
+.range-wrap{display:flex;align-items:center;gap:12px;}
+.range-wrap input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--border2);outline:none;cursor:pointer;}
+.range-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--purple);border:2px solid #fff;box-shadow:0 2px 8px rgba(124,58,237,0.3);cursor:pointer;transition:transform 0.15s;}
+.range-wrap input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
+.range-val{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--purple);min-width:44px;text-align:center;letter-spacing:-0.02em;}
+.range-val span{font-family:var(--font-b);font-size:11px;color:var(--text3);font-weight:400;display:block;margin-top:-2px;}
+
+/* TOGGLE TABS */
+.tab-group{display:flex;gap:4px;background:var(--off);border-radius:10px;padding:4px;border:1px solid var(--border);}
+.tab-btn{flex:1;padding:8px 12px;border-radius:7px;font-family:var(--font-b);font-size:12.5px;font-weight:600;border:none;background:none;color:var(--text3);cursor:pointer;transition:all 0.18s;letter-spacing:0.01em;}
+.tab-btn.active{background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(124,58,237,0.28);}
+
+/* RESULTS GRID */
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.result-item{background:var(--off);border:1px solid var(--border);border-radius:13px;padding:14px 16px;position:relative;overflow:hidden;transition:border-color 0.18s;}
+.result-item:hover{border-color:rgba(124,58,237,0.3);}
+.result-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--purple2));opacity:0;transition:opacity 0.2s;}
+.result-item:hover::before{opacity:1;}
+.result-label{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.result-value{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--purple);letter-spacing:-0.02em;line-height:1;margin-bottom:2px;word-break:break-all;}
+.result-unit{font-size:10.5px;color:var(--text3);font-family:var(--font-m);}
+.result-item.wide{grid-column:span 2;}
+.result-item.highlight{background:rgba(124,58,237,0.06);border-color:rgba(124,58,237,0.22);}
+.result-item.highlight .result-value{color:var(--purple);}
+
+/* FORMULA CALLOUT */
+.formula-box{background:rgba(124,58,237,0.05);border:1px solid rgba(124,58,237,0.18);border-radius:12px;padding:14px 16px;margin-top:16px;}
+.formula-title{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.formula-row{font-family:var(--font-m);font-size:12px;color:var(--text2);padding:3px 0;border-bottom:1px solid rgba(124,58,237,0.1);}
+.formula-row:last-child{border-bottom:none;}
+.formula-row strong{color:var(--text);}
+
+/* BIT TABLE */
+.bit-table-wrap{overflow-x:auto;margin-top:4px;}
+.bit-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.bit-table th{font-family:var(--font-m);font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);padding:8px 12px;border-bottom:2px solid var(--border);text-align:left;}
+.bit-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text2);font-family:var(--font-m);font-size:11.5px;}
+.bit-table tr:last-child td{border-bottom:none;}
+.bit-table tr.active-row td{background:rgba(124,58,237,0.06);color:var(--purple);font-weight:600;}
+.bit-table tr:hover td{background:var(--off);}
+.bit-table tr.active-row:hover td{background:rgba(124,58,237,0.09);}
+.bit-table td:first-child{font-weight:700;color:var(--text);}
+.bit-table tr.active-row td:first-child{color:var(--purple);}
+
+/* WAVEFORM SVG */
+.waveform-wrap{background:rgba(124,58,237,0.04);border:1px solid rgba(124,58,237,0.15);border-radius:12px;padding:16px;margin-top:16px;}
+.waveform-title{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+#waveformSvg{width:100%;height:100px;display:block;}
+
+/* FULL-SPAN CARD */
+.span-full{grid-column:span 2;}
+
+/* INFO BOX */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.info-item{background:var(--off);border:1px solid var(--border);border-radius:11px;padding:13px 14px;}
+.info-item-icon{font-size:20px;margin-bottom:6px;}
+.info-item-title{font-family:var(--font-d);font-size:13px;font-weight:600;margin-bottom:4px;}
+.info-item-desc{font-size:11.5px;color:var(--text2);line-height:1.6;}
+
+/* COPY BTN */
+.copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-family:var(--font-b);font-size:12px;font-weight:600;background:var(--purple3);color:var(--purple);border:1px solid rgba(124,58,237,0.22);cursor:pointer;transition:all 0.18s;margin-top:14px;}
+.copy-btn:hover{background:rgba(124,58,237,0.15);}
+
+/* SECTION LABEL */
+.sec-label{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple);display:flex;align-items:center;gap:6px;margin-bottom:14px;}
+.sec-label::before{content:'';width:16px;height:1.5px;background:var(--purple);border-radius:2px;}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:18px 0;}
+
+/* SNR BAR */
+.snr-bar-wrap{margin-top:8px;}
+.snr-bar-track{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.snr-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--purple2));transition:width 0.4s ease;}
+.snr-labels{display:flex;justify-content:space-between;font-family:var(--font-m);font-size:9.5px;color:var(--text3);margin-top:4px;}
+
+/* DYNAMIC RANGE GAUGE */
+.dr-gauge{position:relative;margin-top:8px;}
+.dr-arc{display:block;margin:0 auto;}
+
+/* RESPONSIVE */
+@media(max-width:900px){.main{grid-template-columns:1fr;}.span-full{grid-column:span 1;}}
+@media(max-width:600px){.main{padding:32px 16px 60px;gap:20px;}.hero{padding:44px 16px 36px;}.hero h1{font-size:clamp(24px,7vw,36px);}.results-grid{grid-template-columns:1fr;}.result-item.wide{grid-column:span 1;}.info-grid{grid-template-columns:1fr;}.hero-visual{display:none;}nav{padding:0 16px;}.bit-table th,.bit-table td{padding:7px 9px;font-size:10.5px;}}
+
+/* Animate in */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.card{animation:fadeUp 0.45s ease both;}
+.card:nth-child(1){animation-delay:0.05s;}
+.card:nth-child(2){animation-delay:0.12s;}
+.card:nth-child(3){animation-delay:0.19s;}
+.card:nth-child(4){animation-delay:0.26s;}
+.card:nth-child(5){animation-delay:0.33s;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Task<em>Junction</em></a>
+  <span class="nav-badge">📡 Electronics</span>
+  <a href="index.html#electronics" class="nav-back">← Back to Tools</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-pill"><span class="hero-pill-dot">📡</span> Electronics Design Tool</div>
+      <h1>ADC / DAC<br><span>Bit Resolution</span> Tool</h1>
+      <p class="hero-sub">Calculate resolution, LSB step size, SNR, ENOB and dynamic range for ADC and DAC converters from 4 to 32-bit. Supports unipolar and bipolar reference configurations.</p>
+      <div class="hero-chips">
+        <span class="hero-chip">8–32 bit</span>
+        <span class="hero-chip">Unipolar & Bipolar</span>
+        <span class="hero-chip">SNR & ENOB</span>
+        <span class="hero-chip">Dynamic Range</span>
+        <span class="hero-chip">No Login</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-icon-wrap">📡</div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- INPUTS CARD -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">⚙️</div>
+      <div><div class="card-title">Converter Parameters</div><div class="card-sub">Set bit depth, voltage range &amp; configuration</div></div>
+    </div>
+    <div class="card-body">
+
+      <!-- Mode toggle -->
+      <div class="field">
+        <label>Converter Type</label>
+        <div class="tab-group">
+          <button class="tab-btn active" onclick="setMode('adc',this)">ADC</button>
+          <button class="tab-btn" onclick="setMode('dac',this)">DAC</button>
+          <button class="tab-btn" onclick="setMode('both',this)">Compare</button>
+        </div>
+      </div>
+
+      <!-- Bit depth slider -->
+      <div class="field">
+        <label>Bit Resolution <span>4 – 32 bits</span></label>
+        <div class="range-wrap">
+          <input type="range" id="bitSlider" min="4" max="32" value="12" step="1" oninput="syncBit(this.value)">
+          <div class="range-val" id="bitDisplay">12<span>bits</span></div>
+        </div>
+      </div>
+
+      <!-- Bit numeric input -->
+      <div class="field">
+        <label>Enter Bit Depth Manually</label>
+        <div class="input-wrap">
+          <input type="number" id="bitInput" value="12" min="4" max="32" step="1" oninput="syncBitFromInput(this.value)">
+          <span class="unit">bits</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Reference config -->
+      <div class="field">
+        <label>Reference Configuration</label>
+        <div class="input-wrap">
+          <select id="refConfig" onchange="calculate()">
+            <option value="unipolar">Unipolar (0 to V_ref)</option>
+            <option value="bipolar">Bipolar (–V_ref/2 to +V_ref/2)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Vref input -->
+      <div class="field">
+        <label>Reference Voltage (V<sub>ref</sub>) <span>volts</span></label>
+        <div class="input-wrap">
+          <input type="number" id="vref" value="5.0" min="0.001" step="0.001" oninput="calculate()">
+          <span class="unit">V</span>
+        </div>
+      </div>
+
+      <!-- Common presets -->
+      <div class="field">
+        <label>Quick Presets</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button onclick="setPreset(8,3.3,'unipolar')" style="padding:6px 12px;border-radius:8px;background:var(--purple3);color:var(--purple);border:1px solid rgba(124,58,237,0.2);font-family:var(--font-b);font-size:11.5px;font-weight:600;cursor:pointer;">8-bit 3.3V</button>
+          <button onclick="setPreset(10,5,'unipolar')" style="padding:6px 12px;border-radius:8px;background:var(--purple3);color:var(--purple);border:1px solid rgba(124,58,237,0.2);font-family:var(--font-b);font-size:11.5px;font-weight:600;cursor:pointer;">10-bit 5V</button>
+          <button onclick="setPreset(12,3.3,'unipolar')" style="padding:6px 12px;border-radius:8px;background:var(--purple3);color:var(--purple);border:1px solid rgba(124,58,237,0.2);font-family:var(--font-b);font-size:11.5px;font-weight:600;cursor:pointer;">12-bit 3.3V</button>
+          <button onclick="setPreset(16,5,'bipolar')" style="padding:6px 12px;border-radius:8px;background:var(--purple3);color:var(--purple);border:1px solid rgba(124,58,237,0.2);font-family:var(--font-b);font-size:11.5px;font-weight:600;cursor:pointer;">16-bit ±2.5V</button>
+          <button onclick="setPreset(24,4.096,'unipolar')" style="padding:6px 12px;border-radius:8px;background:var(--purple3);color:var(--purple);border:1px solid rgba(124,58,237,0.2);font-family:var(--font-b);font-size:11.5px;font-weight:600;cursor:pointer;">24-bit 4.096V</button>
+        </div>
+      </div>
+
+      <!-- SINAD / ENOB inputs (optional) -->
+      <div class="divider"></div>
+      <div class="sec-label">ENOB / SINAD (Optional)</div>
+      <div class="field">
+        <label>Measured SINAD <span>leave blank to use ideal</span></label>
+        <div class="input-wrap">
+          <input type="number" id="sinad" placeholder="e.g. 68.5" min="0" step="0.1" oninput="calculate()">
+          <span class="unit">dB</span>
+        </div>
+      </div>
+
+      <!-- Copy results -->
+      <button class="copy-btn" onclick="copyResults()">📋 Copy Results</button>
+    </div>
+  </div>
+
+  <!-- RESULTS CARD -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📊</div>
+      <div><div class="card-title">Calculated Results</div><div class="card-sub">Live computed values</div></div>
+    </div>
+    <div class="card-body">
+      <div class="results-grid">
+        <div class="result-item highlight">
+          <div class="result-label">Bit Depth</div>
+          <div class="result-value" id="r_bits">12</div>
+          <div class="result-unit">bits</div>
+        </div>
+        <div class="result-item highlight">
+          <div class="result-label">Total Levels (2ⁿ)</div>
+          <div class="result-value" id="r_levels">4096</div>
+          <div class="result-unit">discrete steps</div>
+        </div>
+        <div class="result-item wide">
+          <div class="result-label">LSB Step Size (Δ)</div>
+          <div class="result-value" id="r_lsb">1.221</div>
+          <div class="result-unit" id="r_lsb_unit">mV per step</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Full-Scale Range</div>
+          <div class="result-value" id="r_fsr">5.000</div>
+          <div class="result-unit" id="r_fsr_unit">V</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Max Count</div>
+          <div class="result-value" id="r_maxcount">4095</div>
+          <div class="result-unit">decimal</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Ideal SNR</div>
+          <div class="result-value" id="r_snr">74.0</div>
+          <div class="result-unit">dB</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Dynamic Range</div>
+          <div class="result-value" id="r_dr">74.0</div>
+          <div class="result-unit">dB</div>
+        </div>
+        <div class="result-item wide">
+          <div class="result-label">ENOB (Eff. Number of Bits)</div>
+          <div class="result-value" id="r_enob">12.00</div>
+          <div class="result-unit">bits (from SINAD or ideal)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Max Voltage</div>
+          <div class="result-value" id="r_vmax">5.000</div>
+          <div class="result-unit">V</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Min Voltage</div>
+          <div class="result-value" id="r_vmin">0.000</div>
+          <div class="result-unit">V</div>
+        </div>
+        <div class="result-item wide">
+          <div class="result-label">Hex Max Code</div>
+          <div class="result-value" id="r_hex" style="font-size:16px;">0xFFF</div>
+          <div class="result-unit">hexadecimal</div>
+        </div>
+      </div>
+
+      <!-- SNR bar -->
+      <div class="divider"></div>
+      <div class="result-label" style="margin-bottom:8px;">SNR Quality Indicator</div>
+      <div class="snr-bar-wrap">
+        <div class="snr-bar-track"><div class="snr-bar-fill" id="snrBar" style="width:60%;"></div></div>
+        <div class="snr-labels"><span>0 dB</span><span id="snrBarLabel">74.0 dB</span><span>200 dB</span></div>
+      </div>
+
+      <!-- Quantisation waveform -->
+      <div class="waveform-wrap">
+        <div class="waveform-title">Quantisation Visualisation</div>
+        <svg id="waveformSvg" viewBox="0 0 400 100"></svg>
+      </div>
+
+      <!-- Formula box -->
+      <div class="formula-box">
+        <div class="formula-title">Key Formulas</div>
+        <div class="formula-row"><strong>N levels</strong> = 2ⁿ</div>
+        <div class="formula-row"><strong>LSB</strong> = V<sub>ref</sub> / 2ⁿ &nbsp;(unipolar) &nbsp;|&nbsp; V<sub>ref</sub> / 2ⁿ⁻¹ &nbsp;(bipolar)</div>
+        <div class="formula-row"><strong>Ideal SNR</strong> = 6.02n + 1.76 dB</div>
+        <div class="formula-row"><strong>Dynamic Range</strong> = 20 × log₁₀(2ⁿ) dB</div>
+        <div class="formula-row"><strong>ENOB</strong> = (SINAD − 1.76) / 6.02</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE CARD -->
+  <div class="card span-full">
+    <div class="card-header">
+      <div class="card-icon">📋</div>
+      <div><div class="card-title">Bit Depth Comparison Table</div><div class="card-sub">Common ADC/DAC resolutions — highlighted row matches your selection</div></div>
+    </div>
+    <div class="card-body">
+      <div class="bit-table-wrap">
+        <table class="bit-table" id="bitTable">
+          <thead>
+            <tr>
+              <th>Bits (n)</th>
+              <th>Levels (2ⁿ)</th>
+              <th>LSB @ 5V</th>
+              <th>LSB @ 3.3V</th>
+              <th>Ideal SNR</th>
+              <th>Dyn. Range</th>
+              <th>Hex Max</th>
+              <th>Typical Use</th>
+            </tr>
+          </thead>
+          <tbody id="bitTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO CARD -->
+  <div class="card span-full">
+    <div class="card-header">
+      <div class="card-icon">💡</div>
+      <div><div class="card-title">Understanding ADC &amp; DAC Parameters</div><div class="card-sub">Essential concepts for converter selection</div></div>
+    </div>
+    <div class="card-body">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-item-icon">🔢</div>
+          <div class="info-item-title">Resolution (n bits)</div>
+          <div class="info-item-desc">The number of discrete output levels = 2ⁿ. More bits means finer granularity. Doubling bits roughly quadruples the number of levels.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">📏</div>
+          <div class="info-item-title">LSB (Least Significant Bit)</div>
+          <div class="info-item-desc">The smallest voltage step a converter can resolve. LSB = V_ref / 2ⁿ for unipolar. Smaller LSB = higher precision in measurement or output.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">📶</div>
+          <div class="info-item-title">SNR &amp; Dynamic Range</div>
+          <div class="info-item-desc">Ideal SNR = 6.02n + 1.76 dB. Each additional bit adds ~6 dB SNR. Dynamic range = 20·log₁₀(2ⁿ) dB, representing the ratio of largest to smallest measurable signal.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">🎯</div>
+          <div class="info-item-title">ENOB (Effective Number of Bits)</div>
+          <div class="info-item-desc">Accounts for real-world noise and distortion. ENOB = (SINAD − 1.76) / 6.02. An 12-bit ADC might have ENOB of 10.5 due to noise floor.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">⚡</div>
+          <div class="info-item-title">Unipolar vs Bipolar</div>
+          <div class="info-item-desc">Unipolar: 0 to V_ref (all positive). Bipolar: –V_ref/2 to +V_ref/2 (positive and negative). Bipolar effectively halves the LSB step for the same bit count.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">🔬</div>
+          <div class="info-item-title">Typical Applications</div>
+          <div class="info-item-desc">8-bit: PWM, motor control. 10-12 bit: Arduino, general sensors. 16-bit: audio, precision instruments. 24-bit: industrial weighing, precision measurement.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer style="background:#0f0e0c;color:#fff;padding:40px 32px 28px;text-align:center;">
+  <div style="font-family:var(--font-d);font-size:24px;font-weight:700;letter-spacing:-0.03em;margin-bottom:16px;">Task<em style="color:var(--orange);font-style:normal;">Junction</em></div>
+  <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;">
+    <a href="index.html#electronics" style="font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 10px;border-radius:6px;transition:color 0.15s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">← Electronics Tools</a>
+    <a href="index.html#mechanical" style="font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 10px;border-radius:6px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Mechanical</a>
+    <a href="index.html#civil" style="font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 10px;border-radius:6px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Civil</a>
+    <a href="index.html#apps" style="font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 10px;border-radius:6px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Apps</a>
+    <a href="index.html#privacy" style="font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 10px;border-radius:6px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Privacy</a>
+  </div>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);">Made by Vaibhav Dhokpande · © 2025 TaskJunction. All rights reserved.</p>
+</footer>
+
+<script>
+/* ── STATE ── */
+let mode = 'adc';
+
+/* ── SYNC BIT SLIDER / INPUT ── */
+function syncBit(v){
+  v = Math.min(32,Math.max(4,parseInt(v)||4));
+  document.getElementById('bitInput').value = v;
+  document.getElementById('bitSlider').value = v;
+  document.getElementById('bitDisplay').innerHTML = v+'<span>bits</span>';
+  calculate();
+}
+function syncBitFromInput(v){
+  v = Math.min(32,Math.max(4,parseInt(v)||4));
+  document.getElementById('bitSlider').value = v;
+  document.getElementById('bitDisplay').innerHTML = v+'<span>bits</span>';
+  calculate();
+}
+function setMode(m, el){
+  mode = m;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  calculate();
+}
+function setPreset(bits, vref, config){
+  document.getElementById('bitSlider').value = bits;
+  document.getElementById('bitInput').value = bits;
+  document.getElementById('bitDisplay').innerHTML = bits+'<span>bits</span>';
+  document.getElementById('vref').value = vref;
+  document.getElementById('refConfig').value = config;
+  calculate();
+}
+
+/* ── FORMAT HELPERS ── */
+function fmtSI(val, unit){
+  if(Math.abs(val) < 1e-9) return (val*1e12).toFixed(3)+' p'+unit;
+  if(Math.abs(val) < 1e-6) return (val*1e9).toFixed(3)+' n'+unit;
+  if(Math.abs(val) < 1e-3) return (val*1e6).toFixed(3)+' µ'+unit;
+  if(Math.abs(val) < 1)    return (val*1e3).toFixed(3)+' m'+unit;
+  return val.toFixed(6)+' '+unit;
+}
+function fmtNum(n){
+  if(n>=1e9) return (n/1e9).toFixed(2)+'G';
+  if(n>=1e6) return (n/1e6).toFixed(2)+'M';
+  if(n>=1e3) return (n/1e3).toFixed(1)+'K';
+  return n.toString();
+}
+
+/* ── MAIN CALCULATE ── */
+function calculate(){
+  const n     = parseInt(document.getElementById('bitInput').value)||12;
+  const vref  = parseFloat(document.getElementById('vref').value)||5;
+  const conf  = document.getElementById('refConfig').value;
+  const sinadStr = document.getElementById('sinad').value;
+
+  const levels = Math.pow(2, n);
+  const lsb    = conf==='bipolar' ? vref/Math.pow(2,n-1) : vref/levels;
+  const fsr    = vref;
+  const maxCode= levels - 1;
+  const vmin   = conf==='bipolar' ? -vref/2 : 0;
+  const vmax   = conf==='bipolar' ?  vref/2 : vref;
+
+  const idealSNR = 6.02*n + 1.76;
+  const dr       = 20*Math.log10(levels);
+
+  let enob, enobSrc;
+  if(sinadStr && parseFloat(sinadStr)>0){
+    const sinad = parseFloat(sinadStr);
+    enob = (sinad - 1.76)/6.02;
+    enobSrc = 'from SINAD';
+  } else {
+    enob = n;
+    enobSrc = 'ideal (no SINAD)';
+  }
+
+  /* Update DOM */
+  document.getElementById('r_bits').textContent   = n;
+  document.getElementById('r_levels').textContent = fmtNum(levels);
+  
+  const lsbFmt = fmtSI(lsb,'V');
+  document.getElementById('r_lsb').textContent      = lsbFmt.split(' ')[0];
+  document.getElementById('r_lsb_unit').textContent = lsbFmt.split(' ').slice(1).join(' ')+' per step';
+
+  document.getElementById('r_fsr').textContent     = fsr.toFixed(3);
+  document.getElementById('r_fsr_unit').textContent= 'V full-scale';
+  document.getElementById('r_maxcount').textContent= maxCode.toLocaleString();
+  document.getElementById('r_snr').textContent     = idealSNR.toFixed(1);
+  document.getElementById('r_dr').textContent      = dr.toFixed(1);
+  document.getElementById('r_enob').textContent    = enob.toFixed(2);
+  document.querySelector('#r_enob ~ .result-unit').textContent = 'bits ('+enobSrc+')';
+  document.getElementById('r_vmax').textContent    = vmax.toFixed(3);
+  document.getElementById('r_vmin').textContent    = vmin.toFixed(3);
+  document.getElementById('r_hex').textContent     = '0x'+maxCode.toString(16).toUpperCase();
+
+  /* SNR bar */
+  const pct = Math.min(100, idealSNR/200*100);
+  document.getElementById('snrBar').style.width    = pct+'%';
+  document.getElementById('snrBarLabel').textContent= idealSNR.toFixed(1)+' dB';
+
+  /* Waveform */
+  drawWaveform(n, conf);
+
+  /* Table */
+  buildTable(n);
+}
+
+/* ── WAVEFORM VISUALISATION ── */
+function drawWaveform(bits, conf){
+  const svg = document.getElementById('waveformSvg');
+  const W=400, H=100, PAD=10;
+  const steps = Math.min(bits<=8 ? Math.pow(2,bits) : 64, 64);
+  const step  = (W-2*PAD)/steps;
+  const amp   = H-2*PAD;
+
+  let paths = '';
+  // Analog sine (grey)
+  let sine = 'M';
+  for(let x=0;x<=W-2*PAD;x++){
+    const t  = x/(W-2*PAD)*2*Math.PI;
+    const y  = PAD + (1 - (Math.sin(t)+1)/2)*amp;
+    sine += (x===0?'':' L')+(x+PAD).toFixed(1)+','+y.toFixed(1);
+  }
+  paths += `<path d="${sine}" stroke="rgba(124,58,237,0.18)" stroke-width="1.5" fill="none"/>`;
+
+  // Quantised staircase
+  let stair = '';
+  let prevY = null;
+  for(let i=0;i<=steps;i++){
+    const x  = PAD + i*step;
+    const t  = (i/steps)*2*Math.PI;
+    const raw= (Math.sin(t)+1)/2; // 0..1
+    const q  = Math.round(raw*(steps-1));
+    const y  = PAD + (1 - q/(steps-1))*amp;
+    if(prevY===null){
+      stair += `M${x.toFixed(1)},${y.toFixed(1)}`;
+    } else {
+      stair += ` L${x.toFixed(1)},${prevY.toFixed(1)} L${x.toFixed(1)},${y.toFixed(1)}`;
+    }
+    prevY = y;
+  }
+  paths += `<path d="${stair}" stroke="#7c3aed" stroke-width="1.8" fill="none"/>`;
+
+  // Labels
+  paths += `<text x="${PAD}" y="${H-2}" font-size="8" fill="#9e9890" font-family="JetBrains Mono,monospace">0</text>`;
+  paths += `<text x="${W-PAD-12}" y="${H-2}" font-size="8" fill="#9e9890" font-family="JetBrains Mono,monospace">2π</text>`;
+  paths += `<text x="${PAD}" y="${PAD+8}" font-size="8" fill="#9e9890" font-family="JetBrains Mono,monospace">Vmax</text>`;
+
+  svg.innerHTML = paths;
+}
+
+/* ── COMPARISON TABLE ── */
+const USES = {
+  4:'Basic PWM',
+  6:'Low-res DAC',
+  8:'Arduino, LCD',
+  10:'Arduino ADC, sensors',
+  12:'General purpose, ESP32',
+  14:'Audio 16kHz, IMU',
+  16:'CD Audio, precision',
+  18:'High-res audio',
+  20:'Test equipment',
+  22:'Lab instruments',
+  24:'Weighing scales, sigma-delta',
+  28:'Precision reference',
+  32:'Ultra precision'
+};
+const TABLE_BITS=[4,6,8,10,12,14,16,18,20,24,32];
+
+function buildTable(activeBits){
+  const tbody = document.getElementById('bitTableBody');
+  let html='';
+  TABLE_BITS.forEach(n=>{
+    const lev = Math.pow(2,n);
+    const lsb5 = fmtSI(5/lev,'V');
+    const lsb33= fmtSI(3.3/lev,'V');
+    const snr  = (6.02*n+1.76).toFixed(1);
+    const dr   = (20*Math.log10(lev)).toFixed(1);
+    const hex  = '0x'+(lev-1).toString(16).toUpperCase();
+    const use  = USES[n]||'—';
+    const active = n===activeBits ? 'class="active-row"':'';
+    html+=`<tr ${active}>
+      <td>${n}-bit</td>
+      <td>${fmtNum(lev)}</td>
+      <td>${lsb5}</td>
+      <td>${lsb33}</td>
+      <td>${snr} dB</td>
+      <td>${dr} dB</td>
+      <td>${hex}</td>
+      <td>${use}</td>
+    </tr>`;
+  });
+  tbody.innerHTML=html;
+}
+
+/* ── COPY ── */
+function copyResults(){
+  const n   = document.getElementById('bitInput').value;
+  const vref= document.getElementById('vref').value;
+  const bits= document.getElementById('r_bits').textContent;
+  const lev = document.getElementById('r_levels').textContent;
+  const lsb = document.getElementById('r_lsb').textContent+' '+document.getElementById('r_lsb_unit').textContent;
+  const snr = document.getElementById('r_snr').textContent+' dB';
+  const dr  = document.getElementById('r_dr').textContent+' dB';
+  const enob= document.getElementById('r_enob').textContent+' bits';
+  const hex = document.getElementById('r_hex').textContent;
+  const txt = [
+    'ADC/DAC Bit Resolution Tool – TaskJunction',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `Bit Depth     : ${bits} bits`,
+    `V_ref         : ${vref} V`,
+    `Total Levels  : ${lev}`,
+    `LSB Step Size : ${lsb}`,
+    `Ideal SNR     : ${snr}`,
+    `Dynamic Range : ${dr}`,
+    `ENOB          : ${enob}`,
+    `Hex Max Code  : ${hex}`,
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    'Generated at TaskJunction – vaibhavdhokpande-ai.github.io'
+  ].join('\n');
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn=document.querySelector('.copy-btn');
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.innerHTML='📋 Copy Results',2000);
+  });
+}
+
+/* ── INIT ── */
+calculate();
+</script>
+</body>
+</html>
