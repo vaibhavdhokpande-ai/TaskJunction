@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RC / LC Filter Calculator – TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--p:#7c3aed;--p2:#8b5cf6;--p3:#a78bfa;--p4:rgba(124,58,237,0.08);--p5:rgba(124,58,237,0.15);--text:#0f0e0c;--text2:#5a5650;--text3:#9e9890;--green:#1a9952;--font-d:'Clash Display',sans-serif;--font-b:'Sora',sans-serif;--font-m:'JetBrains Mono',monospace;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;}body{background:#f5f3ff;color:var(--text);font-family:var(--font-b);line-height:1.7;}
+nav{position:sticky;top:0;z-index:100;height:64px;background:rgba(245,243,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid #ddd6fe;display:flex;align-items:center;padding:0 28px;gap:16px;}
+.logo{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}.logo em{color:var(--p);font-style:normal;}
+.back-btn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--p);text-decoration:none;background:var(--p4);border:1px solid rgba(124,58,237,0.2);padding:6px 14px;border-radius:8px;transition:all .18s;}.back-btn:hover{background:var(--p5);}
+.hero{background:linear-gradient(135deg,#7c3aed,#8b5cf6,#a78bfa);color:#fff;padding:48px 28px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px);background-size:28px 28px;}
+.hero-inner{position:relative;z-index:1;}.hero-icon{font-size:48px;margin-bottom:12px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(24px,5vw,42px);font-weight:700;letter-spacing:-0.03em;margin-bottom:8px;}
+.hero p{font-size:15px;opacity:0.85;max-width:520px;margin:0 auto;}
+.tabs{display:flex;gap:0;background:rgba(255,255,255,0.15);border-radius:12px;padding:4px;margin:24px auto 0;max-width:560px;backdrop-filter:blur(10px);}
+.tab{flex:1;padding:8px 10px;border-radius:9px;font-family:var(--font-b);font-size:12.5px;font-weight:600;border:none;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.7);background:transparent;}
+.tab.active{background:#fff;color:var(--p);}
+.main{max-width:900px;margin:0 auto;padding:32px 20px;}
+.card{background:#fff;border:1px solid #ddd6fe;border-radius:20px;padding:28px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,14,12,.06);}
+.card-title{font-family:var(--font-d);font-size:18px;font-weight:600;color:var(--p);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.card-sub{font-size:13px;color:var(--text2);margin-bottom:18px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-family:var(--font-m);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);}
+.field input,.field select{padding:10px 14px;border:1.5px solid #ddd6fe;border-radius:10px;font-family:var(--font-b);font-size:14px;color:var(--text);background:#faf8ff;outline:none;transition:border-color .18s;}
+.field input:focus,.field select:focus{border-color:var(--p);}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;margin-top:10px;transition:all .18s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,58,237,.35);}
+.result-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:14px;padding:20px;margin-top:16px;}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(124,58,237,.12);}
+.result-row:last-child{border-bottom:none;}
+.result-label{font-family:var(--font-m);font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;}
+.result-value{font-family:var(--font-d);font-size:19px;font-weight:700;color:var(--p);}
+.result-unit{font-family:var(--font-m);font-size:11px;color:var(--text3);margin-left:3px;}
+.status-ok{color:var(--green);font-weight:700;font-family:var(--font-m);font-size:12px;}
+.formula-box{background:#faf8ff;border:1px solid #e4d9ff;border-radius:10px;padding:14px 16px;font-family:var(--font-m);font-size:13px;color:var(--text2);margin-top:12px;line-height:1.9;}
+.formula-box strong{color:var(--p);}
+/* Bode plot */
+.bode-wrap{margin-top:16px;border:1px solid #ddd6fe;border-radius:12px;overflow:hidden;background:#faf8ff;}
+.bode-header{background:var(--p4);padding:8px 14px;font-family:var(--font-m);font-size:11px;color:var(--p);font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
+canvas{display:block;width:100%;max-height:200px;}
+footer{text-align:center;padding:32px 20px;font-size:12px;color:var(--text3);border-top:1px solid #ddd6fe;margin-top:20px;}
+footer a{color:var(--p);text-decoration:none;}
+@media(max-width:600px){.grid-2,.grid-3{grid-template-columns:1fr;}.main{padding:20px 12px;}.card{padding:18px 14px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Task<em>Junction</em></a>
+  <a href="index.html#electronics" class="back-btn">← Electronics</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-icon">〰️</div>
+    <h1>RC / LC Filter Calculator</h1>
+    <p>Cutoff frequency, impedance and phase for RC low-pass, high-pass and LC bandpass filters with Bode plot preview.</p>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('rclp')">RC Low-Pass</button>
+      <button class="tab" onclick="showTab('rchp')">RC High-Pass</button>
+      <button class="tab" onclick="showTab('lcbp')">LC Band-Pass</button>
+      <button class="tab" onclick="showTab('rlc')">RLC Series</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- RC LOW-PASS -->
+  <div id="tab-rclp">
+    <div class="card">
+      <div class="card-title">📉 RC Low-Pass Filter</div>
+      <div class="card-sub">Passes low frequencies, attenuates high frequencies. Roll-off: −20 dB/decade.</div>
+      <div class="grid-3">
+        <div class="field"><label>Resistance R (kΩ)</label><input type="number" id="lp_r" value="10" step="0.1" min="0.001"></div>
+        <div class="field"><label>Capacitance C (nF)</label><input type="number" id="lp_c" value="1.59" step="0.01" min="0.001"></div>
+        <div class="field"><label>Input Frequency f (kHz)</label><input type="number" id="lp_f" value="5" step="0.1" min="0.001"></div>
+      </div>
+      <button class="btn" onclick="calcLP()">Calculate Filter</button>
+      <div class="result-box" id="lp-result" style="display:none;"></div>
+      <div class="bode-wrap" id="lp-bode" style="display:none;">
+        <div class="bode-header">📊 Bode Plot — Magnitude Response</div>
+        <canvas id="lp-canvas" height="180"></canvas>
+      </div>
+      <div class="formula-box">
+        <strong>Cutoff Freq:</strong> fc = 1 / (2π × R × C)<br>
+        <strong>Gain at f:</strong> |H| = 1 / √(1 + (f/fc)²)<br>
+        <strong>Phase:</strong> φ = −arctan(f/fc)
+      </div>
+    </div>
+  </div>
+
+  <!-- RC HIGH-PASS -->
+  <div id="tab-rchp" style="display:none;">
+    <div class="card">
+      <div class="card-title">📈 RC High-Pass Filter</div>
+      <div class="card-sub">Passes high frequencies, blocks low frequencies. Roll-off: +20 dB/decade below fc.</div>
+      <div class="grid-3">
+        <div class="field"><label>Resistance R (kΩ)</label><input type="number" id="hp_r" value="10" step="0.1"></div>
+        <div class="field"><label>Capacitance C (nF)</label><input type="number" id="hp_c" value="1.59" step="0.01"></div>
+        <div class="field"><label>Input Frequency f (kHz)</label><input type="number" id="hp_f" value="1" step="0.1"></div>
+      </div>
+      <button class="btn" onclick="calcHP()">Calculate Filter</button>
+      <div class="result-box" id="hp-result" style="display:none;"></div>
+      <div class="bode-wrap" id="hp-bode" style="display:none;">
+        <div class="bode-header">📊 Bode Plot — Magnitude Response</div>
+        <canvas id="hp-canvas" height="180"></canvas>
+      </div>
+      <div class="formula-box">
+        <strong>Cutoff Freq:</strong> fc = 1 / (2π × R × C)<br>
+        <strong>Gain at f:</strong> |H| = (f/fc) / √(1 + (f/fc)²)<br>
+        <strong>Phase:</strong> φ = 90° − arctan(f/fc)
+      </div>
+    </div>
+  </div>
+
+  <!-- LC BAND-PASS -->
+  <div id="tab-lcbp" style="display:none;">
+    <div class="card">
+      <div class="card-title">📻 LC Band-Pass Filter</div>
+      <div class="card-sub">Resonant circuit passing a band of frequencies around resonant frequency fr.</div>
+      <div class="grid-3">
+        <div class="field"><label>Inductance L (mH)</label><input type="number" id="lc_l" value="1" step="0.01" min="0.001"></div>
+        <div class="field"><label>Capacitance C (nF)</label><input type="number" id="lc_c" value="25.3" step="0.01" min="0.001"></div>
+        <div class="field"><label>Series Resistance R (Ω)</label><input type="number" id="lc_r" value="10" step="1" min="0.001"></div>
+      </div>
+      <button class="btn" onclick="calcLC()">Calculate LC Filter</button>
+      <div class="result-box" id="lc-result" style="display:none;"></div>
+      <div class="formula-box">
+        <strong>Resonant Freq:</strong> fr = 1 / (2π√(LC))<br>
+        <strong>Q Factor:</strong> Q = fr × L / R = 1/(R√(C/L))<br>
+        <strong>Bandwidth:</strong> BW = fr / Q
+      </div>
+    </div>
+  </div>
+
+  <!-- RLC SERIES -->
+  <div id="tab-rlc" style="display:none;">
+    <div class="card">
+      <div class="card-title">⚡ RLC Series Circuit</div>
+      <div class="card-sub">Complete RLC series circuit analysis — impedance, current and power factor at given frequency.</div>
+      <div class="grid-2">
+        <div class="field"><label>Resistance R (Ω)</label><input type="number" id="rlc_r" value="100" step="1"></div>
+        <div class="field"><label>Inductance L (mH)</label><input type="number" id="rlc_l" value="10" step="0.1"></div>
+        <div class="field"><label>Capacitance C (μF)</label><input type="number" id="rlc_c" value="10" step="0.1"></div>
+        <div class="field"><label>Supply Voltage Vs (V)</label><input type="number" id="rlc_vs" value="10" step="0.5"></div>
+        <div class="field"><label>Frequency f (Hz)</label><input type="number" id="rlc_f" value="1000" step="10"></div>
+        <div class="field"><label>Phase of Vs (°)</label><input type="number" id="rlc_ph" value="0" step="1"></div>
+      </div>
+      <button class="btn" onclick="calcRLC()">Analyse Circuit</button>
+      <div class="result-box" id="rlc-result" style="display:none;"></div>
+      <div class="formula-box">
+        <strong>XL = 2πfL, XC = 1/(2πfC)</strong><br>
+        <strong>Z = √(R² + (XL−XC)²)</strong><br>
+        <strong>Power Factor = R/Z = cos(φ)</strong>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="index.html">← Back to TaskJunction</a> &nbsp;·&nbsp; © 2025 TaskJunction by Vaibhav Dhokpande
+</footer>
+
+<script>
+function showTab(t){
+  ['rclp','rchp','lcbp','rlc'].forEach(id=>document.getElementById('tab-'+id).style.display=id===t?'block':'none');
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['rclp','rchp','lcbp','rlc'][i]===t));
+}
+function fmtHz(f){return f>=1e6?(f/1e6).toFixed(3)+' MHz':f>=1e3?(f/1e3).toFixed(3)+' kHz':f.toFixed(2)+' Hz';}
+function fmtOhm(z){return z>=1e6?(z/1e6).toFixed(2)+' MΩ':z>=1e3?(z/1e3).toFixed(2)+' kΩ':z.toFixed(2)+' Ω';}
+
+function drawBode(canvasId, type, fc, fInput){
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth||700; canvas.height=180;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const W=canvas.width, H=canvas.height, pad=40;
+  const logFmin=Math.log10(fc/100), logFmax=Math.log10(fc*100);
+  const toX=f=>pad+(Math.log10(f)-logFmin)/(logFmax-logFmin)*(W-2*pad);
+  const toY=db=>pad+((-db)/(40))*(H-2*pad);
+  // Grid
+  ctx.strokeStyle='#e4d9ff'; ctx.lineWidth=1;
+  [-40,-30,-20,-10,-3,0].forEach(db=>{
+    ctx.beginPath(); ctx.moveTo(pad,toY(db)); ctx.lineTo(W-pad,toY(db)); ctx.stroke();
+    ctx.fillStyle='#9e9890'; ctx.font='10px JetBrains Mono,monospace';
+    ctx.fillText(db+'dB',2,toY(db)+4);
+  });
+  // Freq markers
+  for(let e=Math.floor(logFmin);e<=Math.ceil(logFmax);e++){
+    const x=toX(Math.pow(10,e));
+    ctx.beginPath(); ctx.moveTo(x,pad); ctx.lineTo(x,H-pad); ctx.stroke();
+  }
+  // Curve
+  ctx.beginPath(); ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2.5;
+  for(let i=0;i<=300;i++){
+    const logF=logFmin+i/300*(logFmax-logFmin);
+    const f=Math.pow(10,logF);
+    let gain;
+    if(type==='lp') gain=1/Math.sqrt(1+(f/fc)**2);
+    else gain=(f/fc)/Math.sqrt(1+(f/fc)**2);
+    const db=20*Math.log10(gain);
+    const x=toX(f), y=toY(db);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  // fc marker
+  const fcX=toX(fc);
+  ctx.setLineDash([4,4]); ctx.strokeStyle='#a78bfa'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(fcX,pad); ctx.lineTo(fcX,H-pad); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#7c3aed'; ctx.font='bold 10px Sora,sans-serif';
+  ctx.fillText('fc='+fmtHz(fc),fcX+4,pad+14);
+  // Input freq
+  if(fInput>0){
+    const fX=toX(fInput);
+    ctx.strokeStyle='#f4600c'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(fX,pad); ctx.lineTo(fX,H-pad); ctx.stroke();
+    ctx.fillStyle='#f4600c';
+    ctx.fillText('f='+fmtHz(fInput),fX+4,pad+28);
+  }
+}
+
+function calcLP(){
+  const R=parseFloat(document.getElementById('lp_r').value)*1e3;
+  const C=parseFloat(document.getElementById('lp_c').value)*1e-9;
+  const f=parseFloat(document.getElementById('lp_f').value)*1e3;
+  const fc=1/(2*Math.PI*R*C);
+  const gain=1/Math.sqrt(1+(f/fc)**2);
+  const gainDb=20*Math.log10(gain);
+  const phase=-Math.atan(f/fc)*180/Math.PI;
+  const Xc=1/(2*Math.PI*f*C);
+  const Z=Math.sqrt(R**2+Xc**2);
+  const el=document.getElementById('lp-result'); el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Cutoff Frequency fc</span><span class="result-value">${fmtHz(fc)}</span></div>
+    <div class="result-row"><span class="result-label">Gain at ${fmtHz(f)}</span><span class="result-value">${(gain*100).toFixed(2)}<span class="result-unit">%</span></span></div>
+    <div class="result-row"><span class="result-label">Gain (dB)</span><span class="result-value">${gainDb.toFixed(2)}<span class="result-unit">dB</span></span></div>
+    <div class="result-row"><span class="result-label">Phase Shift</span><span class="result-value">${phase.toFixed(2)}<span class="result-unit">°</span></span></div>
+    <div class="result-row"><span class="result-label">Impedance at f</span><span class="result-value">${fmtOhm(Z)}</span></div>
+    <div class="result-row"><span class="result-label">Time Constant τ = RC</span><span class="result-value">${(R*C*1e6).toFixed(3)}<span class="result-unit">μs</span></span></div>
+    <div class="result-row"><span class="result-label">Filter Type</span><span class="status-ok">${f<fc?'✓ Passing (f < fc)':'⚠ Attenuating (f > fc)'}</span></div>`;
+  document.getElementById('lp-bode').style.display='block';
+  setTimeout(()=>drawBode('lp-canvas','lp',fc,f),50);
+}
+
+function calcHP(){
+  const R=parseFloat(document.getElementById('hp_r').value)*1e3;
+  const C=parseFloat(document.getElementById('hp_c').value)*1e-9;
+  const f=parseFloat(document.getElementById('hp_f').value)*1e3;
+  const fc=1/(2*Math.PI*R*C);
+  const gain=(f/fc)/Math.sqrt(1+(f/fc)**2);
+  const gainDb=20*Math.log10(Math.max(gain,1e-10));
+  const phase=90-Math.atan(f/fc)*180/Math.PI;
+  const el=document.getElementById('hp-result'); el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Cutoff Frequency fc</span><span class="result-value">${fmtHz(fc)}</span></div>
+    <div class="result-row"><span class="result-label">Gain at ${fmtHz(f)}</span><span class="result-value">${(gain*100).toFixed(2)}<span class="result-unit">%</span></span></div>
+    <div class="result-row"><span class="result-label">Gain (dB)</span><span class="result-value">${gainDb.toFixed(2)}<span class="result-unit">dB</span></span></div>
+    <div class="result-row"><span class="result-label">Phase Shift</span><span class="result-value">+${phase.toFixed(2)}<span class="result-unit">°</span></span></div>
+    <div class="result-row"><span class="result-label">Time Constant τ</span><span class="result-value">${(R*C*1e6).toFixed(3)}<span class="result-unit">μs</span></span></div>
+    <div class="result-row"><span class="result-label">Filter Status</span><span class="status-ok">${f>fc?'✓ Passing (f > fc)':'⚠ Attenuating (f < fc)'}</span></div>`;
+  document.getElementById('hp-bode').style.display='block';
+  setTimeout(()=>drawBode('hp-canvas','hp',fc,f),50);
+}
+
+function calcLC(){
+  const L=parseFloat(document.getElementById('lc_l').value)*1e-3;
+  const C=parseFloat(document.getElementById('lc_c').value)*1e-9;
+  const R=parseFloat(document.getElementById('lc_r').value);
+  const fr=1/(2*Math.PI*Math.sqrt(L*C));
+  const Xl=2*Math.PI*fr*L;
+  const Q=Xl/R;
+  const BW=fr/Q;
+  const fl=fr-BW/2, fh=fr+BW/2;
+  const Z0=L/(R*C);
+  const el=document.getElementById('lc-result'); el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Resonant Frequency fr</span><span class="result-value">${fmtHz(fr)}</span></div>
+    <div class="result-row"><span class="result-label">Quality Factor Q</span><span class="result-value">${Q.toFixed(2)}</span></div>
+    <div class="result-row"><span class="result-label">-3dB Bandwidth</span><span class="result-value">${fmtHz(BW)}</span></div>
+    <div class="result-row"><span class="result-label">Lower -3dB Freq</span><span class="result-value">${fmtHz(fl)}</span></div>
+    <div class="result-row"><span class="result-label">Upper -3dB Freq</span><span class="result-value">${fmtHz(fh)}</span></div>
+    <div class="result-row"><span class="result-label">Inductive Reactance XL</span><span class="result-value">${fmtOhm(Xl)}</span></div>
+    <div class="result-row"><span class="result-label">Characteristic Impedance</span><span class="result-value">${fmtOhm(Math.sqrt(L/C))}</span></div>
+    <div class="result-row"><span class="result-label">Selectivity</span><span class="${Q>10?'status-ok':''}">Q=${Q.toFixed(1)} — ${Q>10?'High selectivity':Q>3?'Moderate':'Low selectivity'}</span></div>`;
+}
+
+function calcRLC(){
+  const R=parseFloat(document.getElementById('rlc_r').value);
+  const L=parseFloat(document.getElementById('rlc_l').value)*1e-3;
+  const C=parseFloat(document.getElementById('rlc_c').value)*1e-6;
+  const Vs=parseFloat(document.getElementById('rlc_vs').value);
+  const f=parseFloat(document.getElementById('rlc_f').value);
+  const XL=2*Math.PI*f*L;
+  const XC=1/(2*Math.PI*f*C);
+  const Xnet=XL-XC;
+  const Z=Math.sqrt(R**2+Xnet**2);
+  const I=Vs/Z;
+  const pf=R/Z;
+  const phaseAngle=Math.atan2(Xnet,R)*180/Math.PI;
+  const fr=1/(2*Math.PI*Math.sqrt(L*C));
+  const VR=I*R, VL=I*XL, VC=I*XC;
+  const P=I**2*R, S=Vs*I, Q_pwr=I**2*Math.abs(Xnet);
+  const el=document.getElementById('rlc-result'); el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Inductive Reactance XL</span><span class="result-value">${fmtOhm(XL)}</span></div>
+    <div class="result-row"><span class="result-label">Capacitive Reactance XC</span><span class="result-value">${fmtOhm(XC)}</span></div>
+    <div class="result-row"><span class="result-label">Net Reactance X</span><span class="result-value">${fmtOhm(Math.abs(Xnet))}<span class="result-unit">${Xnet>0?'(inductive)':'(capacitive)'}</span></span></div>
+    <div class="result-row"><span class="result-label">Total Impedance Z</span><span class="result-value">${fmtOhm(Z)}</span></div>
+    <div class="result-row"><span class="result-label">Current I</span><span class="result-value">${(I*1000).toFixed(2)}<span class="result-unit">mA</span></span></div>
+    <div class="result-row"><span class="result-label">Phase Angle</span><span class="result-value">${phaseAngle.toFixed(2)}<span class="result-unit">°</span></span></div>
+    <div class="result-row"><span class="result-label">Power Factor</span><span class="result-value">${pf.toFixed(4)}</span></div>
+    <div class="result-row"><span class="result-label">Active Power P</span><span class="result-value">${P.toFixed(4)}<span class="result-unit">W</span></span></div>
+    <div class="result-row"><span class="result-label">Apparent Power S</span><span class="result-value">${S.toFixed(4)}<span class="result-unit">VA</span></span></div>
+    <div class="result-row"><span class="result-label">Resonant Frequency</span><span class="result-value">${fmtHz(fr)}</span></div>`;
+}
+</script>
+</body>
+</html>

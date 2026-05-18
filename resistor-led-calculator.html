@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resistor & LED Calculator – TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--white:#fff;--off:#faf9f7;--border:#e8e2d9;--p:#7c3aed;--p2:#8b5cf6;--p3:#a78bfa;--p4:rgba(124,58,237,0.08);--p5:rgba(124,58,237,0.15);--text:#0f0e0c;--text2:#5a5650;--text3:#9e9890;--green:#1a9952;--shadow:0 2px 12px rgba(15,14,12,0.06);--shadow-lg:0 8px 40px rgba(15,14,12,0.10);--font-d:'Clash Display',sans-serif;--font-b:'Sora',sans-serif;--font-m:'JetBrains Mono',monospace;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:15px;}
+body{background:#f5f3ff;color:var(--text);font-family:var(--font-b);line-height:1.7;}
+nav{position:sticky;top:0;z-index:100;height:64px;background:rgba(245,243,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid #ddd6fe;display:flex;align-items:center;padding:0 28px;gap:16px;}
+.logo{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}
+.logo em{color:var(--p);font-style:normal;}
+.back-btn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--p);text-decoration:none;background:var(--p4);border:1px solid rgba(124,58,237,0.2);padding:6px 14px;border-radius:8px;transition:all .18s;}
+.back-btn:hover{background:var(--p5);}
+.hero{background:linear-gradient(135deg,#7c3aed 0%,#8b5cf6 50%,#a78bfa 100%);color:#fff;padding:48px 28px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px);background-size:28px 28px;}
+.hero-inner{position:relative;z-index:1;}
+.hero-icon{font-size:48px;margin-bottom:12px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(24px,5vw,42px);font-weight:700;letter-spacing:-0.03em;margin-bottom:8px;}
+.hero p{font-size:15px;opacity:0.85;max-width:500px;margin:0 auto;}
+.tabs{display:flex;gap:0;background:rgba(255,255,255,0.15);border-radius:12px;padding:4px;margin:24px auto 0;max-width:480px;backdrop-filter:blur(10px);}
+.tab{flex:1;padding:8px 12px;border-radius:9px;font-family:var(--font-b);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.7);background:transparent;}
+.tab.active{background:#fff;color:var(--p);}
+.main{max-width:900px;margin:0 auto;padding:32px 20px;}
+.card{background:#fff;border:1px solid #ddd6fe;border-radius:20px;padding:28px;margin-bottom:20px;box-shadow:var(--shadow);}
+.card-title{font-family:var(--font-d);font-size:18px;font-weight:600;color:var(--p);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-family:var(--font-m);font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
+.field input,.field select{padding:10px 14px;border:1.5px solid #ddd6fe;border-radius:10px;font-family:var(--font-b);font-size:14px;color:var(--text);background:#faf8ff;transition:border-color .18s;outline:none;}
+.field input:focus,.field select:focus{border-color:var(--p);}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;margin-top:8px;transition:all .18s;letter-spacing:0.02em;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,58,237,0.35);}
+.result-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:14px;padding:20px;margin-top:16px;}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(124,58,237,0.12);}
+.result-row:last-child{border-bottom:none;}
+.result-label{font-family:var(--font-m);font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;}
+.result-value{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--p);}
+.result-unit{font-family:var(--font-m);font-size:11px;color:var(--text3);margin-left:4px;}
+.status-ok{color:var(--green);font-weight:700;font-family:var(--font-m);font-size:12px;}
+.status-warn{color:#d97706;font-weight:700;font-family:var(--font-m);font-size:12px;}
+.status-err{color:#dc2626;font-weight:700;font-family:var(--font-m);font-size:12px;}
+/* Colour code section */
+.color-bands{display:flex;gap:6px;align-items:center;margin:16px 0;}
+.band{width:36px;height:70px;border-radius:6px;border:1.5px solid rgba(0,0,0,0.15);cursor:pointer;position:relative;}
+.band-label{font-family:var(--font-m);font-size:9px;text-align:center;color:var(--text3);margin-top:4px;}
+.resistor-body{flex:1;height:20px;background:linear-gradient(90deg,#d4c5a9,#e8dcc8,#d4c5a9);border-radius:4px;border:1px solid #c4b5a0;position:relative;display:flex;align-items:center;justify-content:center;}
+.resistor-leads{display:flex;align-items:center;gap:0;width:100%;}
+.lead{width:24px;height:3px;background:#aaa;border-radius:2px;}
+.cc-result{font-family:var(--font-d);font-size:26px;font-weight:700;color:var(--p);text-align:center;margin-top:8px;}
+.formula-box{background:#faf8ff;border:1px solid #e4d9ff;border-radius:10px;padding:14px 16px;font-family:var(--font-m);font-size:13px;color:var(--text2);margin-top:12px;line-height:1.8;}
+.formula-box strong{color:var(--p);}
+.tag{display:inline-block;font-family:var(--font-m);font-size:9px;font-weight:700;padding:2px 10px;border-radius:20px;background:var(--p4);color:var(--p);border:1px solid rgba(124,58,237,0.2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
+.info-note{font-size:12.5px;color:var(--text3);line-height:1.6;margin-top:8px;font-style:italic;}
+footer{text-align:center;padding:32px 20px;font-size:12px;color:var(--text3);border-top:1px solid #ddd6fe;margin-top:20px;}
+footer a{color:var(--p);text-decoration:none;}
+@media(max-width:600px){.grid-2,.grid-3{grid-template-columns:1fr;}.hero{padding:32px 16px 28px;}.main{padding:20px 12px;}.card{padding:20px 16px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Task<em>Junction</em></a>
+  <a href="index.html#electronics" class="back-btn">← Electronics</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-icon">🔴</div>
+    <h1>Resistor & LED Calculator</h1>
+    <p>Current-limiting resistors for LEDs, resistor colour code decoder, and E-series preferred value finder.</p>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('led')">LED Resistor</button>
+      <button class="tab" onclick="showTab('color')">Colour Code</button>
+      <button class="tab" onclick="showTab('eseries')">E-Series</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- LED RESISTOR TAB -->
+  <div id="tab-led">
+    <div class="card">
+      <div class="card-title">⚡ Single LED Resistor Calculator</div>
+      <div class="grid-2">
+        <div class="field"><label>Supply Voltage Vs (V)</label><input type="number" id="vs" value="5" step="0.1" min="0" placeholder="e.g. 5"></div>
+        <div class="field"><label>LED Forward Voltage Vf (V)</label><input type="number" id="vf" value="2.0" step="0.1" min="0" placeholder="e.g. 2.0"></div>
+        <div class="field"><label>Desired LED Current If (mA)</label><input type="number" id="if_led" value="20" step="1" min="1" placeholder="e.g. 20"></div>
+        <div class="field"><label>LED Colour (preset Vf)</label>
+          <select id="led_color" onchange="presetVf()">
+            <option value="">Custom</option>
+            <option value="1.8">Red (1.8 V)</option>
+            <option value="2.1">Orange (2.1 V)</option>
+            <option value="2.2">Yellow (2.2 V)</option>
+            <option value="2.1" selected>Green (2.1 V)</option>
+            <option value="3.4">Blue (3.4 V)</option>
+            <option value="3.4">White (3.4 V)</option>
+            <option value="1.9">Infrared (1.9 V)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="calcLED()">Calculate Resistor Value</button>
+      <div class="result-box" id="led-result" style="display:none;"></div>
+      <div class="formula-box" style="margin-top:12px;">
+        <strong>Formula:</strong> R = (Vs − Vf) / If<br>
+        Power in resistor: P = If² × R
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💡 Multi-LED String Calculator</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Calculate resistor for LEDs in series or parallel configurations.</p>
+      <div class="grid-3">
+        <div class="field"><label>Supply Voltage (V)</label><input type="number" id="ms_vs" value="12" step="0.1"></div>
+        <div class="field"><label>LED Forward Voltage (V)</label><input type="number" id="ms_vf" value="2.0" step="0.1"></div>
+        <div class="field"><label>LED Current (mA)</label><input type="number" id="ms_if" value="20" step="1"></div>
+        <div class="field"><label>LEDs in Series</label><input type="number" id="ms_series" value="3" step="1" min="1"></div>
+        <div class="field"><label>Parallel Strings</label><input type="number" id="ms_parallel" value="1" step="1" min="1"></div>
+        <div class="field"><label>Config</label><select id="ms_config"><option value="series">Series</option><option value="parallel">Parallel</option></select></div>
+      </div>
+      <button class="btn" onclick="calcMultiLED()">Calculate Multi-LED</button>
+      <div class="result-box" id="multi-result" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- COLOUR CODE TAB -->
+  <div id="tab-color" style="display:none;">
+    <div class="card">
+      <div class="card-title">🎨 Resistor Colour Code Decoder</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Select the colour for each band to decode the resistor value.</p>
+      <div class="field" style="margin-bottom:16px;"><label>Bands</label>
+        <select id="band_count" onchange="updateBands()">
+          <option value="4">4-Band</option>
+          <option value="5">5-Band</option>
+          <option value="6">6-Band</option>
+        </select>
+      </div>
+      <div id="band-selects" class="grid-3"></div>
+      <button class="btn" onclick="decodeColor()">Decode Resistor</button>
+      <div class="result-box" id="color-result" style="display:none;"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔄 Value to Colour Code</div>
+      <div class="grid-2">
+        <div class="field"><label>Resistance Value (Ω)</label><input type="number" id="val2cc" value="4700" placeholder="e.g. 4700"></div>
+        <div class="field"><label>Tolerance</label><select id="tol2cc">
+          <option value="±1%">±1% (Brown)</option><option value="±2%">±2% (Red)</option>
+          <option value="±5%" selected>±5% (Gold)</option><option value="±10%">±10% (Silver)</option>
+        </select></div>
+      </div>
+      <button class="btn" onclick="encodeColor()">Get Colour Code</button>
+      <div class="result-box" id="encode-result" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- E-SERIES TAB -->
+  <div id="tab-eseries" style="display:none;">
+    <div class="card">
+      <div class="card-title">📊 E-Series Preferred Value Finder</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Find the nearest standard resistor value from your calculated resistance.</p>
+      <div class="grid-2">
+        <div class="field"><label>Calculated Resistance (Ω)</label><input type="number" id="es_val" value="1234" placeholder="e.g. 1234"></div>
+        <div class="field"><label>E-Series</label><select id="es_series">
+          <option value="6">E6 (20% tol)</option>
+          <option value="12">E12 (10% tol)</option>
+          <option value="24" selected>E24 (5% tol)</option>
+          <option value="48">E48 (2% tol)</option>
+          <option value="96">E96 (1% tol)</option>
+        </select></div>
+      </div>
+      <button class="btn" onclick="findESeries()">Find Preferred Value</button>
+      <div class="result-box" id="eseries-result" style="display:none;"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="index.html">← Back to TaskJunction</a> &nbsp;·&nbsp; © 2025 TaskJunction by Vaibhav Dhokpande
+</footer>
+
+<script>
+// Tab control
+function showTab(t) {
+  ['led','color','eseries'].forEach(id => {
+    document.getElementById('tab-'+id).style.display = id===t?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((el,i) => {
+    el.classList.toggle('active', ['led','color','eseries'][i]===t);
+  });
+  if(t==='color') updateBands();
+}
+
+// LED Preset
+function presetVf() {
+  const v = document.getElementById('led_color').value;
+  if(v) document.getElementById('vf').value = v;
+}
+
+// E-series values
+const E_SERIES = {
+  6:[1.0,1.5,2.2,3.3,4.7,6.8],
+  12:[1.0,1.2,1.5,1.8,2.2,2.7,3.3,3.9,4.7,5.6,6.8,8.2],
+  24:[1.0,1.1,1.2,1.3,1.5,1.6,1.8,2.0,2.2,2.4,2.7,3.0,3.3,3.6,3.9,4.3,4.7,5.1,5.6,6.2,6.8,7.5,8.2,9.1],
+  48:[1.00,1.05,1.10,1.15,1.21,1.27,1.33,1.40,1.47,1.54,1.62,1.69,1.78,1.87,1.96,2.05,2.15,2.26,2.37,2.49,2.61,2.74,2.87,3.01,3.16,3.32,3.48,3.65,3.83,4.02,4.22,4.42,4.64,4.87,5.11,5.36,5.62,5.90,6.19,6.49,6.81,7.15,7.50,7.87,8.25,8.66,9.09,9.53],
+  96:[1.00,1.02,1.05,1.07,1.10,1.13,1.15,1.18,1.21,1.24,1.27,1.30,1.33,1.37,1.40,1.43,1.47,1.50,1.54,1.58,1.62,1.65,1.69,1.74,1.78,1.82,1.87,1.91,1.96,2.00,2.05,2.10,2.15,2.21,2.26,2.32,2.37,2.43,2.49,2.55,2.61,2.67,2.74,2.80,2.87,2.94,3.01,3.09,3.16,3.24,3.32,3.40,3.48,3.57,3.65,3.74,3.83,3.92,4.02,4.12,4.22,4.32,4.42,4.53,4.64,4.75,4.87,4.99,5.11,5.23,5.36,5.49,5.62,5.76,5.90,6.04,6.19,6.34,6.49,6.65,6.81,6.98,7.15,7.32,7.50,7.68,7.87,8.06,8.25,8.45,8.66,8.87,9.09,9.31,9.53,9.76]
+};
+
+function formatR(r) {
+  if(r>=1e6) return (r/1e6).toFixed(r%1e6===0?0:2)+' MΩ';
+  if(r>=1e3) return (r/1e3).toFixed(r%1e3===0?0:2)+' kΩ';
+  return r.toFixed(r<10?2:r<100?1:0)+' Ω';
+}
+
+function nearestE(val, series) {
+  const s = E_SERIES[series];
+  const exp = Math.floor(Math.log10(val));
+  const mant = val / Math.pow(10, exp);
+  let best = s[0], bestDiff = Math.abs(mant - s[0]);
+  s.forEach(v => { const d = Math.abs(mant - v); if(d < bestDiff){bestDiff=d;best=v;} });
+  return best * Math.pow(10, exp);
+}
+
+// Single LED calc
+function calcLED() {
+  const vs = parseFloat(document.getElementById('vs').value)||0;
+  const vf = parseFloat(document.getElementById('vf').value)||0;
+  const iF = (parseFloat(document.getElementById('if_led').value)||20)/1000;
+  const vR = vs - vf;
+  const R = vR / iF;
+  const P = iF * iF * R * 1000;
+  const Rstandard = nearestE(R, 24);
+  const status = R <= 0 ? 'err' : R < 10 ? 'warn' : 'ok';
+  const el = document.getElementById('led-result');
+  el.style.display = 'block';
+  if(R <= 0){el.innerHTML='<div class="status-err">⚠ Supply voltage must exceed LED forward voltage!</div>';return;}
+  el.innerHTML = `
+    <div class="result-row"><span class="result-label">Resistor Required</span><span class="result-value">${formatR(R)}</span></div>
+    <div class="result-row"><span class="result-label">Nearest E24 Standard</span><span class="result-value">${formatR(Rstandard)}</span></div>
+    <div class="result-row"><span class="result-label">Voltage Across Resistor</span><span class="result-value">${vR.toFixed(2)}<span class="result-unit">V</span></span></div>
+    <div class="result-row"><span class="result-label">Power Dissipation</span><span class="result-value">${P.toFixed(2)}<span class="result-unit">mW</span></span></div>
+    <div class="result-row"><span class="result-label">Min. Resistor Rating</span><span class="result-value">${P < 125 ? '1/8W (0.125W)' : P < 250 ? '1/4W (0.25W)' : '1/2W (0.5W)'}</span></div>
+    <div class="result-row"><span class="result-label">Status</span><span class="${status==='ok'?'status-ok':'status-warn'}">${status==='ok'?'✓ Good Design':'⚠ Check Values'}</span></div>`;
+}
+
+// Multi LED
+function calcMultiLED() {
+  const vs = parseFloat(document.getElementById('ms_vs').value)||0;
+  const vf = parseFloat(document.getElementById('ms_vf').value)||0;
+  const iF = (parseFloat(document.getElementById('ms_if').value)||20)/1000;
+  const n = parseInt(document.getElementById('ms_series').value)||1;
+  const p = parseInt(document.getElementById('ms_parallel').value)||1;
+  const totalVf = vf * n;
+  const totalI = iF * p;
+  const vR = vs - totalVf;
+  const R = vR / totalI;
+  const P = totalI * totalI * R * 1000;
+  const el = document.getElementById('multi-result');
+  el.style.display = 'block';
+  if(vR <= 0){el.innerHTML='<div class="status-err">⚠ Supply voltage too low for this LED configuration!</div>';return;}
+  el.innerHTML = `
+    <div class="result-row"><span class="result-label">Total LEDs</span><span class="result-value">${n*p}</span></div>
+    <div class="result-row"><span class="result-label">Total Forward Voltage Drop</span><span class="result-value">${totalVf.toFixed(2)}<span class="result-unit">V</span></span></div>
+    <div class="result-row"><span class="result-label">Total Current Draw</span><span class="result-value">${(totalI*1000).toFixed(1)}<span class="result-unit">mA</span></span></div>
+    <div class="result-row"><span class="result-label">Required Resistor</span><span class="result-value">${formatR(R)}</span></div>
+    <div class="result-row"><span class="result-label">Nearest E24 Value</span><span class="result-value">${formatR(nearestE(R,24))}</span></div>
+    <div class="result-row"><span class="result-label">Power in Resistor</span><span class="result-value">${P.toFixed(2)}<span class="result-unit">mW</span></span></div>`;
+}
+
+// Colour code
+const COLORS = [
+  {name:'Black',bg:'#1a1a1a',text:'#fff',val:0,mult:1,tol:null,tc:250},
+  {name:'Brown',bg:'#7B4B2A',text:'#fff',val:1,mult:10,tol:'±1%',tc:100},
+  {name:'Red',bg:'#CC0000',text:'#fff',val:2,mult:100,tol:'±2%',tc:50},
+  {name:'Orange',bg:'#FF8C00',text:'#fff',val:3,mult:1000,tol:null,tc:15},
+  {name:'Yellow',bg:'#FFD700',text:'#000',val:4,mult:10000,tol:null,tc:25},
+  {name:'Green',bg:'#2E8B57',text:'#fff',val:5,mult:100000,tol:'±0.5%',tc:20},
+  {name:'Blue',bg:'#0047AB',text:'#fff',val:6,mult:1000000,tol:'±0.25%',tc:10},
+  {name:'Violet',bg:'#7F00FF',text:'#fff',val:7,mult:10000000,tol:'±0.1%',tc:5},
+  {name:'Grey',bg:'#808080',text:'#fff',val:8,mult:100000000,tol:'±0.05%',tc:1},
+  {name:'White',bg:'#f8f8f8',text:'#000',val:9,mult:1000000000,tol:null,tc:null},
+  {name:'Gold',bg:'#CFB53B',text:'#000',val:null,mult:0.1,tol:'±5%',tc:null},
+  {name:'Silver',bg:'#A8A9AD',text:'#000',val:null,mult:0.01,tol:'±10%',tc:null},
+];
+
+function updateBands() {
+  const n = parseInt(document.getElementById('band_count').value);
+  const container = document.getElementById('band-selects');
+  const labels = n===4?['Band 1 (digit)','Band 2 (digit)','Multiplier','Tolerance']:
+                 n===5?['Band 1','Band 2','Band 3','Multiplier','Tolerance']:
+                       ['Band 1','Band 2','Band 3','Multiplier','Tolerance','Temp Coeff'];
+  container.innerHTML = '';
+  container.style.gridTemplateColumns = n===6?'1fr 1fr 1fr':'1fr 1fr '+( n===4?'1fr 1fr':'1fr 1fr 1fr');
+  labels.forEach((l,i) => {
+    const isDigit = (n===4 && i<2)||(n>=5 && i<3);
+    const isMult = (n===4 && i===2)||(n>=5 && i===3);
+    const isTol = (n===4 && i===3)||(n>=5 && i===4);
+    const isTC = n===6 && i===5;
+    const div = document.createElement('div'); div.className='field';
+    const sel = document.createElement('select'); sel.id='band_'+i; sel.style.background='#faf8ff';
+    COLORS.forEach((c,ci) => {
+      if(isDigit && c.val===null) return;
+      if(isMult && c.mult===undefined) return;
+      if(isTol && c.tol===null && c.mult===undefined) return;
+      if(isTC && c.tc===null) return;
+      const o = document.createElement('option'); o.value=ci;
+      o.textContent = c.name + (isDigit?' ('+c.val+')':isMult?' (×'+c.mult+')':isTol&&c.tol?' ('+c.tol+')':isTC&&c.tc?' ('+c.tc+' ppm/°C)':'');
+      o.style.background = c.bg; o.style.color = c.text;
+      sel.appendChild(o);
+    });
+    // sensible defaults
+    if(i===0) sel.value=1; // Brown
+    if(i===1) sel.value=0; // Black
+    if(i===2&&n>=5) sel.value=0; // Black
+    if(isMult) sel.value=2; // Red (×100)
+    if(isTol) sel.value=10; // Gold
+    div.innerHTML=`<label>${l}</label>`; div.appendChild(sel); container.appendChild(div);
+  });
+}
+
+function decodeColor() {
+  const n = parseInt(document.getElementById('band_count').value);
+  let digits = 0, mult = 1, tol = '', tc = '';
+  for(let i=0;i<n;i++){
+    const sel = document.getElementById('band_'+i);
+    if(!sel) continue;
+    const c = COLORS[parseInt(sel.value)];
+    const isDigit = (n===4&&i<2)||(n>=5&&i<3);
+    const isMult = (n===4&&i===2)||(n>=5&&i===3);
+    const isTol = (n===4&&i===3)||(n>=5&&i===4);
+    const isTC = n===6&&i===5;
+    if(isDigit) digits = digits*10 + c.val;
+    if(isMult) mult = c.mult;
+    if(isTol) tol = c.tol||'N/A';
+    if(isTC) tc = c.tc ? c.tc+' ppm/°C' : 'N/A';
+  }
+  const R = digits * mult;
+  const el = document.getElementById('color-result');
+  el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Resistance</span><span class="result-value">${formatR(R)}</span></div>
+    <div class="result-row"><span class="result-label">Tolerance</span><span class="result-value">${tol||'N/A'}</span></div>
+    ${tc?`<div class="result-row"><span class="result-label">Temp Coefficient</span><span class="result-value">${tc}</span></div>`:''}
+    <div class="result-row"><span class="result-label">Min Value</span><span class="result-value">${tol?formatR(R*(1-parseFloat(tol)/100)):'N/A'}</span></div>
+    <div class="result-row"><span class="result-label">Max Value</span><span class="result-value">${tol?formatR(R*(1+parseFloat(tol)/100)):'N/A'}</span></div>`;
+}
+
+function encodeColor() {
+  let val = parseFloat(document.getElementById('val2cc').value)||0;
+  const tol = document.getElementById('tol2cc').value;
+  if(val<=0){document.getElementById('encode-result').style.display='block';document.getElementById('encode-result').innerHTML='<div class="status-err">Enter a valid resistance value.</div>';return;}
+  const exp = Math.floor(Math.log10(val))-1;
+  const sig = Math.round(val / Math.pow(10,exp));
+  const d1 = Math.floor(sig/10); const d2 = sig%10;
+  const multVal = Math.pow(10,exp);
+  const findColor = (v,type) => COLORS.find(c => type==='digit'?c.val===v:type==='mult'?c.mult===v:c.tol===v);
+  const c1 = findColor(d1,'digit'); const c2 = findColor(d2,'digit');
+  const cm = COLORS.find(c=>Math.abs(c.mult-multVal)<multVal*0.001);
+  const ct = COLORS.find(c=>c.tol===tol);
+  const el = document.getElementById('encode-result'); el.style.display='block';
+  const bandHtml = (c) => c?`<span style="display:inline-block;padding:3px 12px;border-radius:6px;background:${c.bg};color:${c.text};font-family:var(--font-m);font-size:12px;font-weight:600;">${c.name}</span>`:'<span>?</span>';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Value</span><span class="result-value">${formatR(val)}</span></div>
+    <div class="result-row"><span class="result-label">Band 1</span>${bandHtml(c1)}</div>
+    <div class="result-row"><span class="result-label">Band 2</span>${bandHtml(c2)}</div>
+    <div class="result-row"><span class="result-label">Multiplier</span>${bandHtml(cm)}</div>
+    <div class="result-row"><span class="result-label">Tolerance</span>${bandHtml(ct)}</div>`;
+}
+
+function findESeries() {
+  const val = parseFloat(document.getElementById('es_val').value)||0;
+  const series = parseInt(document.getElementById('es_series').value);
+  if(val<=0){return;}
+  const nearest = nearestE(val, series);
+  const error = ((nearest-val)/val*100);
+  const el = document.getElementById('eseries-result'); el.style.display='block';
+  const s = E_SERIES[series];
+  const exp = Math.floor(Math.log10(val));
+  const mant = val/Math.pow(10,exp);
+  const sorted = s.map(v=>({v,d:Math.abs(v-mant)})).sort((a,b)=>a.d-b.d).slice(0,3);
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Your Value</span><span class="result-value">${formatR(val)}</span></div>
+    <div class="result-row"><span class="result-label">Nearest E${series} Value</span><span class="result-value">${formatR(nearest)}</span></div>
+    <div class="result-row"><span class="result-label">Error</span><span class="result-value">${error.toFixed(2)}<span class="result-unit">%</span></span></div>
+    <div class="result-row"><span class="result-label">Next Closest</span><span class="result-value">${sorted.map(x=>formatR(x.v*Math.pow(10,exp))).join(' / ')}</span></div>
+    <div class="result-row"><span class="result-label">Status</span><span class="${Math.abs(error)<5?'status-ok':'status-warn'}">${Math.abs(error)<2?'✓ Excellent':'✓ Acceptable'}</span></div>`;
+}
+
+// Init
+updateBands();
+</script>
+</body>
+</html>

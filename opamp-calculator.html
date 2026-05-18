@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Op-Amp Circuit Calculator – TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--p:#7c3aed;--p2:#8b5cf6;--p3:#a78bfa;--p4:rgba(124,58,237,0.08);--p5:rgba(124,58,237,0.15);--text:#0f0e0c;--text2:#5a5650;--text3:#9e9890;--green:#1a9952;--shadow:0 2px 12px rgba(15,14,12,0.06);--font-d:'Clash Display',sans-serif;--font-b:'Sora',sans-serif;--font-m:'JetBrains Mono',monospace;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;}body{background:#f5f3ff;color:var(--text);font-family:var(--font-b);line-height:1.7;}
+nav{position:sticky;top:0;z-index:100;height:64px;background:rgba(245,243,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid #ddd6fe;display:flex;align-items:center;padding:0 28px;gap:16px;}
+.logo{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}.logo em{color:var(--p);font-style:normal;}
+.back-btn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--p);text-decoration:none;background:var(--p4);border:1px solid rgba(124,58,237,0.2);padding:6px 14px;border-radius:8px;transition:all .18s;}.back-btn:hover{background:var(--p5);}
+.hero{background:linear-gradient(135deg,#7c3aed 0%,#8b5cf6 50%,#a78bfa 100%);color:#fff;padding:48px 28px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px);background-size:28px 28px;}
+.hero-inner{position:relative;z-index:1;}.hero-icon{font-size:48px;margin-bottom:12px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(24px,5vw,42px);font-weight:700;letter-spacing:-0.03em;margin-bottom:8px;}
+.hero p{font-size:15px;opacity:0.85;max-width:520px;margin:0 auto;}
+.tabs{display:flex;gap:0;background:rgba(255,255,255,0.15);border-radius:12px;padding:4px;margin:24px auto 0;max-width:620px;backdrop-filter:blur(10px);flex-wrap:wrap;gap:2px;}
+.tab{flex:1;min-width:120px;padding:8px 10px;border-radius:9px;font-family:var(--font-b);font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.7);background:transparent;}
+.tab.active{background:#fff;color:var(--p);}
+.main{max-width:920px;margin:0 auto;padding:32px 20px;}
+.card{background:#fff;border:1px solid #ddd6fe;border-radius:20px;padding:28px;margin-bottom:20px;box-shadow:var(--shadow);}
+.card-title{font-family:var(--font-d);font-size:18px;font-weight:600;color:var(--p);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.card-sub{font-size:13px;color:var(--text2);margin-bottom:18px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-family:var(--font-m);font-size:10.5px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
+.field input,.field select{padding:10px 14px;border:1.5px solid #ddd6fe;border-radius:10px;font-family:var(--font-b);font-size:14px;color:var(--text);background:#faf8ff;transition:border-color .18s;outline:none;}
+.field input:focus,.field select:focus{border-color:var(--p);}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;margin-top:10px;transition:all .18s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,58,237,0.35);}
+.result-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:14px;padding:20px;margin-top:16px;}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(124,58,237,0.12);}
+.result-row:last-child{border-bottom:none;}
+.result-label{font-family:var(--font-m);font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;}
+.result-value{font-family:var(--font-d);font-size:19px;font-weight:700;color:var(--p);}
+.result-unit{font-family:var(--font-m);font-size:11px;color:var(--text3);margin-left:3px;}
+.status-ok{color:var(--green);font-weight:700;font-family:var(--font-m);font-size:12px;}
+.status-warn{color:#d97706;font-weight:700;font-family:var(--font-m);font-size:12px;}
+.formula-box{background:#faf8ff;border:1px solid #e4d9ff;border-radius:10px;padding:14px 16px;font-family:var(--font-m);font-size:13px;color:var(--text2);margin-top:12px;line-height:1.9;}
+.formula-box strong{color:var(--p);}
+/* Circuit diagram */
+.circuit-svg{display:block;margin:16px auto;max-width:100%;border-radius:12px;background:#faf8ff;border:1px solid #ddd6fe;padding:12px;}
+.highlight-box{background:rgba(124,58,237,0.06);border-left:3px solid var(--p);padding:12px 16px;border-radius:0 10px 10px 0;margin-top:12px;font-size:13px;color:var(--text2);}
+footer{text-align:center;padding:32px 20px;font-size:12px;color:var(--text3);border-top:1px solid #ddd6fe;margin-top:20px;}
+footer a{color:var(--p);text-decoration:none;}
+@media(max-width:600px){.grid-2,.grid-3{grid-template-columns:1fr;}.main{padding:20px 12px;}.card{padding:18px 14px;}.tabs{max-width:100%;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Task<em>Junction</em></a>
+  <a href="index.html#electronics" class="back-btn">← Electronics</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-icon">📈</div>
+    <h1>Op-Amp Circuit Calculator</h1>
+    <p>Design inverting, non-inverting, summing and difference amplifiers with gain, bandwidth and output swing analysis.</p>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('inv')">Inverting</button>
+      <button class="tab" onclick="showTab('noninv')">Non-Inverting</button>
+      <button class="tab" onclick="showTab('sum')">Summing</button>
+      <button class="tab" onclick="showTab('diff')">Difference</button>
+      <button class="tab" onclick="showTab('specs')">GBW & Slew</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- INVERTING -->
+  <div id="tab-inv">
+    <div class="card">
+      <div class="card-title">➖ Inverting Amplifier</div>
+      <div class="card-sub">Output is inverted (180° phase shift). Gain = −Rf / Rin</div>
+      <div class="grid-2">
+        <div class="field"><label>Input Resistor Rin (kΩ)</label><input type="number" id="inv_rin" value="10" step="0.1" min="0.001"></div>
+        <div class="field"><label>Feedback Resistor Rf (kΩ)</label><input type="number" id="inv_rf" value="47" step="0.1" min="0.001"></div>
+        <div class="field"><label>Input Voltage Vin (V)</label><input type="number" id="inv_vin" value="1" step="0.1"></div>
+        <div class="field"><label>Supply Voltage ±Vs (V)</label><input type="number" id="inv_vs" value="15" step="1" min="1"></div>
+        <div class="field"><label>Op-Amp GBW (MHz)</label><input type="number" id="inv_gbw" value="1" step="0.1" min="0.001"></div>
+        <div class="field"><label>Input Frequency (kHz)</label><input type="number" id="inv_freq" value="1" step="0.1" min="0.001"></div>
+      </div>
+      <button class="btn" onclick="calcInv()">Calculate</button>
+      <div class="result-box" id="inv-result" style="display:none;"></div>
+      <div class="formula-box">
+        <strong>Gain:</strong> Av = −Rf / Rin<br>
+        <strong>Bandwidth:</strong> BW = GBW / |Av|<br>
+        <strong>Input impedance:</strong> Zin = Rin<br>
+        <strong>Vout:</strong> clipped to ±(Vs − 1.5V) typically
+      </div>
+    </div>
+  </div>
+
+  <!-- NON-INVERTING -->
+  <div id="tab-noninv" style="display:none;">
+    <div class="card">
+      <div class="card-title">➕ Non-Inverting Amplifier</div>
+      <div class="card-sub">Output is in phase with input. Gain = 1 + Rf/R1 (minimum gain = 1)</div>
+      <div class="grid-2">
+        <div class="field"><label>R1 / Ground Resistor (kΩ)</label><input type="number" id="ni_r1" value="10" step="0.1" min="0.001"></div>
+        <div class="field"><label>Feedback Resistor Rf (kΩ)</label><input type="number" id="ni_rf" value="47" step="0.1" min="0.001"></div>
+        <div class="field"><label>Input Voltage Vin (V)</label><input type="number" id="ni_vin" value="1" step="0.1"></div>
+        <div class="field"><label>Supply Voltage ±Vs (V)</label><input type="number" id="ni_vs" value="15" step="1" min="1"></div>
+        <div class="field"><label>Op-Amp GBW (MHz)</label><input type="number" id="ni_gbw" value="1" step="0.1"></div>
+        <div class="field"><label>Input Frequency (kHz)</label><input type="number" id="ni_freq" value="1" step="0.1"></div>
+      </div>
+      <button class="btn" onclick="calcNonInv()">Calculate</button>
+      <div class="result-box" id="ni-result" style="display:none;"></div>
+      <div class="formula-box">
+        <strong>Gain:</strong> Av = 1 + Rf / R1<br>
+        <strong>Bandwidth:</strong> BW = GBW / Av<br>
+        <strong>Input impedance:</strong> Very high (ideally infinite)<br>
+        <strong>Unity Gain Buffer:</strong> Short Rf = 0, remove R1 → Av = 1
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMING -->
+  <div id="tab-sum" style="display:none;">
+    <div class="card">
+      <div class="card-title">∑ Summing (Mixer) Amplifier</div>
+      <div class="card-sub">Inverts and sums weighted inputs. Vout = −Rf × (V1/R1 + V2/R2 + V3/R3)</div>
+      <div class="grid-3">
+        <div class="field"><label>Feedback Rf (kΩ)</label><input type="number" id="s_rf" value="10" step="0.1"></div>
+        <div class="field"><label>Supply ±Vs (V)</label><input type="number" id="s_vs" value="15" step="1"></div>
+        <div class="field"><label>Number of Inputs</label><select id="s_n" onchange="updateSumInputs()"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select></div>
+      </div>
+      <div id="sum-inputs" class="grid-3" style="margin-top:14px;"></div>
+      <button class="btn" onclick="calcSum()">Calculate Output</button>
+      <div class="result-box" id="sum-result" style="display:none;"></div>
+      <div class="formula-box">
+        <strong>Vout = −Rf × (V1/R1 + V2/R2 + … + Vn/Rn)</strong><br>
+        For equal weights: all Rin = Rf → Vout = −(V1+V2+…+Vn)
+      </div>
+    </div>
+  </div>
+
+  <!-- DIFFERENCE -->
+  <div id="tab-diff" style="display:none;">
+    <div class="card">
+      <div class="card-title">△ Difference Amplifier</div>
+      <div class="card-sub">Amplifies the difference between two signals. Vout = (Rf/R1)(V2 − V1)</div>
+      <div class="grid-2">
+        <div class="field"><label>R1 = R3 (kΩ)</label><input type="number" id="d_r1" value="10" step="0.1"></div>
+        <div class="field"><label>R2 = Rf (kΩ)</label><input type="number" id="d_rf" value="47" step="0.1"></div>
+        <div class="field"><label>V1 Inverting Input (V)</label><input type="number" id="d_v1" value="2" step="0.1"></div>
+        <div class="field"><label>V2 Non-Inverting (V)</label><input type="number" id="d_v2" value="5" step="0.1"></div>
+        <div class="field"><label>Supply ±Vs (V)</label><input type="number" id="d_vs" value="15" step="1"></div>
+        <div class="field"><label>CMRR (dB)</label><input type="number" id="d_cmrr" value="80" step="1"></div>
+      </div>
+      <button class="btn" onclick="calcDiff()">Calculate</button>
+      <div class="result-box" id="diff-result" style="display:none;"></div>
+      <div class="formula-box">
+        <strong>Gain:</strong> Av = R2 / R1 (when R1=R3, R2=Rf)<br>
+        <strong>Vout = (Rf/R1) × (V2 − V1)</strong><br>
+        <strong>CMRR:</strong> Common Mode Rejection Ratio in dB
+      </div>
+    </div>
+  </div>
+
+  <!-- GBW & SLEW -->
+  <div id="tab-specs" style="display:none;">
+    <div class="card">
+      <div class="card-title">📊 Gain-Bandwidth & Slew Rate Analysis</div>
+      <div class="card-sub">Determine operating limits for your op-amp configuration.</div>
+      <div class="grid-2">
+        <div class="field"><label>Op-Amp Model</label><select id="spec_model" onchange="presetSpecs()">
+          <option value="">Custom</option>
+          <option value="1,0.5">LM741 (GBW=1MHz, SR=0.5V/μs)</option>
+          <option value="1,0.6">LM358 (GBW=1MHz, SR=0.6V/μs)</option>
+          <option value="3,13">TL071 (GBW=3MHz, SR=13V/μs)</option>
+          <option value="1,0.5">LM324 (GBW=1MHz, SR=0.5V/μs)</option>
+          <option value="8,7">NE5532 (GBW=8MHz, SR=7V/μs)</option>
+          <option value="10,30">LM318 (GBW=10MHz, SR=30V/μs)</option>
+          <option value="100,40">LF356 (GBW=100MHz, SR=40V/μs)</option>
+          <option value="300,1200">AD8099 (GBW=300MHz, SR=1200V/μs)</option>
+        </select></div>
+        <div class="field"><label>Closed Loop Gain |Av|</label><input type="number" id="spec_gain" value="10" step="1"></div>
+        <div class="field"><label>GBW Product (MHz)</label><input type="number" id="spec_gbw" value="1" step="0.1"></div>
+        <div class="field"><label>Slew Rate (V/μs)</label><input type="number" id="spec_sr" value="0.5" step="0.1"></div>
+        <div class="field"><label>Output Swing Vp (V)</label><input type="number" id="spec_vp" value="10" step="0.5"></div>
+        <div class="field"><label>Input Frequency (kHz)</label><input type="number" id="spec_freq" value="10" step="1"></div>
+      </div>
+      <button class="btn" onclick="calcSpecs()">Analyse Op-Amp</button>
+      <div class="result-box" id="specs-result" style="display:none;"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="index.html">← Back to TaskJunction</a> &nbsp;·&nbsp; © 2025 TaskJunction by Vaibhav Dhokpande
+</footer>
+
+<script>
+function showTab(t) {
+  ['inv','noninv','sum','diff','specs'].forEach(id => {
+    document.getElementById('tab-'+id).style.display = id===t?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((el,i) => {
+    el.classList.toggle('active', ['inv','noninv','sum','diff','specs'][i]===t);
+  });
+  if(t==='sum') updateSumInputs();
+}
+
+function fmtV(v){ return (Math.abs(v)<0.001)?v.toExponential(3)+'V':v.toFixed(3)+' V'; }
+function fmtHz(f){ return f>=1e6?(f/1e6).toFixed(2)+' MHz':f>=1e3?(f/1e3).toFixed(2)+' kHz':f.toFixed(1)+' Hz'; }
+function clipCheck(vout, vs){ const rail = vs-1.5; return Math.abs(vout)>rail?`⚠ Output clips at ±${rail.toFixed(1)}V`:'✓ Output within range'; }
+
+function calcInv() {
+  const rin=parseFloat(document.getElementById('inv_rin').value)*1e3;
+  const rf=parseFloat(document.getElementById('inv_rf').value)*1e3;
+  const vin=parseFloat(document.getElementById('inv_vin').value);
+  const vs=parseFloat(document.getElementById('inv_vs').value);
+  const gbw=parseFloat(document.getElementById('inv_gbw').value)*1e6;
+  const freq=parseFloat(document.getElementById('inv_freq').value)*1e3;
+  const gain = -rf/rin;
+  const bw = gbw/Math.abs(gain);
+  const vout = gain*vin;
+  const el=document.getElementById('inv-result'); el.style.display='block';
+  const ok = freq<bw;
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Voltage Gain Av</span><span class="result-value">${gain.toFixed(2)}×</span></div>
+    <div class="result-row"><span class="result-label">Gain (dB)</span><span class="result-value">${(20*Math.log10(Math.abs(gain))).toFixed(1)}<span class="result-unit">dB</span></span></div>
+    <div class="result-row"><span class="result-label">Output Voltage</span><span class="result-value">${fmtV(vout)}</span></div>
+    <div class="result-row"><span class="result-label">-3dB Bandwidth</span><span class="result-value">${fmtHz(bw)}</span></div>
+    <div class="result-row"><span class="result-label">Input Impedance</span><span class="result-value">${(rin/1e3).toFixed(1)}<span class="result-unit">kΩ</span></span></div>
+    <div class="result-row"><span class="result-label">Clipping Check</span><span class="${Math.abs(vout)<vs-1.5?'status-ok':'status-warn'}">${clipCheck(vout,vs)}</span></div>
+    <div class="result-row"><span class="result-label">Freq vs BW</span><span class="${ok?'status-ok':'status-warn'}">${ok?'✓ f < BW: OK':'⚠ f exceeds BW — gain rolls off'}</span></div>`;
+}
+
+function calcNonInv() {
+  const r1=parseFloat(document.getElementById('ni_r1').value)*1e3;
+  const rf=parseFloat(document.getElementById('ni_rf').value)*1e3;
+  const vin=parseFloat(document.getElementById('ni_vin').value);
+  const vs=parseFloat(document.getElementById('ni_vs').value);
+  const gbw=parseFloat(document.getElementById('ni_gbw').value)*1e6;
+  const freq=parseFloat(document.getElementById('ni_freq').value)*1e3;
+  const gain = 1+rf/r1;
+  const bw = gbw/gain;
+  const vout = gain*vin;
+  const el=document.getElementById('ni-result'); el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Voltage Gain Av</span><span class="result-value">+${gain.toFixed(2)}×</span></div>
+    <div class="result-row"><span class="result-label">Gain (dB)</span><span class="result-value">${(20*Math.log10(gain)).toFixed(1)}<span class="result-unit">dB</span></span></div>
+    <div class="result-row"><span class="result-label">Output Voltage</span><span class="result-value">${fmtV(vout)}</span></div>
+    <div class="result-row"><span class="result-label">-3dB Bandwidth</span><span class="result-value">${fmtHz(bw)}</span></div>
+    <div class="result-row"><span class="result-label">Phase</span><span class="result-value">0° (In Phase)</span></div>
+    <div class="result-row"><span class="result-label">Clipping Check</span><span class="${Math.abs(vout)<vs-1.5?'status-ok':'status-warn'}">${clipCheck(vout,vs)}</span></div>
+    <div class="result-row"><span class="result-label">Freq vs BW</span><span class="${freq<bw?'status-ok':'status-warn'}">${freq<bw?'✓ Within bandwidth':'⚠ Exceeds bandwidth'}</span></div>`;
+}
+
+function updateSumInputs() {
+  const n=parseInt(document.getElementById('s_n').value);
+  const c=document.getElementById('sum-inputs'); c.innerHTML='';
+  c.style.gridTemplateColumns = n<=3?'1fr 1fr 1fr':'1fr 1fr';
+  for(let i=1;i<=n;i++){
+    const d1=document.createElement('div'); d1.className='field';
+    d1.innerHTML=`<label>V${i} Input (V)</label><input type="number" id="sv${i}" value="${i}" step="0.1">`;
+    const d2=document.createElement('div'); d2.className='field';
+    d2.innerHTML=`<label>R${i} Input (kΩ)</label><input type="number" id="sr${i}" value="10" step="0.1" min="0.001">`;
+    c.appendChild(d1); c.appendChild(d2);
+  }
+}
+
+function calcSum() {
+  const n=parseInt(document.getElementById('s_n').value);
+  const rf=parseFloat(document.getElementById('s_rf').value)*1e3;
+  const vs=parseFloat(document.getElementById('s_vs').value);
+  let sum=0, detail='';
+  for(let i=1;i<=n;i++){
+    const v=parseFloat(document.getElementById('sv'+i).value)||0;
+    const r=parseFloat(document.getElementById('sr'+i).value)*1e3||10000;
+    sum += v/r;
+    detail += `V${i}/${(r/1e3).toFixed(0)}kΩ = ${(v/r*1000).toFixed(3)} mA  `;
+  }
+  const vout = -rf*sum;
+  const el=document.getElementById('sum-result'); el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Output Voltage Vout</span><span class="result-value">${fmtV(vout)}</span></div>
+    <div class="result-row"><span class="result-label">Total Input Current</span><span class="result-value">${(sum*1000).toFixed(4)}<span class="result-unit">mA</span></span></div>
+    <div class="result-row"><span class="result-label">Feedback Resistor</span><span class="result-value">${(rf/1e3).toFixed(1)}<span class="result-unit">kΩ</span></span></div>
+    <div class="result-row"><span class="result-label">Clipping Check</span><span class="${Math.abs(vout)<vs-1.5?'status-ok':'status-warn'}">${clipCheck(vout,vs)}</span></div>`;
+}
+
+function calcDiff() {
+  const r1=parseFloat(document.getElementById('d_r1').value)*1e3;
+  const rf=parseFloat(document.getElementById('d_rf').value)*1e3;
+  const v1=parseFloat(document.getElementById('d_v1').value);
+  const v2=parseFloat(document.getElementById('d_v2').value);
+  const vs=parseFloat(document.getElementById('d_vs').value);
+  const cmrr_db=parseFloat(document.getElementById('d_cmrr').value);
+  const gain=rf/r1;
+  const vdiff=v2-v1;
+  const vcm=(v1+v2)/2;
+  const vout=gain*vdiff;
+  const cmrr_lin=Math.pow(10,cmrr_db/20);
+  const vcm_err=vcm/cmrr_lin;
+  const el=document.getElementById('diff-result'); el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Differential Gain</span><span class="result-value">${gain.toFixed(2)}×</span></div>
+    <div class="result-row"><span class="result-label">Differential Input (V2−V1)</span><span class="result-value">${vdiff.toFixed(3)}<span class="result-unit">V</span></span></div>
+    <div class="result-row"><span class="result-label">Common Mode Input</span><span class="result-value">${vcm.toFixed(3)}<span class="result-unit">V</span></span></div>
+    <div class="result-row"><span class="result-label">Output Voltage Vout</span><span class="result-value">${fmtV(vout)}</span></div>
+    <div class="result-row"><span class="result-label">CM Error Voltage</span><span class="result-value">${(vcm_err*1000).toFixed(3)}<span class="result-unit">mV</span></span></div>
+    <div class="result-row"><span class="result-label">CMRR</span><span class="result-value">${cmrr_db.toFixed(0)}<span class="result-unit">dB</span></span></div>
+    <div class="result-row"><span class="result-label">Clipping Check</span><span class="${Math.abs(vout)<vs-1.5?'status-ok':'status-warn'}">${clipCheck(vout,vs)}</span></div>`;
+}
+
+function presetSpecs() {
+  const v=document.getElementById('spec_model').value;
+  if(!v) return;
+  const [gbw,sr]=v.split(',');
+  document.getElementById('spec_gbw').value=gbw;
+  document.getElementById('spec_sr').value=sr;
+}
+
+function calcSpecs() {
+  const gain=parseFloat(document.getElementById('spec_gain').value)||1;
+  const gbw=parseFloat(document.getElementById('spec_gbw').value)*1e6;
+  const sr=parseFloat(document.getElementById('spec_sr').value)*1e6;
+  const vp=parseFloat(document.getElementById('spec_vp').value);
+  const freq=parseFloat(document.getElementById('spec_freq').value)*1e3;
+  const bw = gbw/gain;
+  const fsr = sr/(2*Math.PI*vp);
+  const el=document.getElementById('specs-result'); el.style.display='block';
+  const bwOk = freq<bw;
+  const srOk = freq<fsr;
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">Closed-Loop -3dB BW</span><span class="result-value">${fmtHz(bw)}</span></div>
+    <div class="result-row"><span class="result-label">Slew Rate Limit Freq</span><span class="result-value">${fmtHz(fsr)}</span></div>
+    <div class="result-row"><span class="result-label">Input Frequency</span><span class="result-value">${fmtHz(freq)}</span></div>
+    <div class="result-row"><span class="result-label">Bandwidth Check</span><span class="${bwOk?'status-ok':'status-warn'}">${bwOk?'✓ Within bandwidth':'⚠ Exceeds -3dB bandwidth'}</span></div>
+    <div class="result-row"><span class="result-label">Slew Rate Check</span><span class="${srOk?'status-ok':'status-warn'}">${srOk?'✓ No slew distortion':'⚠ Slew rate distortion expected'}</span></div>
+    <div class="result-row"><span class="result-label">GBW Product</span><span class="result-value">${(gbw/1e6).toFixed(1)}<span class="result-unit">MHz</span></span></div>
+    <div class="result-row"><span class="result-label">Slew Rate</span><span class="result-value">${(sr/1e6).toFixed(2)}<span class="result-unit">V/μs</span></span></div>`;
+}
+
+updateSumInputs();
+</script>
+</body>
+</html>
