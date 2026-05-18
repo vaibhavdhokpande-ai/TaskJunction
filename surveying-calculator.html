@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surveying & Levelling Calculator – HI & Rise-Fall | TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--white:#fff;--off:#faf9f7;--border:#e8e2d9;--c:#059669;--c2:#10b981;--c3:#ecfdf5;--c4:rgba(5,150,105,0.08);--text:#0f0e0c;--text2:#5a5650;--text3:#9e9890;--shadow:0 2px 12px rgba(15,14,12,0.06);--shadow-lg:0 8px 40px rgba(15,14,12,0.10);--font-d:'Clash Display',sans-serif;--font-b:'Sora',sans-serif;--font-m:'JetBrains Mono',monospace;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--off);color:var(--text);font-family:var(--font-b);line-height:1.7;min-height:100vh;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+nav{position:sticky;top:0;z-index:100;height:68px;background:rgba(250,249,247,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;justify-content:space-between;}
+.logo{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}.logo em{color:#f4600c;font-style:normal;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;padding:7px 16px;border:1px solid var(--border);border-radius:9px;transition:all .18s;background:var(--white);font-family:var(--font-b);}
+.back-btn:hover{border-color:var(--c);color:var(--c);background:var(--c3);}
+.hero{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-bottom:1px solid #bbf7d0;padding:56px 32px 44px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;width:500px;height:350px;top:-80px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(5,150,105,0.10) 0%,transparent 65%);pointer-events:none;}
+.hero-inner{position:relative;z-index:1;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);margin-bottom:14px;background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.20);padding:5px 14px;border-radius:20px;}
+h1{font-family:var(--font-d);font-size:clamp(24px,4.5vw,46px);font-weight:700;letter-spacing:-.03em;margin-bottom:12px;animation:fadeUp .5s ease .1s both;}
+h1 span{color:var(--c);}
+.hero-sub{font-size:14.5px;color:var(--text2);max-width:560px;margin:0 auto;line-height:1.8;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.main{max-width:1140px;margin:0 auto;padding:40px 24px 60px;}
+/* Control bar */
+.ctrl-bar{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:24px;display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;box-shadow:var(--shadow);}
+.ctrl-group{display:flex;flex-direction:column;gap:5px;}
+.ctrl-label{font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text3);}
+.ctrl-bar input,.ctrl-bar select{padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-b);font-size:14px;background:var(--off);color:var(--text);outline:none;transition:border-color .18s;min-width:160px;}
+.ctrl-bar input:focus,.ctrl-bar select:focus{border-color:var(--c);background:var(--white);}
+.calc-btn{padding:11px 24px;background:var(--c);color:#fff;border:none;border-radius:11px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;transition:background .18s,transform .15s;box-shadow:0 4px 16px rgba(5,150,105,0.25);white-space:nowrap;}
+.calc-btn:hover{background:var(--c2);transform:translateY(-1px);}
+.add-row-btn{padding:11px 18px;background:var(--off);color:var(--c);border:1.5px solid rgba(5,150,105,0.30);border-radius:11px;font-family:var(--font-b);font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;}
+.add-row-btn:hover{background:var(--c3);border-color:var(--c);}
+/* Input table */
+.table-wrap{background:var(--white);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:24px;}
+.table-header{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-bottom:1px solid #bbf7d0;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.table-header-title{font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--text);}
+.table-header-sub{font-family:var(--font-m);font-size:10.5px;color:var(--text3);letter-spacing:.06em;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{padding:10px 14px;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text3);background:rgba(5,150,105,0.04);border-bottom:1px solid var(--border);text-align:left;}
+.tbl td{padding:7px 8px;border-bottom:1px solid rgba(232,226,217,0.6);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl input[type=number],.tbl input[type=text]{width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-m);font-size:13px;background:var(--off);color:var(--text);outline:none;transition:border-color .18s;-moz-appearance:textfield;}
+.tbl input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.tbl input:focus{border-color:var(--c);background:var(--white);}
+.del-btn{width:28px;height:28px;border:1px solid rgba(220,38,38,0.25);border-radius:7px;background:rgba(220,38,38,0.06);color:#dc2626;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.del-btn:hover{background:rgba(220,38,38,0.14);border-color:#dc2626;}
+/* Results */
+.res-table-wrap{background:var(--white);border:1px solid #bbf7d0;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:24px;}
+.res-header{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-bottom:1px solid #bbf7d0;padding:16px 20px;}
+.res-header-title{font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--c);}
+.rtbl{width:100%;border-collapse:collapse;}
+.rtbl th{padding:10px 14px;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--c);background:rgba(5,150,105,0.06);border-bottom:1px solid #bbf7d0;text-align:left;}
+.rtbl td{padding:10px 14px;border-bottom:1px solid rgba(5,150,105,0.08);font-family:var(--font-m);font-size:13px;}
+.rtbl tr:last-child td{border-bottom:none;}
+.rtbl tr.totals-row td{background:rgba(5,150,105,0.08);font-weight:700;color:var(--c);}
+.rtbl tr.cp-row td{background:rgba(234,179,8,0.08);color:#92400e;}
+/* Summary */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
+.sum-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);}
+.sum-card.green{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-color:#bbf7d0;}
+.sum-label{font-family:var(--font-m);font-size:10px;letter-spacing:.10em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.sum-value{font-family:var(--font-m);font-size:20px;font-weight:700;color:var(--c);line-height:1.2;}
+.sum-unit{font-size:11px;color:var(--text3);font-family:var(--font-m);}
+.badge-ok{display:inline-flex;padding:3px 12px;border-radius:20px;font-family:var(--font-m);font-size:11px;font-weight:700;background:rgba(5,150,105,0.12);color:#059669;border:1px solid rgba(5,150,105,0.25);}
+.badge-warn{display:inline-flex;padding:3px 12px;border-radius:20px;font-family:var(--font-m);font-size:11px;font-weight:700;background:rgba(220,38,38,0.10);color:#dc2626;border:1px solid rgba(220,38,38,0.25);}
+.note-strip{background:rgba(5,150,105,0.06);border:1px solid rgba(5,150,105,0.16);border-radius:12px;padding:14px 18px;font-size:12.5px;color:var(--text2);line-height:1.8;}
+.note-strip strong{color:var(--c);}
+@media(max-width:700px){.ctrl-bar{flex-direction:column;}.ctrl-bar input,.ctrl-bar select{min-width:unset;width:100%;}.tbl th,.tbl td,.rtbl th,.rtbl td{padding:7px 8px;font-size:11px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Task<em>Junction</em></a>
+  <a href="index.html" class="back-btn">← Back to Home</a>
+</nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">📐 Surveying &amp; Levelling</div>
+    <h1>Surveying &amp; <span>Levelling</span> Calculator</h1>
+    <p class="hero-sub">Calculate Reduced Levels using Height of Instrument (HI) or Rise &amp; Fall method. Supports change points, arithmetic checks and misclosure detection.</p>
+  </div>
+</div>
+<div class="main">
+  <div class="ctrl-bar">
+    <div class="ctrl-group">
+      <div class="ctrl-label">Method</div>
+      <select id="method">
+        <option value="hi">Height of Instrument (HI)</option>
+        <option value="rf">Rise &amp; Fall</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-label">Benchmark RL</div>
+      <input type="number" id="bmRL" value="100.000" step="0.001">
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-label">Permissible Closing Error</div>
+      <input type="number" id="permErr" value="0.012" step="0.001" min="0">
+    </div>
+    <button class="add-row-btn" onclick="addRow()">+ Add Row</button>
+    <button class="calc-btn" onclick="calculate()">⚙️ Calculate RLs</button>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-header">
+      <div class="table-header-title">Field Book Entry</div>
+      <div class="table-header-sub">BS = Backsight &nbsp;|&nbsp; IS = Intermediate Sight &nbsp;|&nbsp; FS = Foresight &nbsp;|&nbsp; CP = Change Point</div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>#</th><th>Station</th><th>BS (m)</th><th>IS (m)</th><th>FS (m)</th><th>CP?</th><th>Remarks</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="inputRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="summaryArea" style="display:none;">
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="res-table-wrap">
+      <div class="res-header"><div class="res-header-title">📊 Reduced Level Sheet</div></div>
+      <div style="overflow-x:auto;"><table class="rtbl"><thead id="rtblHead"></thead><tbody id="rtblBody"></tbody></table></div>
+    </div>
+    <div class="note-strip" id="checkNote"></div>
+  </div>
+</div>
+<script>
+let rows=[];
+const defaultRows=[
+  {stn:'BM',bs:1.525,is:'',fs:'',cp:false,rem:'Benchmark'},
+  {stn:'P1',bs:'',is:1.340,fs:'',cp:false,rem:''},
+  {stn:'P2',bs:'',is:1.720,fs:'',cp:false,rem:''},
+  {stn:'CP1',bs:2.115,is:'',fs:1.890,cp:true,rem:'Change Point'},
+  {stn:'P3',bs:'',is:1.055,fs:'',cp:false,rem:''},
+  {stn:'TBM',bs:'',is:'',fs:2.230,cp:false,rem:'End Point'},
+];
+defaultRows.forEach(r=>rows.push({...r}));
+renderTable();
+
+function renderTable(){
+  const tb=document.getElementById('inputRows');
+  tb.innerHTML='';
+  rows.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-family:var(--font-m);font-size:12px;color:var(--text3);text-align:center;">${i+1}</td>
+      <td><input type="text" value="${r.stn}" onchange="rows[${i}].stn=this.value" style="width:70px;"></td>
+      <td><input type="number" value="${r.bs}" step="0.001" onchange="rows[${i}].bs=this.value===''?'':+this.value" style="width:80px;" placeholder="—"></td>
+      <td><input type="number" value="${r.is}" step="0.001" onchange="rows[${i}].is=this.value===''?'':+this.value" style="width:80px;" placeholder="—"></td>
+      <td><input type="number" value="${r.fs}" step="0.001" onchange="rows[${i}].fs=this.value===''?'':+this.value" style="width:80px;" placeholder="—"></td>
+      <td style="text-align:center;"><input type="checkbox" ${r.cp?'checked':''} onchange="rows[${i}].cp=this.checked" style="width:18px;height:18px;cursor:pointer;accent-color:var(--c);"></td>
+      <td><input type="text" value="${r.rem}" onchange="rows[${i}].rem=this.value" style="width:100px;"></td>
+      <td><button class="del-btn" onclick="delRow(${i})">×</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+function addRow(){rows.push({stn:`P${rows.length}`,bs:'',is:'',fs:'',cp:false,rem:''});renderTable();}
+function delRow(i){if(rows.length>2){rows.splice(i,1);renderTable();}}
+
+function fmt(v){return (v===''||v===undefined||isNaN(v))?'—':Number(v).toFixed(3);}
+
+function calculate(){
+  const method=document.getElementById('method').value;
+  const bmRL=+document.getElementById('bmRL').value;
+  const permErr=+document.getElementById('permErr').value;
+  const data=rows.map(r=>({...r,bs:r.bs===''?NaN:+r.bs,is:r.is===''?NaN:+r.is,fs:r.fs===''?NaN:+r.fs}));
+
+  let RL=[];
+  let hiArr=[], riseArr=[], fallArr=[];
+  let sumBS=0,sumFS=0,sumRise=0,sumFall=0;
+
+  if(method==='hi'){
+    let hi=null;
+    data.forEach((r,i)=>{
+      let rl=NaN,h=NaN;
+      if(!isNaN(r.bs)){hi=(!isNaN(r.fs)?RL[i-1]||bmRL:i===0?bmRL:RL[i-1])+r.bs; if(i===0)hi=bmRL+r.bs; sumBS+=r.bs;}
+      if(!isNaN(r.fs)){sumFS+=r.fs;}
+      h=hi;
+      if(!isNaN(r.fs))rl=hi-r.fs;
+      else if(!isNaN(r.is))rl=hi-r.is;
+      else if(i===0)rl=bmRL;
+      hiArr.push(h); RL.push(rl); riseArr.push(NaN); fallArr.push(NaN);
+    });
+    // recalc RL sequentially
+    let hi2=bmRL+data[0].bs;
+    RL[0]=bmRL;
+    for(let i=1;i<data.length;i++){
+      const r=data[i];
+      if(!isNaN(r.fs)){RL[i]=hi2-r.fs;if(!isNaN(r.bs)){hi2=RL[i]+r.bs;}}
+      else if(!isNaN(r.is)){RL[i]=hi2-r.is;}
+      else RL[i]=NaN;
+      hiArr[i]=hi2;
+    }
+  } else {
+    // Rise & Fall
+    RL[0]=bmRL;
+    for(let i=1;i<data.length;i++){
+      const prev=data[i-1], cur=data[i];
+      const prevReading=!isNaN(prev.fs)?prev.fs:!isNaN(prev.is)?prev.is:prev.bs;
+      const curReading=!isNaN(cur.fs)?cur.fs:!isNaN(cur.is)?cur.is:NaN;
+      if(isNaN(curReading)||isNaN(prevReading)){RL[i]=NaN;riseArr.push(NaN);fallArr.push(NaN);continue;}
+      const diff=prevReading-curReading;
+      if(diff>0){riseArr.push(diff);fallArr.push(NaN);sumRise+=diff;}
+      else{riseArr.push(NaN);fallArr.push(-diff);sumFall+=(-diff);}
+      RL[i]=RL[i-1]+(diff);
+    }
+    riseArr.unshift(NaN);fallArr.unshift(NaN);
+  }
+
+  data.forEach((r,i)=>{if(!isNaN(r.bs))sumBS+=0;if(!isNaN(r.fs))sumFS+=0;});
+  // recalc sums
+  sumBS=0;sumFS=0;
+  data.forEach(r=>{if(!isNaN(r.bs))sumBS+=r.bs;if(!isNaN(r.fs))sumFS+=r.fs;});
+
+  const lastRL=RL.filter(v=>!isNaN(v)).pop();
+  const misclosure=isNaN(lastRL)?NaN:lastRL-(bmRL+(sumBS-sumFS));
+  const closing=isNaN(lastRL)?NaN:lastRL-RL.filter(v=>!isNaN(v))[0]-(sumBS-sumFS);
+  const actualErr=Math.abs(sumBS-sumFS-(lastRL-bmRL));
+
+  // Build output table
+  const isHI=method==='hi';
+  const head=isHI
+    ?`<tr><th>Stn</th><th>BS</th><th>IS</th><th>FS</th><th>HI</th><th>RL</th><th>Remarks</th></tr>`
+    :`<tr><th>Stn</th><th>BS</th><th>IS</th><th>FS</th><th>Rise</th><th>Fall</th><th>RL</th><th>Remarks</th></tr>`;
+  document.getElementById('rtblHead').innerHTML=head;
+
+  let bodyHTML='';
+  data.forEach((r,i)=>{
+    const isCp=r.cp;
+    const trClass=isCp?'cp-row':'';
+    if(isHI){
+      bodyHTML+=`<tr class="${trClass}">
+        <td>${r.stn}</td><td>${fmt(r.bs)}</td><td>${fmt(r.is)}</td><td>${fmt(r.fs)}</td>
+        <td>${isNaN(hiArr[i])?'—':hiArr[i].toFixed(3)}</td>
+        <td style="font-weight:700;color:var(--c)">${fmt(RL[i])}</td>
+        <td style="font-size:11px;color:var(--text3);">${r.rem}</td></tr>`;
+    } else {
+      bodyHTML+=`<tr class="${trClass}">
+        <td>${r.stn}</td><td>${fmt(r.bs)}</td><td>${fmt(r.is)}</td><td>${fmt(r.fs)}</td>
+        <td style="color:#059669">${isNaN(riseArr[i])?'—':riseArr[i].toFixed(3)}</td>
+        <td style="color:#dc2626">${isNaN(fallArr[i])?'—':fallArr[i].toFixed(3)}</td>
+        <td style="font-weight:700;color:var(--c)">${fmt(RL[i])}</td>
+        <td style="font-size:11px;color:var(--text3);">${r.rem}</td></tr>`;
+    }
+  });
+  // Totals
+  if(isHI){
+    bodyHTML+=`<tr class="totals-row"><td>Σ</td><td>${sumBS.toFixed(3)}</td><td>—</td><td>${sumFS.toFixed(3)}</td><td>—</td><td>—</td><td>Check: ΣBS−ΣFS = ${(sumBS-sumFS).toFixed(3)}</td></tr>`;
+  } else {
+    bodyHTML+=`<tr class="totals-row"><td>Σ</td><td>${sumBS.toFixed(3)}</td><td>—</td><td>${sumFS.toFixed(3)}</td><td>${sumRise.toFixed(3)}</td><td>${sumFall.toFixed(3)}</td><td>—</td><td>ΣBS−ΣFS=${(sumBS-sumFS).toFixed(3)}</td></tr>`;
+  }
+  document.getElementById('rtblBody').innerHTML=bodyHTML;
+
+  // Summary
+  const errOk=actualErr<=permErr;
+  document.getElementById('summaryGrid').innerHTML=`
+    <div class="sum-card green"><div class="sum-label">BM Reduced Level</div><div class="sum-value">${bmRL.toFixed(3)}</div><div class="sum-unit">m</div></div>
+    <div class="sum-card green"><div class="sum-label">Last Point RL</div><div class="sum-value">${fmt(lastRL)}</div><div class="sum-unit">m</div></div>
+    <div class="sum-card"><div class="sum-label">Sum of BS</div><div class="sum-value">${sumBS.toFixed(3)}</div><div class="sum-unit">m</div></div>
+    <div class="sum-card"><div class="sum-label">Sum of FS</div><div class="sum-value">${sumFS.toFixed(3)}</div><div class="sum-unit">m</div></div>
+    <div class="sum-card"><div class="sum-label">ΣBS − ΣFS</div><div class="sum-value">${(sumBS-sumFS).toFixed(3)}</div><div class="sum-unit">m</div></div>
+    <div class="sum-card ${errOk?'green':''}"><div class="sum-label">Closing Error</div><div class="sum-value">${actualErr.toFixed(4)}</div><div class="sum-unit">m &nbsp;<span class="${errOk?'badge-ok':'badge-warn'}">${errOk?'✓ Within Limit':'✗ Exceeds Limit'}</span></div></div>`;
+
+  document.getElementById('checkNote').innerHTML=`
+    <strong>Arithmetic Check (${isHI?'HI':'Rise &amp; Fall'} Method):</strong><br>
+    ${isHI?`ΣBS − ΣFS = ${(sumBS-sumFS).toFixed(3)} m &nbsp;|&nbsp; Last RL − First RL = ${(lastRL-bmRL).toFixed(3)} m &nbsp;→ ${Math.abs((sumBS-sumFS)-(lastRL-bmRL))<0.001?'<span style="color:var(--c)">✓ Check Passes</span>':'<span style="color:#dc2626">✗ Check Fails</span>'}`
+    :`ΣRise − ΣFall = ${(sumRise-sumFall).toFixed(3)} m &nbsp;|&nbsp; ΣBS − ΣFS = ${(sumBS-sumFS).toFixed(3)} m &nbsp;|&nbsp; Last RL − First RL = ${(lastRL-bmRL).toFixed(3)} m`}<br>
+    Permissible Error = ${permErr.toFixed(3)} m &nbsp;|&nbsp; Actual Closing Error = ${actualErr.toFixed(4)} m`;
+
+  document.getElementById('summaryArea').style.display='block';
+}
+</script>
+</body>
+</html>

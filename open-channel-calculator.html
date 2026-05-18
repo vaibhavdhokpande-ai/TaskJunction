@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Channel Flow Calculator – Manning's Equation | TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--white:#fff;--off:#faf9f7;--border:#e8e2d9;--c:#059669;--c2:#10b981;--c3:#ecfdf5;--c4:rgba(5,150,105,0.08);--text:#0f0e0c;--text2:#5a5650;--text3:#9e9890;--shadow:0 2px 12px rgba(15,14,12,0.06);--shadow-lg:0 8px 40px rgba(15,14,12,0.10);--font-d:'Clash Display',sans-serif;--font-b:'Sora',sans-serif;--font-m:'JetBrains Mono',monospace;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--off);color:var(--text);font-family:var(--font-b);line-height:1.7;min-height:100vh;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+nav{position:sticky;top:0;z-index:100;height:68px;background:rgba(250,249,247,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:24px;justify-content:space-between;}
+.logo{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}.logo em{color:#f4600c;font-style:normal;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;padding:7px 16px;border:1px solid var(--border);border-radius:9px;transition:all .18s;background:var(--white);font-family:var(--font-b);}
+.back-btn:hover{border-color:var(--c);color:var(--c);background:var(--c3);}
+.hero{background:linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 50%,#f0fdf4 100%);border-bottom:1px solid #bbf7d0;padding:56px 32px 48px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;width:600px;height:400px;top:-100px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(5,150,105,0.10) 0%,transparent 65%);pointer-events:none;}
+.hero-inner{position:relative;z-index:1;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);margin-bottom:14px;background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.20);padding:5px 14px;border-radius:20px;}
+h1{font-family:var(--font-d);font-size:clamp(26px,5vw,50px);font-weight:700;letter-spacing:-.03em;margin-bottom:12px;animation:fadeUp .5s ease .1s both;}
+h1 span{color:var(--c);}
+.hero-sub{font-size:14.5px;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.8;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.main{max-width:1100px;margin:0 auto;padding:40px 24px 60px;}
+.layout{display:grid;grid-template-columns:380px 1fr;gap:28px;align-items:start;}
+@media(max-width:860px){.layout{grid-template-columns:1fr;}}
+.panel{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:28px;box-shadow:var(--shadow);}
+.panel-title{font-family:var(--font-d);font-size:16px;font-weight:700;margin-bottom:22px;display:flex;align-items:center;gap:10px;letter-spacing:-.01em;}
+.panel-title .ico{width:36px;height:36px;border-radius:10px;background:var(--c3);border:1px solid rgba(5,150,105,0.18);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+label{display:block;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;margin-top:16px;}
+label:first-of-type{margin-top:0;}
+select,input[type=number]{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-b);font-size:14px;background:var(--off);color:var(--text);outline:none;transition:border-color .18s,background .18s;-moz-appearance:textfield;}
+select:focus,input[type=number]:focus{border-color:var(--c);background:var(--white);}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
+.input-wrap{position:relative;}
+.input-wrap input{padding-right:56px;}
+.unit-label{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--font-m);font-size:11px;color:var(--text3);pointer-events:none;}
+.divider{height:1px;background:var(--border);margin:18px 0;}
+.calc-btn{width:100%;margin-top:20px;padding:13px 20px;background:var(--c);color:#fff;border:none;border-radius:12px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;transition:background .18s,transform .15s,box-shadow .18s;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.01em;box-shadow:0 4px 18px rgba(5,150,105,0.25);}
+.calc-btn:hover{background:var(--c2);transform:translateY(-1px);box-shadow:0 6px 24px rgba(5,150,105,0.30);}
+.results-panel{display:flex;flex-direction:column;gap:20px;}
+.res-card{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow);}
+.res-card.primary{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-color:#bbf7d0;}
+.res-title{font-family:var(--font-d);font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.res-title .dot{width:8px;height:8px;border-radius:50%;background:var(--c);}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.res-item{background:rgba(5,150,105,0.06);border:1px solid rgba(5,150,105,0.14);border-radius:12px;padding:14px;}
+.res-item-label{font-family:var(--font-m);font-size:9.5px;letter-spacing:.10em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.res-item-value{font-family:var(--font-m);font-size:18px;font-weight:600;color:var(--c);line-height:1.2;}
+.res-item-unit{font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--font-m);}
+.status-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(5,150,105,0.10);}
+.status-row:last-child{border-bottom:none;padding-bottom:0;}
+.status-label{font-size:13px;color:var(--text2);}
+.badge{display:inline-flex;padding:3px 12px;border-radius:20px;font-family:var(--font-m);font-size:11px;font-weight:700;}
+.badge-ok{background:rgba(5,150,105,0.12);color:#059669;border:1px solid rgba(5,150,105,0.25);}
+.badge-warn{background:rgba(234,179,8,0.12);color:#ca8a04;border:1px solid rgba(234,179,8,0.25);}
+.badge-val{font-family:var(--font-m);font-size:13px;font-weight:600;color:var(--text);}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3);}
+.empty-state .es-icon{font-size:36px;margin-bottom:12px;}
+.empty-state p{font-size:13px;line-height:1.7;}
+.section-diagram{background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:22px;box-shadow:var(--shadow);}
+.diag-title{font-family:var(--font-m);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;text-align:center;}
+.note-strip{background:rgba(5,150,105,0.06);border:1px solid rgba(5,150,105,0.16);border-radius:12px;padding:14px 16px;font-size:12.5px;color:var(--text2);line-height:1.75;}
+.note-strip strong{color:var(--c);}
+.formula-box{background:#f8fffe;border:1px solid #bbf7d0;border-radius:12px;padding:14px 16px;margin-top:12px;}
+.formula-box .f-label{font-family:var(--font-m);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.formula-box .f-eq{font-family:var(--font-m);font-size:14px;color:var(--c);font-weight:600;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Task<em>Junction</em></a>
+  <a href="index.html" class="back-btn">← Back to Home</a>
+</nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">🌊 Hydraulics &amp; Civil Engineering</div>
+    <h1>Open Channel <span>Flow</span> Calculator</h1>
+    <p class="hero-sub">Compute flow velocity, discharge, Froude number and flow regime for trapezoidal, rectangular and circular channels using Manning's equation.</p>
+  </div>
+</div>
+<div class="main">
+  <div class="layout">
+    <div class="panel">
+      <div class="panel-title"><div class="ico">🌊</div>Channel Parameters</div>
+      <label>Channel Shape</label>
+      <select id="shape" onchange="updateShapeFields()">
+        <option value="rect">Rectangular</option>
+        <option value="trap" selected>Trapezoidal</option>
+        <option value="circ">Circular (Pipe)</option>
+        <option value="tri">Triangular (V-notch)</option>
+      </select>
+      <label>Bottom Width (b)</label>
+      <div class="input-wrap"><input type="number" id="bw" value="2.5" step="0.1" min="0"><span class="unit-label">m</span></div>
+      <div id="sideSlope_row">
+        <label>Side Slope (z : 1 V)</label>
+        <div class="input-wrap"><input type="number" id="zz" value="1.5" step="0.1" min="0"><span class="unit-label">H:V</span></div>
+      </div>
+      <div id="dia_row" style="display:none;">
+        <label>Pipe Diameter (D)</label>
+        <div class="input-wrap"><input type="number" id="dia" value="1.2" step="0.1" min="0.1"><span class="unit-label">m</span></div>
+      </div>
+      <label>Flow Depth (y)</label>
+      <div class="input-wrap"><input type="number" id="depth" value="1.2" step="0.05" min="0.01"><span class="unit-label">m</span></div>
+      <label>Bed Slope (S₀)</label>
+      <div class="input-wrap"><input type="number" id="slope" value="0.001" step="0.0001" min="0.000001"><span class="unit-label">m/m</span></div>
+      <label>Manning's n</label>
+      <select id="manning">
+        <option value="0.011">Smooth concrete (0.011)</option>
+        <option value="0.013" selected>Finished concrete (0.013)</option>
+        <option value="0.015">Brick / unfinished concrete (0.015)</option>
+        <option value="0.020">Earth, clean (0.020)</option>
+        <option value="0.025">Earth with weeds (0.025)</option>
+        <option value="0.030">Gravel (0.030)</option>
+        <option value="0.035">Rock cut (0.035)</option>
+        <option value="0.040">Natural stream, clean (0.040)</option>
+        <option value="custom">Custom value…</option>
+      </select>
+      <div id="custom_n_wrap" style="display:none;margin-top:8px;">
+        <div class="input-wrap"><input type="number" id="custom_n" value="0.013" step="0.001" min="0.001" max="0.5"><span class="unit-label">—</span></div>
+      </div>
+      <div class="divider"></div>
+      <label>Solve For</label>
+      <select id="solveFor">
+        <option value="Q" selected>Discharge Q (given y, S₀, n)</option>
+        <option value="y">Normal Depth y (given Q, S₀, n)</option>
+        <option value="S">Slope S₀ (given Q, y, n)</option>
+      </select>
+      <div id="Q_input_row" style="display:none;">
+        <label>Design Discharge Q</label>
+        <div class="input-wrap"><input type="number" id="Q_in" value="5" step="0.1" min="0.001"><span class="unit-label">m³/s</span></div>
+      </div>
+      <button class="calc-btn" onclick="calculate()">⚙️ Calculate Flow</button>
+    </div>
+
+    <div class="results-panel">
+      <div id="diagram-box" class="section-diagram">
+        <div class="diag-title">Channel Cross-Section</div>
+        <svg id="channelSVG" width="100%" viewBox="0 0 380 180" style="display:block;"></svg>
+      </div>
+      <div id="resultsArea">
+        <div class="res-card primary">
+          <div class="empty-state">
+            <div class="es-icon">🌊</div>
+            <p>Enter channel parameters and click <strong>Calculate Flow</strong> to see results.</p>
+          </div>
+        </div>
+      </div>
+      <div class="formula-box">
+        <div class="f-label">Manning's Equation</div>
+        <div class="f-eq">Q = (1/n) · A · R²⸍³ · S₀½</div>
+      </div>
+      <div class="note-strip">
+        <strong>Key Definitions:</strong> A = Flow area · R = Hydraulic radius (A/P) · P = Wetted perimeter · T = Top width · Fr = Froude number = V/√(g·D_h)<br><br>
+        <strong>Flow Regimes:</strong> Fr &lt; 1 → Subcritical (mild) &nbsp;|&nbsp; Fr = 1 → Critical &nbsp;|&nbsp; Fr > 1 → Supercritical (steep)
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const manSel=document.getElementById('manning');
+const customWrap=document.getElementById('custom_n_wrap');
+manSel.addEventListener('change',()=>customWrap.style.display=manSel.value==='custom'?'block':'none');
+
+const solveSel=document.getElementById('solveFor');
+const qRow=document.getElementById('Q_input_row');
+solveSel.addEventListener('change',()=>qRow.style.display=solveSel.value!=='Q'?'block':'none');
+
+function updateShapeFields(){
+  const sh=document.getElementById('shape').value;
+  document.getElementById('sideSlope_row').style.display=(sh==='trap'||sh==='tri')?'block':'none';
+  document.getElementById('dia_row').style.display=sh==='circ'?'block':'none';
+  document.getElementById('bw').parentElement.parentElement.style.display=sh==='circ'?'none':'block';
+  if(sh==='rect'){document.getElementById('bw').labels[0].textContent='Channel Width (b)';}
+  else if(sh==='tri'){document.getElementById('bw').labels[0].textContent='Bottom Width (b)';}
+}
+
+function getN(){return manSel.value==='custom'?+document.getElementById('custom_n').value:+manSel.value;}
+
+function getGeometry(sh,bw,zz,dia,y){
+  let A,P,T;
+  if(sh==='rect'){A=bw*y;P=bw+2*y;T=bw;}
+  else if(sh==='trap'){A=(bw+zz*y)*y;P=bw+2*y*Math.sqrt(1+zz*zz);T=bw+2*zz*y;}
+  else if(sh==='tri'){A=zz*y*y;P=2*y*Math.sqrt(1+zz*zz);T=2*zz*y;}
+  else{ // circular
+    const r=dia/2;const theta=2*Math.acos((r-y)/r);
+    A=r*r*(theta-Math.sin(theta))/2;P=r*theta;T=2*Math.sqrt(2*r*y-y*y);}
+  return{A,P,T,R:A/P};
+}
+
+function computeQ(sh,bw,zz,dia,y,S,n){
+  const {A,R}=getGeometry(sh,bw,zz,dia,y);
+  return (1/n)*A*Math.pow(R,2/3)*Math.sqrt(S);
+}
+
+function solveNormalDepth(sh,bw,zz,dia,Qtarget,S,n){
+  let lo=0.001,hi=20,mid,Q;
+  for(let i=0;i<80;i++){mid=(lo+hi)/2;Q=computeQ(sh,bw,zz,dia,mid,S,n);if(Q<Qtarget)lo=mid;else hi=mid;}
+  return mid;
+}
+
+function calculate(){
+  const sh=document.getElementById('shape').value;
+  const bw=+document.getElementById('bw').value||2;
+  const zz=+document.getElementById('zz').value||0;
+  const dia=+document.getElementById('dia').value||1;
+  const S=+document.getElementById('slope').value||0.001;
+  const n=getN();
+  const solveFor=solveSel.value;
+  let y=+document.getElementById('depth').value||1;
+  let Q,Sout=S;
+
+  if(solveFor==='Q'){Q=computeQ(sh,bw,zz,dia,y,S,n);}
+  else if(solveFor==='y'){const Qin=+document.getElementById('Q_in').value||5;y=solveNormalDepth(sh,bw,zz,dia,Qin,S,n);Q=Qin;}
+  else{const Qin=+document.getElementById('Q_in').value||5;
+    const {A,R}=getGeometry(sh,bw,zz,dia,y);
+    Sout=Math.pow(Qin*n/(A*Math.pow(R,2/3)),2);Q=Qin;}
+
+  const {A,P,T,R}=getGeometry(sh,bw,zz,dia,y);
+  const V=Q/A;
+  const g=9.81;
+  const Dh=A/T; // hydraulic depth
+  const Fr=V/Math.sqrt(g*Dh);
+  const regime=Fr<0.95?'Subcritical':Fr>1.05?'Supercritical':'Critical';
+  const regime_badge=Fr<0.95?'badge-ok':Fr>1.05?'badge-warn':'badge-warn';
+
+  // Critical depth (bisection)
+  let yc=0.001,hic=20;
+  for(let i=0;i<80;i++){
+    const ym=(yc+hic)/2;
+    const {A:Am,T:Tm}=getGeometry(sh,bw,zz,dia,ym);
+    const Frc=computeQ(sh,bw,zz,dia,ym,S,n)/Am/Math.sqrt(g*Am/Tm);
+    if(Frc>1)yc=ym; else hic=ym;
+  }
+  const yc_val=(yc+hic)/2;
+
+  drawDiagram(sh,bw,zz,dia,y);
+
+  document.getElementById('resultsArea').innerHTML=`
+  <div class="res-card primary">
+    <div class="res-title"><div class="dot"></div>Primary Results</div>
+    <div class="res-grid">
+      <div class="res-item"><div class="res-item-label">Discharge Q</div><div class="res-item-value">${Q.toFixed(3)}</div><div class="res-item-unit">m³/s</div></div>
+      <div class="res-item"><div class="res-item-label">Flow Velocity V</div><div class="res-item-value">${V.toFixed(3)}</div><div class="res-item-unit">m/s</div></div>
+      <div class="res-item"><div class="res-item-label">Normal Depth y</div><div class="res-item-value">${y.toFixed(3)}</div><div class="res-item-unit">m</div></div>
+      <div class="res-item"><div class="res-item-label">Bed Slope S₀</div><div class="res-item-value">${Sout.toExponential(3)}</div><div class="res-item-unit">m/m</div></div>
+    </div>
+  </div>
+  <div class="res-card">
+    <div class="res-title"><div class="dot"></div>Hydraulic Properties</div>
+    <div class="status-row"><span class="status-label">Flow Area (A)</span><span class="badge-val">${A.toFixed(4)} m²</span></div>
+    <div class="status-row"><span class="status-label">Wetted Perimeter (P)</span><span class="badge-val">${P.toFixed(4)} m</span></div>
+    <div class="status-row"><span class="status-label">Hydraulic Radius (R)</span><span class="badge-val">${R.toFixed(4)} m</span></div>
+    <div class="status-row"><span class="status-label">Top Width (T)</span><span class="badge-val">${T.toFixed(4)} m</span></div>
+    <div class="status-row"><span class="status-label">Hydraulic Depth (D_h)</span><span class="badge-val">${Dh.toFixed(4)} m</span></div>
+    <div class="status-row"><span class="status-label">Froude Number (Fr)</span><span class="badge-val">${Fr.toFixed(3)}</span></div>
+    <div class="status-row"><span class="status-label">Critical Depth (yc)</span><span class="badge-val">${yc_val.toFixed(3)} m</span></div>
+    <div class="status-row"><span class="status-label">Flow Regime</span><span class="badge ${regime_badge}">${regime}</span></div>
+  </div>`;
+}
+
+function drawDiagram(sh,bw,zz,dia,y){
+  const svg=document.getElementById('channelSVG');
+  const W=380,H=180,pad=30,ht=110,wt=260,cx=W/2,base=H-pad;
+  let pts='';
+  if(sh==='rect'){
+    const bpx=Math.min(wt,200),ypx=Math.min(y/2*80,ht);
+    const lx=cx-bpx/2,rx=cx+bpx/2;
+    pts=`M${lx},${base-ypx} L${lx},${base} L${rx},${base} L${rx},${base-ypx}`;
+    svg.innerHTML=`<path d="${pts}" fill="rgba(5,150,105,0.12)" stroke="#059669" stroke-width="2"/>
+      <line x1="${lx-20}" y1="${base}" x2="${rx+20}" y2="${base}" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="${cx}" y="${base+14}" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#9e9890">b = ${bw} m</text>
+      <text x="${lx-12}" y="${base-ypx/2}" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="#059669">y</text>
+      <line x1="${lx-6}" y1="${base-ypx}" x2="${lx-6}" y2="${base}" stroke="#059669" stroke-width="1" marker-end="url(#arr)"/>`;
+  } else if(sh==='trap'){
+    const bpx=Math.min(bw*35,180),ypx=Math.min(y*45,ht);
+    const zpx=zz*ypx;
+    const bl=cx-bpx/2,br=cx+bpx/2;
+    const tl=bl-zpx,tr=br+zpx;
+    svg.innerHTML=`<polygon points="${tl},${base-ypx} ${bl},${base} ${br},${base} ${tr},${base-ypx}" fill="rgba(5,150,105,0.12)" stroke="#059669" stroke-width="2"/>
+      <line x1="${tl-10}" y1="${base}" x2="${tr+10}" y2="${base}" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="${cx}" y="${base+14}" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#9e9890">b = ${bw} m</text>
+      <text x="${tr+12}" y="${base-ypx/2}" font-family="JetBrains Mono" font-size="10" fill="#059669">y=${y}m</text>
+      <text x="${(tr+tr+10)/2}" y="${base-ypx-8}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9e9890">T = ${(bw+2*zz*y).toFixed(2)}m</text>`;
+  } else if(sh==='tri'){
+    const ypx=Math.min(y*50,ht);const zpx=zz*ypx;
+    const tl=cx-zpx,tr=cx+zpx;
+    svg.innerHTML=`<polygon points="${tl},${base-ypx} ${cx},${base} ${tr},${base-ypx}" fill="rgba(5,150,105,0.12)" stroke="#059669" stroke-width="2"/>
+      <line x1="${tl-10}" y1="${base}" x2="${tr+10}" y2="${base}" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="${cx}" y="${base+14}" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#059669">y = ${y} m</text>`;
+  } else {
+    const r=Math.min(dia*45,70);
+    const theta=2*Math.acos((r-(y/dia)*2*r)/r);
+    const ypx=(y/dia)*2*r;
+    const cx2=cx,cy2=base-r;
+    const x1=cx2-r*Math.sin(theta/2),x2=cx2+r*Math.sin(theta/2);
+    const y1=cy2+r*Math.cos(theta/2);
+    svg.innerHTML=`<circle cx="${cx2}" cy="${cy2}" r="${r}" fill="none" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <path d="M${x1},${y1} A${r},${r} 0 ${theta>Math.PI?1:0},1 ${x2},${y1}" fill="rgba(5,150,105,0.15)" stroke="#059669" stroke-width="2"/>
+      <line x1="${cx2-r-8}" y1="${y1}" x2="${cx2+r+8}" y2="${y1}" stroke="#aaa" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="${cx2}" y="${cy2+r+16}" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#9e9890">D = ${dia} m</text>
+      <text x="${cx2+r+12}" y="${(y1+cy2)/2}" font-family="JetBrains Mono" font-size="10" fill="#059669">y=${y}m</text>`;
+  }
+}
+
+window.addEventListener('load',()=>{updateShapeFields();drawDiagram('trap',2.5,1.5,1.2,1.2);});
+</script>
+</body>
+</html>
