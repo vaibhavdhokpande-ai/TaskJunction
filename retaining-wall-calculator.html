@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retaining Wall Calculator – TaskJunction</title>
+<meta name="description" content="Analyse cantilever and gravity retaining walls — overturning, sliding, bearing pressure and stability checks with IS 456 code compliance.">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:#ffffff; --off:#faf9f7; --cream:#f5f0e8; --border:#e8e2d9; --border2:#d4cdc2;
+  --orange:#f4600c; --orange2:#ff7a2e; --orange3:#fff0e8; --orange4:rgba(244,96,12,0.08);
+  --text:#0f0e0c; --text2:#5a5650; --text3:#9e9890;
+  --green:#1a9952; --green2:rgba(26,153,82,0.10); --green3:#d1fae5;
+  --blue:#0d74ce; --red:#dc2626; --amber:#b45309;
+  --civil:#059669; --civil2:rgba(5,150,105,0.10); --civil3:#d1fae5; --civil4:rgba(5,150,105,0.07);
+  --shadow:0 2px 12px rgba(15,14,12,0.06); --shadow-lg:0 8px 40px rgba(15,14,12,0.10);
+  --font-d:'Clash Display',sans-serif; --font-b:'Sora',sans-serif; --font-m:'JetBrains Mono',monospace;
+  --nav-h:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:15px;}
+body{background:var(--off);color:var(--text);font-family:var(--font-b);line-height:1.7;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(250,249,247,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:20px;}
+.logo{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}
+.logo em{color:var(--orange);font-style:normal;}
+.nav-back{font-family:var(--font-b);font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;gap:6px;transition:all 0.18s;margin-left:auto;}
+.nav-back:hover{border-color:var(--civil);color:var(--civil);background:var(--civil2);}
+.nav-badge{font-family:var(--font-m);font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--civil2);color:var(--civil);border:1px solid rgba(5,150,105,0.25);letter-spacing:0.08em;text-transform:uppercase;}
+
+/* HERO */
+.hero{padding:56px 32px 40px;background:linear-gradient(160deg,#f0fdf4 0%,#ecfdf5 100%);border-bottom:1px solid #bbf7d0;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;width:700px;height:500px;top:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(5,150,105,0.08) 0%,transparent 65%);pointer-events:none;}
+.hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(5,150,105,0.07) 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 80%);mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 80%);pointer-events:none;}
+.hero-inner{position:relative;z-index:1;max-width:820px;margin:0 auto;text-align:center;}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid #bbf7d0;border-radius:100px;padding:6px 16px 6px 8px;font-size:12.5px;font-weight:500;color:var(--text2);margin-bottom:24px;box-shadow:var(--shadow);}
+.hero-pill-dot{width:22px;height:22px;border-radius:50%;background:var(--civil);display:flex;align-items:center;justify-content:center;font-size:12px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(30px,5vw,60px);font-weight:700;line-height:1.05;letter-spacing:-0.03em;margin-bottom:16px;}
+.hero h1 span{color:var(--civil);}
+.hero-sub{font-size:15px;color:var(--text2);max-width:560px;margin:0 auto 24px;line-height:1.8;}
+.hero-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.hero-tag{font-family:var(--font-m);font-size:10.5px;font-weight:500;padding:4px 12px;border-radius:100px;background:var(--civil2);color:var(--civil);border:1px solid rgba(5,150,105,0.2);letter-spacing:0.04em;}
+
+/* MAIN LAYOUT */
+.main{max-width:1180px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:340px 1fr;gap:28px;align-items:start;}
+@media(max-width:900px){.main{grid-template-columns:1fr;}}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);}
+.card-header{padding:20px 24px 0;display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.card-icon{width:44px;height:44px;border-radius:12px;background:var(--civil2);border:1px solid rgba(5,150,105,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.card-title{font-family:var(--font-d);font-size:17px;font-weight:600;letter-spacing:-0.01em;}
+.card-subtitle{font-size:11.5px;color:var(--text3);}
+.card-body{padding:0 24px 24px;}
+
+/* FORM */
+.sec-label{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--civil);padding:14px 24px 8px;border-top:1px solid var(--border);display:block;margin-top:4px;}
+.sec-label:first-child{border-top:none;margin-top:0;}
+.field{padding:0 24px;margin-bottom:14px;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:0.01em;}
+.field label span{font-family:var(--font-m);font-size:10px;color:var(--text3);font-weight:400;margin-left:4px;}
+.inp{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-family:var(--font-b);font-size:13.5px;color:var(--text);background:var(--off);outline:none;transition:border-color 0.18s,box-shadow 0.18s;}
+.inp:focus{border-color:var(--civil);box-shadow:0 0 0 3px rgba(5,150,105,0.10);}
+select.inp{cursor:pointer;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.calc-btn{display:block;width:calc(100% - 48px);margin:16px 24px 24px;padding:13px;border-radius:12px;font-family:var(--font-b);font-size:14px;font-weight:700;background:var(--civil);color:#fff;border:none;cursor:pointer;letter-spacing:0.02em;transition:background 0.18s,transform 0.15s,box-shadow 0.18s;box-shadow:0 4px 18px rgba(5,150,105,0.25);}
+.calc-btn:hover{background:#047857;transform:translateY(-2px);box-shadow:0 8px 24px rgba(5,150,105,0.30);}
+.reset-btn{display:block;width:calc(100% - 48px);margin:-12px 24px 20px;padding:9px;border-radius:10px;font-family:var(--font-b);font-size:12px;font-weight:500;background:transparent;color:var(--text3);border:1px solid var(--border);cursor:pointer;transition:all 0.18s;}
+.reset-btn:hover{border-color:var(--border2);color:var(--text2);}
+
+/* RESULTS */
+.result-panel{display:flex;flex-direction:column;gap:20px;}
+.status-banner{border-radius:16px;padding:18px 20px;display:flex;align-items:flex-start;gap:14px;border:1px solid;}
+.status-banner.safe{background:rgba(26,153,82,0.07);border-color:rgba(26,153,82,0.25);}
+.status-banner.unsafe{background:rgba(220,38,38,0.07);border-color:rgba(220,38,38,0.25);}
+.status-banner.neutral{background:var(--orange4);border-color:rgba(244,96,12,0.2);}
+.status-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.status-icon.safe{background:rgba(26,153,82,0.15);}
+.status-icon.unsafe{background:rgba(220,38,38,0.12);}
+.status-icon.neutral{background:var(--orange3);}
+.status-title{font-family:var(--font-d);font-size:16px;font-weight:700;margin-bottom:2px;}
+.status-title.safe{color:var(--green);}
+.status-title.unsafe{color:var(--red);}
+.status-title.neutral{color:var(--orange);}
+.status-msg{font-size:12.5px;color:var(--text2);line-height:1.6;}
+
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:600px){.results-grid{grid-template-columns:1fr;}}
+.res-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;}
+.res-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.res-card.pass::before{background:linear-gradient(90deg,var(--green),#34d399);}
+.res-card.fail::before{background:linear-gradient(90deg,var(--red),#f87171);}
+.res-card.info::before{background:linear-gradient(90deg,var(--civil),#34d399);}
+.res-label{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.res-value{font-family:var(--font-d);font-size:26px;font-weight:700;letter-spacing:-0.02em;line-height:1;margin-bottom:4px;}
+.res-value.pass{color:var(--green);}
+.res-value.fail{color:var(--red);}
+.res-value.info{color:var(--civil);}
+.res-unit{font-size:11px;color:var(--text3);font-weight:400;}
+.res-check{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;}
+.res-check.pass{background:rgba(26,153,82,0.1);color:var(--green);border:1px solid rgba(26,153,82,0.2);}
+.res-check.fail{background:rgba(220,38,38,0.1);color:var(--red);border:1px solid rgba(220,38,38,0.2);}
+
+.forces-table-wrap{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.forces-table-wrap table{width:100%;border-collapse:collapse;}
+.forces-table-wrap th{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);padding:10px 16px;background:var(--off);border-bottom:1px solid var(--border);text-align:left;}
+.forces-table-wrap td{padding:10px 16px;font-size:13px;border-bottom:1px solid var(--border);color:var(--text);}
+.forces-table-wrap tr:last-child td{border-bottom:none;}
+.forces-table-wrap tr:hover td{background:var(--civil4);}
+.td-num{font-family:var(--font-m);font-size:12.5px;font-weight:500;}
+.td-label{font-weight:500;}
+
+/* DIAGRAM */
+.diagram-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:20px;}
+.diagram-title{font-family:var(--font-d);font-size:14px;font-weight:600;margin-bottom:14px;color:var(--text2);}
+.wall-diagram{width:100%;max-width:360px;margin:0 auto;display:block;}
+
+/* PLACEHOLDER */
+.placeholder{background:var(--white);border:1px dashed var(--border2);border-radius:20px;padding:60px 32px;text-align:center;}
+.placeholder-icon{font-size:56px;margin-bottom:16px;opacity:0.5;}
+.placeholder-title{font-family:var(--font-d);font-size:20px;font-weight:600;color:var(--text2);margin-bottom:8px;}
+.placeholder-sub{font-size:13px;color:var(--text3);}
+
+/* FORMULA BOX */
+.formula-box{background:var(--off);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:12px;}
+.formula-box h4{font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--civil);margin-bottom:8px;}
+.formula-box p{font-family:var(--font-m);font-size:11.5px;color:var(--text2);line-height:1.9;}
+
+footer{background:var(--text);color:#fff;padding:36px 32px 28px;text-align:center;margin-top:40px;}
+.footer-logo{font-family:var(--font-d);font-size:22px;font-weight:700;margin-bottom:10px;}
+.footer-logo em{color:var(--orange);font-style:normal;}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.35);}
+
+@media(max-width:640px){
+  nav{padding:0 16px;}
+  .hero{padding:40px 16px 32px;}
+  .main{padding:24px 16px 60px;}
+  .card-header{padding:16px 16px 0;}
+  .card-body{padding:0 16px 16px;}
+  .sec-label{padding:12px 16px 6px;}
+  .field{padding:0 16px;}
+  .calc-btn{width:calc(100% - 32px);margin:14px 16px 20px;}
+  .reset-btn{width:calc(100% - 32px);margin:-10px 16px 16px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Task<em>Junction</em></a>
+  <span class="nav-badge">🏗️ Civil</span>
+  <a href="index.html#civil" class="nav-back">← All Civil Tools</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-pill"><span class="hero-pill-dot">🏗️</span> Civil Engineering · IS 456 Compliant</div>
+    <h1>Retaining Wall <span>Calculator</span></h1>
+    <p class="hero-sub">Analyse cantilever and gravity retaining walls — overturning, sliding, bearing pressure and stability checks per IS 456 code.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Overturning</span>
+      <span class="hero-tag">Sliding Stability</span>
+      <span class="hero-tag">Bearing Pressure</span>
+      <span class="hero-tag">Earth Pressure</span>
+      <span class="hero-tag">IS 456</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- INPUT PANEL -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🏗️</div>
+        <div>
+          <div class="card-title">Wall Parameters</div>
+          <div class="card-subtitle">Enter dimensions & material properties</div>
+        </div>
+      </div>
+
+      <span class="sec-label">Wall Type & Geometry</span>
+      <div class="field">
+        <label>Wall Type</label>
+        <select class="inp" id="wallType" onchange="updateDiagram()">
+          <option value="cantilever">Cantilever Retaining Wall</option>
+          <option value="gravity">Gravity Retaining Wall</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Height of Wall (H) <span>m</span></label>
+        <input class="inp" type="number" id="wallH" value="4.0" min="0.5" step="0.1">
+      </div>
+      <div class="field row2">
+        <div>
+          <label>Stem Thickness (t) <span>m</span></label>
+          <input class="inp" type="number" id="stemT" value="0.35" min="0.1" step="0.05">
+        </div>
+        <div>
+          <label>Base Width (B) <span>m</span></label>
+          <input class="inp" type="number" id="baseB" value="2.8" min="0.5" step="0.1">
+        </div>
+      </div>
+      <div class="field row2">
+        <div>
+          <label>Base Thickness (Tb) <span>m</span></label>
+          <input class="inp" type="number" id="baseT" value="0.4" min="0.1" step="0.05">
+        </div>
+        <div>
+          <label>Toe Length (Lt) <span>m</span></label>
+          <input class="inp" type="number" id="toeL" value="0.6" min="0.1" step="0.05">
+        </div>
+      </div>
+
+      <span class="sec-label">Soil Properties</span>
+      <div class="field row2">
+        <div>
+          <label>Unit Weight γ <span>kN/m³</span></label>
+          <input class="inp" type="number" id="soilGamma" value="18" min="10" step="0.5">
+        </div>
+        <div>
+          <label>Friction Angle φ <span>°</span></label>
+          <input class="inp" type="number" id="soilPhi" value="30" min="10" max="45" step="1">
+        </div>
+      </div>
+      <div class="field row2">
+        <div>
+          <label>Cohesion c <span>kN/m²</span></label>
+          <input class="inp" type="number" id="soilC" value="0" min="0" step="1">
+        </div>
+        <div>
+          <label>Safe Bearing Cap. <span>kN/m²</span></label>
+          <input class="inp" type="number" id="sbc" value="150" min="50" step="10">
+        </div>
+      </div>
+
+      <span class="sec-label">Material Properties</span>
+      <div class="field row2">
+        <div>
+          <label>Concrete γc <span>kN/m³</span></label>
+          <input class="inp" type="number" id="concGamma" value="24" min="20" step="0.5">
+        </div>
+        <div>
+          <label>Friction Coeff. μ</label>
+          <input class="inp" type="number" id="mu" value="0.5" min="0.3" max="0.7" step="0.05">
+        </div>
+      </div>
+      <div class="field">
+        <label>Surcharge <span>kN/m²</span></label>
+        <input class="inp" type="number" id="surcharge" value="10" min="0" step="1">
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">Calculate Stability →</button>
+      <button class="reset-btn" onclick="resetForm()">↺ Reset to Defaults</button>
+    </div>
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div class="result-panel" id="resultPanel">
+    <div class="placeholder">
+      <div class="placeholder-icon">🏗️</div>
+      <div class="placeholder-title">Enter wall parameters</div>
+      <div class="placeholder-sub">Fill in the inputs on the left and click Calculate to analyse stability checks.</div>
+    </div>
+
+    <div class="card" id="formulaRef">
+      <div class="card-header"><div class="card-icon">📐</div><div><div class="card-title">Reference Formulas</div><div class="card-subtitle">Rankine's Earth Pressure Theory</div></div></div>
+      <div class="card-body">
+        <div class="formula-box">
+          <h4>Active Earth Pressure Coefficient</h4>
+          <p>Ka = tan²(45° − φ/2)<br>
+          Pa = ½ · Ka · γ · H² + Ka · q · H<br>
+          where q = surcharge load (kN/m²)</p>
+        </div>
+        <div class="formula-box" style="margin-top:10px;">
+          <h4>Stability Checks (IS 456)</h4>
+          <p>FOS overturning ≥ 2.0<br>
+          FOS sliding ≥ 1.5<br>
+          Max bearing pressure ≤ SBC<br>
+          No tension at base (e ≤ B/6)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WALL SVG DIAGRAM (hidden, used in results) -->
+<svg id="wallSvgTemplate" style="display:none" width="300" height="220" viewBox="0 0 300 220"></svg>
+
+<footer>
+  <div class="footer-logo">Task<em>Junction</em></div>
+  <p class="footer-copy">Free engineering tools · No login · IS 456 compliant · © 2025 TaskJunction</p>
+</footer>
+
+<script>
+function resetForm(){
+  document.getElementById('wallType').value='cantilever';
+  document.getElementById('wallH').value='4.0';
+  document.getElementById('stemT').value='0.35';
+  document.getElementById('baseB').value='2.8';
+  document.getElementById('baseT').value='0.4';
+  document.getElementById('toeL').value='0.6';
+  document.getElementById('soilGamma').value='18';
+  document.getElementById('soilPhi').value='30';
+  document.getElementById('soilC').value='0';
+  document.getElementById('sbc').value='150';
+  document.getElementById('concGamma').value='24';
+  document.getElementById('mu').value='0.5';
+  document.getElementById('surcharge').value='10';
+  document.getElementById('resultPanel').innerHTML = `
+    <div class="placeholder">
+      <div class="placeholder-icon">🏗️</div>
+      <div class="placeholder-title">Enter wall parameters</div>
+      <div class="placeholder-sub">Fill in the inputs on the left and click Calculate to analyse stability checks.</div>
+    </div>
+    <div class="card" id="formulaRef">
+      <div class="card-header"><div class="card-icon">📐</div><div><div class="card-title">Reference Formulas</div><div class="card-subtitle">Rankine's Earth Pressure Theory</div></div></div>
+      <div class="card-body">
+        <div class="formula-box"><h4>Active Earth Pressure Coefficient</h4><p>Ka = tan²(45° − φ/2)<br>Pa = ½ · Ka · γ · H² + Ka · q · H<br>where q = surcharge load (kN/m²)</p></div>
+        <div class="formula-box" style="margin-top:10px;"><h4>Stability Checks (IS 456)</h4><p>FOS overturning ≥ 2.0<br>FOS sliding ≥ 1.5<br>Max bearing pressure ≤ SBC<br>No tension at base (e ≤ B/6)</p></div>
+      </div>
+    </div>`;
+}
+
+function calculate(){
+  const H    = parseFloat(document.getElementById('wallH').value);
+  const B    = parseFloat(document.getElementById('baseB').value);
+  const Tb   = parseFloat(document.getElementById('baseT').value);
+  const Lt   = parseFloat(document.getElementById('toeL').value);
+  const t    = parseFloat(document.getElementById('stemT').value);
+  const γs   = parseFloat(document.getElementById('soilGamma').value);
+  const φ    = parseFloat(document.getElementById('soilPhi').value) * Math.PI / 180;
+  const c    = parseFloat(document.getElementById('soilC').value);
+  const SBC  = parseFloat(document.getElementById('sbc').value);
+  const γc   = parseFloat(document.getElementById('concGamma').value);
+  const μ    = parseFloat(document.getElementById('mu').value);
+  const q    = parseFloat(document.getElementById('surcharge').value);
+  const type = document.getElementById('wallType').value;
+
+  const Ka = Math.pow(Math.tan(Math.PI/4 - φ/2), 2);
+  const Hs = H - Tb; // stem height
+  const Lh = B - Lt - t; // heel length
+
+  // Active earth pressure
+  const Pa_tri = 0.5 * Ka * γs * H * H;     // triangular (kN/m)
+  const Pa_sur = Ka * q * H;                  // surcharge (kN/m)
+  const Pa = Pa_tri + Pa_sur;                 // total horizontal force
+
+  // Point of application above base
+  const y_tri = H / 3;
+  const y_sur = H / 2;
+  const y_Pa  = (Pa_tri * y_tri + Pa_sur * y_sur) / Pa;
+
+  // Overturning moment about toe
+  const Mo = Pa * y_Pa;
+
+  // Weights and restoring moments (about toe)
+  const W_stem = γc * t * Hs;
+  const x_stem = Lt + t/2;
+
+  const W_base = γc * B * Tb;
+  const x_base = B / 2;
+
+  const W_soil_heel = γs * Lh * Hs;
+  const x_soil_heel = Lt + t + Lh/2;
+
+  const W_surcharge = q * Lh;
+  const x_surcharge = Lt + t + Lh/2;
+
+  const W_total = W_stem + W_base + W_soil_heel + W_surcharge;
+  const Mr = W_stem*x_stem + W_base*x_base + W_soil_heel*x_soil_heel + W_surcharge*x_surcharge;
+
+  // FOS Overturning
+  const FOS_OT = Mr / Mo;
+
+  // Sliding resistance
+  const R_sliding = μ * W_total + 2*c*B;
+  const FOS_SL = R_sliding / Pa;
+
+  // Location of resultant
+  const x_R = (Mr - Mo) / W_total;
+  const e   = B/2 - x_R; // eccentricity
+
+  // Bearing pressures
+  const p_max = (W_total / B) * (1 + 6*e/B);
+  const p_min = (W_total / B) * (1 - 6*e/B);
+
+  const pass_OT  = FOS_OT  >= 2.0;
+  const pass_SL  = FOS_SL  >= 1.5;
+  const pass_BP  = p_max   <= SBC;
+  const pass_TEN = p_min   >= 0;
+  const overallOK = pass_OT && pass_SL && pass_BP && pass_TEN;
+
+  const fmt1 = v => v.toFixed(2);
+  const fmt3 = v => v.toFixed(3);
+  const pct  = v => (v*100).toFixed(1)+'%';
+
+  function resCard(label, value, unit, pass, reqText){
+    const cls = pass ? 'pass' : 'fail';
+    const valueColor = pass ? 'pass' : 'fail';
+    return `<div class="res-card ${cls}">
+      <div class="res-label">${label}</div>
+      <div class="res-value ${valueColor}">${value}</div>
+      <div class="res-unit">${unit}</div>
+      <span class="res-check ${cls}">${pass?'✓ PASS':'✗ FAIL'} · ${reqText}</span>
+    </div>`;
+  }
+
+  function resCardInfo(label, value, unit){
+    return `<div class="res-card info">
+      <div class="res-label">${label}</div>
+      <div class="res-value info">${value}</div>
+      <div class="res-unit">${unit}</div>
+    </div>`;
+  }
+
+  const wallTypeName = type === 'cantilever' ? 'Cantilever' : 'Gravity';
+
+  document.getElementById('resultPanel').innerHTML = `
+    <div class="status-banner ${overallOK?'safe':'unsafe'}">
+      <div class="status-icon ${overallOK?'safe':'unsafe'}">${overallOK?'✅':'⚠️'}</div>
+      <div>
+        <div class="status-title ${overallOK?'safe':'unsafe'}">${overallOK?'Wall is Stable':'Stability Issues Detected'}</div>
+        <div class="status-msg">${wallTypeName} retaining wall H=${H}m, B=${B}m — ${overallOK ? 'All IS 456 stability checks pass.' : 'One or more stability checks failed. Review dimensions.'}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-icon">📊</div><div><div class="card-title">Stability Check Results</div><div class="card-subtitle">IS 456 code compliance</div></div></div>
+      <div style="padding:16px 24px 24px;">
+        <div class="results-grid">
+          ${resCard('FOS — Overturning', fmt1(FOS_OT), 'Required ≥ 2.0', pass_OT, 'FOS ≥ 2.0')}
+          ${resCard('FOS — Sliding', fmt1(FOS_SL), 'Required ≥ 1.5', pass_SL, 'FOS ≥ 1.5')}
+          ${resCard('Max Bearing Pressure', fmt1(p_max), 'kN/m² · SBC = '+SBC+' kN/m²', pass_BP, 'p_max ≤ SBC')}
+          ${resCard('Min Bearing Pressure', fmt1(p_min), 'kN/m² · No tension', pass_TEN, 'p_min ≥ 0')}
+          ${resCardInfo('Eccentricity e', fmt3(e), 'm · B/6 = '+fmt3(B/6)+' m')}
+          ${resCardInfo('Active Earth Pressure', fmt1(Pa), 'kN/m · Ka = '+fmt3(Ka))}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-icon">📋</div><div><div class="card-title">Force & Moment Summary</div><div class="card-subtitle">About toe (per meter run)</div></div></div>
+      <div class="forces-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Force (kN/m)</th>
+              <th>Lever Arm (m)</th>
+              <th>Moment (kN·m/m)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-label">Stem (concrete)</td><td class="td-num">${fmt1(W_stem)}</td><td class="td-num">${fmt1(x_stem)}</td><td class="td-num">${fmt1(W_stem*x_stem)}</td></tr>
+            <tr><td class="td-label">Base slab</td><td class="td-num">${fmt1(W_base)}</td><td class="td-num">${fmt1(x_base)}</td><td class="td-num">${fmt1(W_base*x_base)}</td></tr>
+            <tr><td class="td-label">Soil on heel</td><td class="td-num">${fmt1(W_soil_heel)}</td><td class="td-num">${fmt1(x_soil_heel)}</td><td class="td-num">${fmt1(W_soil_heel*x_soil_heel)}</td></tr>
+            <tr><td class="td-label">Surcharge on heel</td><td class="td-num">${fmt1(W_surcharge)}</td><td class="td-num">${fmt1(x_surcharge)}</td><td class="td-num">${fmt1(W_surcharge*x_surcharge)}</td></tr>
+            <tr style="font-weight:600;background:rgba(5,150,105,0.05);"><td class="td-label">Total Vertical (W)</td><td class="td-num">${fmt1(W_total)}</td><td>—</td><td class="td-num">${fmt1(Mr)} (Mr)</td></tr>
+            <tr style="background:rgba(220,38,38,0.04);"><td class="td-label">Active Earth Pressure</td><td class="td-num">${fmt1(Pa)} (H)</td><td class="td-num">${fmt1(y_Pa)}</td><td class="td-num">${fmt1(Mo)} (Mo)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-icon">🖼️</div><div><div class="card-title">Wall Cross-Section</div><div class="card-subtitle">Schematic (not to scale)</div></div></div>
+      <div style="padding:0 24px 24px;">
+        ${buildDiagramSVG(H,B,t,Tb,Lt,Lh,type)}
+      </div>
+    </div>
+  `;
+}
+
+function buildDiagramSVG(H,B,t,Tb,Lt,Lh,type){
+  const svgW=360, svgH=240;
+  const marginL=40, marginB=30, marginT=20;
+  const drawW=svgW-marginL-40;
+  const drawH=svgH-marginT-marginB;
+
+  // Scale
+  const scaleX=drawW/B;
+  const scaleY=drawH/H;
+
+  // Coordinates (y=0 at top of SVG)
+  const baseY=svgH-marginB;          // ground level y
+  const topY=marginT;                 // top of wall
+  const baseTopY=baseY - Tb*scaleY;  // top of base slab
+
+  const toeX=marginL;
+  const stemL=toeX+Lt*scaleX;
+  const stemR=stemL+t*scaleX;
+  const heelX=marginL+B*scaleX;
+
+  const ci='#059669'; // civil green
+  const soilC='#86efac';
+
+  let svg=`<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">`;
+  // Soil fill behind wall
+  svg+=`<rect x="${stemR}" y="${topY}" width="${heelX-stemR}" height="${baseTopY-topY}" fill="#dcfce7" opacity="0.8"/>`;
+  // Soil in front (toe side)
+  svg+=`<rect x="${toeX}" y="${baseTopY-20}" width="${stemL-toeX}" height="20" fill="#dcfce7" opacity="0.5"/>`;
+  // Base slab
+  svg+=`<rect x="${toeX}" y="${baseTopY}" width="${heelX-toeX}" height="${Tb*scaleY}" fill="${ci}" opacity="0.85" rx="2"/>`;
+  // Stem
+  svg+=`<rect x="${stemL}" y="${topY}" width="${t*scaleX}" height="${baseTopY-topY}" fill="${ci}" opacity="0.85" rx="2"/>`;
+
+  // Ground line
+  svg+=`<line x1="${toeX-10}" y1="${baseTopY}" x2="${heelX+10}" y2="${baseTopY}" stroke="#374151" stroke-width="1.5" stroke-dasharray="6,3"/>`;
+
+  // Dimension annotations
+  const annY=baseY+20;
+  svg+=`<line x1="${toeX}" y1="${annY}" x2="${heelX}" y2="${annY}" stroke="#6b7280" stroke-width="1"/>`;
+  svg+=`<text x="${(toeX+heelX)/2}" y="${annY+12}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#374151">B = ${B}m</text>`;
+
+  const hX=heelX+22;
+  svg+=`<line x1="${hX}" y1="${topY}" x2="${hX}" y2="${baseTopY}" stroke="#6b7280" stroke-width="1"/>`;
+  svg+=`<text x="${hX+4}" y="${(topY+baseTopY)/2+4}" font-family="JetBrains Mono,monospace" font-size="9" fill="#374151">H=${H}m</text>`;
+
+  // Earth pressure arrow
+  const arrowY1=topY+10, arrowY2=baseTopY-10;
+  svg+=`<defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#dc2626"/></marker></defs>`;
+  svg+=`<line x1="${stemR+8}" y1="${arrowY2}" x2="${stemR+8}" y2="${arrowY1}" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arr)"/>`;
+  svg+=`<text x="${stemR+12}" y="${(arrowY1+arrowY2)/2}" font-family="JetBrains Mono,monospace" font-size="9" fill="#dc2626">Pa</text>`;
+
+  // Hatching below base
+  for(let xi=toeX;xi<heelX;xi+=10){
+    svg+=`<line x1="${xi}" y1="${baseY}" x2="${xi+8}" y2="${baseY+10}" stroke="#9ca3af" stroke-width="0.8"/>`;
+  }
+  svg+=`<line x1="${toeX}" y1="${baseY}" x2="${heelX}" y2="${baseY}" stroke="#374151" stroke-width="1.5"/>`;
+
+  // Labels
+  svg+=`<text x="${(stemL+stemR)/2}" y="${(topY+baseTopY)/2}" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="white" transform="rotate(-90,${(stemL+stemR)/2},${(topY+baseTopY)/2})">Stem</text>`;
+  svg+=`<text x="${(toeX+heelX)/2}" y="${baseTopY+Tb*scaleY/2+4}" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="white">Base</text>`;
+  svg+=`<text x="${(stemR+heelX)/2}" y="${(topY+baseTopY)/2+4}" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="#059669" opacity="0.8">Backfill</text>`;
+
+  svg+=`</svg>`;
+  return svg;
+}
+
+function updateDiagram(){}
+</script>
+</body>
+</html>
