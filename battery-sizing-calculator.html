@@ -3,189 +3,849 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Battery Bank & UPS Sizing — ElecCalc Pro</title>
-<link rel="stylesheet" href="styles.css">
+<title>Battery Bank & UPS Sizing Calculator – TaskJunction</title>
+<meta name="description" content="Size battery banks and UPS systems for given load, backup duration and discharge rate. Supports lead-acid and lithium-ion battery types.">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:#ffffff; --off:#faf9f7; --cream:#f5f0e8; --border:#e8e2d9; --border2:#d4cdc2;
+  --orange:#f4600c; --orange2:#ff7a2e; --orange3:#fff0e8; --orange4:rgba(244,96,12,0.08);
+  --text:#0f0e0c; --text2:#5a5650; --text3:#9e9890; --green:#1a9952; --blue:#0d74ce;
+  --shadow:0 2px 12px rgba(15,14,12,0.06); --shadow-lg:0 8px 40px rgba(15,14,12,0.10);
+  --font-d:'Clash Display',sans-serif; --font-b:'Sora',sans-serif; --font-m:'JetBrains Mono',monospace;
+  --nav-h:68px;
+
+  /* Battery theme accent */
+  --bat:#d97706; --bat2:#f59e0b; --bat3:rgba(217,119,6,0.10); --bat4:rgba(217,119,6,0.07);
+  --bat-border:rgba(217,119,6,0.22); --bat-border2:rgba(217,119,6,0.35);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:15px;}
+body{background:var(--off);color:var(--text);font-family:var(--font-b);line-height:1.7;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(250,249,247,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:24px;}
+.logo{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-0.02em;flex-shrink:0;}
+.logo em{color:var(--orange);font-style:normal;}
+.nav-back{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--white);transition:all .18s;margin-left:auto;}
+.nav-back:hover{border-color:var(--orange2);background:var(--orange3);color:var(--orange);}
+.nav-badge{font-family:var(--font-m);font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(217,119,6,0.10);color:#d97706;border:1px solid rgba(217,119,6,0.25);letter-spacing:.08em;text-transform:uppercase;}
+
+/* ── HERO ── */
+.hero{padding:56px 32px 48px;position:relative;overflow:hidden;text-align:center;}
+.hero::before{content:'';position:absolute;width:700px;height:500px;top:-160px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(217,119,6,0.09) 0%,transparent 65%);pointer-events:none;}
+.hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(15,14,12,0.05) 1px,transparent 1px);background-size:32px 32px;-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 80%);mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 80%);pointer-events:none;}
+.hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--border);border-radius:100px;padding:6px 16px 6px 8px;font-size:12.5px;font-weight:500;color:var(--text2);margin-bottom:24px;box-shadow:var(--shadow);animation:fadeUp .5s ease .1s both;}
+.hero-pill-dot{width:22px;height:22px;border-radius:50%;background:var(--bat);display:flex;align-items:center;justify-content:center;font-size:12px;}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;margin-right:2px;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(26,153,82,0.5);}50%{box-shadow:0 0 0 5px rgba(26,153,82,0);}}
+.hero h1{font-family:var(--font-d);font-size:clamp(30px,6vw,58px);font-weight:700;line-height:1.05;letter-spacing:-0.04em;margin-bottom:16px;animation:fadeUp .5s ease .2s both;}
+.hero h1 .accent{color:var(--bat);}
+.hero-sub{font-size:15px;color:var(--text2);max-width:500px;margin:0 auto;line-height:1.75;animation:fadeUp .5s ease .3s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:1080px;margin:0 auto;padding:0 32px 80px;display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start;}
+@media(max-width:900px){.main{grid-template-columns:1fr;padding:0 20px 60px;}}
+@media(max-width:480px){.main{padding:0 16px 48px;gap:20px;}}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);}
+.card-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.card-icon{width:40px;height:40px;border-radius:11px;background:var(--bat3);border:1px solid var(--bat-border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.card-title{font-family:var(--font-d);font-size:17px;font-weight:700;letter-spacing:-0.01em;}
+.card-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.card-body{padding:24px;}
+
+/* ── TABS ── */
+.tab-row{display:flex;gap:6px;background:var(--off);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:24px;}
+.tab-btn{flex:1;padding:8px 12px;border-radius:9px;border:none;background:transparent;font-family:var(--font-b);font-size:12.5px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .18s;letter-spacing:.01em;}
+.tab-btn.active{background:var(--white);color:var(--bat);box-shadow:0 2px 8px rgba(217,119,6,0.12);border:1px solid var(--bat-border);}
+
+/* ── BATTERY TYPE CARDS ── */
+.bat-type-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.bat-type-card{border:1.5px solid var(--border);border-radius:13px;padding:14px 16px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
+.bat-type-card:hover{border-color:var(--bat-border);}
+.bat-type-card.selected{border-color:var(--bat);background:var(--bat3);}
+.bat-type-card.selected::before{content:'✓';position:absolute;top:8px;right:10px;font-size:11px;font-weight:700;color:var(--bat);font-family:var(--font-m);}
+.bat-type-icon{font-size:22px;margin-bottom:6px;}
+.bat-type-name{font-family:var(--font-d);font-size:13.5px;font-weight:700;letter-spacing:-0.01em;margin-bottom:2px;}
+.bat-type-spec{font-family:var(--font-m);font-size:10px;color:var(--text3);line-height:1.5;}
+
+/* ── FORM ── */
+.form-section{margin-bottom:20px;}
+.form-section-label{font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--bat);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.form-section-label::before{content:'';width:16px;height:1.5px;background:var(--bat);border-radius:2px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.form-row{grid-template-columns:1fr;}}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--text2);margin-bottom:6px;letter-spacing:.01em;}
+.field-note{font-size:11px;color:var(--text3);margin-top:3px;}
+.input-wrap{position:relative;display:flex;align-items:center;}
+.input-wrap input,.input-wrap select{width:100%;padding:10px 48px 10px 13px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-b);font-size:13.5px;color:var(--text);background:var(--off);outline:none;transition:border-color .18s,box-shadow .18s;appearance:none;-webkit-appearance:none;}
+.input-wrap select{cursor:pointer;}
+.input-wrap input:focus,.input-wrap select:focus{border-color:var(--bat);box-shadow:0 0 0 3px rgba(217,119,6,0.10);background:var(--white);}
+.unit-tag{position:absolute;right:12px;font-family:var(--font-m);font-size:10.5px;font-weight:500;color:var(--text3);pointer-events:none;}
+.select-arrow{position:absolute;right:12px;pointer-events:none;color:var(--text3);}
+
+/* ── RANGE SLIDER ── */
+.slider-wrap{display:flex;align-items:center;gap:12px;margin-top:6px;}
+input[type=range]{flex:1;-webkit-appearance:none;height:4px;border-radius:4px;background:var(--border);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--bat);border:2.5px solid var(--white);box-shadow:0 2px 6px rgba(217,119,6,0.3);cursor:pointer;transition:transform .15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--bat);border:2.5px solid var(--white);box-shadow:0 2px 6px rgba(217,119,6,0.3);cursor:pointer;}
+.slider-val{font-family:var(--font-m);font-size:13px;font-weight:600;color:var(--bat);min-width:44px;text-align:right;}
+
+/* ── CALCULATE BTN ── */
+.calc-btn{width:100%;padding:14px;border-radius:12px;border:none;background:var(--bat);color:#fff;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 20px rgba(217,119,6,0.28);transition:all .18s;margin-top:8px;}
+.calc-btn:hover{background:var(--bat2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(217,119,6,0.34);}
+.calc-btn:active{transform:translateY(0);}
+.reset-btn{width:100%;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--text3);font-family:var(--font-b);font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;margin-top:8px;}
+.reset-btn:hover{border-color:var(--border2);color:var(--text);}
+
+/* ── RESULTS PANEL ── */
+.results-panel{display:none;flex-direction:column;gap:16px;}
+.results-panel.show{display:flex;animation:fadeUp .4s ease both;}
+
+.result-hero{background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);border:1px solid rgba(217,119,6,0.25);border-radius:18px;padding:28px 24px;text-align:center;position:relative;overflow:hidden;}
+.result-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--bat),var(--bat2),#fbbf24);}
+.result-hero-label{font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--bat);margin-bottom:6px;}
+.result-hero-val{font-family:var(--font-d);font-size:52px;font-weight:700;color:var(--bat);letter-spacing:-0.04em;line-height:1;}
+.result-hero-unit{font-family:var(--font-m);font-size:15px;font-weight:500;color:var(--bat);margin-top:4px;}
+.result-hero-note{font-size:12.5px;color:var(--text2);margin-top:8px;}
+
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.res-item{background:var(--off);border:1px solid var(--border);border-radius:13px;padding:14px 16px;}
+.res-item-label{font-family:var(--font-m);font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.res-item-val{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1.1;}
+.res-item-unit{font-family:var(--font-m);font-size:10.5px;color:var(--text3);margin-top:2px;}
+
+/* ── BATTERY VISUAL ── */
+.bat-visual-wrap{padding:20px 0 8px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;}
+.bat-cell{width:28px;height:48px;border:2px solid var(--bat);border-radius:5px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;overflow:hidden;background:var(--off);}
+.bat-cell::before{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:12px;height:5px;background:var(--bat);border-radius:2px 2px 0 0;}
+.bat-cell-fill{width:100%;background:linear-gradient(180deg,var(--bat2),var(--bat));border-radius:0 0 3px 3px;transition:height .5s ease;}
+.bat-cell.series{border-color:#0d74ce;}
+.bat-cell.series::before{background:#0d74ce;}
+.bat-cell.series .bat-cell-fill{background:linear-gradient(180deg,#38bdf8,#0d74ce);}
+.bat-label{font-family:var(--font-m);font-size:9px;color:var(--text3);text-align:center;margin-top:4px;}
+
+/* ── FORMULA BOX ── */
+.formula-box{background:var(--off);border:1px solid var(--border);border-radius:13px;padding:16px 18px;}
+.formula-box-title{font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+.formula-line{font-family:var(--font-m);font-size:11.5px;color:var(--text2);line-height:1.8;border-left:2px solid var(--bat-border);padding-left:12px;margin-left:4px;}
+.formula-val{color:var(--bat);font-weight:600;}
+
+/* ── INFO SIDEBAR ── */
+.info-card{background:var(--white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);}
+.info-card-header{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.info-card-body{padding:20px 22px;}
+.info-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--border);}
+.info-row:last-child{border-bottom:none;}
+.info-row-label{font-size:12.5px;color:var(--text2);font-weight:500;}
+.info-row-val{font-family:var(--font-m);font-size:12px;font-weight:600;color:var(--text);}
+
+.tip-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.tip-list li{font-size:12.5px;color:var(--text2);line-height:1.65;padding-left:18px;position:relative;}
+.tip-list li::before{content:'→';position:absolute;left:0;color:var(--bat);font-size:11px;top:2px;}
+
+.glossary-row{padding:9px 0;border-bottom:1px solid var(--border);}
+.glossary-row:last-child{border-bottom:none;}
+.glossary-term{font-family:var(--font-m);font-size:11px;font-weight:600;color:var(--bat);margin-bottom:2px;}
+.glossary-def{font-size:12px;color:var(--text2);line-height:1.55;}
+
+/* ── STATUS CHIP ── */
+.status-chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase;}
+.status-ok{background:rgba(26,153,82,0.10);color:var(--green);border:1px solid rgba(26,153,82,0.22);}
+.status-warn{background:rgba(217,119,6,0.10);color:var(--bat);border:1px solid var(--bat-border);}
+.status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* ── EFFICIENCY BAR ── */
+.eff-bar-wrap{margin-top:10px;}
+.eff-bar-label{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text2);margin-bottom:5px;}
+.eff-bar-track{height:8px;background:var(--border);border-radius:10px;overflow:hidden;}
+.eff-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--bat),var(--bat2));transition:width .7s cubic-bezier(.4,0,.2,1);}
+
+/* ── WARNING ── */
+.warning-box{background:rgba(244,96,12,0.06);border:1px solid rgba(244,96,12,0.2);border-radius:12px;padding:14px 16px;display:flex;gap:10px;}
+.warning-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.warning-text{font-size:12.5px;color:var(--text2);line-height:1.65;}
+.warning-text strong{color:var(--orange);}
+
+/* ── FOOTER ── */
+footer{background:var(--text);color:#fff;padding:40px 32px 28px;text-align:center;}
+.footer-logo{font-family:var(--font-d);font-size:24px;font-weight:700;letter-spacing:-0.03em;margin-bottom:14px;}
+.footer-logo em{color:var(--orange);font-style:normal;}
+.footer-copy{font-size:12.5px;color:rgba(255,255,255,0.35);margin-top:10px;}
+.footer-links{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+.footer-links a{font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;padding:4px 10px;border-radius:6px;transition:all .15s;}
+.footer-links a:hover{color:#fff;background:rgba(255,255,255,0.08);}
+
+/* ── UPS MODE SPECIFIC ── */
+.ups-info{background:rgba(13,116,206,0.05);border:1px solid rgba(13,116,206,0.2);border-radius:12px;padding:14px 16px;margin-top:-8px;margin-bottom:16px;}
+.ups-info-title{font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#0d74ce;margin-bottom:4px;}
+.ups-info-text{font-size:12.5px;color:var(--text2);line-height:1.6;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  nav{padding:0 16px;}
+  .hero{padding:44px 20px 36px;}
+}
+@media(max-width:480px){
+  :root{--nav-h:60px;}
+  .logo{font-size:18px;}
+  .hero h1{font-size:clamp(26px,9vw,38px);}
+  .results-grid{grid-template-columns:1fr 1fr;}
+  .result-hero-val{font-size:40px;}
+  .bat-type-row{grid-template-columns:1fr 1fr;}
+  .card-body{padding:18px 16px;}
+  .info-card-body{padding:16px;}
+}
+</style>
 </head>
 <body>
-<nav class="top-nav">
-  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
-  <a href="index.html" class="nav-back">← BACK</a>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Task<em>Junction</em></a>
+  <span class="nav-badge">● Live</span>
+  <a href="index.html#electrical" class="nav-back">← All Tools</a>
 </nav>
-<div class="calc-header">
-  <div class="calc-tag">// CALCULATOR 08 OF 08</div>
-  <h1 class="calc-title"><span class="icon">🔋</span>Battery Bank & UPS Sizing</h1>
-  <p class="calc-desc">Battery capacity, number of cells, charger sizing, autonomy time and UPS kVA rating. IEEE 485 / IS 16282 method.</p>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-pill">
+      <span class="hero-pill-dot">🔋</span>
+      <span class="pulse"></span>
+      Electrical Engineering · Battery Design
+    </div>
+    <h1>Battery Bank &amp;<br><span class="accent">UPS Sizing</span> Calculator</h1>
+    <p class="hero-sub">Size battery banks and UPS systems for any load, backup duration and discharge rate. Supports lead-acid and lithium-ion batteries.</p>
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="main" style="margin-top:32px;">
+
+  <!-- LEFT: CALCULATOR -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+
+    <!-- Mode Selector -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">⚡</div>
+        <div>
+          <div class="card-title">Calculation Mode</div>
+          <div class="card-sub">Choose what you are designing</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="tab-row">
+          <button class="tab-btn active" onclick="setMode('battery')" id="tabBattery">🔋 Battery Bank</button>
+          <button class="tab-btn" onclick="setMode('ups')" id="tabUPS">🛡️ UPS System</button>
+          <button class="tab-btn" onclick="setMode('solar')" id="tabSolar">☀️ Solar Storage</button>
+        </div>
+        <div id="upsNote" class="ups-info" style="display:none;">
+          <div class="ups-info-title">UPS Mode</div>
+          <div class="ups-info-text">UPS sizing includes inverter efficiency loss and automatic load-factor safety margin. Output capacity is sized to handle in-rush current of motor loads.</div>
+        </div>
+        <div id="solarNote" class="ups-info" style="display:none;background:rgba(244,96,12,0.05);border-color:rgba(244,96,12,0.2);">
+          <div class="ups-info-title" style="color:var(--orange);">Solar Storage Mode</div>
+          <div class="ups-info-text">Calculates days of autonomy-based battery sizing. Depth of Discharge is critical — lithium cells recommended for solar applications.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Battery Type -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🔋</div>
+        <div>
+          <div class="card-title">Battery Chemistry</div>
+          <div class="card-sub">Select your battery type</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="bat-type-row">
+          <div class="bat-type-card selected" onclick="selectBatType('lead')" id="btnLead">
+            <div class="bat-type-icon">🔋</div>
+            <div class="bat-type-name">Lead-Acid</div>
+            <div class="bat-type-spec">12V / 6V cells<br>DoD: 50% | η: 80%<br>~300–500 cycles</div>
+          </div>
+          <div class="bat-type-card" onclick="selectBatType('lithium')" id="btnLithium">
+            <div class="bat-type-icon">⚡</div>
+            <div class="bat-type-name">Lithium-Ion</div>
+            <div class="bat-type-spec">3.2V–3.7V cells<br>DoD: 80% | η: 95%<br>~2000–5000 cycles</div>
+          </div>
+          <div class="bat-type-card" onclick="selectBatType('gel')" id="btnGel">
+            <div class="bat-type-icon">🟡</div>
+            <div class="bat-type-name">Gel / AGM</div>
+            <div class="bat-type-spec">12V cells (sealed)<br>DoD: 60% | η: 82%<br>~500–800 cycles</div>
+          </div>
+          <div class="bat-type-card" onclick="selectBatType('lfp')" id="btnLFP">
+            <div class="bat-type-icon">🟢</div>
+            <div class="bat-type-name">LiFePO₄</div>
+            <div class="bat-type-spec">3.2V cells<br>DoD: 90% | η: 97%<br>~3000–6000 cycles</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📐</div>
+        <div>
+          <div class="card-title">System Parameters</div>
+          <div class="card-sub">Enter your load and system requirements</div>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div class="form-section">
+          <div class="form-section-label">Load Parameters</div>
+          <div class="form-row">
+            <div class="field">
+              <label>Total Load Power</label>
+              <div class="input-wrap">
+                <input type="number" id="loadPower" value="2000" min="1" max="1000000" step="50">
+                <span class="unit-tag">W</span>
+              </div>
+              <div class="field-note">Total connected load in watts</div>
+            </div>
+            <div class="field">
+              <label>Power Factor</label>
+              <div class="input-wrap">
+                <input type="number" id="pf" value="0.9" min="0.1" max="1.0" step="0.01">
+                <span class="unit-tag">p.f.</span>
+              </div>
+              <div class="field-note">0.8–1.0 (1.0 = pure resistive)</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>System Voltage</label>
+              <div class="input-wrap">
+                <select id="sysVoltage">
+                  <option value="12">12 V</option>
+                  <option value="24">24 V</option>
+                  <option value="48" selected>48 V</option>
+                  <option value="96">96 V</option>
+                  <option value="120">120 V</option>
+                  <option value="240">240 V</option>
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Load Factor / Utilisation</label>
+              <div class="slider-wrap">
+                <input type="range" id="loadFactor" min="50" max="100" value="80" oninput="updateSlider('loadFactor','loadFactorVal','%')">
+                <span class="slider-val" id="loadFactorVal">80%</span>
+              </div>
+              <div class="field-note">Actual vs rated load (%)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-label">Backup &amp; Duration</div>
+          <div class="form-row">
+            <div class="field">
+              <label>Backup Duration</label>
+              <div class="input-wrap">
+                <input type="number" id="backupHours" value="4" min="0.25" max="72" step="0.25">
+                <span class="unit-tag">hrs</span>
+              </div>
+              <div class="field-note">Required autonomy time</div>
+            </div>
+            <div class="field" id="solarDaysField" style="display:none;">
+              <label>Days of Autonomy</label>
+              <div class="input-wrap">
+                <input type="number" id="solarDays" value="3" min="1" max="30" step="1">
+                <span class="unit-tag">days</span>
+              </div>
+              <div class="field-note">Cloudy day buffer</div>
+            </div>
+            <div class="field" id="dischargeRateField">
+              <label>Discharge Rate (C-Rate)</label>
+              <div class="input-wrap">
+                <select id="cRate">
+                  <option value="20">C/20 — 20-hr (gentle)</option>
+                  <option value="10" selected>C/10 — 10-hr (standard)</option>
+                  <option value="5">C/5 — 5-hr (moderate)</option>
+                  <option value="2">C/2 — 2-hr (high)</option>
+                  <option value="1">C/1 — 1-hr (peak)</option>
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-label">Battery Configuration</div>
+          <div class="form-row">
+            <div class="field">
+              <label>Depth of Discharge (DoD)</label>
+              <div class="slider-wrap">
+                <input type="range" id="dod" min="20" max="95" value="50" oninput="updateSlider('dod','dodVal','%')">
+                <span class="slider-val" id="dodVal">50%</span>
+              </div>
+              <div class="field-note">Higher DoD = more usable capacity</div>
+            </div>
+            <div class="field">
+              <label>System Efficiency (η)</label>
+              <div class="slider-wrap">
+                <input type="range" id="eta" min="60" max="99" value="80" oninput="updateSlider('eta','etaVal','%')">
+                <span class="slider-val" id="etaVal">80%</span>
+              </div>
+              <div class="field-note">Inverter + cable + battery losses</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Battery Cell Voltage</label>
+              <div class="input-wrap">
+                <input type="number" id="cellVoltage" value="12" min="1" max="100" step="0.1">
+                <span class="unit-tag">V</span>
+              </div>
+              <div class="field-note">Nominal voltage per cell/unit</div>
+            </div>
+            <div class="field">
+              <label>Safety / Aging Factor</label>
+              <div class="slider-wrap">
+                <input type="range" id="safetyFactor" min="100" max="150" value="120" oninput="updateSlider('safetyFactor','safetyVal','%')">
+                <span class="slider-val" id="safetyVal">120%</span>
+              </div>
+              <div class="field-note">Oversize for aging / temperature</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Individual Battery Rating (Ah)</label>
+            <div class="input-wrap">
+              <input type="number" id="batAh" value="100" min="1" max="10000" step="5">
+              <span class="unit-tag">Ah</span>
+            </div>
+            <div class="field-note">Capacity of a single battery unit</div>
+          </div>
+        </div>
+
+        <button class="calc-btn" onclick="calculate()">
+          ⚡ Calculate Battery Bank
+        </button>
+        <button class="reset-btn" onclick="resetForm()">↺ Reset to Defaults</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="card results-panel" id="resultsPanel">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(26,153,82,0.10);border-color:rgba(26,153,82,0.22);">✅</div>
+        <div>
+          <div class="card-title">Sizing Results</div>
+          <div class="card-sub" id="modeLabel">Battery Bank Design</div>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div class="result-hero">
+          <div class="result-hero-label">Total Battery Capacity Required</div>
+          <div class="result-hero-val" id="rTotalAh">—</div>
+          <div class="result-hero-unit">Ah  ·  <span id="rTotalKWh">—</span> kWh</div>
+          <div class="result-hero-note" id="rHeroNote">—</div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div class="results-grid">
+            <div class="res-item">
+              <div class="res-item-label">Batteries in Series</div>
+              <div class="res-item-val" id="rSeries">—</div>
+              <div class="res-item-unit">units (for system V)</div>
+            </div>
+            <div class="res-item">
+              <div class="res-item-label">Strings in Parallel</div>
+              <div class="res-item-val" id="rParallel">—</div>
+              <div class="res-item-unit">strings</div>
+            </div>
+            <div class="res-item">
+              <div class="res-item-label">Total Battery Units</div>
+              <div class="res-item-val" id="rTotal">—</div>
+              <div class="res-item-unit">batteries</div>
+            </div>
+            <div class="res-item">
+              <div class="res-item-label">Actual Capacity</div>
+              <div class="res-item-val" id="rActualAh">—</div>
+              <div class="res-item-unit">Ah installed</div>
+            </div>
+            <div class="res-item">
+              <div class="res-item-label">Discharge Current</div>
+              <div class="res-item-val" id="rCurrent">—</div>
+              <div class="res-item-unit">Amperes (DC)</div>
+            </div>
+            <div class="res-item">
+              <div class="res-item-label">Backup Autonomy</div>
+              <div class="res-item-val" id="rAutonomy">—</div>
+              <div class="res-item-unit">hours</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Battery Visual -->
+        <div style="margin-top:16px;">
+          <div style="font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;text-align:center;">Configuration Diagram</div>
+          <div class="bat-visual-wrap" id="batVisual"></div>
+          <div style="font-family:var(--font-m);font-size:10px;color:var(--text3);text-align:center;margin-top:4px;" id="batVisualLabel"></div>
+        </div>
+
+        <!-- Efficiency Bar -->
+        <div class="eff-bar-wrap" style="margin-top:16px;">
+          <div class="eff-bar-label">
+            <span>Overall System Efficiency</span>
+            <span id="rEtaLabel" style="font-weight:600;color:var(--bat);">—</span>
+          </div>
+          <div class="eff-bar-track"><div class="eff-bar-fill" id="rEtaBar" style="width:0%"></div></div>
+        </div>
+
+        <!-- Formula breakdown -->
+        <div class="formula-box" style="margin-top:16px;">
+          <div class="formula-box-title">Calculation Trace</div>
+          <div class="formula-line" id="rFormula"></div>
+        </div>
+
+        <!-- Warning if applicable -->
+        <div class="warning-box" id="rWarning" style="margin-top:14px;display:none;">
+          <div class="warning-icon">⚠️</div>
+          <div class="warning-text" id="rWarningText"></div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span class="status-chip status-ok" id="rStatus"><span class="status-dot"></span> Valid Design</span>
+          <span style="font-family:var(--font-m);font-size:10.5px;color:var(--text3);">DoD Applied: <span id="rDodApplied" style="color:var(--bat);font-weight:600;">—</span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: INFO SIDEBAR -->
+  <div style="display:flex;flex-direction:column;gap:20px;position:sticky;top:calc(var(--nav-h) + 20px);">
+
+    <!-- Battery Reference -->
+    <div class="info-card">
+      <div class="info-card-header">
+        <div class="card-icon" style="font-size:16px;">📊</div>
+        <div>
+          <div class="card-title" style="font-size:15px;">Battery Type Reference</div>
+          <div class="card-sub">Typical specifications</div>
+        </div>
+      </div>
+      <div class="info-card-body">
+        <div class="info-row"><span class="info-row-label">Lead-Acid DoD</span><span class="info-row-val">40–50%</span></div>
+        <div class="info-row"><span class="info-row-label">Gel / AGM DoD</span><span class="info-row-val">60%</span></div>
+        <div class="info-row"><span class="info-row-label">Lithium-Ion DoD</span><span class="info-row-val">80%</span></div>
+        <div class="info-row"><span class="info-row-label">LiFePO₄ DoD</span><span class="info-row-val">80–90%</span></div>
+        <div class="info-row"><span class="info-row-label">Lead-Acid η</span><span class="info-row-val">80%</span></div>
+        <div class="info-row"><span class="info-row-label">Li-Ion η</span><span class="info-row-val">95%</span></div>
+        <div class="info-row"><span class="info-row-label">LiFePO₄ η</span><span class="info-row-val">97%</span></div>
+        <div class="info-row"><span class="info-row-label">Inverter η (typical)</span><span class="info-row-val">92–96%</span></div>
+      </div>
+    </div>
+
+    <!-- C-Rate Guide -->
+    <div class="info-card">
+      <div class="info-card-header">
+        <div class="card-icon" style="font-size:16px;">⏱️</div>
+        <div>
+          <div class="card-title" style="font-size:15px;">C-Rate Guide</div>
+          <div class="card-sub">Discharge rate selection</div>
+        </div>
+      </div>
+      <div class="info-card-body">
+        <div class="info-row"><span class="info-row-label">C/20 (20 hr)</span><span class="info-row-val">Gentle · max capacity</span></div>
+        <div class="info-row"><span class="info-row-label">C/10 (10 hr)</span><span class="info-row-val">Standard UPS / solar</span></div>
+        <div class="info-row"><span class="info-row-label">C/5 (5 hr)</span><span class="info-row-val">Moderate discharge</span></div>
+        <div class="info-row"><span class="info-row-label">C/2 (2 hr)</span><span class="info-row-val">High demand</span></div>
+        <div class="info-row"><span class="info-row-label">C/1 (1 hr)</span><span class="info-row-val">Peak · reduce capacity ~80%</span></div>
+        <div style="margin-top:10px;font-size:11.5px;color:var(--text2);line-height:1.6;padding:10px 12px;background:var(--off);border-radius:10px;border:1px solid var(--border);">
+          ⚡ Higher C-rates reduce effective battery capacity. Lead-acid is especially sensitive — size generously.
+        </div>
+      </div>
+    </div>
+
+    <!-- Design Tips -->
+    <div class="info-card">
+      <div class="info-card-header">
+        <div class="card-icon" style="font-size:16px;">💡</div>
+        <div>
+          <div class="card-title" style="font-size:15px;">Design Tips</div>
+          <div class="card-sub">Best practices</div>
+        </div>
+      </div>
+      <div class="info-card-body">
+        <ul class="tip-list">
+          <li>Always derate for temperature — battery capacity drops ~1% per °C below 25°C for lead-acid.</li>
+          <li>Add 20–25% safety margin for aging over the battery lifespan.</li>
+          <li>Keep series strings ≤ 4 for lead-acid to maintain cell balance.</li>
+          <li>Use a BMS for lithium banks to prevent over-charge and deep discharge.</li>
+          <li>Size cables for maximum discharge current, not average.</li>
+          <li>Ventilate lead-acid banks — hydrogen gas is released during charging.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Glossary -->
+    <div class="info-card">
+      <div class="info-card-header">
+        <div class="card-icon" style="font-size:16px;">📖</div>
+        <div>
+          <div class="card-title" style="font-size:15px;">Glossary</div>
+        </div>
+      </div>
+      <div class="info-card-body">
+        <div class="glossary-row"><div class="glossary-term">DoD — Depth of Discharge</div><div class="glossary-def">% of battery capacity that can be used before recharging. Exceeding damages the battery.</div></div>
+        <div class="glossary-row"><div class="glossary-term">Ah — Ampere-Hour</div><div class="glossary-def">A measure of battery capacity. 100Ah = 100A for 1hr, or 10A for 10hrs.</div></div>
+        <div class="glossary-row"><div class="glossary-term">C-Rate</div><div class="glossary-def">Discharge speed relative to capacity. C/10 means full discharge in 10 hours.</div></div>
+        <div class="glossary-row"><div class="glossary-term">η — Efficiency</div><div class="glossary-def">Ratio of output to input energy, accounting for losses in battery, inverter, and cables.</div></div>
+        <div class="glossary-row"><div class="glossary-term">BMS</div><div class="glossary-def">Battery Management System — monitors and protects lithium cells from unsafe conditions.</div></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="calc-body">
-  <div class="panel">
-    <div class="panel-title">⚙ Load & System Parameters</div>
-    <div class="field">
-      <label>UPS Type</label>
-      <select id="upstype" onchange="toggleUPS()">
-        <option value="ups">Online UPS (AC Load)</option>
-        <option value="dc">DC Battery Bank (DC Load)</option>
-      </select>
-    </div>
-    <div class="field" id="f-acload">
-      <label>Total AC Load <span class="unit">[ kVA ]</span></label>
-      <input type="number" id="acload" placeholder="e.g. 10" step="any">
-    </div>
-    <div class="field" id="f-pfups">
-      <label>Load Power Factor <span class="unit">[ 0–1 ]</span></label>
-      <input type="number" id="pfups" value="0.8" step="0.01">
-    </div>
-    <div class="field" id="f-dcload" style="display:none">
-      <label>DC Load Current <span class="unit">[ Amperes ]</span></label>
-      <input type="number" id="dcload" placeholder="e.g. 50" step="any">
-    </div>
-    <div class="field">
-      <label>Battery Voltage (System) <span class="unit">[ V ]</span></label>
-      <select id="sysvolt">
-        <option value="12">12 V</option>
-        <option value="24">24 V</option>
-        <option value="48">48 V</option>
-        <option value="110">110 V DC</option>
-        <option value="220">220 V DC</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Cell Voltage <span class="unit">[ V/cell ]</span></label>
-      <select id="vcell">
-        <option value="2.0">2.0 V — VRLA / Lead-Acid</option>
-        <option value="2.25">2.25 V — Flooded Lead-Acid</option>
-        <option value="3.2">3.2 V — LiFePO₄</option>
-        <option value="3.7">3.7 V — Li-ion NMC</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Backup Time Required <span class="unit">[ minutes ]</span></label>
-      <input type="number" id="backup" placeholder="e.g. 60" step="any">
-    </div>
-    <div class="field">
-      <label>Depth of Discharge (DoD) <span class="unit">[ % ]</span></label>
-      <select id="dod">
-        <option value="80">80% — VRLA standard</option>
-        <option value="50">50% — Conservative</option>
-        <option value="90">90% — LiFePO₄</option>
-        <option value="100">100% — Full discharge</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Temperature Correction Factor</label>
-      <select id="tcf">
-        <option value="1.0">1.0 — 25°C (nominal)</option>
-        <option value="1.11">1.11 — 15°C</option>
-        <option value="1.25">1.25 — 5°C</option>
-        <option value="0.95">0.95 — 35°C (hot climate)</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>UPS Efficiency (η) <span class="unit">[ % ]</span></label>
-      <input type="number" id="upseta" value="90" step="any">
-    </div>
-    <button class="btn" onclick="calcUPS()">CALCULATE</button>
-    <button class="btn btn-outline" onclick="clrUPS()">CLEAR</button>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Task<em>Junction</em></div>
+  <div class="footer-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#electrical">Electrical Tools</a>
+    <a href="index.html#mechanical">Mechanical Tools</a>
+    <a href="index.html#privacy">Privacy</a>
+    <a href="mailto:vaibhavdhokpande@gmail.com">Contact</a>
   </div>
+  <p class="footer-copy">Made by Vaibhav Dhokpande &nbsp;·&nbsp; © 2025 TaskJunction. All rights reserved.</p>
+</footer>
 
-  <div class="panel">
-    <div class="panel-title">📊 Battery & UPS Results</div>
-    <div class="result-grid">
-      <div class="result-item" id="ru-Pload"><div class="result-label">Load Power</div><div class="result-value" id="rv-Pload">—</div><div class="result-unit">kW</div></div>
-      <div class="result-item" id="ru-Idc"><div class="result-label">DC Discharge Current</div><div class="result-value" id="rv-Idc">—</div><div class="result-unit">A</div></div>
-      <div class="result-item" id="ru-Cap"><div class="result-label">Battery Capacity (Ah)</div><div class="result-value" id="rv-Cap">—</div><div class="result-unit">Ah</div></div>
-      <div class="result-item" id="ru-Ncells"><div class="result-label">No. of Cells in Series</div><div class="result-value" id="rv-Ncells">—</div></div>
-      <div class="result-item" id="ru-Npar"><div class="result-label">Strings in Parallel</div><div class="result-value" id="rv-Npar">—</div></div>
-      <div class="result-item" id="ru-Ntot"><div class="result-label">Total Battery Cells</div><div class="result-value" id="rv-Ntot">—</div></div>
-      <div class="result-item" id="ru-Ich"><div class="result-label">Charger Current</div><div class="result-value" id="rv-Ich">—</div><div class="result-unit">A</div></div>
-      <div class="result-item" id="ru-kVA"><div class="result-label">UPS kVA Rating</div><div class="result-value" id="rv-kVA">—</div><div class="result-unit">kVA</div></div>
-    </div>
-    <div class="formula-box">
-      <strong>IEEE 485 METHOD:</strong><br>
-      I<sub>dc</sub> = P<sub>load</sub> / (V<sub>bat</sub> × η)<br>
-      C = I<sub>dc</sub> × T<sub>backup</sub> / (DoD × TCF) &nbsp;[Ah]<br>
-      N<sub>series</sub> = V<sub>system</sub> / V<sub>cell</sub><br>
-      I<sub>charger</sub> = C / 10 + I<sub>load</sub>
-    </div>
-  </div>
-
-  <div class="panel panel-full">
-    <div class="panel-title">📋 Standard Battery Cell Ratings Reference</div>
-    <table class="ref-table">
-      <thead><tr><th>Technology</th><th>Cell V</th><th>DoD</th><th>Cycle Life</th><th>Application</th></tr></thead>
-      <tbody>
-        <tr><td>VRLA / AGM</td><td>2.0 V</td><td>80%</td><td>500–1000</td><td>UPS, Telecom</td></tr>
-        <tr><td>Flooded Lead-Acid</td><td>2.25 V</td><td>70–80%</td><td>1500+</td><td>Substations, SCADA</td></tr>
-        <tr><td>LiFePO₄</td><td>3.2 V</td><td>90%</td><td>3000–6000</td><td>Solar, EV, Modern UPS</td></tr>
-        <tr><td>Li-ion NMC</td><td>3.7 V</td><td>80–90%</td><td>1000–3000</td><td>Portable, data centre</td></tr>
-        <tr><td>Ni-Cd</td><td>1.2 V</td><td>80%</td><td>2000+</td><td>Emergency lighting</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="footer">// ELECCALC PRO · BATTERY BANK & UPS · IEEE 485</div>
 <script>
-function toggleUPS() {
-  const t = document.getElementById('upstype').value;
-  document.getElementById('f-acload').style.display = t === 'ups' ? '' : 'none';
-  document.getElementById('f-pfups').style.display = t === 'ups' ? '' : 'none';
-  document.getElementById('f-dcload').style.display = t === 'dc' ? '' : 'none';
+/* ─── STATE ─── */
+let mode = 'battery';
+let batType = 'lead';
+
+const DEFAULTS = {
+  lead:    { dod: 50, eta: 80, cellV: 12 },
+  lithium: { dod: 80, eta: 95, cellV: 3.7 },
+  gel:     { dod: 60, eta: 82, cellV: 12 },
+  lfp:     { dod: 90, eta: 97, cellV: 3.2 },
+};
+
+/* ─── MODE ─── */
+function setMode(m) {
+  mode = m;
+  ['battery','ups','solar'].forEach(id => {
+    document.getElementById('tab' + id.charAt(0).toUpperCase() + id.slice(1))?.classList.toggle('active', id === m);
+  });
+  document.getElementById('upsNote').style.display = m === 'ups' ? '' : 'none';
+  document.getElementById('solarNote').style.display = m === 'solar' ? '' : 'none';
+  document.getElementById('solarDaysField').style.display = m === 'solar' ? '' : 'none';
+  document.getElementById('dischargeRateField').style.display = m === 'solar' ? 'none' : '';
+  document.getElementById('modeLabel').textContent =
+    m === 'ups' ? 'UPS System Design' :
+    m === 'solar' ? 'Solar Storage Design' : 'Battery Bank Design';
 }
 
-function calcUPS() {
-  const t = document.getElementById('upstype').value;
-  const Vbat = parseFloat(document.getElementById('sysvolt').value);
-  const Vcell = parseFloat(document.getElementById('vcell').value);
-  const Tbak = parseFloat(document.getElementById('backup').value);
-  const dod = parseFloat(document.getElementById('dod').value) / 100;
-  const tcf = parseFloat(document.getElementById('tcf').value);
-  const eta = parseFloat(document.getElementById('upseta').value) / 100;
-  const pf = parseFloat(document.getElementById('pfups').value);
+/* ─── BAT TYPE ─── */
+function selectBatType(type) {
+  batType = type;
+  ['lead','lithium','gel','lfp'].forEach(t => {
+    const btn = document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1));
+    if(btn) btn.classList.toggle('selected', t === type);
+  });
+  const d = DEFAULTS[type];
+  document.getElementById('dod').value = d.dod;
+  document.getElementById('dodVal').textContent = d.dod + '%';
+  document.getElementById('eta').value = d.eta;
+  document.getElementById('etaVal').textContent = d.eta + '%';
+  document.getElementById('cellVoltage').value = d.cellV;
+}
 
-  let Pload_W, Idc_bat;
-  if (t === 'ups') {
-    const acload_kva = parseFloat(document.getElementById('acload').value);
-    if (isNaN(acload_kva)) { alert('Enter AC Load.'); return; }
-    Pload_W = acload_kva * 1000 * pf;
-    Idc_bat = Pload_W / (Vbat * eta);
-  } else {
-    Idc_bat = parseFloat(document.getElementById('dcload').value);
-    if (isNaN(Idc_bat)) { alert('Enter DC Load.'); return; }
-    Pload_W = Idc_bat * Vbat;
+/* ─── SLIDER ─── */
+function updateSlider(id, valId, unit) {
+  document.getElementById(valId).textContent = document.getElementById(id).value + unit;
+}
+
+/* ─── CALCULATE ─── */
+function calculate() {
+  const loadW      = parseFloat(document.getElementById('loadPower').value) || 0;
+  const pf         = parseFloat(document.getElementById('pf').value) || 0.9;
+  const sysV       = parseFloat(document.getElementById('sysVoltage').value);
+  const loadFactor = parseFloat(document.getElementById('loadFactor').value) / 100;
+  const hours      = parseFloat(document.getElementById('backupHours').value) || 4;
+  const dod        = parseFloat(document.getElementById('dod').value) / 100;
+  const eta        = parseFloat(document.getElementById('eta').value) / 100;
+  const cellV      = parseFloat(document.getElementById('cellVoltage').value);
+  const safety     = parseFloat(document.getElementById('safetyFactor').value) / 100;
+  const batAh      = parseFloat(document.getElementById('batAh').value) || 100;
+  const cRate      = parseFloat(document.getElementById('cRate').value);
+
+  // C-rate derating factor (capacity reduces at higher discharge rates for lead-acid)
+  const cRateDerate = batType === 'lead' || batType === 'gel'
+    ? Math.min(1, cRate / 10 * 0.85 + 0.15)
+    : 1.0;
+
+  // UPS adds inverter load factor
+  const modeMargin = mode === 'ups' ? 1.25 : 1.0;
+
+  // Actual load
+  const actualLoadW = loadW * loadFactor * modeMargin;
+
+  // Energy needed (Wh)
+  const energyWh = (actualLoadW * hours) / eta;
+
+  // With safety/aging factor
+  const energyWhSafe = energyWh * safety;
+
+  // Total Ah at system voltage
+  const totalAhRaw = energyWhSafe / sysV;
+
+  // Adjust for DoD
+  const totalAhRequired = totalAhRaw / dod / cRateDerate;
+
+  // Solar days override
+  let totalAhFinal = totalAhRequired;
+  if (mode === 'solar') {
+    const days = parseFloat(document.getElementById('solarDays').value) || 3;
+    totalAhFinal = totalAhRequired * days / (hours || 1) * hours; // autonomy-based
   }
 
-  if ([Vbat,Vcell,Tbak,dod,tcf,eta].some(isNaN)) { alert('Fill all fields.'); return; }
+  // Series strings (to match system voltage)
+  const seriesCount = Math.ceil(sysV / cellV);
 
-  const T_hr = Tbak / 60;
-  const C_raw = Idc_bat * T_hr / dod;
-  const C = C_raw * tcf;
+  // Parallel strings (to meet Ah)
+  const parallelCount = Math.ceil(totalAhFinal / batAh);
 
-  const Ncells = Math.round(Vbat / Vcell);
-  // Standard Ah ratings: pick next standard size
-  const stdAh = [7, 12, 17, 24, 38, 42, 55, 65, 75, 100, 120, 150, 200];
-  const cellAh = stdAh.find(a => a >= C) || Math.ceil(C);
-  const Npar = Math.ceil(C / cellAh);
-  const Ntot = Ncells * Npar;
+  const totalBatteries = seriesCount * parallelCount;
+  const actualAh = parallelCount * batAh;
+  const actualKWh = (actualAh * sysV) / 1000;
+  const dischargeCurrent = actualLoadW / sysV;
+  const autonomy = (actualAh * dod * eta) / (dischargeCurrent || 1);
 
-  const Ich = C / 10 + Idc_bat; // 10-hr charge + float current
-  const kVA_ups = Pload_W / (pf * 1000);
-  const stds = [1,2,3,5,7.5,10,15,20,30,40,50,60,80,100,120,160,200];
-  const kVA_std = stds.find(s => s >= kVA_ups) || Math.ceil(kVA_ups);
+  // Render
+  document.getElementById('rTotalAh').textContent = Math.ceil(totalAhFinal);
+  document.getElementById('rTotalKWh').textContent = ((totalAhFinal * sysV) / 1000).toFixed(2);
+  document.getElementById('rHeroNote').textContent =
+    `${actualLoadW.toFixed(0)} W effective load × ${hours} hrs backup at ${(dod*100).toFixed(0)}% DoD`;
+  document.getElementById('rSeries').textContent = seriesCount;
+  document.getElementById('rParallel').textContent = parallelCount;
+  document.getElementById('rTotal').textContent = totalBatteries;
+  document.getElementById('rActualAh').textContent = actualAh;
+  document.getElementById('rCurrent').textContent = dischargeCurrent.toFixed(1);
+  document.getElementById('rAutonomy').textContent = Math.min(autonomy, 999).toFixed(1);
+  document.getElementById('rEtaLabel').textContent = (eta * 100).toFixed(0) + '%';
+  document.getElementById('rEtaBar').style.width = (eta * 100) + '%';
+  document.getElementById('rDodApplied').textContent = (dod * 100).toFixed(0) + '%';
 
-  const s = (id, val) => { document.getElementById('rv-'+id).textContent = val; document.getElementById('ru-'+id).classList.add('active'); };
-  s('Pload', (Pload_W/1000).toFixed(2));
-  s('Idc', Idc_bat.toFixed(1));
-  s('Cap', C.toFixed(1) + ' Ah → Use ' + cellAh + ' Ah cells');
-  s('Ncells', Ncells + ' cells × ' + Vcell + 'V');
-  s('Npar', Npar + ' string(s) in parallel');
-  s('Ntot', Ntot + ' cells total');
-  s('Ich', Ich.toFixed(1));
-  s('kVA', kVA_std + ' kVA (standard)');
+  document.getElementById('rFormula').innerHTML =
+    `Load: <span class="formula-val">${actualLoadW.toFixed(0)} W</span> → Energy: <span class="formula-val">${energyWh.toFixed(0)} Wh</span><br>` +
+    `With safety factor: <span class="formula-val">${energyWhSafe.toFixed(0)} Wh</span><br>` +
+    `Ah at ${sysV}V: <span class="formula-val">${totalAhRaw.toFixed(1)} Ah</span> ÷ DoD ${(dod*100).toFixed(0)}% = <span class="formula-val">${totalAhFinal.toFixed(1)} Ah</span><br>` +
+    `Series: ${sysV}V ÷ ${cellV}V = <span class="formula-val">${seriesCount} units</span> | Parallel: <span class="formula-val">${parallelCount} strings</span>`;
+
+  // Warnings
+  const warn = document.getElementById('rWarning');
+  const warnText = document.getElementById('rWarningText');
+  let warnings = [];
+  if (dischargeCurrent > 200) warnings.push(`High discharge current (${dischargeCurrent.toFixed(0)} A) — use low-resistance busbars and cables.`);
+  if (seriesCount > 8) warnings.push(`Large series string (${seriesCount} cells) — consider a higher-voltage cell or different topology.`);
+  if (parallelCount > 6) warnings.push(`Many parallel strings (${parallelCount}) — install individual string fuses and monitor balancing.`);
+  if (dod > 0.8 && (batType === 'lead' || batType === 'gel')) warnings.push(`DoD of ${(dod*100).toFixed(0)}% is too high for lead-acid. Reduce to ≤60% to protect battery life.`);
+  if (warnings.length > 0) {
+    warnText.innerHTML = '<strong>Design Warnings:</strong><br>' + warnings.map(w => '• ' + w).join('<br>');
+    warn.style.display = 'flex';
+  } else {
+    warn.style.display = 'none';
+  }
+
+  // Battery visual
+  renderBatVisual(seriesCount, parallelCount);
+
+  document.getElementById('resultsPanel').classList.add('show');
+  document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-function clrUPS() {
-  ['acload','dcload','backup'].forEach(id => document.getElementById(id).value = '');
-  ['Pload','Idc','Cap','Ncells','Npar','Ntot','Ich','kVA'].forEach(id => { document.getElementById('rv-'+id).textContent='—'; document.getElementById('ru-'+id).classList.remove('active'); });
+
+function renderBatVisual(series, parallel) {
+  const wrap = document.getElementById('batVisual');
+  wrap.innerHTML = '';
+  const maxShow = Math.min(series * parallel, 32);
+  const totalBat = series * parallel;
+
+  for (let p = 0; p < Math.min(parallel, 4); p++) {
+    const rowDiv = document.createElement('div');
+    rowDiv.style.cssText = 'display:flex;align-items:flex-end;gap:4px;flex-direction:column;';
+
+    const label = document.createElement('div');
+    label.className = 'bat-label';
+    label.textContent = `S${p + 1}`;
+
+    const cells = document.createElement('div');
+    cells.style.cssText = 'display:flex;gap:3px;align-items:flex-end;';
+
+    for (let s = 0; s < Math.min(series, 8); s++) {
+      const cell = document.createElement('div');
+      cell.className = 'bat-cell' + (p % 2 === 0 ? '' : ' series');
+      const fill = document.createElement('div');
+      fill.className = 'bat-cell-fill';
+      fill.style.height = '75%';
+      cell.appendChild(fill);
+      cells.appendChild(cell);
+    }
+
+    if (series > 8) {
+      const dots = document.createElement('div');
+      dots.style.cssText = 'font-family:var(--font-m);font-size:16px;color:var(--text3);align-self:center;padding-bottom:4px;';
+      dots.textContent = '···';
+      cells.appendChild(dots);
+    }
+
+    rowDiv.appendChild(cells);
+    rowDiv.appendChild(label);
+    wrap.appendChild(rowDiv);
+  }
+
+  if (parallel > 4) {
+    const more = document.createElement('div');
+    more.style.cssText = 'align-self:center;font-family:var(--font-m);font-size:11px;color:var(--text3);padding:4px 0;';
+    more.textContent = `+${parallel - 4} more strings`;
+    wrap.appendChild(more);
+  }
+
+  document.getElementById('batVisualLabel').textContent =
+    `${Math.min(parallel, 4)} of ${parallel} strings shown · ${Math.min(series, 8)} of ${series} series cells`;
 }
+
+/* ─── RESET ─── */
+function resetForm() {
+  document.getElementById('loadPower').value = 2000;
+  document.getElementById('pf').value = 0.9;
+  document.getElementById('sysVoltage').value = 48;
+  document.getElementById('loadFactor').value = 80;
+  document.getElementById('loadFactorVal').textContent = '80%';
+  document.getElementById('backupHours').value = 4;
+  document.getElementById('safetyFactor').value = 120;
+  document.getElementById('safetyVal').textContent = '120%';
+  document.getElementById('batAh').value = 100;
+  document.getElementById('cRate').value = 10;
+  selectBatType('lead');
+  setMode('battery');
+  document.getElementById('resultsPanel').classList.remove('show');
+}
+
+/* ─── INIT ─── */
+setMode('battery');
+selectBatType('lead');
 </script>
 </body>
 </html>
