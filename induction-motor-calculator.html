@@ -3,152 +3,1391 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Induction Motor — ElecCalc Pro</title>
-<link rel="stylesheet" href="styles.css">
+<title>Induction Motor Calculator | TaskJunction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-base: #0b0f1a;
+    --bg-surface: #111827;
+    --bg-card: #161d2e;
+    --bg-card-hover: #1b2338;
+    --bg-input: #0d1422;
+    --border: #1e2d45;
+    --border-bright: #2a3d5a;
+    --accent: #f97316;
+    --accent-dim: rgba(249,115,22,0.15);
+    --accent-glow: rgba(249,115,22,0.08);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.12);
+    --teal: #14b8a6;
+    --teal-dim: rgba(20,184,166,0.12);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.12);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --amber: #f59e0b;
+    --text-primary: #f0f4ff;
+    --text-secondary: #8899bb;
+    --text-muted: #4a5e80;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+  }
+
+  body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ── Header ── */
+  header {
+    background: rgba(11,15,26,0.95);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 14px;
+    color: #fff;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+  .logo-text span { color: var(--accent); }
+  .header-badge {
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(249,115,22,0.25);
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+  }
+  .header-nav {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .nav-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 52px 0 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue-dim);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(59,130,246,0.2);
+    margin-bottom: 16px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .hero-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p {
+    color: var(--text-secondary);
+    font-size: 16px;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  /* ── Mode Tabs ── */
+  .mode-tabs {
+    display: flex;
+    gap: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 4px;
+    width: fit-content;
+    margin: 28px 0 0;
+  }
+  .mode-tab {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 8px 20px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-body);
+    white-space: nowrap;
+  }
+  .mode-tab.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .mode-tab:not(.active):hover { color: var(--text-primary); }
+
+  /* ── Main Layout ── */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 24px;
+    padding: 32px 0 60px;
+  }
+  @media (max-width: 900px) {
+    .main-layout { grid-template-columns: 1fr; }
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title::before {
+    content: '';
+    width: 3px; height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* ── Form ── */
+  .form-section { margin-bottom: 24px; }
+  .form-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+  }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  input[type="number"] {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: var(--font-mono);
+    padding: 10px 46px 10px 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .unit-tag {
+    position: absolute;
+    right: 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    pointer-events: none;
+  }
+  select {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 14px;
+    padding: 10px 12px;
+    transition: border-color 0.2s;
+    appearance: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+  }
+  select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    font-size: 12px;
+  }
+  .calc-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font-display);
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .calc-btn:hover { background: #ea6b0d; transform: translateY(-1px); }
+  .calc-btn:active { transform: translateY(0); }
+  .reset-btn {
+    width: 100%;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .reset-btn:hover { border-color: var(--border-bright); color: var(--text-primary); }
+
+  /* ── Results ── */
+  .results-panel { display: flex; flex-direction: column; gap: 20px; }
+
+  /* Summary Row */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 1100px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
+  .metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .metric-card:hover { border-color: var(--border-bright); }
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .metric-card.orange::before { background: var(--accent); }
+  .metric-card.blue::before { background: var(--blue); }
+  .metric-card.teal::before { background: var(--teal); }
+  .metric-card.green::before { background: var(--green); }
+  .metric-card.red::before { background: var(--red); }
+  .metric-card.amber::before { background: var(--amber); }
+  .metric-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+  .metric-value {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .metric-card.orange .metric-value { color: var(--accent); }
+  .metric-card.blue .metric-value { color: var(--blue); }
+  .metric-card.teal .metric-value { color: var(--teal); }
+  .metric-card.green .metric-value { color: var(--green); }
+  .metric-card.red .metric-value { color: var(--red); }
+  .metric-card.amber .metric-value { color: var(--amber); }
+  .metric-unit {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  /* Detail Tables */
+  .detail-card { position: relative; }
+  .detail-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+  .detail-tab {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-mono);
+  }
+  .detail-tab.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(249,115,22,0.3); }
+  .detail-tab:not(.active):hover { border-color: var(--border-bright); color: var(--text-primary); }
+  .detail-section { display: none; }
+  .detail-section.active { display: block; }
+  .result-table { width: 100%; border-collapse: collapse; }
+  .result-table tr { border-bottom: 1px solid var(--border); }
+  .result-table tr:last-child { border-bottom: none; }
+  .result-table td {
+    padding: 12px 0;
+    font-size: 13.5px;
+  }
+  .result-table td:first-child { color: var(--text-secondary); }
+  .result-table td:last-child {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .result-table .highlight td:last-child { color: var(--accent); font-weight: 600; }
+
+  /* Efficiency Bar */
+  .eff-bar-wrap { margin-top: 16px; }
+  .eff-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+  }
+  .eff-bar-track {
+    height: 8px;
+    background: var(--bg-input);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .eff-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* Torque-Speed Chart */
+  .chart-card { min-height: 280px; }
+  #torqueCanvas { width: 100%; display: block; }
+
+  /* Warning/Info banners */
+  .banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    margin-top: 16px;
+  }
+  .banner.warn {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.25);
+    color: #fbbf24;
+  }
+  .banner.info {
+    background: var(--blue-dim);
+    border: 1px solid rgba(59,130,246,0.25);
+    color: #60a5fa;
+  }
+  .banner-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Formula Legend */
+  .formula-box {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-top: 20px;
+  }
+  .formula-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 10px;
+  }
+  .formula-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12.5px;
+    font-family: var(--font-mono);
+  }
+  .formula-row:last-child { margin-bottom: 0; }
+  .formula-sym { color: var(--accent); font-weight: 600; min-width: 90px; }
+  .formula-eq { color: var(--text-secondary); }
+
+  /* Placeholder state */
+  .placeholder-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-muted);
+  }
+  .placeholder-icon {
+    width: 60px; height: 60px;
+    border: 2px dashed var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: var(--text-muted);
+  }
+  .placeholder-state h3 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .placeholder-state p { font-size: 13px; line-height: 1.5; max-width: 260px; }
+
+  /* Hide/show */
+  .hidden { display: none !important; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+    margin-top: 0;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+</style>
 </head>
 <body>
-<nav class="top-nav">
-  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
-  <a href="index.html" class="nav-back">← BACK</a>
-</nav>
-<div class="calc-header">
-  <div class="calc-tag">// CALCULATOR 04 OF 08</div>
-  <h1 class="calc-title"><span class="icon">🔄</span>Induction Motor Calculator</h1>
-  <p class="calc-desc">Synchronous speed, slip, rotor speed, full load torque, starting current, and efficiency analysis for 3Φ induction motors. IS 325 / IEC 60034.</p>
-</div>
 
-<div class="calc-body">
-  <div class="panel">
-    <div class="panel-title">⚙ Motor Nameplate Data</div>
-    <div class="field">
-      <label>Rated Power <span class="unit">[ kW ]</span></label>
-      <input type="number" id="prated" placeholder="e.g. 15" step="any">
-    </div>
-    <div class="field">
-      <label>Supply Frequency <span class="unit">[ Hz ]</span></label>
-      <select id="freq">
-        <option value="50">50 Hz (India / Europe)</option>
-        <option value="60">60 Hz (USA)</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Number of Poles</label>
-      <select id="poles">
-        <option value="2">2 Poles</option>
-        <option value="4" selected>4 Poles</option>
-        <option value="6">6 Poles</option>
-        <option value="8">8 Poles</option>
-        <option value="10">10 Poles</option>
-        <option value="12">12 Poles</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Rated Speed (N<sub>r</sub>) <span class="unit">[ RPM ]</span></label>
-      <input type="number" id="nr" placeholder="e.g. 1450" step="any">
-    </div>
-    <div class="field">
-      <label>Rated Voltage <span class="unit">[ V ]</span></label>
-      <input type="number" id="vmot" value="415" step="any">
-    </div>
-    <div class="field">
-      <label>Full Load Efficiency (η) <span class="unit">[ % ]</span></label>
-      <input type="number" id="eta" placeholder="e.g. 90" value="90" step="any">
-    </div>
-    <div class="field">
-      <label>Full Load Power Factor <span class="unit">[ 0–1 ]</span></label>
-      <input type="number" id="pfmot" placeholder="e.g. 0.85" value="0.85" step="0.01">
-    </div>
-    <div class="field">
-      <label>Starting Current Multiplier (I<sub>start</sub>/I<sub>FL</sub>)</label>
-      <select id="kstart">
-        <option value="6">6× (DOL typical)</option>
-        <option value="7">7× (large motors)</option>
-        <option value="2.5">2.5× (Star-Delta)</option>
-        <option value="1.5">1.5× (VFD)</option>
-      </select>
-    </div>
-    <button class="btn" onclick="calcMotor()">CALCULATE</button>
-    <button class="btn btn-outline" onclick="clrMotor()">CLEAR</button>
-  </div>
-
-  <div class="panel">
-    <div class="panel-title">📊 Motor Performance</div>
-    <div class="result-grid">
-      <div class="result-item" id="rm-ns"><div class="result-label">Synchronous Speed</div><div class="result-value" id="rv-ns">—</div><div class="result-unit">RPM</div></div>
-      <div class="result-item" id="rm-slip"><div class="result-label">Full Load Slip</div><div class="result-value" id="rv-slip">—</div><div class="result-unit">%</div></div>
-      <div class="result-item" id="rm-T"><div class="result-label">Full Load Torque</div><div class="result-value" id="rv-T">—</div><div class="result-unit">N·m</div></div>
-      <div class="result-item" id="rm-Ifl"><div class="result-label">Full Load Current</div><div class="result-value" id="rv-Ifl">—</div><div class="result-unit">A</div></div>
-      <div class="result-item" id="rm-Ist"><div class="result-label">Starting Current</div><div class="result-value" id="rv-Ist">—</div><div class="result-unit">A</div></div>
-      <div class="result-item" id="rm-Pin"><div class="result-label">Input Power</div><div class="result-value" id="rv-Pin">—</div><div class="result-unit">kW</div></div>
-      <div class="result-item" id="rm-kVA"><div class="result-label">Input kVA</div><div class="result-value" id="rv-kVA">—</div><div class="result-unit">kVA</div></div>
-      <div class="result-item" id="rm-kVAR"><div class="result-label">Reactive kVAR</div><div class="result-value" id="rv-kVAR">—</div><div class="result-unit">kVAR</div></div>
+<!-- Header -->
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a class="logo" href="#">
+        <div class="logo-icon">TJ</div>
+        <span class="logo-text">Task<span>Junction</span></span>
+      </a>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="header-badge">ENGINEERING TOOLS</span>
+        <nav class="header-nav">
+          <button class="nav-btn active">Motor Calc</button>
+          <button class="nav-btn">Transformers</button>
+          <button class="nav-btn">Power Factor</button>
+        </nav>
+      </div>
     </div>
   </div>
+</header>
 
-  <div class="panel panel-full">
-    <div class="panel-title">📋 Standard Motor Frame Sizes — IS 325</div>
-    <table class="ref-table">
-      <thead><tr><th>kW Rating</th><th>HP</th><th>Frame (IEC)</th><th>Typical FLC (415V)</th><th>Eff. Class</th></tr></thead>
-      <tbody>
-        <tr><td>0.37</td><td>0.5</td><td>63</td><td>1.2 A</td><td>IE2</td></tr>
-        <tr><td>0.75</td><td>1</td><td>71</td><td>2.0 A</td><td>IE2</td></tr>
-        <tr><td>1.5</td><td>2</td><td>80</td><td>3.5 A</td><td>IE2</td></tr>
-        <tr><td>2.2</td><td>3</td><td>90S</td><td>5.0 A</td><td>IE2</td></tr>
-        <tr><td>3.7</td><td>5</td><td>100L</td><td>7.8 A</td><td>IE2</td></tr>
-        <tr><td>5.5</td><td>7.5</td><td>112M</td><td>11.5 A</td><td>IE2</td></tr>
-        <tr><td>7.5</td><td>10</td><td>132S</td><td>15.5 A</td><td>IE2</td></tr>
-        <tr><td>11</td><td>15</td><td>132M</td><td>22.0 A</td><td>IE2</td></tr>
-        <tr><td>15</td><td>20</td><td>160M</td><td>30.0 A</td><td>IE2</td></tr>
-        <tr><td>18.5</td><td>25</td><td>160L</td><td>36.0 A</td><td>IE3</td></tr>
-        <tr><td>22</td><td>30</td><td>180M</td><td>43.0 A</td><td>IE3</td></tr>
-        <tr><td>30</td><td>40</td><td>200L</td><td>57.0 A</td><td>IE3</td></tr>
-        <tr><td>37</td><td>50</td><td>225S</td><td>70.0 A</td><td>IE3</td></tr>
-      </tbody>
-    </table>
-    <div class="formula-box">
-      <strong>N<sub>s</sub></strong> = 120f / P &nbsp;&nbsp; <strong>Slip</strong> = (N<sub>s</sub> − N<sub>r</sub>) / N<sub>s</sub><br>
-      <strong>T<sub>FL</sub></strong> = P × 1000 / (2π × N<sub>r</sub> / 60) N·m<br>
-      <strong>I<sub>FL</sub></strong> = P × 1000 / (√3 × V × η/100 × PF)
+<!-- Hero -->
+<div class="container">
+  <div class="hero">
+    <div class="hero-label">3-Phase AC Machine Analysis</div>
+    <h1>Induction Motor<br><em>Calculator</em></h1>
+    <p>Compute slip, rotor speed, torque, efficiency and starting current for three-phase induction motors with full-load and no-load analysis.</p>
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="switchMode('fullload')">Full-Load Analysis</button>
+      <button class="mode-tab" onclick="switchMode('noload')">No-Load Analysis</button>
+      <button class="mode-tab" onclick="switchMode('starting')">Starting Conditions</button>
     </div>
   </div>
 </div>
-<div class="footer">// ELECCALC PRO · INDUCTION MOTOR · IS 325</div>
+
+<!-- Main -->
+<div class="container">
+  <div class="main-layout">
+
+    <!-- Input Panel -->
+    <div>
+      <div class="card">
+        <div class="card-title">Motor Parameters</div>
+
+        <!-- Mode: Full-Load -->
+        <div id="inputs-fullload">
+          <div class="form-section">
+            <div class="form-section-label">Nameplate Data</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Rated Power</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-power" value="15" min="0.1" step="0.1">
+                  <span class="unit-tag">kW</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Supply Frequency</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-freq" value="50" min="1" step="1">
+                  <span class="unit-tag">Hz</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Pole Pairs (p)</label>
+                <div class="select-wrap">
+                  <select id="fl-poles">
+                    <option value="1">2 poles (p=1)</option>
+                    <option value="2" selected>4 poles (p=2)</option>
+                    <option value="3">6 poles (p=3)</option>
+                    <option value="4">8 poles (p=4)</option>
+                    <option value="5">10 poles (p=5)</option>
+                    <option value="6">12 poles (p=6)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Rotor Speed (actual)</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-nrotor" value="1450" min="0" step="1">
+                  <span class="unit-tag">RPM</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Line Voltage (VL)</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-voltage" value="415" min="1" step="1">
+                  <span class="unit-tag">V</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Power Factor (PF)</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-pf" value="0.85" min="0.01" max="1" step="0.01">
+                  <span class="unit-tag">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-label">Loss Data</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Stator Cu Loss</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-pcu1" value="400" min="0" step="10">
+                  <span class="unit-tag">W</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Rotor Cu Loss</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-pcu2" value="300" min="0" step="10">
+                  <span class="unit-tag">W</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Core (Iron) Loss</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-pcore" value="200" min="0" step="10">
+                  <span class="unit-tag">W</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Mech + Stray Loss</label>
+                <div class="input-wrap">
+                  <input type="number" id="fl-pmech" value="150" min="0" step="10">
+                  <span class="unit-tag">W</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode: No-Load -->
+        <div id="inputs-noload" class="hidden">
+          <div class="form-section">
+            <div class="form-section-label">No-Load Test Data</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Line Voltage</label>
+                <div class="input-wrap">
+                  <input type="number" id="nl-voltage" value="415" min="1" step="1">
+                  <span class="unit-tag">V</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>No-Load Current</label>
+                <div class="input-wrap">
+                  <input type="number" id="nl-current" value="5.2" min="0" step="0.1">
+                  <span class="unit-tag">A</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>No-Load Power</label>
+                <div class="input-wrap">
+                  <input type="number" id="nl-power" value="650" min="0" step="10">
+                  <span class="unit-tag">W</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Supply Frequency</label>
+                <div class="input-wrap">
+                  <input type="number" id="nl-freq" value="50" min="1" step="1">
+                  <span class="unit-tag">Hz</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Pole Pairs (p)</label>
+                <div class="select-wrap">
+                  <select id="nl-poles">
+                    <option value="1">2 poles (p=1)</option>
+                    <option value="2" selected>4 poles (p=2)</option>
+                    <option value="3">6 poles (p=3)</option>
+                    <option value="4">8 poles (p=4)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Stator Resistance (R1)</label>
+                <div class="input-wrap">
+                  <input type="number" id="nl-r1" value="0.5" min="0" step="0.01">
+                  <span class="unit-tag">Ω</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode: Starting -->
+        <div id="inputs-starting" class="hidden">
+          <div class="form-section">
+            <div class="form-section-label">Motor Circuit Parameters</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Line Voltage</label>
+                <div class="input-wrap">
+                  <input type="number" id="st-voltage" value="415" min="1" step="1">
+                  <span class="unit-tag">V</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Stator Resistance (R1)</label>
+                <div class="input-wrap">
+                  <input type="number" id="st-r1" value="0.5" min="0" step="0.01">
+                  <span class="unit-tag">Ω</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Stator Reactance (X1)</label>
+                <div class="input-wrap">
+                  <input type="number" id="st-x1" value="1.2" min="0" step="0.01">
+                  <span class="unit-tag">Ω</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Rotor Resistance (R2')</label>
+                <div class="input-wrap">
+                  <input type="number" id="st-r2" value="0.4" min="0" step="0.01">
+                  <span class="unit-tag">Ω</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Rotor Reactance (X2')</label>
+                <div class="input-wrap">
+                  <input type="number" id="st-x2" value="0.9" min="0" step="0.01">
+                  <span class="unit-tag">Ω</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Magnetizing Reactance</label>
+                <div class="input-wrap">
+                  <input type="number" id="st-xm" value="35" min="0" step="0.5">
+                  <span class="unit-tag">Ω</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Frequency</label>
+                <div class="input-wrap">
+                  <input type="number" id="st-freq" value="50" min="1" step="1">
+                  <span class="unit-tag">Hz</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Pole Pairs (p)</label>
+                <div class="select-wrap">
+                  <select id="st-poles">
+                    <option value="1">2 poles (p=1)</option>
+                    <option value="2" selected>4 poles (p=2)</option>
+                    <option value="3">6 poles (p=3)</option>
+                    <option value="4">8 poles (p=4)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="calc-btn" onclick="calculate()">⚡ Calculate Results</button>
+        <button class="reset-btn" onclick="resetDefaults()">↺ Reset to Defaults</button>
+
+        <!-- Formula Legend -->
+        <div class="formula-box">
+          <div class="formula-title">Key Formulae</div>
+          <div class="formula-row"><span class="formula-sym">Ns</span><span class="formula-eq">= 60f / p</span></div>
+          <div class="formula-row"><span class="formula-sym">Slip (s)</span><span class="formula-eq">= (Ns − Nr) / Ns</span></div>
+          <div class="formula-row"><span class="formula-sym">Torque</span><span class="formula-eq">= P_mech / ω_r</span></div>
+          <div class="formula-row"><span class="formula-sym">η</span><span class="formula-eq">= P_out / P_in × 100%</span></div>
+          <div class="formula-row"><span class="formula-sym">I_start</span><span class="formula-eq">= V_ph / |Z_eq|</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="results-panel">
+
+      <!-- Placeholder -->
+      <div id="placeholder" class="card">
+        <div class="placeholder-state">
+          <div class="placeholder-icon">⚙</div>
+          <h3>Ready to Compute</h3>
+          <p>Enter motor parameters on the left and click Calculate Results to view full analysis.</p>
+        </div>
+      </div>
+
+      <!-- Actual Results (hidden until calculated) -->
+      <div id="results-area" class="hidden">
+
+        <!-- Summary Metrics -->
+        <div class="summary-grid" id="summary-cards">
+          <!-- Injected by JS -->
+        </div>
+
+        <!-- Detail Tabs -->
+        <div class="card detail-card">
+          <div class="detail-tabs" id="detail-tabs">
+            <button class="detail-tab active" onclick="showTab('performance')">Performance</button>
+            <button class="detail-tab" onclick="showTab('losses')">Losses</button>
+            <button class="detail-tab" onclick="showTab('electrical')">Electrical</button>
+          </div>
+
+          <div id="tab-performance" class="detail-section active">
+            <table class="result-table" id="tbl-performance"></table>
+          </div>
+          <div id="tab-losses" class="detail-section">
+            <table class="result-table" id="tbl-losses"></table>
+          </div>
+          <div id="tab-electrical" class="detail-section">
+            <table class="result-table" id="tbl-electrical"></table>
+          </div>
+
+          <!-- Efficiency bar -->
+          <div class="eff-bar-wrap" id="eff-bar-section">
+            <div class="eff-bar-label">
+              <span>Efficiency</span>
+              <span id="eff-pct-label">—</span>
+            </div>
+            <div class="eff-bar-track">
+              <div class="eff-bar-fill" id="eff-bar" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div id="warning-banner"></div>
+        </div>
+
+        <!-- Torque-Speed Curve -->
+        <div class="card chart-card" id="chart-card">
+          <div class="card-title">Torque–Speed Characteristic</div>
+          <canvas id="torqueCanvas" height="220"></canvas>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© 2025 TaskJunction Engineering Tools</span>
+      <div class="footer-links">
+        <a href="#">Documentation</a>
+        <a href="#">About Formulae</a>
+        <a href="#">Feedback</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-function calcMotor() {
-  const Pr = parseFloat(document.getElementById('prated').value);
-  const f = parseFloat(document.getElementById('freq').value);
-  const poles = parseFloat(document.getElementById('poles').value);
-  const Nr = parseFloat(document.getElementById('nr').value);
-  const V = parseFloat(document.getElementById('vmot').value);
-  const eta = parseFloat(document.getElementById('eta').value) / 100;
-  const pf = parseFloat(document.getElementById('pfmot').value);
-  const ks = parseFloat(document.getElementById('kstart').value);
-  if ([Pr,f,poles,Nr,V,eta,pf].some(isNaN)) { alert('Fill all fields.'); return; }
+let currentMode = 'fullload';
+let torqueChart = null;
 
-  const Ns = 120 * f / poles;
-  const slip = (Ns - Nr) / Ns * 100;
-  const T = Pr * 1000 / (2 * Math.PI * Nr / 60);
-  const Ifl = Pr * 1000 / (Math.sqrt(3) * V * eta * pf);
-  const Ist = Ifl * ks;
-  const Pin = Pr / eta;
-  const kVA = Math.sqrt(3) * V * Ifl / 1000;
-  const kVAR = kVA * Math.sqrt(1 - pf * pf);
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach((t,i)=>{
+    const modes = ['fullload','noload','starting'];
+    t.classList.toggle('active', modes[i]===mode);
+  });
+  document.getElementById('inputs-fullload').classList.toggle('hidden', mode!=='fullload');
+  document.getElementById('inputs-noload').classList.toggle('hidden', mode!=='noload');
+  document.getElementById('inputs-starting').classList.toggle('hidden', mode!=='starting');
 
-  const set = (id, val) => { document.getElementById(id).textContent = val; document.getElementById(id.replace('rv-','rm-')).classList.add('active'); };
-  set('rv-ns', Ns.toFixed(0));
-  set('rv-slip', slip.toFixed(2));
-  set('rv-T', T.toFixed(2));
-  set('rv-Ifl', Ifl.toFixed(2));
-  set('rv-Ist', Ist.toFixed(2));
-  set('rv-Pin', Pin.toFixed(3));
-  set('rv-kVA', kVA.toFixed(3));
-  set('rv-kVAR', kVAR.toFixed(3));
+  // Adjust visible detail tabs
+  const detailTabs = document.getElementById('detail-tabs');
+  if(mode==='starting'){
+    detailTabs.innerHTML = `
+      <button class="detail-tab active" onclick="showTab('performance')">Starting Analysis</button>
+      <button class="detail-tab" onclick="showTab('electrical')">Impedances</button>
+    `;
+  } else if(mode==='noload'){
+    detailTabs.innerHTML = `
+      <button class="detail-tab active" onclick="showTab('performance')">No-Load Results</button>
+      <button class="detail-tab" onclick="showTab('electrical')">Equivalent Cct</button>
+    `;
+  } else {
+    detailTabs.innerHTML = `
+      <button class="detail-tab active" onclick="showTab('performance')">Performance</button>
+      <button class="detail-tab" onclick="showTab('losses')">Losses</button>
+      <button class="detail-tab" onclick="showTab('electrical')">Electrical</button>
+    `;
+  }
+  showTab('performance');
+  hideResults();
 }
-function clrMotor() {
-  ['prated','nr'].forEach(id => document.getElementById(id).value = '');
-  ['rv-ns','rv-slip','rv-T','rv-Ifl','rv-Ist','rv-Pin','rv-kVA','rv-kVAR'].forEach(id => document.getElementById(id).textContent = '—');
-  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
+
+function showTab(id) {
+  document.querySelectorAll('.detail-tab').forEach(t=>{
+    const tgt = t.getAttribute('onclick').match(/'(\w+)'/)[1];
+    t.classList.toggle('active', tgt===id);
+  });
+  document.querySelectorAll('.detail-section').forEach(s=> s.classList.remove('active'));
+  const el = document.getElementById('tab-'+id);
+  if(el) el.classList.add('active');
 }
+
+function hideResults() {
+  document.getElementById('placeholder').classList.remove('hidden');
+  document.getElementById('results-area').classList.add('hidden');
+}
+
+function showResults() {
+  document.getElementById('placeholder').classList.add('hidden');
+  document.getElementById('results-area').classList.remove('hidden');
+}
+
+function fmt(n, dec=2) { return parseFloat(n.toFixed(dec)); }
+function fmtN(n, dec=2) { return n.toFixed(dec); }
+
+function fillTable(id, rows) {
+  const tbl = document.getElementById(id);
+  tbl.innerHTML = rows.map(r => `
+    <tr class="${r.highlight?'highlight':''}">
+      <td>${r.label}</td>
+      <td>${r.value}</td>
+    </tr>
+  `).join('');
+}
+
+function setSummaryCards(cards) {
+  const colors = ['orange','blue','teal','green','red','amber'];
+  document.getElementById('summary-cards').innerHTML = cards.map((c,i)=>`
+    <div class="metric-card ${colors[i%colors.length]}">
+      <div class="metric-label">${c.label}</div>
+      <div class="metric-value">${c.value}</div>
+      <div class="metric-unit">${c.unit}</div>
+    </div>
+  `).join('');
+}
+
+function calculate() {
+  if(currentMode==='fullload') calcFullLoad();
+  else if(currentMode==='noload') calcNoLoad();
+  else calcStarting();
+}
+
+function calcFullLoad() {
+  const P_out = parseFloat(document.getElementById('fl-power').value)*1000;
+  const f = parseFloat(document.getElementById('fl-freq').value);
+  const p = parseInt(document.getElementById('fl-poles').value);
+  const Nr = parseFloat(document.getElementById('fl-nrotor').value);
+  const VL = parseFloat(document.getElementById('fl-voltage').value);
+  const PF = parseFloat(document.getElementById('fl-pf').value);
+  const Pcu1 = parseFloat(document.getElementById('fl-pcu1').value);
+  const Pcu2 = parseFloat(document.getElementById('fl-pcu2').value);
+  const Pcore = parseFloat(document.getElementById('fl-pcore').value);
+  const Pmech = parseFloat(document.getElementById('fl-pmech').value);
+
+  const Ns = 60*f / p;
+  const slip = (Ns - Nr) / Ns;
+  const omega_r = 2*Math.PI*Nr/60;
+  const T_fl = P_out / omega_r;
+  const P_air_gap = P_out + Pcu2 + Pmech;
+  const P_in = P_out + Pcu1 + Pcu2 + Pcore + Pmech;
+  const eta = (P_out/P_in)*100;
+  const I_fl = P_in / (Math.sqrt(3)*VL*PF);
+  const P_total_loss = Pcu1 + Pcu2 + Pcore + Pmech;
+
+  setSummaryCards([
+    {label:'Slip', value: fmtN(slip*100, 2), unit:'%'},
+    {label:'Sync Speed', value: fmtN(Ns, 0), unit:'RPM'},
+    {label:'Full-Load Torque', value: fmtN(T_fl, 2), unit:'N·m'},
+    {label:'Efficiency', value: fmtN(eta, 2), unit:'%'},
+    {label:'Line Current', value: fmtN(I_fl, 2), unit:'A'},
+    {label:'Total Input', value: fmtN(P_in/1000, 3), unit:'kW'},
+  ]);
+
+  fillTable('tbl-performance',[
+    {label:'Synchronous Speed (Ns)', value: `${fmtN(Ns,0)} RPM`},
+    {label:'Rotor Speed (Nr)', value: `${fmtN(Nr,0)} RPM`},
+    {label:'Slip (s)', value: `${fmtN(slip*100,3)} %`, highlight:true},
+    {label:'Angular Velocity (ωr)', value: `${fmtN(omega_r,3)} rad/s`},
+    {label:'Full-Load Torque', value: `${fmtN(T_fl,3)} N·m`, highlight:true},
+    {label:'Air-Gap Power (Pag)', value: `${fmtN(P_air_gap,1)} W`},
+    {label:'Output Power', value: `${fmtN(P_out/1000,3)} kW`},
+  ]);
+
+  fillTable('tbl-losses',[
+    {label:'Stator Cu Loss (Pcu1)', value: `${fmtN(Pcu1,1)} W`},
+    {label:'Rotor Cu Loss (Pcu2)', value: `${fmtN(Pcu2,1)} W`},
+    {label:'Core Loss (Pcore)', value: `${fmtN(Pcore,1)} W`},
+    {label:'Mech + Stray Loss', value: `${fmtN(Pmech,1)} W`},
+    {label:'Total Loss', value: `${fmtN(P_total_loss,1)} W`, highlight:true},
+    {label:'Loss as % of Input', value: `${fmtN((P_total_loss/P_in)*100,2)} %`},
+    {label:'Input Power (Pin)', value: `${fmtN(P_in/1000,3)} kW`, highlight:true},
+  ]);
+
+  fillTable('tbl-electrical',[
+    {label:'Line Voltage (VL)', value: `${fmtN(VL,1)} V`},
+    {label:'Phase Voltage (Vph)', value: `${fmtN(VL/Math.sqrt(3),2)} V`},
+    {label:'Power Factor', value: `${fmtN(PF,3)}`},
+    {label:'Full-Load Current', value: `${fmtN(I_fl,3)} A`, highlight:true},
+    {label:'Efficiency (η)', value: `${fmtN(eta,3)} %`, highlight:true},
+    {label:'Poles', value: `${2*p} (p=${p})`},
+    {label:'Frequency', value: `${fmtN(f,0)} Hz`},
+  ]);
+
+  document.getElementById('eff-bar').style.width = eta.toFixed(1)+'%';
+  document.getElementById('eff-pct-label').textContent = eta.toFixed(2)+'%';
+  document.getElementById('eff-bar-section').style.display = 'block';
+
+  const warnEl = document.getElementById('warning-banner');
+  if(slip > 0.08) {
+    warnEl.innerHTML = `<div class="banner warn"><span class="banner-icon">⚠</span><span>High slip detected (${fmtN(slip*100,2)}%). Verify rotor speed input or check for rotor faults.</span></div>`;
+  } else if(eta < 80) {
+    warnEl.innerHTML = `<div class="banner warn"><span class="banner-icon">⚠</span><span>Efficiency is below 80%. Consider reviewing losses or motor sizing.</span></div>`;
+  } else {
+    warnEl.innerHTML = `<div class="banner info"><span class="banner-icon">ℹ</span><span>Operating within normal parameters. Slip: ${fmtN(slip*100,2)}%, η: ${fmtN(eta,2)}%.</span></div>`;
+  }
+
+  drawTorqueSpeedCurve(Ns, Nr, T_fl, P_air_gap, p, f);
+  showResults();
+}
+
+function calcNoLoad() {
+  const VL = parseFloat(document.getElementById('nl-voltage').value);
+  const I0 = parseFloat(document.getElementById('nl-current').value);
+  const P0 = parseFloat(document.getElementById('nl-power').value);
+  const f = parseFloat(document.getElementById('nl-freq').value);
+  const p = parseInt(document.getElementById('nl-poles').value);
+  const R1 = parseFloat(document.getElementById('nl-r1').value);
+
+  const Vph = VL / Math.sqrt(3);
+  const Ns = 60*f/p;
+  const PF_nl = P0 / (Math.sqrt(3)*VL*I0);
+  const Pcu1_nl = 3 * I0*I0 * R1;
+  const Pcore = P0 - Pcu1_nl;
+  const phi = Math.acos(PF_nl);
+  const Ic = I0 * Math.cos(phi);
+  const Im = I0 * Math.sin(phi);
+  const Rc = Vph / Ic;
+  const Xm = Vph / Im;
+  const Z_nl = Vph / I0;
+
+  setSummaryCards([
+    {label:'No-Load PF', value: fmtN(PF_nl, 4), unit:'lag'},
+    {label:'Sync Speed', value: fmtN(Ns, 0), unit:'RPM'},
+    {label:'Core Loss', value: fmtN(Pcore, 1), unit:'W'},
+    {label:'Magnetizing Xm', value: fmtN(Xm, 2), unit:'Ω'},
+    {label:'Core Resistance', value: fmtN(Rc, 2), unit:'Ω'},
+    {label:'No-Load Z', value: fmtN(Z_nl, 3), unit:'Ω'},
+  ]);
+
+  fillTable('tbl-performance',[
+    {label:'No-Load Input Power (P0)', value: `${fmtN(P0,1)} W`},
+    {label:'No-Load Current (I0)', value: `${fmtN(I0,3)} A`},
+    {label:'No-Load Power Factor', value: `${fmtN(PF_nl,4)}`, highlight:true},
+    {label:'Phase Voltage (Vph)', value: `${fmtN(Vph,2)} V`},
+    {label:'Stator Cu Loss (no-load)', value: `${fmtN(Pcu1_nl,2)} W`},
+    {label:'Core & Mech Loss (≈Pcore)', value: `${fmtN(Pcore,2)} W`, highlight:true},
+    {label:'Synchronous Speed', value: `${fmtN(Ns,0)} RPM`},
+  ]);
+
+  fillTable('tbl-electrical',[
+    {label:'Magnetizing Reactance (Xm)', value: `${fmtN(Xm,3)} Ω`, highlight:true},
+    {label:'Core Loss Resistance (Rc)', value: `${fmtN(Rc,3)} Ω`, highlight:true},
+    {label:'In-phase Component (Ic)', value: `${fmtN(Ic,4)} A`},
+    {label:'Magnetizing Component (Im)', value: `${fmtN(Im,4)} A`},
+    {label:'No-Load Impedance (Z0)', value: `${fmtN(Z_nl,3)} Ω`},
+    {label:'Phase Angle (φ)', value: `${fmtN(phi*180/Math.PI,2)}°`},
+  ]);
+
+  document.getElementById('eff-bar-section').style.display = 'none';
+  document.getElementById('warning-banner').innerHTML = `<div class="banner info"><span class="banner-icon">ℹ</span><span>No-load parameters extracted. Use Rc=${fmtN(Rc,2)} Ω and Xm=${fmtN(Xm,2)} Ω in your equivalent circuit model.</span></div>`;
+
+  drawNoLoadBars(PF_nl, Pcore, Pcu1_nl, Xm, Rc);
+  showResults();
+}
+
+function calcStarting() {
+  const VL = parseFloat(document.getElementById('st-voltage').value);
+  const R1 = parseFloat(document.getElementById('st-r1').value);
+  const X1 = parseFloat(document.getElementById('st-x1').value);
+  const R2 = parseFloat(document.getElementById('st-r2').value);
+  const X2 = parseFloat(document.getElementById('st-x2').value);
+  const Xm = parseFloat(document.getElementById('st-xm').value);
+  const f = parseFloat(document.getElementById('st-freq').value);
+  const p = parseInt(document.getElementById('st-poles').value);
+
+  const Vph = VL / Math.sqrt(3);
+  const Ns = 60*f/p;
+  const omega_s = 2*Math.PI*Ns/60;
+
+  // At start: s=1
+  // Simplified equivalent circuit (neglect Xm branch for starting current approx)
+  const Ztot_r = R1+R2;
+  const Ztot_x = X1+X2;
+  const Ztot = Math.sqrt(Ztot_r*Ztot_r + Ztot_x*Ztot_x);
+  const I_start = Vph / Ztot;
+
+  // Starting torque via air-gap power at s=1
+  const I_start_sq = I_start*I_start;
+  const Pag_start = 3 * I_start_sq * R2;  // rotor copper loss = Pag at s=1
+  const T_start = Pag_start / omega_s;
+
+  // Full-load torque estimate (at typical slip 0.04)
+  const s_fl = 0.04;
+  const R2s = R2/s_fl;
+  const Zfl_r = R1+R2s;
+  const Zfl_x = X1+X2;
+  const Zfl = Math.sqrt(Zfl_r*Zfl_r + Zfl_x*Zfl_x);
+  const I_fl = Vph/Zfl;
+  const Pag_fl = 3*I_fl*I_fl*R2s;
+  const T_fl = Pag_fl/omega_s;
+
+  // Max torque (breakdown) slip
+  const s_max_t = R2 / Math.sqrt(R1*R1 + (X1+X2)*(X1+X2));
+  const R2_sm = R2/s_max_t;
+  const Z_mt_r = R1+R2_sm;
+  const Z_mt = Math.sqrt(Z_mt_r*Z_mt_r + Zfl_x*Zfl_x);
+  const I_mt = Vph/Z_mt;
+  const Pag_mt = 3*I_mt*I_mt*R2_sm;
+  const T_max = Pag_mt/omega_s;
+
+  const ratio_st = T_start/T_fl;
+  const ratio_it = I_start/I_fl;
+
+  setSummaryCards([
+    {label:'Starting Current', value: fmtN(I_start, 2), unit:'A (per phase)'},
+    {label:'Starting Torque', value: fmtN(T_start, 2), unit:'N·m'},
+    {label:'Max (Pullout) Torque', value: fmtN(T_max, 2), unit:'N·m'},
+    {label:'Slip at Max Torque', value: fmtN(s_max_t*100, 2), unit:'%'},
+    {label:'I_start / I_FL', value: fmtN(ratio_it, 2), unit:'×'},
+    {label:'T_start / T_FL', value: fmtN(ratio_st, 3), unit:'×'},
+  ]);
+
+  fillTable('tbl-performance',[
+    {label:'Starting Current (s=1)', value: `${fmtN(I_start,3)} A`, highlight:true},
+    {label:'Full-Load Current (est.)', value: `${fmtN(I_fl,3)} A`},
+    {label:'Starting Torque', value: `${fmtN(T_start,3)} N·m`, highlight:true},
+    {label:'Full-Load Torque (est.)', value: `${fmtN(T_fl,3)} N·m`},
+    {label:'Maximum Torque (breakdown)', value: `${fmtN(T_max,3)} N·m`, highlight:true},
+    {label:'Slip at Max Torque', value: `${fmtN(s_max_t*100,3)} %`},
+    {label:'I_start / I_fl ratio', value: `${fmtN(ratio_it,2)}×`},
+    {label:'T_start / T_fl ratio', value: `${fmtN(ratio_st,3)}×`},
+  ]);
+
+  fillTable('tbl-electrical',[
+    {label:'Total Starting Impedance', value: `${fmtN(Ztot,4)} Ω`},
+    {label:'R1 + R2\'', value: `${fmtN(Ztot_r,4)} Ω`},
+    {label:'X1 + X2\'', value: `${fmtN(Ztot_x,4)} Ω`},
+    {label:'Magnetizing Reactance (Xm)', value: `${fmtN(Xm,2)} Ω`},
+    {label:'Phase Voltage (Vph)', value: `${fmtN(Vph,2)} V`},
+    {label:'Sync Speed (Ns)', value: `${fmtN(Ns,0)} RPM`},
+  ]);
+
+  document.getElementById('eff-bar-section').style.display = 'none';
+  const warnEl = document.getElementById('warning-banner');
+  if(ratio_it > 7) {
+    warnEl.innerHTML = `<div class="banner warn"><span class="banner-icon">⚠</span><span>High starting current ratio (${fmtN(ratio_it,2)}×). Consider star-delta starter or soft starter to limit inrush.</span></div>`;
+  } else {
+    warnEl.innerHTML = `<div class="banner info"><span class="banner-icon">ℹ</span><span>Starting current is ${fmtN(ratio_it,2)}× full-load current. Starting torque is ${fmtN(ratio_st,2)}× rated torque.</span></div>`;
+  }
+
+  drawTorqueSpeedCurve(Ns, Ns*(1-0.04), T_fl, Pag_fl, p, f, s_max_t, T_max, T_start, R1, X1, R2, X2);
+  showResults();
+}
+
+function drawTorqueSpeedCurve(Ns, Nr, T_fl, Pag, p, f, s_max_override, T_max_override, T_start_override, R1=0.5, X1=1.2, R2=0.4, X2=0.9) {
+  const canvas = document.getElementById('torqueCanvas');
+  const ctx = canvas.getContext('2d');
+  const omega_s = 2*Math.PI*Ns/60;
+
+  // Generate torque-speed points
+  const slips = [], speeds = [], torques = [];
+  for(let s=0.001; s<=1; s+=0.005) {
+    const R2s = R2/s;
+    const Zr = R1+R2s;
+    const Zx = X1+X2;
+    const Vph = 240; // normalised
+    const I = Vph / Math.sqrt(Zr*Zr + Zx*Zx);
+    const Pag = 3*I*I*R2s;
+    const T = Pag/omega_s;
+    slips.push(s);
+    speeds.push(Ns*(1-s));
+    torques.push(T);
+  }
+
+  const maxT = Math.max(...torques);
+  const normTorques = torques.map(t => t/maxT * 100);
+  const normSpeeds = speeds.map(s => s/Ns * 100);
+
+  if(torqueChart) torqueChart.destroy();
+
+  torqueChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: normSpeeds.map(s=>s.toFixed(1)),
+      datasets: [{
+        data: normTorques,
+        borderColor: '#f97316',
+        backgroundColor: 'rgba(249,115,22,0.08)',
+        borderWidth: 2.5,
+        pointRadius: 0,
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#161d2e',
+          borderColor: '#1e2d45',
+          borderWidth: 1,
+          titleColor: '#8899bb',
+          bodyColor: '#f0f4ff',
+          callbacks: {
+            title: items => `Speed: ${parseFloat(items[0].label).toFixed(1)}% of Ns`,
+            label: items => `Torque: ${parseFloat(items.formattedValue).toFixed(1)}% of max`,
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Rotor Speed (% of Ns)', color: '#4a5e80', font:{size:11} },
+          ticks: { maxTicksLimit: 8, color: '#4a5e80', font:{size:11}, stepSize: 10, callback: (v,i,a)=> i%4===0 ? a[i].label+'%' : '' },
+          grid: { color: 'rgba(30,45,69,0.8)' },
+        },
+        y: {
+          title: { display: true, text: 'Torque (normalised %)', color: '#4a5e80', font:{size:11} },
+          ticks: { color: '#4a5e80', font:{size:11}, callback: v => v+'%' },
+          grid: { color: 'rgba(30,45,69,0.8)' },
+          max: 110,
+          min: 0,
+        }
+      }
+    }
+  });
+}
+
+function drawNoLoadBars(PF_nl, Pcore, Pcu1, Xm, Rc) {
+  const canvas = document.getElementById('torqueCanvas');
+  const ctx = canvas.getContext('2d');
+  if(torqueChart) torqueChart.destroy();
+
+  torqueChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Core Loss', 'Stator Cu Loss', 'Total No-Load Loss'],
+      datasets: [{
+        data: [Pcore, Pcu1, Pcore+Pcu1],
+        backgroundColor: ['rgba(20,184,166,0.7)','rgba(59,130,246,0.7)','rgba(249,115,22,0.7)'],
+        borderColor: ['#14b8a6','#3b82f6','#f97316'],
+        borderWidth: 1.5,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend:{display:false}, tooltip:{backgroundColor:'#161d2e',borderColor:'#1e2d45',borderWidth:1,bodyColor:'#f0f4ff',titleColor:'#8899bb',callbacks:{label:i=>`${i.formattedValue} W`}} },
+      scales: {
+        x: { ticks:{color:'#8899bb',font:{size:12}}, grid:{color:'rgba(30,45,69,0.8)'} },
+        y: { ticks:{color:'#4a5e80',font:{size:11},callback:v=>v+' W'}, grid:{color:'rgba(30,45,69,0.8)'}, title:{display:true,text:'Power (W)',color:'#4a5e80',font:{size:11}} }
+      }
+    }
+  });
+}
+
+function resetDefaults() {
+  if(currentMode==='fullload'){
+    document.getElementById('fl-power').value=15;
+    document.getElementById('fl-freq').value=50;
+    document.getElementById('fl-poles').value=2;
+    document.getElementById('fl-nrotor').value=1450;
+    document.getElementById('fl-voltage').value=415;
+    document.getElementById('fl-pf').value=0.85;
+    document.getElementById('fl-pcu1').value=400;
+    document.getElementById('fl-pcu2').value=300;
+    document.getElementById('fl-pcore').value=200;
+    document.getElementById('fl-pmech').value=150;
+  } else if(currentMode==='noload'){
+    document.getElementById('nl-voltage').value=415;
+    document.getElementById('nl-current').value=5.2;
+    document.getElementById('nl-power').value=650;
+    document.getElementById('nl-freq').value=50;
+    document.getElementById('nl-poles').value=2;
+    document.getElementById('nl-r1').value=0.5;
+  } else {
+    document.getElementById('st-voltage').value=415;
+    document.getElementById('st-r1').value=0.5;
+    document.getElementById('st-x1').value=1.2;
+    document.getElementById('st-r2').value=0.4;
+    document.getElementById('st-x2').value=0.9;
+    document.getElementById('st-xm').value=35;
+    document.getElementById('st-freq').value=50;
+    document.getElementById('st-poles').value=2;
+  }
+  hideResults();
+}
+
+// Auto-calculate on load with defaults
+window.addEventListener('load', ()=>{ calculate(); });
 </script>
 </body>
 </html>
