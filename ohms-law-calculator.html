@@ -3,189 +3,1183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ohm's Law & Power — ElecCalc Pro</title>
-<link rel="stylesheet" href="styles.css">
+<title>Ohm's Law & Power Calculator | TaskJunction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
-.mode-select { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
-.mode-btn {
-  padding:10px; background:var(--bg3); border:1px solid var(--bg4);
-  color:var(--text-dim); font-family:var(--mono); font-size:0.68rem;
-  cursor:pointer; letter-spacing:0.08em; transition:all 0.2s; text-align:center;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:        #0b0f1a;
+  --bg-surface:     #111827;
+  --bg-card:        #161d2e;
+  --bg-input:       #0d1422;
+  --border:         #1e2d45;
+  --border-bright:  #2a3d5a;
+  --accent:         #f97316;
+  --accent-dim:     rgba(249,115,22,0.13);
+  --accent-glow:    rgba(249,115,22,0.07);
+  --blue:           #3b82f6;
+  --blue-dim:       rgba(59,130,246,0.12);
+  --teal:           #14b8a6;
+  --teal-dim:       rgba(20,184,166,0.12);
+  --green:          #22c55e;
+  --green-dim:      rgba(34,197,94,0.12);
+  --red:            #ef4444;
+  --red-dim:        rgba(239,68,68,0.12);
+  --amber:          #f59e0b;
+  --violet:         #8b5cf6;
+  --violet-dim:     rgba(139,92,246,0.12);
+  --text-primary:   #f0f4ff;
+  --text-secondary: #8899bb;
+  --text-muted:     #4a5e80;
+  --font-display:   'Syne', sans-serif;
+  --font-body:      'DM Sans', sans-serif;
+  --font-mono:      'JetBrains Mono', monospace;
+  --radius:         10px;
+  --radius-lg:      16px;
+  --radius-xl:      20px;
 }
-.mode-btn.active { background:var(--amber-glow); color:var(--amber); border-color:var(--amber); }
-.mode-btn:hover:not(.active) { background:var(--bg4); color:var(--text); }
-.triangle {
-  display:flex; align-items:center; justify-content:center;
-  margin:16px 0;
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
 }
-.triangle svg { width:180px; height:120px; }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* ── Header ── */
+header {
+  background: rgba(11,15,26,0.96);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 0;
+}
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-icon {
+  width: 34px; height: 34px; background: var(--accent); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 14px;
+  color: #fff; letter-spacing: -0.5px; flex-shrink: 0;
+}
+.logo-text { font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--text-primary); letter-spacing: -0.3px; }
+.logo-text span { color: var(--accent); }
+.header-badge {
+  background: var(--accent-dim); color: var(--accent); font-size: 11px; font-weight: 500;
+  padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(249,115,22,0.25);
+  font-family: var(--font-mono); letter-spacing: 0.5px;
+}
+.header-nav { display: flex; gap: 6px; align-items: center; }
+.nav-btn {
+  background: none; border: 1px solid var(--border); color: var(--text-secondary);
+  padding: 7px 14px; border-radius: var(--radius); font-size: 13px; cursor: pointer;
+  font-family: var(--font-body); transition: all 0.2s;
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ── Hero ── */
+.hero { padding: 52px 0 36px; border-bottom: 1px solid var(--border); }
+.hero-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--blue-dim); color: var(--blue); font-size: 12px; font-weight: 500;
+  padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(59,130,246,0.2);
+  margin-bottom: 16px; font-family: var(--font-mono); letter-spacing: 0.5px; text-transform: uppercase;
+}
+.hero-label::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--blue);
+  animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero h1 {
+  font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -1.5px; line-height: 1.1; color: var(--text-primary); margin-bottom: 12px;
+}
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p { color: var(--text-secondary); font-size: 16px; max-width: 580px; line-height: 1.6; }
+
+/* ── Mode Tabs ── */
+.mode-tabs {
+  display: flex; gap: 0; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 4px; width: fit-content; margin: 28px 0 0;
+}
+.mode-tab {
+  background: none; border: none; color: var(--text-secondary); padding: 8px 20px;
+  border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: all 0.2s; font-family: var(--font-body); white-space: nowrap;
+}
+.mode-tab.active { background: var(--accent); color: #fff; }
+.mode-tab:not(.active):hover { color: var(--text-primary); }
+
+/* ── Layout ── */
+.main-layout {
+  display: grid; grid-template-columns: 400px 1fr; gap: 24px; padding: 32px 0 60px;
+}
+@media (max-width: 860px) { .main-layout { grid-template-columns: 1fr; } }
+
+/* ── Card ── */
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px; }
+.card-title {
+  font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+  text-transform: uppercase; color: var(--text-secondary); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title::before { content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; }
+
+/* ── Solve-For Selector ── */
+.solve-for-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); margin-bottom: 10px; font-family: var(--font-mono);
+}
+.solve-for-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+.solve-btn {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text-secondary); padding: 12px 6px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; font-family: var(--font-mono); text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.solve-btn .sym { font-size: 20px; line-height: 1; }
+.solve-btn .name { font-size: 10px; font-family: var(--font-body); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.solve-btn.active.V  { background: rgba(249,115,22,0.15); border-color: var(--accent);    color: var(--accent); }
+.solve-btn.active.I  { background: rgba(59,130,246,0.15);  border-color: var(--blue);     color: var(--blue); }
+.solve-btn.active.R  { background: rgba(20,184,166,0.15);  border-color: var(--teal);     color: var(--teal); }
+.solve-btn.active.P  { background: rgba(139,92,246,0.15);  border-color: var(--violet);   color: var(--violet); }
+.solve-btn:not(.active):hover { border-color: var(--border-bright); color: var(--text-primary); }
+
+/* ── Inputs ── */
+.form-section { margin-bottom: 20px; }
+.form-section-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); margin-bottom: 10px; font-family: var(--font-mono);
+}
+.input-row { display: flex; flex-direction: column; gap: 10px; }
+.input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+.input-wrap { position: relative; display: flex; align-items: center; }
+input[type="number"] {
+  width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-primary); font-size: 14px;
+  font-family: var(--font-mono); padding: 10px 50px 10px 12px;
+  transition: border-color 0.2s, box-shadow 0.2s; appearance: none; -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type="number"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+input[type="number"]:disabled { opacity: 0.35; cursor: not-allowed; }
+input[type="number"].V:focus  { border-color: var(--accent);  box-shadow: 0 0 0 3px var(--accent-glow); }
+input[type="number"].I:focus  { border-color: var(--blue);    box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+input[type="number"].R:focus  { border-color: var(--teal);    box-shadow: 0 0 0 3px rgba(20,184,166,0.1); }
+input[type="number"].P:focus  { border-color: var(--violet);  box-shadow: 0 0 0 3px rgba(139,92,246,0.1); }
+.unit-select {
+  position: absolute; right: 2px;
+  background: var(--bg-card); border: none; border-left: 1px solid var(--border);
+  color: var(--text-muted); font-size: 11px; font-family: var(--font-mono);
+  padding: 6px 6px 6px 6px; cursor: pointer; border-radius: 0 8px 8px 0;
+  outline: none; height: calc(100% - 4px); width: 46px; text-align: center;
+}
+.unit-tag {
+  position: absolute; right: 10px; font-size: 11px; color: var(--text-muted);
+  font-family: var(--font-mono); pointer-events: none;
+}
+select.cfg-sel {
+  width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-primary); font-size: 14px;
+  padding: 10px 12px; transition: border-color 0.2s; appearance: none;
+  cursor: pointer; font-family: var(--font-body);
+}
+select.cfg-sel:focus { outline: none; border-color: var(--accent); }
+.select-wrap { position: relative; }
+.select-wrap::after { content: '▾'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 12px; }
+
+/* Component list */
+.comp-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.comp-row {
+  display: grid; grid-template-columns: 1fr 80px 36px; align-items: center; gap: 8px;
+  animation: slideIn 0.2s ease;
+}
+@keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.comp-row input { padding: 8px 42px 8px 10px; font-size: 13px; }
+.comp-label { font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); }
+.del-btn {
+  background: none; border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-muted); width: 36px; height: 36px; cursor: pointer;
+  font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.del-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+.add-comp-btn {
+  width: 100%; background: none; border: 1px dashed var(--border); border-radius: var(--radius);
+  color: var(--text-muted); padding: 9px; font-size: 13px; cursor: pointer;
+  transition: all 0.2s; font-family: var(--font-body); margin-top: 6px;
+}
+.add-comp-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Buttons */
+.calc-btn {
+  width: 100%; background: var(--accent); color: #fff; border: none;
+  border-radius: var(--radius); padding: 13px; font-size: 14px; font-weight: 600;
+  font-family: var(--font-display); letter-spacing: 0.3px; cursor: pointer;
+  transition: all 0.2s; margin-top: 6px;
+}
+.calc-btn:hover { background: #ea6b0d; transform: translateY(-1px); }
+.calc-btn:active { transform: translateY(0); }
+.reset-btn {
+  width: 100%; background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 10px;
+  font-size: 13px; font-family: var(--font-body); cursor: pointer; transition: all 0.2s; margin-top: 8px;
+}
+.reset-btn:hover { border-color: var(--border-bright); color: var(--text-primary); }
+
+/* ── Ohm Wheel ── */
+.wheel-wrap {
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px 0 8px;
+}
+
+/* ── Results ── */
+.results-panel { display: flex; flex-direction: column; gap: 20px; }
+
+/* Answer spotlight */
+.answer-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 28px 28px 24px;
+  position: relative; overflow: hidden;
+  animation: fadeUp 0.35s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.answer-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.answer-card.V::before { background: var(--accent); }
+.answer-card.I::before { background: var(--blue); }
+.answer-card.R::before { background: var(--teal); }
+.answer-card.P::before { background: var(--violet); }
+.answer-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.answer-quantity { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; }
+.formula-chip {
+  font-size: 12px; font-family: var(--font-mono); padding: 4px 10px;
+  border-radius: 20px; border: 1px solid;
+}
+.formula-chip.V { background: var(--accent-dim);   border-color: rgba(249,115,22,0.3); color: var(--accent); }
+.formula-chip.I { background: var(--blue-dim);      border-color: rgba(59,130,246,0.3);  color: var(--blue); }
+.formula-chip.R { background: var(--teal-dim);      border-color: rgba(20,184,166,0.3);  color: var(--teal); }
+.formula-chip.P { background: var(--violet-dim);    border-color: rgba(139,92,246,0.3);  color: var(--violet); }
+.answer-value {
+  font-family: var(--font-display); font-size: clamp(42px, 6vw, 64px);
+  font-weight: 800; letter-spacing: -2px; line-height: 1;
+}
+.answer-card.V .answer-value { color: var(--accent); }
+.answer-card.I .answer-value { color: var(--blue); }
+.answer-card.R .answer-value { color: var(--teal); }
+.answer-card.P .answer-value { color: var(--violet); }
+.answer-unit { font-family: var(--font-mono); font-size: 20px; font-weight: 400; margin-left: 8px; opacity: 0.6; }
+
+/* Derived values row */
+.derived-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+.derived-card {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 14px 14px 12px;
+}
+.derived-label { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.derived-value { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+.derived-card.V .derived-value { color: var(--accent); }
+.derived-card.I .derived-value { color: var(--blue); }
+.derived-card.R .derived-value { color: var(--teal); }
+.derived-card.P .derived-value { color: var(--violet); }
+.derived-unit { font-size: 11px; font-family: var(--font-mono); opacity: 0.5; margin-left: 3px; }
+
+/* Circuit diagram */
+.circuit-card {}
+.circuit-svg-wrap { display: flex; justify-content: center; padding: 12px 0 4px; overflow: auto; }
+
+/* All formulas */
+.formulas-card {}
+.formula-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.formula-tile {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 12px 14px;
+}
+.formula-tile-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 8px; }
+.formula-tile-eq { font-size: 13px; font-family: var(--font-mono); color: var(--text-secondary); line-height: 1.6; }
+.formula-tile-eq span { font-weight: 600; }
+.formula-tile-eq .cv { color: var(--accent); }
+.formula-tile-eq .ci { color: var(--blue); }
+.formula-tile-eq .cr { color: var(--teal); }
+.formula-tile-eq .cp { color: var(--violet); }
+
+/* Series/Parallel result table */
+.sp-result-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.sp-result-table th {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted);
+  font-family: var(--font-mono); text-align: left; padding: 0 0 10px; border-bottom: 1px solid var(--border);
+}
+.sp-result-table td { padding: 11px 0; font-size: 13.5px; border-bottom: 1px solid var(--border); }
+.sp-result-table tr:last-child td { border-bottom: none; }
+.sp-result-table td:first-child { color: var(--text-secondary); font-family: var(--font-mono); }
+.sp-result-table td:last-child { text-align: right; font-family: var(--font-mono); font-weight: 500; }
+.sp-result-table .hl td { }
+.sp-result-table .hl td:last-child { color: var(--accent); font-weight: 600; }
+
+/* Placeholder */
+.placeholder-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 60px 20px; text-align: center; color: var(--text-muted);
+}
+.placeholder-icon {
+  width: 60px; height: 60px; border: 2px dashed var(--border); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+  margin-bottom: 16px; color: var(--text-muted);
+}
+.placeholder-state h3 { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
+.placeholder-state p { font-size: 13px; line-height: 1.5; max-width: 260px; }
+
+/* Banner */
+.banner {
+  display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px;
+  border-radius: var(--radius); font-size: 13px; margin-top: 16px;
+}
+.banner.warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: #fbbf24; }
+.banner.info { background: var(--blue-dim); border: 1px solid rgba(59,130,246,0.25); color: #60a5fa; }
+.banner.err  { background: var(--red-dim);  border: 1px solid rgba(239,68,68,0.25);  color: #f87171; }
+.banner-icon { font-size: 15px; flex-shrink: 0; }
+
+.hidden { display: none !important; }
+
+/* Footer */
+footer { border-top: 1px solid var(--border); padding: 20px 0; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+.footer-links { display: flex; gap: 16px; }
+.footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--accent); }
 </style>
 </head>
 <body>
-<nav class="top-nav">
-  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
-  <a href="index.html" class="nav-back">← BACK</a>
-</nav>
 
-<div class="calc-header">
-  <div class="calc-tag">// CALCULATOR 01 OF 08</div>
-  <h1 class="calc-title"><span class="icon">🔌</span>Ohm's Law & Power</h1>
-  <p class="calc-desc">Enter any two known values to calculate the remaining two. Applicable to DC circuits and AC resistive loads.</p>
-</div>
-
-<div class="calc-body">
-  <!-- INPUT PANEL -->
-  <div class="panel">
-    <div class="panel-title">⚙ Input Values</div>
-
-    <p style="font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);margin-bottom:14px;letter-spacing:0.08em;">SELECT KNOWN PARAMETERS:</p>
-    <div class="mode-select">
-      <div class="mode-btn active" onclick="setMode('VI')" id="m-VI">V + I</div>
-      <div class="mode-btn" onclick="setMode('VR')" id="m-VR">V + R</div>
-      <div class="mode-btn" onclick="setMode('IR')" id="m-IR">I + R</div>
-      <div class="mode-btn" onclick="setMode('PI')" id="m-PI">P + I</div>
-      <div class="mode-btn" onclick="setMode('PV')" id="m-PV">P + V</div>
-      <div class="mode-btn" onclick="setMode('PR')" id="m-PR">P + R</div>
-    </div>
-
-    <div id="inputs">
-      <div class="field" id="f-V">
-        <label>Voltage (V) <span class="unit">[ Volts ]</span></label>
-        <input type="number" id="inp-V" placeholder="e.g. 230" step="any">
+<!-- Header -->
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a class="logo" href="#">
+        <div class="logo-icon">TJ</div>
+        <span class="logo-text">Task<span>Junction</span></span>
+      </a>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="header-badge">ENGINEERING TOOLS</span>
+        <nav class="header-nav">
+          <button class="nav-btn">Motor Calc</button>
+          <button class="nav-btn active">Ohm's Law</button>
+          <button class="nav-btn">Power Factor</button>
+        </nav>
       </div>
-      <div class="field" id="f-I">
-        <label>Current (I) <span class="unit">[ Amperes ]</span></label>
-        <input type="number" id="inp-I" placeholder="e.g. 10" step="any">
-      </div>
-      <div class="field" id="f-R" style="display:none">
-        <label>Resistance (R) <span class="unit">[ Ohms ]</span></label>
-        <input type="number" id="inp-R" placeholder="e.g. 23" step="any">
-      </div>
-      <div class="field" id="f-P" style="display:none">
-        <label>Power (P) <span class="unit">[ Watts ]</span></label>
-        <input type="number" id="inp-P" placeholder="e.g. 2300" step="any">
-      </div>
-    </div>
-
-    <button class="btn" onclick="calculate()">CALCULATE</button>
-    <button class="btn btn-outline" onclick="clearAll()">CLEAR</button>
-  </div>
-
-  <!-- RESULTS PANEL -->
-  <div class="panel">
-    <div class="panel-title">📊 Results</div>
-    <div class="result-grid" id="results">
-      <div class="result-item" id="r-V">
-        <div class="result-label">Voltage</div>
-        <div class="result-value" id="rv-V">—</div>
-        <div class="result-unit">V</div>
-      </div>
-      <div class="result-item" id="r-I">
-        <div class="result-label">Current</div>
-        <div class="result-value" id="rv-I">—</div>
-        <div class="result-unit">A</div>
-      </div>
-      <div class="result-item" id="r-R">
-        <div class="result-label">Resistance</div>
-        <div class="result-value" id="rv-R">—</div>
-        <div class="result-unit">Ω</div>
-      </div>
-      <div class="result-item" id="r-P">
-        <div class="result-label">Power</div>
-        <div class="result-value" id="rv-P">—</div>
-        <div class="result-unit">W</div>
-      </div>
-      <div class="result-item full" id="r-kW">
-        <div class="result-label">Power (kW / HP)</div>
-        <div class="result-value" id="rv-kW">—</div>
-      </div>
-    </div>
-
-    <div class="formula-box">
-      <strong>OHM'S LAW:</strong><br>
-      V = I × R &nbsp;|&nbsp; I = V / R &nbsp;|&nbsp; R = V / I<br><br>
-      <strong>POWER:</strong><br>
-      P = V × I = I² × R = V² / R<br><br>
-      <strong>CONVERSIONS:</strong><br>
-      1 kW = 1000 W &nbsp;|&nbsp; 1 HP = 746 W
     </div>
   </div>
+</header>
 
-  <!-- REFERENCE TABLE -->
-  <div class="panel panel-full">
-    <div class="panel-title">📋 Ohm's Law — All Formulas</div>
-    <table class="ref-table">
-      <thead>
-        <tr><th>Find</th><th>Known</th><th>Formula</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>V</td><td>I, R</td><td>V = I × R</td></tr>
-        <tr><td>V</td><td>P, I</td><td>V = P / I</td></tr>
-        <tr><td>V</td><td>P, R</td><td>V = √(P × R)</td></tr>
-        <tr><td>I</td><td>V, R</td><td>I = V / R</td></tr>
-        <tr><td>I</td><td>P, V</td><td>I = P / V</td></tr>
-        <tr><td>I</td><td>P, R</td><td>I = √(P / R)</td></tr>
-        <tr><td>R</td><td>V, I</td><td>R = V / I</td></tr>
-        <tr><td>R</td><td>P, I</td><td>R = P / I²</td></tr>
-        <tr><td>R</td><td>V, P</td><td>R = V² / P</td></tr>
-        <tr><td>P</td><td>V, I</td><td>P = V × I</td></tr>
-        <tr><td>P</td><td>I, R</td><td>P = I² × R</td></tr>
-        <tr><td>P</td><td>V, R</td><td>P = V² / R</td></tr>
-      </tbody>
-    </table>
+<!-- Hero -->
+<div class="container">
+  <div class="hero">
+    <div class="hero-label">DC & AC Circuit Analysis</div>
+    <h1>Ohm's Law &amp;<br><em>Power Calculator</em></h1>
+    <p>Instantly compute voltage, current, resistance and power. Supports series and parallel circuit configurations with live formula display.</p>
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="switchMode('basic')">Basic Calculator</button>
+      <button class="mode-tab" onclick="switchMode('series')">Series Circuit</button>
+      <button class="mode-tab" onclick="switchMode('parallel')">Parallel Circuit</button>
+    </div>
   </div>
 </div>
-<div class="footer">// ELECCALC PRO · OHM'S LAW & POWER</div>
+
+<!-- Main -->
+<div class="container">
+  <div class="main-layout">
+
+    <!-- LEFT: Inputs -->
+    <div>
+      <div class="card">
+        <div class="card-title">Input Parameters</div>
+
+        <!-- ── BASIC MODE ── -->
+        <div id="mode-basic">
+          <div class="solve-for-label">Solve For</div>
+          <div class="solve-for-grid">
+            <button class="solve-btn V" onclick="setSolveFor('V')">
+              <span class="sym">V</span><span class="name">Voltage</span>
+            </button>
+            <button class="solve-btn I" onclick="setSolveFor('I')">
+              <span class="sym">I</span><span class="name">Current</span>
+            </button>
+            <button class="solve-btn R active" onclick="setSolveFor('R')">
+              <span class="sym">R</span><span class="name">Resistance</span>
+            </button>
+            <button class="solve-btn P" onclick="setSolveFor('P')">
+              <span class="sym">P</span><span class="name">Power</span>
+            </button>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-label">Known Values</div>
+            <div class="input-row">
+              <div class="input-group">
+                <div class="form-group" id="grp-V">
+                  <label>Voltage (V)</label>
+                  <div class="input-wrap">
+                    <input type="number" id="inp-V" class="V" value="12" min="0" step="0.001" placeholder="e.g. 12">
+                    <select class="unit-select" id="unit-V">
+                      <option value="1">V</option>
+                      <option value="1000">kV</option>
+                      <option value="0.001">mV</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" id="grp-I">
+                  <label>Current (I)</label>
+                  <div class="input-wrap">
+                    <input type="number" id="inp-I" class="I" value="" min="0" step="0.0001" placeholder="—">
+                    <select class="unit-select" id="unit-I">
+                      <option value="1">A</option>
+                      <option value="0.001">mA</option>
+                      <option value="1e-6">µA</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="form-group" id="grp-R">
+                  <label>Resistance (R)</label>
+                  <div class="input-wrap">
+                    <input type="number" id="inp-R" class="R" value="4" min="0" step="0.001" placeholder="e.g. 4">
+                    <select class="unit-select" id="unit-R">
+                      <option value="1">Ω</option>
+                      <option value="1000">kΩ</option>
+                      <option value="1e6">MΩ</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" id="grp-P">
+                  <label>Power (P)</label>
+                  <div class="input-wrap">
+                    <input type="number" id="inp-P" class="P" value="" min="0" step="0.001" placeholder="—">
+                    <select class="unit-select" id="unit-P">
+                      <option value="1">W</option>
+                      <option value="1000">kW</option>
+                      <option value="0.001">mW</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SERIES MODE ── -->
+        <div id="mode-series" class="hidden">
+          <div class="form-section">
+            <div class="form-section-label">Supply Voltage</div>
+            <div class="form-group">
+              <label>Total Voltage (Vs)</label>
+              <div class="input-wrap">
+                <input type="number" id="ser-V" value="24" min="0" step="0.01">
+                <span class="unit-tag">V</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-label">Resistors in Series</div>
+            <div class="comp-list" id="ser-list"></div>
+            <button class="add-comp-btn" onclick="addComponent('series')">+ Add Resistor</button>
+          </div>
+        </div>
+
+        <!-- ── PARALLEL MODE ── -->
+        <div id="mode-parallel" class="hidden">
+          <div class="form-section">
+            <div class="form-section-label">Supply Voltage</div>
+            <div class="form-group">
+              <label>Total Voltage (Vs)</label>
+              <div class="input-wrap">
+                <input type="number" id="par-V" value="12" min="0" step="0.01">
+                <span class="unit-tag">V</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-label">Resistors in Parallel</div>
+            <div class="comp-list" id="par-list"></div>
+            <button class="add-comp-btn" onclick="addComponent('parallel')">+ Add Resistor</button>
+          </div>
+        </div>
+
+        <button class="calc-btn" onclick="calculate()">⚡ Calculate</button>
+        <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+
+        <!-- Ohm's Wheel SVG -->
+        <div class="wheel-wrap">
+          <svg viewBox="0 0 220 220" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <clipPath id="cl1"><circle cx="110" cy="110" r="100"/></clipPath>
+            </defs>
+            <!-- outer ring -->
+            <circle cx="110" cy="110" r="100" fill="none" stroke="#1e2d45" stroke-width="1.5"/>
+            <circle cx="110" cy="110" r="60"  fill="none" stroke="#1e2d45" stroke-width="1"/>
+            <circle cx="110" cy="110" r="28"  fill="#0d1422" stroke="#1e2d45" stroke-width="1"/>
+            <!-- quadrant dividers -->
+            <line x1="110" y1="10" x2="110" y2="210" stroke="#1e2d45" stroke-width="1"/>
+            <line x1="10" y1="110" x2="210" y2="110" stroke="#1e2d45" stroke-width="1"/>
+            <!-- Top-Left: V = IR -->
+            <path d="M110,110 L10,110 A100,100 0 0,1 110,10 Z" fill="rgba(249,115,22,0.07)" clip-path="url(#cl1)"/>
+            <text x="60" y="68" text-anchor="middle" font-family="'JetBrains Mono'" font-size="11" fill="#f97316" font-weight="600">V = I × R</text>
+            <text x="60" y="82" text-anchor="middle" font-family="'JetBrains Mono'" font-size="9.5" fill="#f97316" opacity="0.7">V = P / I</text>
+            <text x="60" y="95" text-anchor="middle" font-family="'JetBrains Mono'" font-size="9.5" fill="#f97316" opacity="0.7">V = √(P×R)</text>
+            <!-- Top-Right: I = V/R -->
+            <path d="M110,110 L110,10 A100,100 0 0,1 210,110 Z" fill="rgba(59,130,246,0.07)" clip-path="url(#cl1)"/>
+            <text x="160" y="68" text-anchor="middle" font-family="'JetBrains Mono'" font-size="11" fill="#3b82f6" font-weight="600">I = V / R</text>
+            <text x="160" y="82" text-anchor="middle" font-family="'JetBrains Mono'" font-size="9.5" fill="#3b82f6" opacity="0.7">I = P / V</text>
+            <text x="160" y="95" text-anchor="middle" font-family="'JetBrains Mono'" font-size="9.5" fill="#3b82f6" opacity="0.7">I = √(P/R)</text>
+            <!-- Bottom-Right: R = V/I -->
+            <path d="M110,110 L210,110 A100,100 0 0,1 110,210 Z" fill="rgba(20,184,166,0.07)" clip-path="url(#cl1)"/>
+            <text x="160" y="152" text-anchor="middle" font-family="'JetBrains Mono'" font-size="11" fill="#14b8a6" font-weight="600">R = V / I</text>
+            <text x="160" y="166" text-anchor="middle" font-family="'JetBrains Mono'" font-size="9.5" fill="#14b8a6" opacity="0.7">R = V²/ P</text>
+            <text x="160" y="179" text-anchor="middle" font-family="'JetBrains Mono'" font-size="9.5" fill="#14b8a6" opacity="0.7">R = P / I²</text>
+            <!-- Bottom-Left: P = VI -->
+            <path d="M110,110 L110,210 A100,100 0 0,1 10,110 Z" fill="rgba(139,92,246,0.07)" clip-path="url(#cl1)"/>
+            <text x="60" y="152" text-anchor="middle" font-family="'JetBrains Mono'" font-size="11" fill="#8b5cf6" font-weight="600">P = V × I</text>
+            <text x="60" y="166" text-anchor="middle" font-family="'JetBrains Mono'" font-size="9.5" fill="#8b5cf6" opacity="0.7">P = I² × R</text>
+            <text x="60" y="179" text-anchor="middle" font-family="'JetBrains Mono'" font-size="9.5" fill="#8b5cf6" opacity="0.7">P = V² / R</text>
+            <!-- Centre labels -->
+            <text x="110" y="114" text-anchor="middle" font-family="'Syne'" font-size="13" fill="#f0f4ff" font-weight="700">OHM</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div class="results-panel">
+      <div id="placeholder" class="card">
+        <div class="placeholder-state">
+          <div class="placeholder-icon">⚡</div>
+          <h3>Awaiting Input</h3>
+          <p>Select what to solve for, enter any two known values, and hit Calculate.</p>
+        </div>
+      </div>
+
+      <div id="results-area" class="hidden">
+
+        <!-- Answer Spotlight -->
+        <div id="answer-card" class="answer-card">
+          <div class="answer-top">
+            <div class="answer-quantity" id="ans-qty">Voltage</div>
+            <div class="formula-chip V" id="ans-chip">V = I × R</div>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:4px;">
+            <div class="answer-value" id="ans-val">—</div>
+            <span class="answer-unit" id="ans-unit">V</span>
+          </div>
+          <div class="derived-grid" id="derived-grid"></div>
+          <div id="ans-banner"></div>
+        </div>
+
+        <!-- Circuit Diagram -->
+        <div class="card circuit-card" id="circuit-card">
+          <div class="card-title">Circuit Diagram</div>
+          <div class="circuit-svg-wrap" id="circuit-svg"></div>
+        </div>
+
+        <!-- SP Results Table (series/parallel only) -->
+        <div class="card" id="sp-result-card" style="display:none">
+          <div class="card-title" id="sp-card-title">Per-Component Analysis</div>
+          <table class="sp-result-table">
+            <thead><tr><th>Component</th><th>R (Ω)</th><th>V drop (V)</th><th>I (A)</th><th>P (W)</th></tr></thead>
+            <tbody id="sp-tbody"></tbody>
+          </table>
+          <div id="sp-totals" style="margin-top:16px"></div>
+        </div>
+
+        <!-- All Formulas Reference -->
+        <div class="card formulas-card">
+          <div class="card-title">Formula Reference</div>
+          <div class="formula-grid">
+            <div class="formula-tile">
+              <div class="formula-tile-label">Voltage</div>
+              <div class="formula-tile-eq">
+                <span class="cv">V</span> = <span class="ci">I</span> × <span class="cr">R</span><br>
+                <span class="cv">V</span> = <span class="cp">P</span> / <span class="ci">I</span><br>
+                <span class="cv">V</span> = √(<span class="cp">P</span> × <span class="cr">R</span>)
+              </div>
+            </div>
+            <div class="formula-tile">
+              <div class="formula-tile-label">Current</div>
+              <div class="formula-tile-eq">
+                <span class="ci">I</span> = <span class="cv">V</span> / <span class="cr">R</span><br>
+                <span class="ci">I</span> = <span class="cp">P</span> / <span class="cv">V</span><br>
+                <span class="ci">I</span> = √(<span class="cp">P</span> / <span class="cr">R</span>)
+              </div>
+            </div>
+            <div class="formula-tile">
+              <div class="formula-tile-label">Resistance</div>
+              <div class="formula-tile-eq">
+                <span class="cr">R</span> = <span class="cv">V</span> / <span class="ci">I</span><br>
+                <span class="cr">R</span> = <span class="cv">V</span>² / <span class="cp">P</span><br>
+                <span class="cr">R</span> = <span class="cp">P</span> / <span class="ci">I</span>²
+              </div>
+            </div>
+            <div class="formula-tile">
+              <div class="formula-tile-label">Power</div>
+              <div class="formula-tile-eq">
+                <span class="cp">P</span> = <span class="cv">V</span> × <span class="ci">I</span><br>
+                <span class="cp">P</span> = <span class="ci">I</span>² × <span class="cr">R</span><br>
+                <span class="cp">P</span> = <span class="cv">V</span>² / <span class="cr">R</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© 2025 TaskJunction Engineering Tools</span>
+      <div class="footer-links">
+        <a href="#">Documentation</a>
+        <a href="#">Formula Guide</a>
+        <a href="#">Feedback</a>
+      </div>
+    </div>
+  </footer>
+</div>
 
 <script>
-let mode = 'VI';
+/* ═══════════════════════════════════════════════
+   State
+═══════════════════════════════════════════════ */
+let currentMode = 'basic';
+let solveFor = 'R';
+let serComponents = [100, 200, 300];
+let parComponents = [100, 200, 470];
 
-function setMode(m) {
-  mode = m;
-  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('m-' + m).classList.add('active');
-  const show = m.split('').map(c => 'f-' + c);
-  ['f-V','f-I','f-R','f-P'].forEach(id => {
-    document.getElementById(id).style.display = show.includes(id) ? '' : 'none';
-    const inp = document.getElementById('inp-' + id.split('-')[1]);
-    inp.value = ''; inp.disabled = false;
+/* ═══════════════════════════════════════════════
+   Mode Switch
+═══════════════════════════════════════════════ */
+function switchMode(m) {
+  currentMode = m;
+  ['basic','series','parallel'].forEach((id,i)=>{
+    document.getElementById('mode-'+id).classList.toggle('hidden', id!==m);
+    document.querySelectorAll('.mode-tab')[i].classList.toggle('active', id===m);
   });
-  ['rv-V','rv-I','rv-R','rv-P','rv-kW'].forEach(id => document.getElementById(id).textContent = '—');
-  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
+  hideResults();
+  if(m==='series') renderComponents('series');
+  if(m==='parallel') renderComponents('parallel');
 }
 
-function fmt(n) { return n < 0.001 ? n.toExponential(3) : (n >= 1000 ? n.toFixed(2) : n.toPrecision(5).replace(/\.?0+$/, '')); }
+/* ═══════════════════════════════════════════════
+   Solve-For
+═══════════════════════════════════════════════ */
+function setSolveFor(q) {
+  solveFor = q;
+  document.querySelectorAll('.solve-btn').forEach(b=>{
+    b.classList.remove('active');
+    if(b.classList.contains(q)) b.classList.add('active');
+  });
+  // disable the target input, enable others
+  ['V','I','R','P'].forEach(id=>{
+    const inp = document.getElementById('inp-'+id);
+    if(!inp) return;
+    inp.disabled = (id===q);
+    if(id===q) inp.value = '';
+  });
+  hideResults();
+}
 
+/* ═══════════════════════════════════════════════
+   Component Lists
+═══════════════════════════════════════════════ */
+function renderComponents(type) {
+  const arr = type==='series' ? serComponents : parComponents;
+  const listEl = document.getElementById(type==='series'?'ser-list':'par-list');
+  listEl.innerHTML = '';
+  arr.forEach((val, i) => {
+    const row = document.createElement('div');
+    row.className = 'comp-row';
+    row.innerHTML = `
+      <div class="input-wrap">
+        <input type="number" class="R" value="${val}" min="0.001" step="1"
+          oninput="updateComp('${type}',${i},this.value)">
+        <span class="unit-tag">Ω</span>
+      </div>
+      <div class="comp-label">R${i+1}</div>
+      <button class="del-btn" onclick="removeComp('${type}',${i})" title="Remove">×</button>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+function addComponent(type) {
+  if(type==='series') serComponents.push(100);
+  else parComponents.push(100);
+  renderComponents(type);
+}
+
+function removeComp(type, i) {
+  const arr = type==='series' ? serComponents : parComponents;
+  if(arr.length <= 2) return;
+  arr.splice(i,1);
+  renderComponents(type);
+}
+
+function updateComp(type, i, val) {
+  if(type==='series') serComponents[i] = parseFloat(val)||0;
+  else parComponents[i] = parseFloat(val)||0;
+}
+
+/* ═══════════════════════════════════════════════
+   Calculate
+═══════════════════════════════════════════════ */
 function calculate() {
-  const v = parseFloat(document.getElementById('inp-V').value);
-  const i = parseFloat(document.getElementById('inp-I').value);
-  const r = parseFloat(document.getElementById('inp-R').value);
-  const p = parseFloat(document.getElementById('inp-P').value);
-  let V, I, R, P;
-  try {
-    if (mode === 'VI') { V=v; I=i; R=V/I; P=V*I; }
-    else if (mode === 'VR') { V=v; R=r; I=V/R; P=V*I; }
-    else if (mode === 'IR') { I=i; R=r; V=I*R; P=I*I*R; }
-    else if (mode === 'PI') { P=p; I=i; V=P/I; R=V/I; }
-    else if (mode === 'PV') { P=p; V=v; I=P/V; R=V/I; }
-    else if (mode === 'PR') { P=p; R=r; I=Math.sqrt(P/R); V=I*R; }
-    if ([V,I,R,P].some(x => !isFinite(x) || x<0)) throw new Error();
-    document.getElementById('rv-V').textContent = fmt(V);
-    document.getElementById('rv-I').textContent = fmt(I);
-    document.getElementById('rv-R').textContent = fmt(R);
-    document.getElementById('rv-P').textContent = fmt(P);
-    document.getElementById('rv-kW').textContent = (P/1000).toFixed(4) + ' kW  /  ' + (P/746).toFixed(4) + ' HP';
-    document.querySelectorAll('.result-item').forEach(r => r.classList.add('active'));
-  } catch(e) {
-    alert('Please enter valid positive numbers for both fields.');
-  }
+  if(currentMode==='basic') calcBasic();
+  else if(currentMode==='series') calcSeries();
+  else calcParallel();
 }
 
-function clearAll() {
-  ['inp-V','inp-I','inp-R','inp-P'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
-  ['rv-V','rv-I','rv-R','rv-P','rv-kW'].forEach(id => document.getElementById(id).textContent = '—');
-  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
+function getVal(id) {
+  const inp = document.getElementById('inp-'+id);
+  const mul = parseFloat(document.getElementById('unit-'+id).value);
+  const v = parseFloat(inp.value);
+  return isNaN(v) ? null : v * mul;
 }
+
+function calcBasic() {
+  let V = getVal('V'), I = getVal('I'), R = getVal('R'), P = getVal('P');
+  let formula = '', result = null, unit = '', qty = '';
+  let warn = '';
+
+  try {
+    if(solveFor==='V') {
+      if(I!==null && R!==null)      { result=I*R;           formula='V = I × R'; }
+      else if(P!==null && I!==null) { result=P/I;           formula='V = P / I'; }
+      else if(P!==null && R!==null) { result=Math.sqrt(P*R);formula='V = √(P × R)'; }
+      else { warn='Provide two of: I, R, P'; }
+      qty='Voltage'; unit='V';
+      if(result!==null) V=result;
+    } else if(solveFor==='I') {
+      if(V!==null && R!==null)      { result=V/R;           formula='I = V / R'; }
+      else if(P!==null && V!==null) { result=P/V;           formula='I = P / V'; }
+      else if(P!==null && R!==null) { result=Math.sqrt(P/R);formula='I = √(P / R)'; }
+      else { warn='Provide two of: V, R, P'; }
+      qty='Current'; unit='A';
+      if(result!==null) I=result;
+    } else if(solveFor==='R') {
+      if(V!==null && I!==null)      { result=V/I;           formula='R = V / I'; }
+      else if(V!==null && P!==null) { result=V*V/P;         formula='R = V² / P'; }
+      else if(P!==null && I!==null) { result=P/(I*I);       formula='R = P / I²'; }
+      else { warn='Provide two of: V, I, P'; }
+      qty='Resistance'; unit='Ω';
+      if(result!==null) R=result;
+    } else if(solveFor==='P') {
+      if(V!==null && I!==null)      { result=V*I;           formula='P = V × I'; }
+      else if(I!==null && R!==null) { result=I*I*R;         formula='P = I² × R'; }
+      else if(V!==null && R!==null) { result=V*V/R;         formula='P = V² / R'; }
+      else { warn='Provide two of: V, I, R'; }
+      qty='Power'; unit='W';
+      if(result!==null) P=result;
+    }
+  } catch(e) { warn='Calculation error: '+e.message; }
+
+  if(warn) { showError(warn); return; }
+  if(result===null || !isFinite(result) || result<0) { showError('Invalid result — check inputs.'); return; }
+
+  // Auto-compute missing values
+  if(V!==null && I===null && R!==null) I=V/R;
+  if(V!==null && I!==null && P===null) P=V*I;
+  if(V!==null && I!==null && R===null) R=V/I;
+
+  showBasicResult(solveFor, result, unit, qty, formula, V, I, R, P);
+  drawBasicCircuit(V, I, R, P);
+  showResults();
+}
+
+function calcSeries() {
+  const Vs = parseFloat(document.getElementById('ser-V').value);
+  // Read current values from inputs
+  const listEl = document.getElementById('ser-list');
+  const inputs = listEl.querySelectorAll('input[type="number"]');
+  const Rs = Array.from(inputs).map(inp => parseFloat(inp.value)||0);
+
+  if(Rs.some(r=>r<=0)) { showError('All resistances must be > 0'); return; }
+
+  const R_total = Rs.reduce((a,b)=>a+b, 0);
+  const I = Vs / R_total;
+  const P_total = Vs * I;
+
+  const rows = Rs.map((R,i) => {
+    const Vd = I * R;
+    const P  = I * I * R;
+    return {R, V:Vd, I, P, label:'R'+(i+1)};
+  });
+
+  document.getElementById('sp-result-card').style.display='block';
+  document.getElementById('sp-card-title').textContent = 'Series: Per-Resistor Analysis';
+  const tbody = document.getElementById('sp-tbody');
+  tbody.innerHTML = rows.map(r=>`
+    <tr>
+      <td>${r.label}</td>
+      <td>${fmt(r.R)}</td>
+      <td>${fmt(r.V)}</td>
+      <td>${fmt(r.I,4)}</td>
+      <td>${fmt(r.P)}</td>
+    </tr>
+  `).join('') + `<tr class="hl" style="border-top:2px solid var(--border-bright)">
+      <td style="color:var(--accent);font-weight:600">TOTAL</td>
+      <td style="color:var(--accent);font-weight:600">${fmt(R_total)}</td>
+      <td style="color:var(--accent);font-weight:600">${fmt(Vs)}</td>
+      <td style="color:var(--accent);font-weight:600">${fmt(I,4)}</td>
+      <td style="color:var(--accent);font-weight:600">${fmt(P_total)}</td>
+    </tr>`;
+
+  document.getElementById('sp-totals').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      ${metricMini('R_total', fmt(R_total)+' Ω', 'Total Resistance','teal')}
+      ${metricMini('I', fmt(I,4)+' A', 'Series Current','blue')}
+      ${metricMini('V', fmt(Vs)+' V', 'Supply Voltage','orange')}
+      ${metricMini('P', fmt(P_total)+' W', 'Total Power','violet')}
+    </div>`;
+
+  showBasicResult('R', R_total, 'Ω', 'Total Resistance (Series)', 'R_total = R1+R2+…+Rn', Vs, I, R_total, P_total);
+  drawSeriesCircuit(Vs, Rs, I);
+  showResults();
+  document.getElementById('ans-banner').innerHTML = `<div class="banner info"><span class="banner-icon">ℹ</span><span>Series circuit: same current (${fmt(I,4)} A) flows through all resistors. Voltage divides proportionally to resistance.</span></div>`;
+}
+
+function calcParallel() {
+  const Vs = parseFloat(document.getElementById('par-V').value);
+  const listEl = document.getElementById('par-list');
+  const inputs = listEl.querySelectorAll('input[type="number"]');
+  const Rs = Array.from(inputs).map(inp => parseFloat(inp.value)||0);
+
+  if(Rs.some(r=>r<=0)) { showError('All resistances must be > 0'); return; }
+
+  const R_inv = Rs.reduce((a,b)=>a+1/b, 0);
+  const R_total = 1/R_inv;
+  const I_total = Vs / R_total;
+  const P_total = Vs * I_total;
+
+  const rows = Rs.map((R,i) => {
+    const Ir = Vs / R;
+    const P  = Vs * Ir;
+    return {R, V:Vs, I:Ir, P, label:'R'+(i+1)};
+  });
+
+  document.getElementById('sp-result-card').style.display='block';
+  document.getElementById('sp-card-title').textContent = 'Parallel: Per-Resistor Analysis';
+  const tbody = document.getElementById('sp-tbody');
+  tbody.innerHTML = rows.map(r=>`
+    <tr>
+      <td>${r.label}</td>
+      <td>${fmt(r.R)}</td>
+      <td>${fmt(r.V)}</td>
+      <td>${fmt(r.I,4)}</td>
+      <td>${fmt(r.P)}</td>
+    </tr>
+  `).join('') + `<tr class="hl" style="border-top:2px solid var(--border-bright)">
+      <td style="color:var(--accent);font-weight:600">TOTAL</td>
+      <td style="color:var(--accent);font-weight:600">${fmt(R_total,4)}</td>
+      <td style="color:var(--accent);font-weight:600">${fmt(Vs)}</td>
+      <td style="color:var(--accent);font-weight:600">${fmt(I_total,4)}</td>
+      <td style="color:var(--accent);font-weight:600">${fmt(P_total)}</td>
+    </tr>`;
+
+  document.getElementById('sp-totals').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      ${metricMini('R_eq', fmt(R_total,4)+' Ω', 'Equivalent R','teal')}
+      ${metricMini('I', fmt(I_total,4)+' A', 'Total Current','blue')}
+      ${metricMini('V', fmt(Vs)+' V', 'Supply Voltage','orange')}
+      ${metricMini('P', fmt(P_total)+' W', 'Total Power','violet')}
+    </div>`;
+
+  showBasicResult('R', R_total, 'Ω', 'Equivalent Resistance (Parallel)', '1/R_eq = 1/R1+1/R2+…', Vs, I_total, R_total, P_total);
+  drawParallelCircuit(Vs, Rs, I_total);
+  showResults();
+  document.getElementById('ans-banner').innerHTML = `<div class="banner info"><span class="banner-icon">ℹ</span><span>Parallel circuit: same voltage (${fmt(Vs)} V) across all resistors. Current divides inversely to resistance.</span></div>`;
+}
+
+function metricMini(id, val, label, color) {
+  const cols = {orange:'var(--accent)',blue:'var(--blue)',teal:'var(--teal)',violet:'var(--violet)'};
+  const c = cols[color]||'var(--text-primary)';
+  return `<div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px">
+    <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px">${label}</div>
+    <div style="font-family:var(--font-display);font-size:17px;font-weight:700;color:${c}">${val}</div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════
+   Display Results
+═══════════════════════════════════════════════ */
+function showBasicResult(q, result, unit, qty, formula, V, I, R, P) {
+  const card = document.getElementById('answer-card');
+  card.className = 'answer-card ' + q;
+
+  document.getElementById('ans-qty').textContent = qty;
+  const chip = document.getElementById('ans-chip');
+  chip.className = 'formula-chip ' + q;
+  chip.textContent = formula;
+
+  document.getElementById('ans-val').textContent = smartFmt(result);
+  document.getElementById('ans-unit').textContent = unit;
+
+  // derived values (the other 3)
+  const all = [
+    {q:'V', val:V,  unit:'V',  label:'Voltage'},
+    {q:'I', val:I,  unit:'A',  label:'Current'},
+    {q:'R', val:R,  unit:'Ω',  label:'Resistance'},
+    {q:'P', val:P,  unit:'W',  label:'Power'},
+  ].filter(d=>d.q!==q);
+
+  document.getElementById('derived-grid').innerHTML = all.map(d=>`
+    <div class="derived-card ${d.q}">
+      <div class="derived-label">${d.label}</div>
+      <div class="derived-value">${d.val!=null ? smartFmt(d.val) : '—'}<span class="derived-unit">${d.unit}</span></div>
+    </div>
+  `).join('');
+}
+
+function showError(msg) {
+  document.getElementById('placeholder').classList.add('hidden');
+  document.getElementById('results-area').classList.remove('hidden');
+  document.getElementById('answer-card').className = 'answer-card V';
+  document.getElementById('ans-qty').textContent = 'Error';
+  document.getElementById('ans-chip').className = 'formula-chip I';
+  document.getElementById('ans-chip').textContent = '—';
+  document.getElementById('ans-val').textContent = '!';
+  document.getElementById('ans-unit').textContent = '';
+  document.getElementById('derived-grid').innerHTML = '';
+  document.getElementById('ans-banner').innerHTML = `<div class="banner err"><span class="banner-icon">✕</span><span>${msg}</span></div>`;
+  document.getElementById('circuit-svg').innerHTML = '';
+  document.getElementById('sp-result-card').style.display='none';
+}
+
+function showResults() {
+  document.getElementById('placeholder').classList.add('hidden');
+  document.getElementById('results-area').classList.remove('hidden');
+}
+function hideResults() {
+  document.getElementById('placeholder').classList.remove('hidden');
+  document.getElementById('results-area').classList.add('hidden');
+  document.getElementById('sp-result-card').style.display='none';
+}
+
+/* ═══════════════════════════════════════════════
+   Circuit SVG Drawings
+═══════════════════════════════════════════════ */
+function drawBasicCircuit(V, I, R, P) {
+  const W=560, H=180;
+  const svg = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="max-width:100%">
+    ${circuitStyle()}
+    <!-- Wires -->
+    <line x1="80" y1="50" x2="230" y2="50" class="wire"/>
+    <line x1="330" y1="50" x2="480" y2="50" class="wire"/>
+    <line x1="480" y1="50" x2="480" y2="130" class="wire"/>
+    <line x1="480" y1="130" x2="80" y2="130" class="wire"/>
+    <line x1="80" y1="130" x2="80" y2="50" class="wire"/>
+    <!-- Battery/Source -->
+    ${batterySymbol(80, 90, V)}
+    <!-- Resistor -->
+    ${resistorSymbol(280, 50, R)}
+    <!-- Labels -->
+    <text x="280" y="80" class="lab" text-anchor="middle">R = ${smartFmt(R)} Ω</text>
+    <!-- Current arrow -->
+    <text x="405" y="44" class="lab-sm" text-anchor="middle">I = ${smartFmt(I)} A</text>
+    <line x1="380" y1="50" x2="400" y2="50" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+    <!-- Power label -->
+    <text x="400" y="148" class="lab-p" text-anchor="middle">P = ${smartFmt(P)} W</text>
+  </svg>`;
+  document.getElementById('circuit-svg').innerHTML = svg;
+}
+
+function drawSeriesCircuit(Vs, Rs, I) {
+  const n = Rs.length;
+  const W = Math.min(600, 100 + n*120 + 60);
+  const H = 180;
+  const startX = 80, endX = W-40, topY = 50, botY = 130;
+  const rSpacing = (endX - startX - 100) / n;
+
+  let wires = `<line x1="${startX}" y1="${topY}" x2="${startX+50}" y2="${topY}" class="wire"/>`;
+  let resistors = '';
+  let labels = '';
+
+  for(let i=0; i<n; i++) {
+    const cx = startX + 50 + i*rSpacing + rSpacing/2 - 10;
+    const from = startX + 50 + i*rSpacing;
+    const to   = startX + 50 + (i+1)*rSpacing;
+    wires += `<line x1="${from}" y1="${topY}" x2="${cx-50}" y2="${topY}" class="wire"/>`;
+    resistors += resistorSymbol(cx, topY, Rs[i]);
+    labels += `<text x="${cx}" y="${topY-14}" class="lab-sm" text-anchor="middle">R${i+1}: ${fmt(Rs[i])}Ω</text>`;
+    labels += `<text x="${cx}" y="${topY+18}" class="lab-sm" text-anchor="middle">${fmt(I*Rs[i],2)}V</text>`;
+    wires += `<line x1="${cx+50}" y1="${topY}" x2="${to}" y2="${topY}" class="wire"/>`;
+  }
+
+  wires += `<line x1="${endX}" y1="${topY}" x2="${endX}" y2="${botY}" class="wire"/>`;
+  wires += `<line x1="${endX}" y1="${botY}" x2="${startX}" y2="${botY}" class="wire"/>`;
+  wires += `<line x1="${startX}" y1="${botY}" x2="${startX}" y2="${topY}" class="wire"/>`;
+
+  const svg = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="max-width:100%">
+    ${circuitStyle()}
+    ${wires}${resistors}${labels}
+    ${batterySymbol(startX, 90, Vs)}
+    <text x="${startX+20}" y="${botY+16}" class="lab-p" text-anchor="middle">I = ${fmt(I,4)} A</text>
+  </svg>`;
+  document.getElementById('circuit-svg').innerHTML = svg;
+}
+
+function drawParallelCircuit(Vs, Rs, I_total) {
+  const n = Rs.length;
+  const W = Math.min(580, 260 + n*90);
+  const H = 60 + n*55 + 20;
+  const lx = 70, rx = W-50, topY = 30, botY = H-30;
+  const spacing = (botY - topY) / (n+1);
+
+  let lines = '';
+  let resistors = '';
+  let labels = '';
+
+  // vertical rails
+  lines += `<line x1="${lx}" y1="${topY}" x2="${lx}" y2="${botY}" class="wire"/>`;
+  lines += `<line x1="${rx}" y1="${topY}" x2="${rx}" y2="${botY}" class="wire"/>`;
+  // horizontal top & bottom connections
+  lines += `<line x1="${lx}" y1="${topY}" x2="${rx}" y2="${topY}" class="wire"/>`;
+  lines += `<line x1="${lx}" y1="${botY}" x2="${rx}" y2="${botY}" class="wire"/>`;
+
+  for(let i=0; i<n; i++) {
+    const cy = topY + spacing*(i+1);
+    const Ir = Vs/Rs[i];
+    // branch lines
+    lines += `<line x1="${lx}" y1="${cy}" x2="${lx+80}" y2="${cy}" class="wire"/>`;
+    lines += `<line x1="${lx+180}" y1="${cy}" x2="${rx}" y2="${cy}" class="wire"/>`;
+    resistors += resistorSymbolH(lx+130, cy, Rs[i]);
+    labels += `<text x="${lx+130}" y="${cy-14}" class="lab-sm" text-anchor="middle">R${i+1}=${fmt(Rs[i])}Ω</text>`;
+    labels += `<text x="${rx-20}" y="${cy-8}" class="lab-sm" text-anchor="end">${fmt(Ir,3)}A</text>`;
+  }
+
+  const svg = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="max-width:100%">
+    ${circuitStyle()}
+    ${lines}${resistors}${labels}
+    ${batterySymbol(lx, (topY+botY)/2, Vs)}
+    <text x="${lx-30}" y="${botY+16}" class="lab-p" text-anchor="middle">I=${fmt(I_total,3)}A</text>
+    <text x="${rx+2}" y="${topY-8}" class="lab-sm" text-anchor="middle">${fmt(Vs)}V</text>
+  </svg>`;
+  document.getElementById('circuit-svg').innerHTML = svg;
+}
+
+function circuitStyle() {
+  return `<defs>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+  <style>
+    .wire{stroke:#2a3d5a;stroke-width:2;fill:none}
+    .res-body{fill:none;stroke:#14b8a6;stroke-width:2}
+    .bat-line{stroke:#f97316;stroke-width:2.5}
+    .bat-minus{stroke:#8899bb;stroke-width:2}
+    .lab{font-family:'JetBrains Mono';font-size:11px;fill:#f0f4ff}
+    .lab-sm{font-family:'JetBrains Mono';font-size:10px;fill:#8899bb}
+    .lab-p{font-family:'JetBrains Mono';font-size:11px;fill:#8b5cf6}
+    .lab-v{font-family:'JetBrains Mono';font-size:11px;fill:#f97316}
+    .node{fill:#2a3d5a}
+  </style>`;
+}
+
+function batterySymbol(x, cy, V) {
+  return `
+    <line x1="${x}" y1="${cy-18}" x2="${x}" y2="${cy+18}" class="bat-line"/>
+    <line x1="${x-8}" y1="${cy-12}" x2="${x+8}" y2="${cy-12}" stroke="#f97316" stroke-width="3"/>
+    <line x1="${x-5}" y1="${cy+12}" x2="${x+5}" y2="${cy+12}" class="bat-minus"/>
+    <text x="${x}" y="${cy+34}" class="lab-v" text-anchor="middle">${smartFmt(V)}V</text>
+    <text x="${x}" y="${cy-26}" class="lab-sm" text-anchor="middle">Vs</text>`;
+}
+
+function resistorSymbol(cx, y, R) {
+  const x1=cx-50, x2=cx+50;
+  return `
+    <line x1="${x1}" y1="${y}" x2="${x1+15}" y2="${y}" class="wire"/>
+    <rect x="${x1+15}" y="${y-8}" width="70" height="16" rx="3" class="res-body"/>
+    <line x1="${x2-15}" y1="${y}" x2="${x2}" y2="${y}" class="wire"/>
+  `;
+}
+
+function resistorSymbolH(cx, cy, R) {
+  return `
+    <rect x="${cx-50}" y="${cy-8}" width="70" height="16" rx="3" class="res-body"/>
+  `;
+}
+
+/* ═══════════════════════════════════════════════
+   Formatting
+═══════════════════════════════════════════════ */
+function fmt(n, dec=2) { return parseFloat(n.toFixed(dec)); }
+function smartFmt(v) {
+  if(v===null||v===undefined||!isFinite(v)) return '—';
+  const abs = Math.abs(v);
+  if(abs===0) return '0';
+  if(abs>=1e9)  return (v/1e9).toPrecision(4)+' G';
+  if(abs>=1e6)  return (v/1e6).toPrecision(4)+' M';
+  if(abs>=1000) return (v/1000).toPrecision(4)+' k';
+  if(abs>=0.1)  return parseFloat(v.toPrecision(5)).toString();
+  if(abs>=1e-3) return (v*1000).toPrecision(4)+' m';
+  if(abs>=1e-6) return (v*1e6).toPrecision(4)+' µ';
+  return v.toExponential(3);
+}
+
+/* ═══════════════════════════════════════════════
+   Reset
+═══════════════════════════════════════════════ */
+function resetAll() {
+  if(currentMode==='basic') {
+    document.getElementById('inp-V').value = '12';
+    document.getElementById('inp-I').value = '';
+    document.getElementById('inp-R').value = '4';
+    document.getElementById('inp-P').value = '';
+    setSolveFor('R');
+  } else if(currentMode==='series') {
+    serComponents = [100, 200, 300];
+    renderComponents('series');
+    document.getElementById('ser-V').value = '24';
+  } else {
+    parComponents = [100, 200, 470];
+    renderComponents('parallel');
+    document.getElementById('par-V').value = '12';
+  }
+  hideResults();
+}
+
+/* ═══════════════════════════════════════════════
+   Init
+═══════════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  setSolveFor('R');
+  renderComponents('series');
+  renderComponents('parallel');
+  calculate();
+});
 </script>
 </body>
 </html>
