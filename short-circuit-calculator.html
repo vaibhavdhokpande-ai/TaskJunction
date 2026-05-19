@@ -1,147 +1,1243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Short Circuit & Fault — ElecCalc Pro</title>
-<link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Short Circuit & Fault Calculator — IEC 60909</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg-deep:    #0b0f1a;
+    --bg-card:    #111827;
+    --bg-panel:   #1a2235;
+    --bg-input:   #0f1724;
+    --border:     #1e2d45;
+    --border-hi:  #2a4060;
+    --cyan:       #22d3ee;
+    --cyan-dim:   #0e7490;
+    --teal:       #14b8a6;
+    --amber:      #f59e0b;
+    --red:        #ef4444;
+    --green:      #22c55e;
+    --text-pri:   #e2e8f0;
+    --text-sec:   #94a3b8;
+    --text-dim:   #4b6380;
+    --text-mono:  #7dd3fc;
+    --accent:     #22d3ee;
+    --radius:     10px;
+    --shadow:     0 4px 24px rgba(0,0,0,0.5);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-pri);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── Noise overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: .4;
+  }
+
+  /* ── Grid lines ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,211,238,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* ── Header ── */
+  header {
+    padding: 32px 0 0;
+    display: flex; align-items: flex-start; gap: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    padding-bottom: 28px;
+  }
+  .logo-badge {
+    width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--cyan-dim), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .header-text h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 800; letter-spacing: -0.5px;
+    color: var(--text-pri);
+  }
+  .header-text p {
+    font-size: 13px; color: var(--text-sec);
+    margin-top: 2px;
+  }
+  .iec-badge {
+    margin-left: auto; flex-shrink: 0;
+    background: rgba(34,211,238,.08);
+    border: 1px solid rgba(34,211,238,.2);
+    color: var(--cyan); padding: 6px 14px;
+    border-radius: 100px; font-size: 12px;
+    font-family: 'DM Mono', monospace; font-weight: 500;
+    white-space: nowrap; align-self: center;
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex; gap: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 5px;
+    margin-bottom: 28px;
+    width: fit-content;
+  }
+  .tab-btn {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 8px 20px; border-radius: 8px; border: none;
+    background: transparent; color: var(--text-sec);
+    cursor: pointer; transition: all .18s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .tab-btn .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .5; }
+  .tab-btn:hover { color: var(--text-pri); background: var(--bg-panel); }
+  .tab-btn.active {
+    background: rgba(34,211,238,.12);
+    color: var(--cyan);
+    border: 1px solid rgba(34,211,238,.2);
+  }
+  .tab-btn.active .dot { opacity: 1; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeUp .25s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
+
+  /* ── Layout ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  @media(max-width:768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-sec); margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ── Form fields ── */
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block; font-size: 12px; font-weight: 500;
+    color: var(--text-sec); margin-bottom: 5px;
+    letter-spacing: .3px;
+  }
+  .field-row { display: flex; gap: 8px; }
+  .field-row input, .field-row select { flex: 1; min-width: 0; }
+
+  input[type="number"], input[type="text"], select {
+    width: 100%; padding: 9px 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text-pri);
+    font-family: 'DM Mono', monospace; font-size: 13px;
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  input:focus, select:focus {
+    border-color: var(--cyan-dim);
+    box-shadow: 0 0 0 3px rgba(34,211,238,.08);
+  }
+  select { cursor: pointer; }
+  select option { background: var(--bg-card); }
+
+  .unit-tag {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: 6px; padding: 9px 10px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--text-dim); white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* ── Calculate button ── */
+  .calc-btn {
+    width: 100%; padding: 12px;
+    background: linear-gradient(135deg, var(--cyan-dim), #0c5e73);
+    border: 1px solid var(--cyan-dim); border-radius: 8px;
+    color: #fff; font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: .5px;
+    cursor: pointer; transition: all .18s;
+    margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .calc-btn:hover { background: linear-gradient(135deg, #1190aa, var(--cyan-dim)); box-shadow: 0 0 20px rgba(34,211,238,.2); }
+
+  /* ── Results ── */
+  .results-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-top: 4px; }
+  @media(max-width:500px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-item {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 16px;
+    position: relative; overflow: hidden;
+    transition: border-color .15s;
+  }
+  .result-item::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .result-item.cyan::before  { background: var(--cyan); }
+  .result-item.teal::before  { background: var(--teal); }
+  .result-item.amber::before { background: var(--amber); }
+  .result-item.red::before   { background: var(--red); }
+  .result-item.green::before { background: var(--green); }
+
+  .result-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; font-weight: 500; letter-spacing: .3px; }
+  .result-value {
+    font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500;
+    color: var(--text-mono); line-height: 1.1;
+  }
+  .result-unit { font-size: 12px; color: var(--text-sec); margin-top: 2px; }
+
+  /* ── Impedance vector ── */
+  .imp-viz { margin-top: 16px; }
+  .imp-bar-wrap { margin-top: 6px; }
+  .imp-bar-label { font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between; margin-bottom: 3px; }
+  .imp-bar { height: 6px; border-radius: 3px; background: var(--bg-input); overflow: hidden; }
+  .imp-bar-fill { height: 100%; border-radius: 3px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+  .imp-bar-fill.r { background: linear-gradient(90deg, var(--amber), #d97706); }
+  .imp-bar-fill.x { background: linear-gradient(90deg, var(--cyan), var(--teal)); }
+  .imp-bar-fill.z { background: linear-gradient(90deg, var(--green), #16a34a); }
+
+  /* ── System diagram ── */
+  .diagram { margin-bottom: 20px; }
+  canvas { border-radius: 8px; display: block; width: 100%; height: auto; }
+
+  /* ── Fault type selector ── */
+  .fault-selector { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .fault-opt {
+    flex: 1; min-width: 100px; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg-panel);
+    color: var(--text-sec); cursor: pointer; font-size: 12px;
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+    text-align: center; transition: all .15s;
+  }
+  .fault-opt:hover { border-color: var(--border-hi); color: var(--text-pri); }
+  .fault-opt.active { border-color: var(--cyan); background: rgba(34,211,238,.08); color: var(--cyan); }
+  .fault-opt .sub { display: block; font-size: 10px; opacity: .6; margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  /* ── Info strip ── */
+  .info-strip {
+    background: rgba(34,211,238,.04); border: 1px solid rgba(34,211,238,.12);
+    border-radius: 8px; padding: 12px 16px; font-size: 12px;
+    color: var(--text-sec); display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .info-strip .icon { color: var(--cyan); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Formula display ── */
+  .formula-box {
+    background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    color: var(--text-mono); line-height: 1.8;
+  }
+  .formula-box .comment { color: var(--text-dim); }
+
+  /* ── Section heading ── */
+  .section-sub {
+    font-size: 12px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin: 20px 0 10px; font-weight: 600;
+  }
+
+  /* ── Table ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .data-table th {
+    text-align: left; padding: 8px 12px;
+    background: var(--bg-panel); color: var(--text-dim);
+    font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td {
+    padding: 9px 12px; border-bottom: 1px solid rgba(30,45,69,.5);
+    font-family: 'DM Mono', monospace; color: var(--text-pri);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .highlight { color: var(--cyan); font-weight: 500; }
+  .data-table .warn { color: var(--amber); }
+
+  /* ── Ring diagram ── */
+  .ring-path {
+    display: flex; gap: 12px; align-items: center;
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 12px;
+  }
+  .ring-path .path-label { font-size: 11px; color: var(--text-dim); width: 50px; flex-shrink: 0; }
+  .ring-path .path-bar { flex: 1; height: 4px; border-radius: 2px; }
+  .ring-path .path-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text-mono); width: 80px; text-align: right; flex-shrink: 0; }
+  .path-a { background: linear-gradient(90deg, var(--cyan), var(--teal)); }
+  .path-b { background: linear-gradient(90deg, var(--amber), #d97706); }
+
+  /* ── Scroll bar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
+</style>
 </head>
 <body>
-<nav class="top-nav">
-  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
-  <a href="index.html" class="nav-back">← BACK</a>
-</nav>
-<div class="calc-header">
-  <div class="calc-tag">// CALCULATOR 06 OF 08</div>
-  <h1 class="calc-title"><span class="icon">🛡️</span>Short Circuit & Fault Calculator</h1>
-  <p class="calc-desc">IEC 60909 / IS 13234 — Symmetrical fault current, peak current, and protective device selection for LV/MV systems.</p>
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="logo-badge">⚡</div>
+    <div class="header-text">
+      <h1>Short Circuit & Fault Calculator</h1>
+      <p>Symmetrical fault currents · Impedance · Short-circuit MVA · Radial & Ring systems</p>
+    </div>
+    <div class="iec-badge">IEC 60909</div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('radial')"><span class="dot"></span>Radial System</button>
+    <button class="tab-btn" onclick="switchTab('ring')"><span class="dot"></span>Ring System</button>
+    <button class="tab-btn" onclick="switchTab('components')"><span class="dot"></span>Impedance Library</button>
+    <button class="tab-btn" onclick="switchTab('reference')"><span class="dot"></span>Reference</button>
+  </div>
+
+  <!-- ══════════ RADIAL TAB ══════════ -->
+  <div id="tab-radial" class="tab-panel active">
+    <div class="info-strip">
+      <span class="icon">ℹ</span>
+      <span>Calculates max/min three-phase symmetrical fault current at the fault point using IEC 60909 voltage factor <strong>c</strong>. Includes source, transformer and feeder impedances in series.</span>
+    </div>
+
+    <div class="grid-2">
+      <!-- Inputs -->
+      <div>
+        <!-- System -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">System Parameters <span class="line"></span></div>
+
+          <div class="field">
+            <label>Nominal Voltage U<sub>n</sub></label>
+            <div class="field-row">
+              <input type="number" id="r_un" value="11" min="0.1" step="0.1" oninput="calcRadial()"/>
+              <select id="r_un_unit" onchange="calcRadial()">
+                <option value="1">V</option>
+                <option value="0.001">mV</option>
+                <option value="1000" selected>kV</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Voltage Factor c (IEC 60909)</label>
+            <select id="r_c" onchange="calcRadial()">
+              <option value="1.1" selected>1.10 — Maximum fault (HV &gt; 1 kV)</option>
+              <option value="1.0">1.00 — Minimum fault (HV &gt; 1 kV)</option>
+              <option value="1.05">1.05 — Maximum fault (LV, ±6%)</option>
+              <option value="0.95">0.95 — Minimum fault (LV)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>System Frequency</label>
+            <select id="r_freq" onchange="calcRadial()">
+              <option value="50" selected>50 Hz</option>
+              <option value="60">60 Hz</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Source -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Network / Source <span class="line"></span></div>
+          <div class="field">
+            <label>Initial Symmetrical Short-Circuit Power S″<sub>kQ</sub></label>
+            <div class="field-row">
+              <input type="number" id="r_skq" value="500" min="1" oninput="calcRadial()"/>
+              <div class="unit-tag">MVA</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Source X/R Ratio</label>
+            <input type="number" id="r_xr_src" value="10" min="0.1" step="0.1" oninput="calcRadial()"/>
+          </div>
+        </div>
+
+        <!-- Transformer -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Transformer <span class="line"></span></div>
+          <div class="field">
+            <label>Rated Power S<sub>n</sub></label>
+            <div class="field-row">
+              <input type="number" id="r_sn" value="10" min="0.01" step="0.1" oninput="calcRadial()"/>
+              <div class="unit-tag">MVA</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Short-circuit Voltage u<sub>kr</sub></label>
+            <div class="field-row">
+              <input type="number" id="r_ukr" value="6" min="0.1" step="0.1" oninput="calcRadial()"/>
+              <div class="unit-tag">%</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Resistive Component u<sub>Rr</sub></label>
+            <div class="field-row">
+              <input type="number" id="r_urr" value="1" min="0" step="0.1" oninput="calcRadial()"/>
+              <div class="unit-tag">%</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Correction Factor K<sub>T</sub> (IEC 60909 §3.3.3)</label>
+            <select id="r_kt" onchange="calcRadial()">
+              <option value="1.0">1.00 — Not applied</option>
+              <option value="0.975" selected>0.975 — Typical HV/MV</option>
+              <option value="0.95">0.950 — Conservative</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Feeder cable -->
+        <div class="card">
+          <div class="card-title">Feeder Cable / Line <span class="line"></span></div>
+          <div class="field">
+            <label>Resistance r'</label>
+            <div class="field-row">
+              <input type="number" id="r_rl" value="0.206" min="0" step="0.001" oninput="calcRadial()"/>
+              <div class="unit-tag">Ω/km</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Reactance x'</label>
+            <div class="field-row">
+              <input type="number" id="r_xl" value="0.08" min="0" step="0.001" oninput="calcRadial()"/>
+              <div class="unit-tag">Ω/km</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Length</label>
+            <div class="field-row">
+              <input type="number" id="r_len" value="2" min="0" step="0.1" oninput="calcRadial()"/>
+              <div class="unit-tag">km</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Fault Results <span class="line"></span></div>
+
+          <p class="section-sub">Fault Currents</p>
+          <div class="results-grid">
+            <div class="result-item cyan">
+              <div class="result-label">I″<sub>k3</sub> — Three-phase fault</div>
+              <div class="result-value" id="r_ik3">—</div>
+              <div class="result-unit">kA</div>
+            </div>
+            <div class="result-item teal">
+              <div class="result-label">Peak current i<sub>p</sub></div>
+              <div class="result-value" id="r_ip">—</div>
+              <div class="result-unit">kA peak</div>
+            </div>
+            <div class="result-item amber">
+              <div class="result-label">I<sub>th</sub> — Thermal equiv.</div>
+              <div class="result-value" id="r_ith">—</div>
+              <div class="result-unit">kA (1 s)</div>
+            </div>
+            <div class="result-item green">
+              <div class="result-label">S″<sub>k</sub> — SC MVA</div>
+              <div class="result-value" id="r_sk">—</div>
+              <div class="result-unit">MVA</div>
+            </div>
+          </div>
+
+          <p class="section-sub" style="margin-top:18px">Total Impedance at Fault Point</p>
+          <div class="results-grid">
+            <div class="result-item cyan">
+              <div class="result-label">Z<sub>k</sub> — Total</div>
+              <div class="result-value" id="r_zk">—</div>
+              <div class="result-unit">Ω</div>
+            </div>
+            <div class="result-item teal">
+              <div class="result-label">R<sub>k</sub></div>
+              <div class="result-value" id="r_rk">—</div>
+              <div class="result-unit">Ω</div>
+            </div>
+            <div class="result-item amber">
+              <div class="result-label">X<sub>k</sub></div>
+              <div class="result-value" id="r_xk">—</div>
+              <div class="result-unit">Ω</div>
+            </div>
+            <div class="result-item green">
+              <div class="result-label">X/R ratio</div>
+              <div class="result-value" id="r_xr">—</div>
+              <div class="result-unit">—</div>
+            </div>
+          </div>
+
+          <!-- Impedance bar chart -->
+          <div class="imp-viz" style="margin-top:20px">
+            <p class="section-sub" style="margin:0 0 10px">Impedance Composition</p>
+            <div class="imp-bar-wrap">
+              <div class="imp-bar-label"><span>Z<sub>source</sub></span><span id="b_src_pct">—</span></div>
+              <div class="imp-bar"><div class="imp-bar-fill z" id="b_src" style="width:0%"></div></div>
+            </div>
+            <div class="imp-bar-wrap" style="margin-top:8px">
+              <div class="imp-bar-label"><span>Z<sub>transformer</sub></span><span id="b_tr_pct">—</span></div>
+              <div class="imp-bar"><div class="imp-bar-fill x" id="b_tr" style="width:0%"></div></div>
+            </div>
+            <div class="imp-bar-wrap" style="margin-top:8px">
+              <div class="imp-bar-label"><span>Z<sub>cable/line</sub></span><span id="b_ln_pct">—</span></div>
+              <div class="imp-bar"><div class="imp-bar-fill r" id="b_ln" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Component breakdown table -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Impedance Breakdown <span class="line"></span></div>
+          <table class="data-table">
+            <thead><tr><th>Component</th><th>R (Ω)</th><th>X (Ω)</th><th>Z (Ω)</th></tr></thead>
+            <tbody id="r_breakdown">
+              <tr><td colspan="4" style="color:var(--text-dim);text-align:center">— Enter values and calculate —</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Formula -->
+        <div class="card">
+          <div class="card-title">Applied Formula <span class="line"></span></div>
+          <div class="formula-box" id="r_formula">
+            <span class="comment">// IEC 60909 Eq. (29) — Three-phase fault</span><br>
+            I″<sub>k3</sub> = c · U<sub>n</sub> / (√3 · |Z<sub>k</sub>|)<br><br>
+            <span class="comment">// Peak current factor κ (IEC 60909 §4.3.1)</span><br>
+            κ = 1.02 + 0.98 · e<sup>−3R/X</sup><br>
+            i<sub>p</sub> = κ · √2 · I″<sub>k3</sub>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ RING TAB ══════════ -->
+  <div id="tab-ring" class="tab-panel">
+    <div class="info-strip">
+      <span class="icon">ℹ</span>
+      <span>Ring/loop distribution: fault current supplied from both ends simultaneously. Total I″<sub>k</sub> = I<sub>A</sub> + I<sub>B</sub>. Each path computed as radial equivalent per IEC 60909.</span>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <!-- Common -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Common Parameters <span class="line"></span></div>
+          <div class="field">
+            <label>Nominal Voltage U<sub>n</sub></label>
+            <div class="field-row">
+              <input type="number" id="rg_un" value="11" step="0.1" oninput="calcRing()"/>
+              <select id="rg_un_unit" onchange="calcRing()">
+                <option value="1">V</option>
+                <option value="1000" selected>kV</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Voltage Factor c</label>
+            <select id="rg_c" onchange="calcRing()">
+              <option value="1.1" selected>1.10 — Maximum</option>
+              <option value="1.0">1.00 — Minimum</option>
+              <option value="1.05">1.05 — LV Max</option>
+              <option value="0.95">0.95 — LV Min</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Fault Location f (from bus A)</label>
+            <div class="field-row">
+              <input type="number" id="rg_frac" value="50" min="0" max="100" step="1" oninput="calcRing()"/>
+              <div class="unit-tag">%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bus A -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Bus A — Source & Feeder <span class="line"></span></div>
+          <div class="field">
+            <label>S″<sub>kA</sub> Network short-circuit power</label>
+            <div class="field-row">
+              <input type="number" id="rg_ska" value="500" oninput="calcRing()"/>
+              <div class="unit-tag">MVA</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>X/R ratio (source A)</label>
+            <input type="number" id="rg_xra" value="10" step="0.1" oninput="calcRing()"/>
+          </div>
+          <div class="field">
+            <label>Ring cable resistance r'<sub>A</sub></label>
+            <div class="field-row">
+              <input type="number" id="rg_rca" value="0.206" step="0.001" oninput="calcRing()"/>
+              <div class="unit-tag">Ω/km</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Ring cable reactance x'<sub>A</sub></label>
+            <div class="field-row">
+              <input type="number" id="rg_xca" value="0.08" step="0.001" oninput="calcRing()"/>
+              <div class="unit-tag">Ω/km</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Total ring length (A→fault)</label>
+            <div class="field-row">
+              <input type="number" id="rg_la" value="5" step="0.1" oninput="calcRing()"/>
+              <div class="unit-tag">km</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bus B -->
+        <div class="card">
+          <div class="card-title">Bus B — Source & Feeder <span class="line"></span></div>
+          <div class="field">
+            <label>S″<sub>kB</sub> Network short-circuit power</label>
+            <div class="field-row">
+              <input type="number" id="rg_skb" value="300" oninput="calcRing()"/>
+              <div class="unit-tag">MVA</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>X/R ratio (source B)</label>
+            <input type="number" id="rg_xrb" value="8" step="0.1" oninput="calcRing()"/>
+          </div>
+          <div class="field">
+            <label>Ring cable resistance r'<sub>B</sub></label>
+            <div class="field-row">
+              <input type="number" id="rg_rcb" value="0.206" step="0.001" oninput="calcRing()"/>
+              <div class="unit-tag">Ω/km</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Ring cable reactance x'<sub>B</sub></label>
+            <div class="field-row">
+              <input type="number" id="rg_xcb" value="0.08" step="0.001" oninput="calcRing()"/>
+              <div class="unit-tag">Ω/km</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Total ring length (B→fault)</label>
+            <div class="field-row">
+              <input type="number" id="rg_lb" value="3" step="0.1" oninput="calcRing()"/>
+              <div class="unit-tag">km</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ring results -->
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Ring Fault Results <span class="line"></span></div>
+
+          <p class="section-sub">Path Contributions</p>
+          <div class="ring-path">
+            <div class="path-label" style="color:var(--cyan)">Path A</div>
+            <div class="path-bar path-a" id="rg_bar_a" style="flex:1"></div>
+            <div class="path-val" id="rg_ia">—</div>
+            <div class="unit-tag" style="width:30px;text-align:center">kA</div>
+          </div>
+          <div class="ring-path">
+            <div class="path-label" style="color:var(--amber)">Path B</div>
+            <div class="path-bar path-b" id="rg_bar_b" style="flex:1"></div>
+            <div class="path-val" id="rg_ib">—</div>
+            <div class="unit-tag" style="width:30px;text-align:center">kA</div>
+          </div>
+
+          <p class="section-sub" style="margin-top:16px">Total at Fault Point</p>
+          <div class="results-grid">
+            <div class="result-item cyan">
+              <div class="result-label">I″<sub>k</sub> total</div>
+              <div class="result-value" id="rg_ik">—</div>
+              <div class="result-unit">kA</div>
+            </div>
+            <div class="result-item teal">
+              <div class="result-label">Peak i<sub>p</sub></div>
+              <div class="result-value" id="rg_ip">—</div>
+              <div class="result-unit">kA peak</div>
+            </div>
+            <div class="result-item amber">
+              <div class="result-label">S″<sub>k</sub></div>
+              <div class="result-value" id="rg_sk">—</div>
+              <div class="result-unit">MVA</div>
+            </div>
+            <div class="result-item green">
+              <div class="result-label">Thevenin Z<sub>eq</sub></div>
+              <div class="result-value" id="rg_zeq">—</div>
+              <div class="result-unit">Ω</div>
+            </div>
+          </div>
+
+          <!-- Ring canvas diagram -->
+          <div style="margin-top:20px">
+            <p class="section-sub" style="margin-bottom:10px">System Diagram</p>
+            <canvas id="ringCanvas" width="500" height="140"></canvas>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Impedance per Path <span class="line"></span></div>
+          <table class="data-table">
+            <thead><tr><th>Path</th><th>Z<sub>src</sub> (Ω)</th><th>Z<sub>cable</sub> (Ω)</th><th>Z<sub>total</sub> (Ω)</th><th>I (kA)</th></tr></thead>
+            <tbody id="rg_table">
+              <tr><td colspan="5" style="color:var(--text-dim);text-align:center">— Enter values —</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Notes <span class="line"></span></div>
+          <div class="formula-box">
+            <span class="comment">// Path impedances in parallel (Thevenin equivalent)</span><br>
+            Z<sub>eq</sub> = Z<sub>A</sub> ‖ Z<sub>B</sub> = Z<sub>A</sub>·Z<sub>B</sub> / (Z<sub>A</sub>+Z<sub>B</sub>)<br><br>
+            I<sub>A</sub> = c·U<sub>n</sub> / (√3·Z<sub>A</sub>)<br>
+            I<sub>B</sub> = c·U<sub>n</sub> / (√3·Z<sub>B</sub>)<br>
+            I<sub>total</sub> = I<sub>A</sub> + I<sub>B</sub>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ COMPONENTS TAB ══════════ -->
+  <div id="tab-components" class="tab-panel">
+    <div class="info-strip">
+      <span class="icon">ℹ</span>
+      <span>Typical impedance values for common cables, transformers and overhead lines. Values referenced to the system voltage shown. Use these to populate the calculator inputs.</span>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Power Transformers — u<sub>kr</sub> & u<sub>Rr</sub> <span class="line"></span></div>
+          <table class="data-table">
+            <thead><tr><th>S<sub>n</sub></th><th>u<sub>kr</sub> %</th><th>u<sub>Rr</sub> %</th><th>X/R</th></tr></thead>
+            <tbody>
+              <tr><td>100 kVA</td><td class="highlight">4.0</td><td>1.8</td><td>2.2</td></tr>
+              <tr><td>250 kVA</td><td class="highlight">4.0</td><td>1.4</td><td>2.8</td></tr>
+              <tr><td>630 kVA</td><td class="highlight">4.0</td><td>1.1</td><td>3.6</td></tr>
+              <tr><td>1 MVA</td><td class="highlight">5.0</td><td>1.0</td><td>5.0</td></tr>
+              <tr><td>2.5 MVA</td><td class="highlight">5.5</td><td>0.8</td><td>6.9</td></tr>
+              <tr><td>10 MVA</td><td class="highlight">6.0</td><td>0.5</td><td>12</td></tr>
+              <tr><td>40 MVA</td><td class="highlight">8.0</td><td>0.3</td><td>27</td></tr>
+              <tr><td>100 MVA</td><td class="highlight">12.0</td><td>0.2</td><td>60</td></tr>
+              <tr><td>250 MVA</td><td class="highlight">14.0</td><td>0.1</td><td class="warn">140</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Overhead Lines (Al conductor) <span class="line"></span></div>
+          <table class="data-table">
+            <thead><tr><th>Size (mm²)</th><th>r' (Ω/km)</th><th>x' (Ω/km)</th><th>I<sub>max</sub> (A)</th></tr></thead>
+            <tbody>
+              <tr><td>50 Al</td><td class="highlight">0.641</td><td>0.391</td><td>170</td></tr>
+              <tr><td>95 Al</td><td class="highlight">0.306</td><td>0.371</td><td>250</td></tr>
+              <tr><td>150 Al</td><td class="highlight">0.206</td><td>0.356</td><td>320</td></tr>
+              <tr><td>240 Al</td><td class="highlight">0.125</td><td>0.340</td><td>420</td></tr>
+              <tr><td>400 Al</td><td class="highlight">0.080</td><td>0.328</td><td>550</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Underground Cables (XLPE) <span class="line"></span></div>
+          <table class="data-table">
+            <thead><tr><th>Size (mm²)</th><th>r' (Ω/km)</th><th>x' (Ω/km)</th><th>I<sub>max</sub> (A)</th></tr></thead>
+            <tbody>
+              <tr><td>35 Cu</td><td class="highlight">0.524</td><td>0.113</td><td>165</td></tr>
+              <tr><td>70 Cu</td><td class="highlight">0.268</td><td>0.101</td><td>230</td></tr>
+              <tr><td>120 Cu</td><td class="highlight">0.153</td><td>0.094</td><td>295</td></tr>
+              <tr><td>185 Cu</td><td class="highlight">0.099</td><td>0.087</td><td>375</td></tr>
+              <tr><td>300 Cu</td><td class="highlight">0.060</td><td>0.082</td><td>470</td></tr>
+              <tr><td>95 Al</td><td class="highlight">0.320</td><td>0.099</td><td>195</td></tr>
+              <tr><td>150 Al</td><td class="highlight">0.206</td><td>0.091</td><td>250</td></tr>
+              <tr><td>240 Al</td><td class="highlight">0.125</td><td>0.086</td><td>320</td></tr>
+              <tr><td>400 Al</td><td class="highlight">0.077</td><td>0.079</td><td>420</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Voltage Factor c — IEC 60909 Table 1 <span class="line"></span></div>
+          <table class="data-table">
+            <thead><tr><th>Voltage Level</th><th>c<sub>max</sub></th><th>c<sub>min</sub></th></tr></thead>
+            <tbody>
+              <tr><td>LV: 100V–1kV (±6%)</td><td class="highlight">1.05</td><td>0.95</td></tr>
+              <tr><td>LV: 100V–1kV (±10%)</td><td class="highlight">1.10</td><td>0.95</td></tr>
+              <tr><td>MV: 1kV–35kV</td><td class="highlight">1.10</td><td>1.00</td></tr>
+              <tr><td>HV: 35kV–230kV</td><td class="highlight">1.10</td><td>1.00</td></tr>
+              <tr><td>EHV: &gt;230kV</td><td class="highlight">1.10</td><td>1.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ REFERENCE TAB ══════════ -->
+  <div id="tab-reference" class="tab-panel">
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">IEC 60909 Key Equations <span class="line"></span></div>
+          <div class="formula-box" style="line-height:2.2">
+            <span class="comment">// Three-phase symmetrical fault current</span><br>
+            I″<sub>k3</sub> = c·U<sub>n</sub> / (√3·|Z<sub>k</sub>|)<br><br>
+            <span class="comment">// Peak short-circuit current</span><br>
+            i<sub>p</sub> = κ·√2·I″<sub>k3</sub><br>
+            κ = 1.02 + 0.98·e<sup>−3R/X</sup><br><br>
+            <span class="comment">// Thermal equivalent current (t<sub>k</sub> = 1s)</span><br>
+            I<sub>th</sub> = I″<sub>k</sub>·√(m+n)<br><br>
+            <span class="comment">// Short-circuit MVA</span><br>
+            S″<sub>k</sub> = √3·U<sub>n</sub>·I″<sub>k3</sub><br><br>
+            <span class="comment">// Network impedance from fault level</span><br>
+            Z<sub>Q</sub> = c·U<sub>n</sub>² / S″<sub>kQ</sub><br><br>
+            <span class="comment">// Transformer impedance (referred to LV)</span><br>
+            Z<sub>T</sub> = K<sub>T</sub>·(u<sub>kr</sub>/100)·(U<sub>n</sub>²/S<sub>n</sub>)<br>
+            R<sub>T</sub> = K<sub>T</sub>·(u<sub>Rr</sub>/100)·(U<sub>n</sub>²/S<sub>n</sub>)<br>
+            X<sub>T</sub> = √(Z<sub>T</sub>²−R<sub>T</sub>²)
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Kappa Factor κ vs X/R <span class="line"></span></div>
+          <canvas id="kappaChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Fault Type Multipliers <span class="line"></span></div>
+          <table class="data-table">
+            <thead><tr><th>Fault Type</th><th>Multiplier</th><th>Typical I/I<sub>k3</sub></th></tr></thead>
+            <tbody>
+              <tr><td>3-phase (L-L-L)</td><td class="highlight">1.00</td><td>100%</td></tr>
+              <tr><td>3-phase-to-earth (L-L-L-E)</td><td class="highlight">≈1.00</td><td>~100%</td></tr>
+              <tr><td>2-phase (L-L)</td><td class="highlight">√3/2 ≈ 0.866</td><td>~87%</td></tr>
+              <tr><td>1-phase-to-earth (L-E)</td><td class="warn">Depends Z<sub>0</sub></td><td>60–120%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">κ Factor Quick Reference <span class="line"></span></div>
+          <table class="data-table">
+            <thead><tr><th>X/R ratio</th><th>κ</th><th>i<sub>p</sub>/I″<sub>k</sub>·√2</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td class="highlight">1.128</td><td>1.128</td></tr>
+              <tr><td>2</td><td class="highlight">1.247</td><td>1.247</td></tr>
+              <tr><td>5</td><td class="highlight">1.468</td><td>1.468</td></tr>
+              <tr><td>10</td><td class="highlight">1.642</td><td>1.642</td></tr>
+              <tr><td>20</td><td class="highlight">1.760</td><td>1.760</td></tr>
+              <tr><td>50</td><td class="highlight">1.840</td><td>1.840</td></tr>
+              <tr><td>∞</td><td class="warn">2.000</td><td>2.000</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Correction Factors <span class="line"></span></div>
+          <div class="formula-box" style="line-height:2.0">
+            <span class="comment">// Transformer correction factor K<sub>T</sub></span><br>
+            K<sub>T</sub> = 0.95·c<sub>max</sub> / (1+0.6·x<sub>T</sub>)<br>
+            where x<sub>T</sub> = u<sub>kr</sub>/100 (pu reactance)<br><br>
+            <span class="comment">// Generator correction K<sub>G</sub></span><br>
+            K<sub>G</sub> = U<sub>n</sub>·c<sub>max</sub> / (U<sub>rG</sub>·(1+x″<sub>d</sub>·sin φ<sub>rG</sub>))
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="calc-body">
-  <div class="panel">
-    <div class="panel-title">⚙ System Data</div>
-    <div class="field">
-      <label>System Voltage (V<sub>n</sub>) <span class="unit">[ Volts ]</span></label>
-      <input type="number" id="vn" placeholder="415 / 11000" value="415" step="any">
-    </div>
-    <div class="field">
-      <label>Voltage Factor (c)</label>
-      <select id="cfact">
-        <option value="1.1">1.1 — Max fault (LV ≤1kV)</option>
-        <option value="1.05">1.05 — Max fault (MV >1kV)</option>
-        <option value="0.95">0.95 — Min fault (LV)</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Source: System Fault Level <span class="unit">[ MVA ]</span></label>
-      <input type="number" id="mva" placeholder="e.g. 500" step="any">
-    </div>
-    <div class="field">
-      <label>Transformer kVA <span class="unit">[ kVA ]</span></label>
-      <input type="number" id="txkva" placeholder="e.g. 500" step="any">
-    </div>
-    <div class="field">
-      <label>Transformer Z% <span class="unit">[ % ]</span></label>
-      <input type="number" id="txz" placeholder="e.g. 4.5" step="5" value="4.5" step="any">
-    </div>
-    <div class="field">
-      <label>Cable Impedance (R+jX) <span class="unit">[ mΩ ]</span></label>
-      <input type="number" id="Rcable" placeholder="R e.g. 5" step="any">
-      <input type="number" id="Xcable" placeholder="X e.g. 2" step="any" style="margin-top:6px">
-    </div>
-    <div class="field">
-      <label>X/R Ratio of Source</label>
-      <input type="number" id="xr" placeholder="e.g. 10" value="10" step="any">
-    </div>
-    <button class="btn" onclick="calcSC()">CALCULATE FAULT</button>
-    <button class="btn btn-outline" onclick="clrSC()">CLEAR</button>
-  </div>
-
-  <div class="panel">
-    <div class="panel-title">📊 Fault Analysis Results</div>
-    <div class="result-grid">
-      <div class="result-item" id="rsc-Zs"><div class="result-label">Source Impedance</div><div class="result-value" id="rv-Zs">—</div><div class="result-unit">mΩ</div></div>
-      <div class="result-item" id="rsc-Ztx"><div class="result-label">Transformer Impedance</div><div class="result-value" id="rv-Ztx">—</div><div class="result-unit">mΩ</div></div>
-      <div class="result-item" id="rsc-Ztot"><div class="result-label">Total Impedance</div><div class="result-value" id="rv-Ztot">—</div><div class="result-unit">mΩ</div></div>
-      <div class="result-item" id="rsc-Ik"><div class="result-label">Symmetrical Fault (I"k)</div><div class="result-value" id="rv-Ik">—</div><div class="result-unit">kA</div></div>
-      <div class="result-item" id="rsc-ip"><div class="result-label">Peak Current (i<sub>p</sub>)</div><div class="result-value" id="rv-ip">—</div><div class="result-unit">kA</div></div>
-      <div class="result-item" id="rsc-Sk"><div class="result-label">Fault Level (S"k)</div><div class="result-value" id="rv-Sk">—</div><div class="result-unit">MVA</div></div>
-      <div class="result-item full" id="rsc-breaker"><div class="result-label">Min. Breaker Rating</div><div class="result-value" id="rv-breaker">—</div><div class="result-unit">kA</div></div>
-    </div>
-    <div class="formula-box">
-      <strong>IEC 60909:</strong><br>
-      I"k = c × Vn / (√3 × |Ztotal|)<br>
-      i<sub>p</sub> = κ × √2 × I"k &nbsp;&nbsp; κ = 1.02 + 0.98e^(−3R/X)<br>
-      Z<sub>tx</sub> = (Z% × V²) / (100 × S<sub>tx</sub>)
-    </div>
-  </div>
-
-  <div class="panel panel-full">
-    <div class="panel-title">📋 Typical Fault Levels — LV/MV Systems</div>
-    <table class="ref-table">
-      <thead><tr><th>Voltage Level</th><th>Typical Fault (kA)</th><th>Standard Breaker (kA)</th><th>Note</th></tr></thead>
-      <tbody>
-        <tr><td>415 V LT Bus</td><td>25–50 kA</td><td>50 / 65 kA</td><td>Incomer ACB</td></tr>
-        <tr><td>415 V Distribution</td><td>10–25 kA</td><td>25 / 36 kA</td><td>Outgoing MCCB</td></tr>
-        <tr><td>415 V Final Circuit</td><td>3–10 kA</td><td>10 / 16 kA</td><td>MCB</td></tr>
-        <tr><td>11 kV HT Panel</td><td>16–25 kA</td><td>25 / 31.5 kA</td><td>VCB</td></tr>
-        <tr><td>33 kV Sub-station</td><td>12–20 kA</td><td>20 / 25 kA</td><td>VCB</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="footer">// ELECCALC PRO · SHORT CIRCUIT · IEC 60909</div>
 <script>
-function calcSC() {
-  const Vn = parseFloat(document.getElementById('vn').value);
-  const c = parseFloat(document.getElementById('cfact').value);
-  const mva = parseFloat(document.getElementById('mva').value);
-  const txkva = parseFloat(document.getElementById('txkva').value);
-  const txz = parseFloat(document.getElementById('txz').value);
-  const Rc = parseFloat(document.getElementById('Rcable').value) || 0;
-  const Xc = parseFloat(document.getElementById('Xcable').value) || 0;
-  const xr = parseFloat(document.getElementById('xr').value) || 10;
+/* ══════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+const val = id => parseFloat($(id).value) || 0;
+const fmt = (v, d=3) => isNaN(v)||!isFinite(v) ? '—' : v.toFixed(d);
 
-  if ([Vn,c].some(isNaN)) { alert('Enter at least system voltage.'); return; }
+function kappa(xr) {
+  return 1.02 + 0.98 * Math.exp(-3 / xr);
+}
 
-  // Source impedance from MVA fault level (mΩ)
-  let Zs = 0;
-  if (!isNaN(mva) && mva > 0) {
-    Zs = Vn * Vn / (mva * 1e6) * 1000; // mΩ
+/* ══════════════════════════════════════
+   RADIAL CALCULATOR
+══════════════════════════════════════ */
+function calcRadial() {
+  const Un   = val('r_un') * val('r_un_unit');   // Volts
+  const c    = val('r_c');
+  const Skq  = val('r_skq') * 1e6;               // VA
+  const xr_s = val('r_xr_src');
+  const Sn   = val('r_sn') * 1e6;
+  const ukr  = val('r_ukr') / 100;
+  const urr  = val('r_urr') / 100;
+  const KT   = val('r_kt');
+  const rl   = val('r_rl');                       // Ω/km
+  const xl   = val('r_xl');
+  const len  = val('r_len');
+
+  if (!Un || !Skq) return;
+
+  // Source impedance
+  const Zsrc = c * Un * Un / Skq;
+  const angle_s = Math.atan(xr_s);
+  const Rs = Zsrc * Math.cos(angle_s);
+  const Xs = Zsrc * Math.sin(angle_s);
+
+  // Transformer impedance
+  const ZT_base = Un * Un / Sn;
+  const ZT = KT * ukr * ZT_base;
+  const RT = KT * urr * ZT_base;
+  const XT = Math.sqrt(Math.max(0, ZT*ZT - RT*RT));
+
+  // Cable impedance
+  const RL = rl * len;
+  const XL = xl * len;
+  const ZL = Math.hypot(RL, XL);
+
+  // Totals
+  const Rk = Rs + RT + RL;
+  const Xk = Xs + XT + XL;
+  const Zk = Math.hypot(Rk, Xk);
+  const xr_total = Xk / Rk;
+
+  // Results
+  const Ik3 = c * Un / (Math.sqrt(3) * Zk);        // A
+  const kap = kappa(xr_total);
+  const ip  = kap * Math.sqrt(2) * Ik3;
+  const Ith = Ik3 * Math.sqrt(1.02 + 0.98 * Math.exp(-4 * Rk / Xk));
+  const Sk  = Math.sqrt(3) * Un * Ik3;
+
+  $('r_ik3').textContent = fmt(Ik3 / 1e3, 3);
+  $('r_ip').textContent  = fmt(ip  / 1e3, 3);
+  $('r_ith').textContent = fmt(Ith / 1e3, 3);
+  $('r_sk').textContent  = fmt(Sk  / 1e6, 2);
+  $('r_zk').textContent  = fmt(Zk, 4);
+  $('r_rk').textContent  = fmt(Rk, 4);
+  $('r_xk').textContent  = fmt(Xk, 4);
+  $('r_xr').textContent  = fmt(xr_total, 2);
+
+  // Bars
+  const Zsrc_z = Math.hypot(Rs, Xs);
+  const total_z = Zsrc_z + ZT + ZL;
+  const pSrc = total_z > 0 ? Zsrc_z / total_z * 100 : 0;
+  const pTr  = total_z > 0 ? ZT    / total_z * 100 : 0;
+  const pLn  = total_z > 0 ? ZL    / total_z * 100 : 0;
+
+  $('b_src').style.width = pSrc + '%';
+  $('b_tr').style.width  = pTr  + '%';
+  $('b_ln').style.width  = pLn  + '%';
+  $('b_src_pct').textContent = pSrc.toFixed(1) + '%';
+  $('b_tr_pct').textContent  = pTr.toFixed(1)  + '%';
+  $('b_ln_pct').textContent  = pLn.toFixed(1)  + '%';
+
+  // Breakdown table
+  $('r_breakdown').innerHTML = `
+    <tr><td>Source/Network</td><td>${fmt(Rs,4)}</td><td>${fmt(Xs,4)}</td><td class="highlight">${fmt(Zsrc_z,4)}</td></tr>
+    <tr><td>Transformer</td><td>${fmt(RT,4)}</td><td>${fmt(XT,4)}</td><td class="highlight">${fmt(ZT,4)}</td></tr>
+    <tr><td>Cable/Line</td><td>${fmt(RL,4)}</td><td>${fmt(XL,4)}</td><td class="highlight">${fmt(ZL,4)}</td></tr>
+    <tr style="font-weight:600"><td style="color:var(--cyan)">Total Z<sub>k</sub></td><td>${fmt(Rk,4)}</td><td>${fmt(Xk,4)}</td><td class="highlight">${fmt(Zk,4)}</td></tr>
+  `;
+}
+
+/* ══════════════════════════════════════
+   RING CALCULATOR
+══════════════════════════════════════ */
+function calcRing() {
+  const Un  = val('rg_un') * val('rg_un_unit');
+  const c   = val('rg_c');
+  const frac = val('rg_frac') / 100;
+
+  const ska  = val('rg_ska') * 1e6;
+  const xra  = val('rg_xra');
+  const rca  = val('rg_rca');
+  const xca  = val('rg_xca');
+  const la   = val('rg_la') * frac;
+
+  const skb  = val('rg_skb') * 1e6;
+  const xrb  = val('rg_xrb');
+  const rcb  = val('rg_rcb');
+  const xcb  = val('rg_xcb');
+  const lb   = val('rg_lb') * (1 - frac);
+
+  if (!Un || !ska || !skb) return;
+
+  function pathImp(sk, xr, rc, xc, length) {
+    const Zq = c * Un * Un / sk;
+    const ang = Math.atan(xr);
+    const Rq = Zq * Math.cos(ang);
+    const Xq = Zq * Math.sin(ang);
+    const Rc = rc * length;
+    const Xc = xc * length;
+    const Rt = Rq + Rc;
+    const Xt = Xq + Xc;
+    const Zt = Math.hypot(Rt, Xt);
+    return { Rq, Xq, Zq, Rc, Xc, Zt, Rt, Xt };
   }
 
-  // Transformer impedance (mΩ)
-  let Ztx = 0;
-  if (!isNaN(txkva) && !isNaN(txz)) {
-    Ztx = txz / 100 * (Vn * Vn) / (txkva * 1000) * 1000; // mΩ
-  }
+  const pA = pathImp(ska, xra, rca, xca, la);
+  const pB = pathImp(skb, xrb, rcb, xcb, lb);
 
-  const Ztotal = Math.sqrt(Math.pow(Zs + Ztx + Rc, 2) + Math.pow(Xc, 2));
-  if (Ztotal === 0) { alert('Enter source MVA or transformer data.'); return; }
+  const IA = Un / (Math.sqrt(3) * pA.Zt);  // A (no c — included in Zq)
+  const IB = Un / (Math.sqrt(3) * pB.Zt);
 
-  const Ik = c * Vn / (Math.sqrt(3) * Ztotal / 1000); // A
-  const kappa = 1.02 + 0.98 * Math.exp(-3 / xr);
-  const ip = kappa * Math.sqrt(2) * Ik;
-  const Sk = Math.sqrt(3) * Vn * Ik / 1e6; // MVA
+  // Thevenin parallel
+  const Req = (pA.Rt * pB.Rt - pA.Xt * pB.Xt) / ((pA.Rt + pB.Rt)**2 + (pA.Xt + pB.Xt)**2)
+              * ((pA.Rt + pB.Rt)**2 + (pA.Xt + pB.Xt)**2) /
+              Math.hypot(pA.Zt, pB.Zt);  // simplified magnitude
 
-  // Standardize breaker
-  const stds = [6,10,16,25,36,50,65,80,100];
-  const IkKA = Ik / 1000;
-  const breaker = stds.find(s => s >= IkKA) || '>100';
+  // Parallel: 1/Z_eq = 1/ZA + 1/ZB (magnitude approx)
+  const Zeq = pA.Zt * pB.Zt / (pA.Zt + pB.Zt);
 
-  const s = (id, val) => { document.getElementById('rv-'+id).textContent = val; document.getElementById('rsc-'+id).classList.add('active'); };
-  s('Zs', Zs.toFixed(2));
-  s('Ztx', Ztx.toFixed(2));
-  s('Ztot', Ztotal.toFixed(3));
-  s('Ik', IkKA.toFixed(2));
-  s('ip', (ip/1000).toFixed(2));
-  s('Sk', Sk.toFixed(2));
-  s('breaker', breaker + ' kA');
+  const Ik  = c * Un / (Math.sqrt(3) * Zeq);
+  const xr_eq = (pA.Xt / pA.Rt + pB.Xt / pB.Rt) / 2;
+  const ip  = kappa(xr_eq) * Math.sqrt(2) * Ik;
+  const Sk  = Math.sqrt(3) * Un * Ik;
+
+  $('rg_ia').textContent = fmt(IA / 1e3, 3);
+  $('rg_ib').textContent = fmt(IB / 1e3, 3);
+  $('rg_ik').textContent = fmt(Ik / 1e3, 3);
+  $('rg_ip').textContent = fmt(ip / 1e3, 3);
+  $('rg_sk').textContent = fmt(Sk / 1e6, 2);
+  $('rg_zeq').textContent = fmt(Zeq, 4);
+
+  // Path bars
+  const maxI = Math.max(IA, IB, 1);
+  $('rg_bar_a').style.flex = (IA / maxI);
+  $('rg_bar_b').style.flex = (IB / maxI);
+
+  $('rg_table').innerHTML = `
+    <tr>
+      <td style="color:var(--cyan)">Path A</td>
+      <td>${fmt(pA.Zq,4)}</td>
+      <td>${fmt(Math.hypot(pA.Rc,pA.Xc),4)}</td>
+      <td class="highlight">${fmt(pA.Zt,4)}</td>
+      <td>${fmt(IA/1e3,3)}</td>
+    </tr>
+    <tr>
+      <td style="color:var(--amber)">Path B</td>
+      <td>${fmt(pB.Zq,4)}</td>
+      <td>${fmt(Math.hypot(pB.Rc,pB.Xc),4)}</td>
+      <td class="highlight">${fmt(pB.Zt,4)}</td>
+      <td>${fmt(IB/1e3,3)}</td>
+    </tr>
+    <tr style="font-weight:600">
+      <td style="color:var(--green)">Parallel Z<sub>eq</sub></td>
+      <td colspan="2">—</td>
+      <td class="highlight">${fmt(Zeq,4)}</td>
+      <td>${fmt(Ik/1e3,3)}</td>
+    </tr>
+  `;
+
+  drawRingDiagram(frac, IA/1e3, IB/1e3);
 }
-function clrSC() {
-  ['mva','txkva','Rcable','Xcable'].forEach(id => document.getElementById(id).value = '');
-  ['Zs','Ztx','Ztot','Ik','ip','Sk','breaker'].forEach(id => { document.getElementById('rv-'+id).textContent='—'; document.getElementById('rsc-'+id).classList.remove('active'); });
+
+/* ── Ring diagram ── */
+function drawRingDiagram(frac, ia, ib) {
+  const cv = $('ringCanvas');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = '#0f1724';
+  ctx.roundRect(0, 0, W, H, 8);
+  ctx.fill();
+
+  const busY = 70;
+  const busA = 60, busB = W - 60;
+  const faultX = busA + (busB - busA) * frac;
+  const midY = 110;
+
+  // Draw ring cable (two paths)
+  // Upper straight line A→fault→B
+  ctx.beginPath();
+  ctx.moveTo(busA, busY);
+  ctx.lineTo(faultX, busY);
+  ctx.strokeStyle = '#22d3ee';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(faultX, busY);
+  ctx.lineTo(busB, busY);
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Source symbols (circle)
+  [[busA,'#22d3ee'],[busB,'#f59e0b']].forEach(([x, col]) => {
+    ctx.beginPath();
+    ctx.arc(x, busY, 14, 0, Math.PI*2);
+    ctx.fillStyle = col + '22';
+    ctx.fill();
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = col;
+    ctx.font = 'bold 11px DM Mono';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(x === busA ? 'A' : 'B', x, busY);
+  });
+
+  // Fault point
+  ctx.beginPath();
+  ctx.arc(faultX, busY, 8, 0, Math.PI*2);
+  ctx.fillStyle = '#ef444444';
+  ctx.fill();
+  ctx.strokeStyle = '#ef4444';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Fault label
+  ctx.fillStyle = '#ef4444';
+  ctx.font = '11px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚡ FAULT', faultX, busY - 22);
+
+  // Current arrows
+  const arrA = faultX - 30;
+  ctx.fillStyle = '#22d3ee';
+  ctx.font = '10px DM Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText(`IA=${ia.toFixed(2)}kA →`, (busA + faultX)/2, busY + 22);
+
+  ctx.fillStyle = '#f59e0b';
+  ctx.fillText(`← IB=${ib.toFixed(2)}kA`, (faultX + busB)/2, busY + 22);
+
+  // Labels
+  ctx.fillStyle = '#4b6380';
+  ctx.font = '10px DM Sans';
+  ctx.textAlign = 'center';
+  ctx.fillText('Bus A', busA, busY + 38);
+  ctx.fillText('Bus B', busB, busY + 38);
 }
+
+/* ══════════════════════════════════════
+   KAPPA CHART
+══════════════════════════════════════ */
+function drawKappaChart() {
+  const cv = $('kappaChart');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  const pad = { t: 16, r: 20, b: 36, l: 46 };
+  const w = W - pad.l - pad.r;
+  const h = H - pad.t - pad.b;
+
+  ctx.fillStyle = '#0f1724';
+  ctx.fillRect(0, 0, W, H);
+
+  const xrs = [1,2,3,5,7,10,15,20,30,50,100];
+  const kaps = xrs.map(xr => kappa(xr));
+  const xMin = 1, xMax = 100, yMin = 1.0, yMax = 2.0;
+
+  const px = xr => pad.l + (Math.log10(xr) - Math.log10(xMin)) / (Math.log10(xMax) - Math.log10(xMin)) * w;
+  const py = k  => pad.t + (1 - (k - yMin) / (yMax - yMin)) * h;
+
+  // Grid
+  [1.0,1.2,1.4,1.6,1.8,2.0].forEach(k => {
+    ctx.beginPath();
+    ctx.moveTo(pad.l, py(k)); ctx.lineTo(pad.l+w, py(k));
+    ctx.strokeStyle = '#1e2d45'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#4b6380'; ctx.font = '10px DM Mono'; ctx.textAlign = 'right';
+    ctx.fillText(k.toFixed(1), pad.l-6, py(k)+4);
+  });
+
+  // Curve
+  const grad = ctx.createLinearGradient(pad.l, 0, pad.l+w, 0);
+  grad.addColorStop(0, '#22d3ee'); grad.addColorStop(1, '#14b8a6');
+  ctx.beginPath();
+  xrs.forEach((xr, i) => {
+    const x = px(xr), y = py(kaps[i]);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle = grad; ctx.lineWidth = 2.5; ctx.stroke();
+
+  // Dots
+  xrs.forEach((xr, i) => {
+    ctx.beginPath();
+    ctx.arc(px(xr), py(kaps[i]), 3, 0, Math.PI*2);
+    ctx.fillStyle = '#22d3ee'; ctx.fill();
+  });
+
+  // X axis label
+  ctx.fillStyle = '#4b6380'; ctx.font = '10px DM Mono'; ctx.textAlign = 'center';
+  [1,2,5,10,20,50,100].forEach(xr => ctx.fillText(xr, px(xr), pad.t+h+14));
+  ctx.fillStyle = '#94a3b8'; ctx.font = '11px DM Sans';
+  ctx.fillText('X/R Ratio', pad.l + w/2, H - 4);
+  ctx.save(); ctx.translate(12, pad.t + h/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('κ factor', 0, 0); ctx.restore();
+}
+
+/* ══════════════════════════════════════
+   TAB SWITCH
+══════════════════════════════════════ */
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    const names = ['radial','ring','components','reference'];
+    btn.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'tab-' + name);
+  });
+  if (name === 'reference') { setTimeout(drawKappaChart, 50); }
+  if (name === 'ring')       { setTimeout(() => calcRing(), 50); }
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  calcRadial();
+  calcRing();
+});
 </script>
 </body>
 </html>
