@@ -3,154 +3,974 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Three-Phase Power — ElecCalc Pro</title>
-<link rel="stylesheet" href="styles.css">
+<title>Three-Phase Power Calculator — TaskJunction</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:    #0f2744;
+  --navy2:   #1a3a5c;
+  --navy3:   #243f63;
+  --orange:  #f47c20;
+  --orange2: #e06510;
+  --light:   #f5f7fa;
+  --border:  rgba(15,39,68,0.13);
+  --text:    #0f2744;
+  --muted:   #5a7a9a;
+  --card:    #ffffff;
+  --section: #f0f4f8;
+  --green:   #1a7a4a;
+  --green-bg:#e8f5ee;
+  --red:     #c0392b;
+  --red-bg:  #fdecea;
+  --amber:   #b7750a;
+  --amber-bg:#fef3e2;
+}
+body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--light); color:var(--text); min-height:100vh; }
+
+/* ── HEADER ── */
+.app-header { background:var(--navy); position:relative; overflow:hidden; }
+.hdr-stripe { position:absolute;top:0;left:0;width:100%;height:4px; background:linear-gradient(90deg,var(--orange),#ffaa44); }
+.hdr-glow   { position:absolute;top:0;right:0;width:340px;height:100%; background:radial-gradient(ellipse at top right,rgba(244,124,32,.13) 0%,transparent 70%);pointer-events:none; }
+.hdr-inner  { display:flex;align-items:center;gap:16px;padding:20px 32px;position:relative;z-index:1;flex-wrap:wrap; }
+.hdr-icon   { width:50px;height:50px;background:var(--orange);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 16px rgba(244,124,32,.35); }
+.hdr-icon svg { width:28px;height:28px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
+.hdr-text   { flex:1; }
+.hdr-title  { color:#fff;font-size:21px;font-weight:700;letter-spacing:-.4px;line-height:1.2; }
+.hdr-sub    { color:rgba(255,255,255,.5);font-size:12.5px;margin-top:4px; }
+.hdr-badges { display:flex;gap:8px;align-items:center;flex-wrap:wrap; }
+.badge { padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;white-space:nowrap; }
+.badge-o { background:rgba(244,124,32,.2);border:1px solid rgba(244,124,32,.4);color:var(--orange); }
+.badge-l { background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7); }
+
+/* ── TABS ── */
+.tab-bar { background:var(--navy2);display:flex;padding:0 32px;border-bottom:1px solid rgba(255,255,255,.07);overflow-x:auto; }
+.tab-btn { background:none;border:none;color:rgba(255,255,255,.45);font-size:13px;font-weight:500;padding:13px 20px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;font-family:inherit; }
+.tab-btn.active { color:var(--orange);border-bottom-color:var(--orange); }
+.tab-btn:hover:not(.active) { color:rgba(255,255,255,.75);background:rgba(255,255,255,.04); }
+
+/* ── MAIN ── */
+.main { padding:24px 32px 60px;max-width:980px;margin:0 auto; }
+
+/* ── CARDS ── */
+.card { background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px; }
+.card-hdr { display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border); }
+.card-ico  { width:32px;height:32px;background:rgba(244,124,32,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+.card-ico svg { width:17px;height:17px;fill:none;stroke:var(--orange);stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
+.card-title { font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.7px; }
+
+/* ── GRID LAYOUTS ── */
+.g2 { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+.g3 { display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px; }
+.g4 { display:grid;grid-template-columns:repeat(4,1fr);gap:12px; }
+.full { grid-column:1/-1; }
+
+/* ── FORM ── */
+.field { margin-bottom:13px; }
+.field:last-child { margin-bottom:0; }
+label { display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px; }
+select, input[type=number] {
+  width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;
+  background:var(--section);color:var(--text);font-size:14px;font-family:inherit;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+select:focus, input[type=number]:focus { border-color:var(--orange);box-shadow:0 0 0 3px rgba(244,124,32,.13);background:#fff; }
+.radio-group { display:flex;gap:8px;flex-wrap:wrap; }
+.rp { position:relative; }
+.rp input { position:absolute;opacity:0;width:0;height:0; }
+.rp label { display:block;padding:7px 15px;border:1.5px solid var(--border);border-radius:20px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s;text-transform:none;letter-spacing:0;margin:0;background:var(--section); }
+.rp input:checked + label { background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 2px 8px rgba(15,39,68,.2); }
+
+/* ── PHASE INPUTS (unbalanced) ── */
+.phase-row { display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:10px;align-items:end;margin-bottom:10px; }
+.phase-label { font-size:13px;font-weight:700;padding:9px 0;text-align:center; }
+.ph-r { color:#e53935; } .ph-y { color:#f9a825; } .ph-b { color:#1976d2; }
+.phase-header { display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:10px;margin-bottom:6px; }
+.phase-header span { font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;text-align:center; }
+.phase-header span:first-child { text-align:left; }
+
+/* ── CALC BUTTON ── */
+.calc-btn { width:100%;padding:15px;background:var(--orange);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s,transform .1s;letter-spacing:.3px;font-family:inherit;box-shadow:0 4px 16px rgba(244,124,32,.3); }
+.calc-btn:hover { background:var(--orange2); }
+.calc-btn:active { transform:scale(.98); }
+.calc-btn svg { width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round; }
+
+/* ── RESULTS ── */
+.result-area { display:none; }
+.result-area.visible { display:block; }
+
+.result-hero { background:var(--navy);border-radius:12px;padding:24px 28px;color:#fff;position:relative;overflow:hidden;margin-bottom:16px; }
+.result-hero::after { content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:rgba(244,124,32,.09);pointer-events:none; }
+.rh-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative;z-index:1; }
+.rh-item { }
+.rh-val  { font-size:30px;font-weight:800;color:var(--orange);line-height:1;letter-spacing:-1px; }
+.rh-unit { font-size:13px;color:rgba(255,255,255,.5);margin-left:3px;font-weight:400; }
+.rh-label { font-size:11px;color:rgba(255,255,255,.45);margin-top:5px;text-transform:uppercase;letter-spacing:.5px; }
+.rh-sub   { font-size:12px;color:rgba(255,255,255,.55);margin-top:2px; }
+
+.metric-card { background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center; }
+.metric-val  { font-size:20px;font-weight:800;color:var(--navy); }
+.metric-lbl  { font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.3px; }
+
+/* ── STATUS BADGE ── */
+.status-pill { display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700; }
+.s-good  { background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,74,.2); }
+.s-warn  { background:var(--amber-bg);color:var(--amber);border:1px solid rgba(183,117,10,.2); }
+.s-bad   { background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2); }
+
+/* ── PF CORRECTION SECTION ── */
+.pfc-bar-wrap { background:var(--section);border-radius:8px;height:14px;overflow:hidden;margin:6px 0; }
+.pfc-bar      { height:100%;border-radius:8px;transition:width .5s ease; }
+.pfc-good  { background:var(--green); }
+.pfc-warn  { background:#f9a825; }
+.pfc-bad   { background:var(--red); }
+
+/* ── PHASOR DIAGRAM ── */
+.phasor-wrap { background:var(--navy);border-radius:12px;padding:20px;display:flex;align-items:center;justify-content:center; }
+#phasor-canvas { display:block;max-width:100%; }
+
+/* ── TABLES ── */
+.data-table { width:100%;border-collapse:collapse;font-size:13px; }
+.data-table th { background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.5px; }
+.data-table th:not(:first-child) { text-align:center; }
+.data-table td { padding:9px 14px;border-bottom:1px solid var(--border);text-align:center; }
+.data-table td:first-child { text-align:left;font-weight:700;color:var(--navy); }
+.data-table tr:last-child td { border-bottom:none; }
+.data-table .hl td { background:rgba(244,124,32,.07);font-weight:700; }
+.data-table .hl td:not(:first-child) { color:var(--orange); }
+.table-wrap { overflow-x:auto;border-radius:10px;border:1px solid var(--border); }
+
+/* ── FORMULA BOXES ── */
+.formula-box { background:var(--navy);border-radius:10px;padding:18px 20px;font-family:'Courier New',monospace;font-size:13px;color:#fff;line-height:2;margin-top:12px; }
+.f-lbl { color:rgba(255,255,255,.45);font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-family:'Segoe UI',sans-serif; }
+.f-eq  { color:var(--orange); }
+.note-box { background:rgba(244,124,32,.08);border-left:3px solid var(--orange);border-radius:0 9px 9px 0;padding:12px 16px;font-size:12.5px;color:var(--muted);line-height:1.7; }
+.note-box strong { color:var(--navy); }
+
+/* ── INFO CARDS ── */
+.info-card { background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px; }
+.info-card h4 { font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--border); }
+.info-card ul { list-style:none;font-size:13px;color:var(--muted); }
+.info-card ul li { padding:5px 0;border-bottom:1px solid rgba(15,39,68,.05); }
+.info-card ul li:last-child { border-bottom:none; }
+.info-card ul li::before { content:"→ ";color:var(--orange);font-weight:700; }
+
+/* ── FOOTER ── */
+.app-footer { background:var(--navy);color:rgba(255,255,255,.4);text-align:center;padding:18px 32px;font-size:12px;line-height:1.7; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  .main{padding:16px 16px 40px;}
+  .hdr-inner{padding:16px 20px;}
+  .tab-bar{padding:0 16px;}
+  .g2,.g3,.g4,.rh-grid{grid-template-columns:1fr;}
+  .phase-row,.phase-header{grid-template-columns:50px 1fr 1fr 1fr;}
+}
+@media print {
+  .tab-bar,.calc-btn,.app-footer{display:none!important;}
+  .result-area{display:block!important;}
+}
+</style>
 </head>
 <body>
-<nav class="top-nav">
-  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
-  <a href="index.html" class="nav-back">← BACK</a>
-</nav>
-<div class="calc-header">
-  <div class="calc-tag">// CALCULATOR 03 OF 08</div>
-  <h1 class="calc-title"><span class="icon">⚡</span>Three-Phase Power Calculator</h1>
-  <p class="calc-desc">Calculate active (P), reactive (Q), and apparent (S) power for balanced 3-phase systems. Star & Delta connections.</p>
-</div>
 
-<div class="calc-body">
-  <div class="panel">
-    <div class="panel-title">⚙ Input Parameters</div>
-    <div class="field">
-      <label>Connection Type</label>
-      <select id="conn">
-        <option value="star">Star (Y) — Line voltage given</option>
-        <option value="delta">Delta (Δ) — Line voltage given</option>
-      </select>
+<!-- ══ HEADER ══ -->
+<header class="app-header">
+  <div class="hdr-stripe"></div>
+  <div class="hdr-glow"></div>
+  <div class="hdr-inner">
+    <div class="hdr-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
     </div>
-    <div class="field">
-      <label>Line Voltage (V<sub>L</sub>) <span class="unit">[ Volts ]</span></label>
-      <input type="number" id="vl" placeholder="e.g. 415" value="415" step="any">
+    <div class="hdr-text">
+      <div class="hdr-title">Three-Phase Power Calculator</div>
+      <div class="hdr-sub">Active · Reactive · Apparent Power · PF Correction · Balanced &amp; Unbalanced Systems</div>
     </div>
-    <div class="field">
-      <label>Line Current (I<sub>L</sub>) <span class="unit">[ Amperes ]</span></label>
-      <input type="number" id="il" placeholder="e.g. 50" step="any">
+    <div class="hdr-badges">
+      <span class="badge badge-o">IS 12360</span>
+      <span class="badge badge-l">IEC 60038</span>
+      <span class="badge badge-l">IEEE 1459</span>
     </div>
-    <div class="field">
-      <label>Power Factor (cos φ) <span class="unit">[ 0.0 – 1.0 ]</span></label>
-      <input type="number" id="pf" placeholder="e.g. 0.85" value="0.85" min="0" max="1" step="0.01">
+  </div>
+</header>
+
+<!-- ══ TABS ══ -->
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('calc',this)">⚡ Calculator</button>
+  <button class="tab-btn" onclick="switchTab('phasor',this)">📐 Phasor Diagram</button>
+  <button class="tab-btn" onclick="switchTab('pfc',this)">🔋 PF Correction</button>
+  <button class="tab-btn" onclick="switchTab('ref',this)">📋 Reference</button>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+<!-- ════ TAB: CALCULATOR ════ -->
+<div id="tab-calc">
+
+  <div class="g2" style="margin-bottom:16px;">
+
+    <!-- System Configuration -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12h6m-3-3v6"/></svg></div>
+        <div class="card-title">System Configuration</div>
+      </div>
+      <div class="field">
+        <label>System Type</label>
+        <div class="radio-group">
+          <div class="rp"><input type="radio" name="sys" id="s-bal" value="balanced" checked onchange="onSysChange()"><label for="s-bal">Balanced</label></div>
+          <div class="rp"><input type="radio" name="sys" id="s-unb" value="unbalanced" onchange="onSysChange()"><label for="s-unb">Unbalanced</label></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Connection Type</label>
+        <div class="radio-group">
+          <div class="rp"><input type="radio" name="conn" id="c-star" value="star" checked><label for="c-star">Star (Y)</label></div>
+          <div class="rp"><input type="radio" name="conn" id="c-delta" value="delta"><label for="c-delta">Delta (Δ)</label></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Frequency (Hz)</label>
+        <div class="radio-group">
+          <div class="rp"><input type="radio" name="freq" id="f50" value="50" checked><label for="f50">50 Hz</label></div>
+          <div class="rp"><input type="radio" name="freq" id="f60" value="60"><label for="f60">60 Hz</label></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Input Method</label>
+        <div class="radio-group">
+          <div class="rp"><input type="radio" name="inpm" id="i-vi" value="vi" checked onchange="onInputChange()"><label for="i-vi">V &amp; I</label></div>
+          <div class="rp"><input type="radio" name="inpm" id="i-vp" value="vp" onchange="onInputChange()"><label for="i-vp">V &amp; P</label></div>
+          <div class="rp"><input type="radio" name="inpm" id="i-ip" value="ip" onchange="onInputChange()"><label for="i-ip">I &amp; P</label></div>
+        </div>
+      </div>
     </div>
-    <div class="field">
-      <label>Load Type</label>
-      <select id="loadtype">
-        <option value="lag">Inductive (Lagging)</option>
-        <option value="lead">Capacitive (Leading)</option>
-        <option value="unity">Unity Power Factor</option>
-      </select>
+
+    <!-- Balanced Inputs -->
+    <div class="card" id="bal-inputs">
+      <div class="card-hdr">
+        <div class="card-ico"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="card-title">Load Parameters (Balanced)</div>
+      </div>
+      <div class="field" id="f-vll">
+        <label>Line Voltage V<sub>LL</sub> (V)</label>
+        <input type="number" id="vll" value="415" min="1" step="1">
+      </div>
+      <div class="field" id="f-il">
+        <label>Line Current I<sub>L</sub> (A)</label>
+        <input type="number" id="il" value="50" min="0.01" step="0.1">
+      </div>
+      <div class="field" id="f-pf">
+        <label>Power Factor (cos φ)</label>
+        <input type="number" id="pf-in" value="0.85" min="0.01" max="1" step="0.01">
+      </div>
+      <div class="field" id="f-pf-type">
+        <label>PF Nature</label>
+        <div class="radio-group">
+          <div class="rp"><input type="radio" name="pfn" id="pfn-lag" value="lag" checked><label for="pfn-lag">Lagging (inductive)</label></div>
+          <div class="rp"><input type="radio" name="pfn" id="pfn-lead" value="lead"><label for="pfn-lead">Leading (capacitive)</label></div>
+        </div>
+      </div>
+      <div class="field" id="f-kw" style="display:none">
+        <label>Active Power P (kW)</label>
+        <input type="number" id="kw-in" value="30" min="0.01" step="0.1">
+      </div>
     </div>
-    <button class="btn" onclick="calc3ph()">CALCULATE</button>
-    <button class="btn btn-outline" onclick="clr3()">CLEAR</button>
+
+  </div><!-- /g2 -->
+
+  <!-- Unbalanced Inputs -->
+  <div class="card" id="unbal-inputs" style="display:none">
+    <div class="card-hdr">
+      <div class="card-ico"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></div>
+      <div class="card-title">Per-Phase Parameters (Unbalanced)</div>
+    </div>
+    <div class="phase-header">
+      <span></span>
+      <span>Voltage (V)</span>
+      <span>Current (A)</span>
+      <span>PF (cos φ)</span>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label ph-r">R</div>
+      <div><input type="number" id="vr" value="230" min="1" step="1"></div>
+      <div><input type="number" id="ir" value="40" min="0" step="0.1"></div>
+      <div><input type="number" id="pfr" value="0.85" min="0.01" max="1" step="0.01"></div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label ph-y">Y</div>
+      <div><input type="number" id="vy" value="228" min="1" step="1"></div>
+      <div><input type="number" id="iy" value="45" min="0" step="0.1"></div>
+      <div><input type="number" id="pfy" value="0.80" min="0.01" max="1" step="0.01"></div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label ph-b">B</div>
+      <div><input type="number" id="vb" value="232" min="1" step="1"></div>
+      <div><input type="number" id="ib2" value="35" min="0" step="0.1"></div>
+      <div><input type="number" id="pfb" value="0.90" min="0.01" max="1" step="0.01"></div>
+    </div>
+    <div class="note-box" style="margin-top:12px;">
+      <strong>Note:</strong> Enter per-phase (phase-to-neutral) voltages for star connection. For delta, enter line voltages. All power factors assumed lagging.
+    </div>
   </div>
 
-  <div class="panel">
-    <div class="panel-title">📊 Power Analysis</div>
-    <div class="result-grid">
-      <div class="result-item" id="r-vph"><div class="result-label">Phase Voltage</div><div class="result-value" id="rv-vph">—</div><div class="result-unit">V</div></div>
-      <div class="result-item" id="r-iph"><div class="result-label">Phase Current</div><div class="result-value" id="rv-iph">—</div><div class="result-unit">A</div></div>
-      <div class="result-item" id="r-P"><div class="result-label">Active Power (P)</div><div class="result-value" id="rv-P">—</div><div class="result-unit">kW</div></div>
-      <div class="result-item" id="r-Q"><div class="result-label">Reactive Power (Q)</div><div class="result-value" id="rv-Q">—</div><div class="result-unit">kVAR</div></div>
-      <div class="result-item" id="r-S"><div class="result-label">Apparent Power (S)</div><div class="result-value" id="rv-S">—</div><div class="result-unit">kVA</div></div>
-      <div class="result-item" id="r-pfa"><div class="result-label">Power Factor Angle</div><div class="result-value" id="rv-pfa">—</div><div class="result-unit">°</div></div>
-      <div class="result-item full" id="r-hp"><div class="result-label">Power in HP / MW</div><div class="result-value" id="rv-hp">—</div></div>
+  <button class="calc-btn" onclick="calculate()">
+    <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    Calculate Three-Phase Power
+  </button>
+
+  <!-- ── RESULTS ── -->
+  <div class="result-area" id="result-area" style="margin-top:20px;">
+
+    <div class="result-hero">
+      <div class="rh-grid">
+        <div class="rh-item">
+          <div><span class="rh-val" id="r-kw">—</span><span class="rh-unit">kW</span></div>
+          <div class="rh-label">Active Power (P)</div>
+          <div class="rh-sub" id="r-kw-sub">Real / useful power</div>
+        </div>
+        <div class="rh-item">
+          <div><span class="rh-val" id="r-kvar">—</span><span class="rh-unit">kVAR</span></div>
+          <div class="rh-label">Reactive Power (Q)</div>
+          <div class="rh-sub" id="r-kvar-sub">Magnetising component</div>
+        </div>
+        <div class="rh-item">
+          <div><span class="rh-val" id="r-kva">—</span><span class="rh-unit">kVA</span></div>
+          <div class="rh-label">Apparent Power (S)</div>
+          <div class="rh-sub" id="r-kva-sub">Total demand</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-bottom:16px;">
+      <div class="metric-card"><div class="metric-val" id="m-pf">—</div><div class="metric-lbl">Power Factor</div></div>
+      <div class="metric-card"><div class="metric-val" id="m-phi">—</div><div class="metric-lbl">Phase Angle φ</div></div>
+      <div class="metric-card"><div class="metric-val" id="m-eff">—</div><div class="metric-lbl">Efficiency Index</div></div>
+      <div class="metric-card"><div class="metric-val" id="m-ub">—</div><div class="metric-lbl">Unbalance %</div></div>
+    </div>
+
+    <!-- Detailed breakdown -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ico"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+        <div class="card-title">Per-Phase &amp; System Breakdown</div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="breakdown-table"></table>
+      </div>
+    </div>
+
+    <!-- PF Status -->
+    <div class="card" id="pf-status-card">
+      <div class="card-hdr">
+        <div class="card-ico"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="card-title">Power Factor Assessment</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-size:13px;color:var(--muted);">Power Factor</span>
+            <span style="font-size:13px;font-weight:700;" id="pf-bar-label">—</span>
+          </div>
+          <div class="pfc-bar-wrap">
+            <div class="pfc-bar" id="pf-bar" style="width:0%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px;">
+            <span>0.0</span><span>0.7</span><span>0.85</span><span>1.0</span>
+          </div>
+        </div>
+        <div id="pf-badge">—</div>
+      </div>
+      <div class="note-box" style="margin-top:14px;" id="pf-advice">—</div>
+    </div>
+
+    <!-- Energy / Loss estimates -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+        <div class="card-title">Operational Estimates (per hour)</div>
+      </div>
+      <div class="g3">
+        <div class="metric-card"><div class="metric-val" id="e-kwh">—</div><div class="metric-lbl">Energy (kWh)</div></div>
+        <div class="metric-card"><div class="metric-val" id="e-loss">—</div><div class="metric-lbl">Reactive Loss (kVARh)</div></div>
+        <div class="metric-card"><div class="metric-val" id="e-cost">—</div><div class="metric-lbl">Est. Cost @ ₹8/kWh</div></div>
+      </div>
+    </div>
+
+    <div class="note-box" id="result-note" style="margin-top:0;"></div>
+  </div><!-- /result-area -->
+
+</div><!-- /tab-calc -->
+
+<!-- ════ TAB: PHASOR DIAGRAM ════ -->
+<div id="tab-phasor" style="display:none;">
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 12l4-4"/></svg></div>
+      <div class="card-title">Three-Phase Phasor Diagram</div>
+    </div>
+    <div class="phasor-wrap">
+      <canvas id="phasor-canvas" width="480" height="480"></canvas>
+    </div>
+    <div class="note-box" style="margin-top:14px;">
+      <strong>How to read:</strong> VR (red) is the reference phasor at 0°. VY (yellow) lags by 120° and VB (blue) lags by 240°. The current phasors (dashed) show the phase angle φ relative to each voltage. Run the calculator first to update angles.
+    </div>
+  </div>
+  <div class="g3" style="margin-top:0;">
+    <div class="info-card">
+      <h4>⚡ Phase Sequence</h4>
+      <ul>
+        <li>Standard: R → Y → B (positive)</li>
+        <li>Reverse: R → B → Y (negative)</li>
+        <li>India: R-Y-B per IE Rules</li>
+        <li>IEC: L1-L2-L3 (same)</li>
+        <li>Verify with phase sequence meter</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>📐 Voltage Relationships</h4>
+      <ul>
+        <li>Star: V<sub>LL</sub> = √3 × V<sub>LN</sub></li>
+        <li>415 V LL → 239.6 V LN</li>
+        <li>11 kV LL → 6.35 kV LN</li>
+        <li>Delta: V<sub>phase</sub> = V<sub>line</sub></li>
+        <li>V<sub>LN</sub> = V<sub>LL</sub> / 1.732</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>🔁 Current Relationships</h4>
+      <ul>
+        <li>Star: I<sub>L</sub> = I<sub>phase</sub></li>
+        <li>Delta: I<sub>L</sub> = √3 × I<sub>phase</sub></li>
+        <li>Neutral current = vector sum</li>
+        <li>Balanced: I<sub>N</sub> = 0</li>
+        <li>Unbalanced: I<sub>N</sub> ≠ 0 (measure)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TAB: PF CORRECTION ════ -->
+<div id="tab-pfc" style="display:none;">
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-ico"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <div class="card-title">Power Factor Correction Calculator</div>
+    </div>
+    <div class="g2">
+      <div>
+        <div class="field">
+          <label>Active Power P (kW)</label>
+          <input type="number" id="pfc-kw" value="50" min="0.1" step="0.1">
+        </div>
+        <div class="field">
+          <label>Existing Power Factor</label>
+          <input type="number" id="pfc-pf1" value="0.72" min="0.01" max="0.999" step="0.01">
+        </div>
+        <div class="field">
+          <label>Target Power Factor</label>
+          <input type="number" id="pfc-pf2" value="0.95" min="0.1" max="1" step="0.01">
+        </div>
+        <div class="field">
+          <label>System Voltage V<sub>LL</sub> (V)</label>
+          <input type="number" id="pfc-vll" value="415" min="1" step="1">
+        </div>
+        <div class="field">
+          <label>Frequency (Hz)</label>
+          <div class="radio-group">
+            <div class="rp"><input type="radio" name="pfc-f" id="pf50" value="50" checked><label for="pf50">50 Hz</label></div>
+            <div class="rp"><input type="radio" name="pfc-f" id="pf60" value="60"><label for="pf60">60 Hz</label></div>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcPFC()" style="margin-top:6px;">
+          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Calculate Correction
+        </button>
+      </div>
+      <div id="pfc-results" style="display:none;">
+        <div style="background:var(--navy);border-radius:12px;padding:20px;color:#fff;margin-bottom:14px;">
+          <div style="font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Required Capacitor Bank</div>
+          <div style="font-size:36px;font-weight:800;color:var(--orange);" id="pfc-kvar">—</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:4px;" id="pfc-kvar-sub">—</div>
+        </div>
+        <div class="g2" style="gap:10px;margin-bottom:12px;">
+          <div class="metric-card"><div class="metric-val" id="pfc-old-kva">—</div><div class="metric-lbl">Old kVA</div></div>
+          <div class="metric-card"><div class="metric-val" id="pfc-new-kva">—</div><div class="metric-lbl">New kVA</div></div>
+          <div class="metric-card"><div class="metric-val" id="pfc-i-red">—</div><div class="metric-lbl">Current Reduction</div></div>
+          <div class="metric-card"><div class="metric-val" id="pfc-loss-sav">—</div><div class="metric-lbl">Loss Saving %</div></div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="pfc-cap-table">
+            <thead><tr><th>Capacitor Steps</th><th>Rating</th><th>Voltage</th><th>Type</th></tr></thead>
+            <tbody id="pfc-cap-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-top:0;">
+    <div class="info-card">
+      <h4>📊 DISCOM PF Penalty Guidelines (India)</h4>
+      <ul>
+        <li>PF &lt; 0.85 → Penalty surcharge (typically 0.5–1% per 0.01 drop)</li>
+        <li>PF &gt; 0.95 → Incentive / rebate in many DISCOMs</li>
+        <li>IE Rules 1956 Rule 51: minimum PF 0.85</li>
+        <li>CERC regulation: PF ≥ 0.90 recommended</li>
+        <li>Industrial HT consumers: metered kVAh billing</li>
+        <li>Always check local DISCOM tariff schedule</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>🔋 Capacitor Bank Sizing Tips</h4>
+      <ul>
+        <li>Install at point of use (motor terminals) for best results</li>
+        <li>Avoid over-correction — leading PF can cause voltage rise</li>
+        <li>For variable loads: use automatic APFC panels</li>
+        <li>Standard steps: 5, 10, 15, 20, 25, 30, 50 kVAR</li>
+        <li>Derating: 0.9 × nameplate for 50°C ambient</li>
+        <li>Verify harmonic levels before installing capacitors</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TAB: REFERENCE ════ -->
+<div id="tab-ref" style="display:none;">
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hdr">
+      <div class="card-ico"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <div class="card-title">Three-Phase Power Formulas</div>
     </div>
     <div class="formula-box">
-      <strong>BALANCED 3Φ:</strong><br>
-      S = √3 × V<sub>L</sub> × I<sub>L</sub><br>
-      P = √3 × V<sub>L</sub> × I<sub>L</sub> × cosφ<br>
-      Q = √3 × V<sub>L</sub> × I<sub>L</sub> × sinφ<br>
-      P² + Q² = S²
+      <div class="f-lbl">Balanced Three-Phase (Star or Delta)</div>
+      <div><span class="f-eq">P</span>  = √3 × V<sub>LL</sub> × I<sub>L</sub> × cos φ  =  3 × V<sub>LN</sub> × I<sub>L</sub> × cos φ</div>
+      <div><span class="f-eq">Q</span>  = √3 × V<sub>LL</sub> × I<sub>L</sub> × sin φ  =  3 × V<sub>LN</sub> × I<sub>L</sub> × sin φ</div>
+      <div><span class="f-eq">S</span>  = √3 × V<sub>LL</sub> × I<sub>L</sub>          =  √(P² + Q²)</div>
+      <div><span class="f-eq">PF</span> = cos φ = P / S</div>
+      <br>
+      <div class="f-lbl">Unbalanced Three-Phase</div>
+      <div><span class="f-eq">P<sub>total</sub></span> = P<sub>R</sub> + P<sub>Y</sub> + P<sub>B</sub>  =  V<sub>R</sub>I<sub>R</sub>cosφ<sub>R</sub> + V<sub>Y</sub>I<sub>Y</sub>cosφ<sub>Y</sub> + V<sub>B</sub>I<sub>B</sub>cosφ<sub>B</sub></div>
+      <div><span class="f-eq">Q<sub>total</sub></span> = Q<sub>R</sub> + Q<sub>Y</sub> + Q<sub>B</sub>  =  V<sub>R</sub>I<sub>R</sub>sinφ<sub>R</sub> + V<sub>Y</sub>I<sub>Y</sub>sinφ<sub>Y</sub> + V<sub>B</sub>I<sub>B</sub>sinφ<sub>B</sub></div>
+      <div><span class="f-eq">S<sub>total</sub></span> = √(P² + Q²)</div>
+      <br>
+      <div class="f-lbl">Star ↔ Delta Conversion</div>
+      <div><span class="f-eq">V<sub>LN</sub></span> = V<sub>LL</sub> / √3 = V<sub>LL</sub> / 1.7321</div>
+      <div><span class="f-eq">I<sub>Δ</sub></span>  = I<sub>L</sub> / √3  (Delta phase current)</div>
+      <div><span class="f-eq">PF Correction:</span>  Q<sub>C</sub> = P × (tan φ<sub>1</sub> − tan φ<sub>2</sub>)  [kVAR]</div>
     </div>
   </div>
 
-  <!-- Power Triangle SVG -->
-  <div class="panel panel-full" id="triangle-panel" style="display:none">
-    <div class="panel-title">📐 Power Triangle</div>
-    <svg id="power-triangle" viewBox="0 0 500 200" style="width:100%;max-width:500px;display:block;margin:0 auto"></svg>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hdr">
+      <div class="card-ico"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></div>
+      <div class="card-title">Standard Voltage Levels (IS 12360 / IEC 60038)</div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>System</th><th>V<sub>LL</sub> (V)</th><th>V<sub>LN</sub> (V)</th><th>Tolerance</th><th>Application</th></tr></thead>
+        <tbody>
+          <tr><td>LT Standard</td><td>415</td><td>240</td><td>±6%</td><td>Industrial &amp; commercial</td></tr>
+          <tr><td>LT (old)</td><td>400</td><td>231</td><td>±6%</td><td>Legacy installations</td></tr>
+          <tr><td>11 kV</td><td>11,000</td><td>6,351</td><td>±6%</td><td>Distribution feeder</td></tr>
+          <tr><td>22 kV</td><td>22,000</td><td>12,702</td><td>±6%</td><td>Sub-transmission</td></tr>
+          <tr><td>33 kV</td><td>33,000</td><td>19,053</td><td>±6%</td><td>Sub-transmission</td></tr>
+          <tr><td>66 kV</td><td>66,000</td><td>38,105</td><td>±5%</td><td>Transmission</td></tr>
+          <tr><td>110 kV</td><td>110,000</td><td>63,509</td><td>±5%</td><td>Transmission</td></tr>
+          <tr><td>220 kV</td><td>220,000</td><td>127,017</td><td>±5%</td><td>Transmission</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="panel panel-full">
-    <div class="panel-title">📋 Standard 3-Phase Voltages Reference</div>
-    <table class="ref-table">
-      <thead><tr><th>System</th><th>Line Voltage</th><th>Phase Voltage</th><th>Application</th></tr></thead>
-      <tbody>
-        <tr><td>LT (India)</td><td>415 V</td><td>240 V</td><td>Industrial / Commercial</td></tr>
-        <tr><td>HT Level 1</td><td>11 kV</td><td>6.35 kV</td><td>Distribution feeders</td></tr>
-        <tr><td>HT Level 2</td><td>33 kV</td><td>19.05 kV</td><td>Sub-transmission</td></tr>
-        <tr><td>EHT</td><td>132 kV</td><td>76.2 kV</td><td>Transmission</td></tr>
-        <tr><td>EHV</td><td>220 kV / 400 kV</td><td>127 / 231 kV</td><td>Grid backbone</td></tr>
-      </tbody>
-    </table>
+  <div class="g2">
+    <div class="info-card">
+      <h4>📋 Applicable Standards</h4>
+      <ul>
+        <li>IS 12360 — Voltage bands for electrical installations</li>
+        <li>IEC 60038 — Standard voltages</li>
+        <li>IEEE 1459 — Power definitions (non-sinusoidal)</li>
+        <li>IS 4237 — General requirements for switchgear</li>
+        <li>IS 13947 — LV switchgear and controlgear</li>
+        <li>IE Rules 1956 (Amended) — Power factor Rule 51</li>
+        <li>CEA Regulations 2010 — Technical standards</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>🏭 Typical Load Power Factors</h4>
+      <ul>
+        <li>Induction motors (full load): 0.85–0.92</li>
+        <li>Induction motors (light load): 0.40–0.65</li>
+        <li>Welding machines: 0.35–0.60</li>
+        <li>Fluorescent lighting: 0.85–0.95</li>
+        <li>LED lighting: 0.90–0.99</li>
+        <li>Resistive heaters: 1.00</li>
+        <li>Variable speed drives: 0.95–0.98</li>
+        <li>UPS systems: 0.80–0.90 (input)</li>
+      </ul>
+    </div>
   </div>
-</div>
-<div class="footer">// ELECCALC PRO · THREE-PHASE POWER</div>
+
+</div><!-- /tab-ref -->
+
+</main>
+
+<footer class="app-footer">
+  Three-Phase Power Calculator · IS 12360 / IEC 60038 / IEEE 1459 · For engineering reference use only<br>
+  Verify all calculations with a qualified electrical engineer before application
+</footer>
 
 <script>
-function calc3ph() {
-  const conn = document.getElementById('conn').value;
-  const VL = parseFloat(document.getElementById('vl').value);
-  const IL = parseFloat(document.getElementById('il').value);
-  const pf = parseFloat(document.getElementById('pf').value);
-  const lt = document.getElementById('loadtype').value;
-  if ([VL,IL,pf].some(isNaN)) { alert('Fill all fields.'); return; }
-  if (pf < 0 || pf > 1) { alert('PF must be between 0 and 1'); return; }
-
-  const Vph = conn === 'star' ? VL / Math.sqrt(3) : VL;
-  const Iph = conn === 'star' ? IL : IL / Math.sqrt(3);
-  const S = Math.sqrt(3) * VL * IL;
-  const P = S * pf;
-  const sinPhi = Math.sqrt(1 - pf*pf);
-  const Q = S * sinPhi;
-  const phi = Math.acos(pf) * 180 / Math.PI;
-  const pfAngle = lt === 'lead' ? -phi : (lt === 'unity' ? 0 : phi);
-
-  const fmt = n => n >= 1000 ? (n/1000).toFixed(3) + ' M' : n.toFixed(3);
-
-  document.getElementById('rv-vph').textContent = Vph.toFixed(1);
-  document.getElementById('rv-iph').textContent = Iph.toFixed(2);
-  document.getElementById('rv-P').textContent = (P/1000).toFixed(3);
-  document.getElementById('rv-Q').textContent = (Q/1000).toFixed(3);
-  document.getElementById('rv-S').textContent = (S/1000).toFixed(3);
-  document.getElementById('rv-pfa').textContent = Math.abs(pfAngle).toFixed(2) + (lt==='lag'?' (Lag)':lt==='lead'?' (Lead)':' (Unity)');
-  document.getElementById('rv-hp').textContent = (P/746).toFixed(2) + ' HP  /  ' + (P/1e6).toFixed(4) + ' MW';
-  document.querySelectorAll('.result-item').forEach(r => r.classList.add('active'));
-
-  drawTriangle(P/1000, Q/1000, S/1000, lt);
-  document.getElementById('triangle-panel').style.display = '';
+/* ══════════ TAB SWITCHING ══════════ */
+function switchTab(tab, btn) {
+  ['calc','phasor','pfc','ref'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===tab ? '' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (tab === 'phasor') drawPhasor();
 }
 
-function drawTriangle(P, Q, S, lt) {
-  const svg = document.getElementById('power-triangle');
-  const w=460, h=160, ox=20, oy=140;
-  const scl = Math.min((w-40)/S, (h-30)/Q);
-  const pw = P*scl, qh = Q*scl;
-  const qSign = lt === 'lead' ? 1 : -1;
-  svg.innerHTML = `
-    <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6" fill="none" stroke="#d97706" stroke-width="1.5"/></marker></defs>
-    <line x1="${ox}" y1="${oy}" x2="${ox+pw}" y2="${oy}" stroke="#d97706" stroke-width="2" marker-end="url(#arr)"/>
-    <text x="${ox+pw/2}" y="${oy+18}" fill="#d97706" font-family="'Share Tech Mono'" font-size="12" text-anchor="middle">P = ${P.toFixed(2)} kW</text>
-    <line x1="${ox+pw}" y1="${oy}" x2="${ox+pw}" y2="${oy+qSign*qh}" stroke="#f59e0b" stroke-width="2" marker-end="url(#arr)"/>
-    <text x="${ox+pw+40}" y="${oy+qSign*qh/2}" fill="#f59e0b" font-family="'Share Tech Mono'" font-size="12">Q=${Q.toFixed(2)}</text>
-    <line x1="${ox}" y1="${oy}" x2="${ox+pw}" y2="${oy+qSign*qh}" stroke="#8a7f70" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
-    <text x="${ox+pw/2-20}" y="${oy+qSign*qh/2-5}" fill="#8a7f70" font-family="'Share Tech Mono'" font-size="12">S=${S.toFixed(2)} kVA</text>
-  `;
+/* ══════════ UI CHANGE HANDLERS ══════════ */
+function onSysChange() {
+  const bal = document.querySelector('input[name=sys]:checked').value === 'balanced';
+  document.getElementById('bal-inputs').style.display = bal ? '' : 'none';
+  document.getElementById('unbal-inputs').style.display = bal ? 'none' : '';
 }
 
-function clr3() {
-  document.getElementById('il').value = '';
-  ['rv-vph','rv-iph','rv-P','rv-Q','rv-S','rv-pfa','rv-hp'].forEach(id => document.getElementById(id).textContent = '—');
-  document.querySelectorAll('.result-item').forEach(r => r.classList.remove('active'));
-  document.getElementById('triangle-panel').style.display = 'none';
+function onInputChange() {
+  const m = document.querySelector('input[name=inpm]:checked').value;
+  document.getElementById('f-vll').style.display  = (m==='ip') ? 'none' : '';
+  document.getElementById('f-il').style.display   = (m==='vp') ? 'none' : '';
+  document.getElementById('f-pf').style.display   = (m==='vi') ? '' : 'none';
+  document.getElementById('f-pf-type').style.display = (m==='vi') ? '' : 'none';
+  document.getElementById('f-kw').style.display   = (m==='vi') ? 'none' : '';
 }
+
+/* ══════════ HELPERS ══════════ */
+const sqrt3 = Math.sqrt(3);
+const toRad = d => d * Math.PI / 180;
+const toDeg = r => r * 180 / Math.PI;
+const fmt   = (v, d=2) => isFinite(v) ? v.toFixed(d) : '—';
+const fmtK  = (v, d=2) => isFinite(v) ? (v/1000).toFixed(d) : '—';
+
+/* ══════════ PHASOR STATE ══════════ */
+let phasorData = { balanced: true, phi: 28.4, phases: [
+  {v:230, i:50, phi:28.4, angle:0},
+  {v:230, i:50, phi:28.4, angle:-120},
+  {v:230, i:50, phi:28.4, angle:-240}
+]};
+
+/* ══════════ MAIN CALCULATE ══════════ */
+function calculate() {
+  const sysType = document.querySelector('input[name=sys]:checked').value;
+  const conn    = document.querySelector('input[name=conn]:checked').value;
+
+  let P=0, Q=0, S=0, pf=0, phi=0, unbalPct=0;
+  let phases=[], breakdown='';
+
+  if (sysType === 'balanced') {
+    const m    = document.querySelector('input[name=inpm]:checked').value;
+    const pfn  = document.querySelector('input[name=pfn]:checked').value;
+    let Vll, Il, PF, Kw;
+
+    if (m === 'vi') {
+      Vll = parseFloat(document.getElementById('vll').value);
+      Il  = parseFloat(document.getElementById('il').value);
+      PF  = parseFloat(document.getElementById('pf-in').value);
+      S   = sqrt3 * Vll * Il;
+      P   = S * PF;
+      Q   = S * Math.sqrt(1 - PF*PF) * (pfn==='lead' ? -1 : 1);
+    } else if (m === 'vp') {
+      Vll = parseFloat(document.getElementById('vll').value);
+      Kw  = parseFloat(document.getElementById('kw-in').value) * 1000;
+      PF  = parseFloat(document.getElementById('pf-in').value);
+      P   = Kw;
+      Il  = P / (sqrt3 * Vll * PF);
+      S   = sqrt3 * Vll * Il;
+      Q   = S * Math.sqrt(1 - PF*PF) * (pfn==='lead' ? -1 : 1);
+    } else {
+      Il  = parseFloat(document.getElementById('il').value);
+      Kw  = parseFloat(document.getElementById('kw-in').value) * 1000;
+      PF  = parseFloat(document.getElementById('pf-in').value);
+      P   = Kw;
+      S   = P / PF;
+      Q   = S * Math.sqrt(1 - PF*PF) * (pfn==='lead' ? -1 : 1);
+      Vll = S / (sqrt3 * Il);
+    }
+
+    pf  = P / S;
+    phi = toDeg(Math.acos(pf));
+    const Vln = Vll / sqrt3;
+    const Sph = S / 3, Pph = P / 3, Qph = Q / 3;
+
+    phases = [
+      {v:Vln, i:Il, phi:phi, angle:0, name:'R'},
+      {v:Vln, i:Il, phi:phi, angle:-120, name:'Y'},
+      {v:Vln, i:Il, phi:phi, angle:-240, name:'B'}
+    ];
+    unbalPct = 0;
+
+    breakdown = `
+      <thead><tr><th>Phase</th><th>V (V)</th><th>I (A)</th><th>PF</th><th>P (kW)</th><th>Q (kVAR)</th><th>S (kVA)</th></tr></thead>
+      <tbody>
+      <tr><td style="color:#e53935">R</td><td>${fmt(Vln)}</td><td>${fmt(Il)}</td><td>${fmt(pf,3)}</td><td>${fmtK(Pph)}</td><td>${fmtK(Math.abs(Qph))}</td><td>${fmtK(Sph)}</td></tr>
+      <tr><td style="color:#f9a825">Y</td><td>${fmt(Vln)}</td><td>${fmt(Il)}</td><td>${fmt(pf,3)}</td><td>${fmtK(Pph)}</td><td>${fmtK(Math.abs(Qph))}</td><td>${fmtK(Sph)}</td></tr>
+      <tr><td style="color:#1976d2">B</td><td>${fmt(Vln)}</td><td>${fmt(Il)}</td><td>${fmt(pf,3)}</td><td>${fmtK(Pph)}</td><td>${fmtK(Math.abs(Qph))}</td><td>${fmtK(Sph)}</td></tr>
+      <tr class="hl"><td>Total</td><td>${fmt(Vll)}</td><td>${fmt(Il)}</td><td>${fmt(pf,3)}</td><td>${fmtK(P)}</td><td>${fmtK(Math.abs(Q))}</td><td>${fmtK(S)}</td></tr>
+      </tbody>`;
+
+  } else {
+    /* UNBALANCED */
+    const Vr = parseFloat(document.getElementById('vr').value);
+    const Vy = parseFloat(document.getElementById('vy').value);
+    const Vb = parseFloat(document.getElementById('vb').value);
+    const Ir = parseFloat(document.getElementById('ir').value);
+    const Iy = parseFloat(document.getElementById('iy').value);
+    const Ib = parseFloat(document.getElementById('ib2').value);
+    const PFr = parseFloat(document.getElementById('pfr').value);
+    const PFy = parseFloat(document.getElementById('pfy').value);
+    const PFb = parseFloat(document.getElementById('pfb').value);
+
+    const Pr = Vr*Ir*PFr, Py = Vy*Iy*PFy, Pb = Vb*Ib*PFb;
+    const Qr = Vr*Ir*Math.sqrt(1-PFr*PFr);
+    const Qy = Vy*Iy*Math.sqrt(1-PFy*PFy);
+    const Qb = Vb*Ib*Math.sqrt(1-PFb*PFb);
+    const Sr = Vr*Ir, Sy = Vy*Iy, Sb = Vb*Ib;
+
+    P = Pr+Py+Pb; Q = Qr+Qy+Qb; S = Math.sqrt(P*P+Q*Q);
+    pf = P/S; phi = toDeg(Math.acos(pf));
+
+    const Iavg = (Ir+Iy+Ib)/3;
+    unbalPct = Iavg > 0 ? (Math.max(Math.abs(Ir-Iavg),Math.abs(Iy-Iavg),Math.abs(Ib-Iavg))/Iavg)*100 : 0;
+
+    const Vavg = (Vr+Vy+Vb)/3;
+    const Vll  = Vavg * sqrt3;
+
+    phases = [
+      {v:Vr, i:Ir, phi:toDeg(Math.acos(PFr)), angle:0,    name:'R'},
+      {v:Vy, i:Iy, phi:toDeg(Math.acos(PFy)), angle:-120, name:'Y'},
+      {v:Vb, i:Ib, phi:toDeg(Math.acos(PFb)), angle:-240, name:'B'}
+    ];
+
+    breakdown = `
+      <thead><tr><th>Phase</th><th>V (V)</th><th>I (A)</th><th>PF</th><th>P (kW)</th><th>Q (kVAR)</th><th>S (kVA)</th></tr></thead>
+      <tbody>
+      <tr><td style="color:#e53935">R</td><td>${fmt(Vr)}</td><td>${fmt(Ir)}</td><td>${fmt(PFr,3)}</td><td>${fmtK(Pr)}</td><td>${fmtK(Qr)}</td><td>${fmtK(Sr)}</td></tr>
+      <tr><td style="color:#f9a825">Y</td><td>${fmt(Vy)}</td><td>${fmt(Iy)}</td><td>${fmt(PFy,3)}</td><td>${fmtK(Py)}</td><td>${fmtK(Qy)}</td><td>${fmtK(Sy)}</td></tr>
+      <tr><td style="color:#1976d2">B</td><td>${fmt(Vb)}</td><td>${fmt(Ib)}</td><td>${fmt(PFb,3)}</td><td>${fmtK(Pb)}</td><td>${fmtK(Qb)}</td><td>${fmtK(Sb)}</td></tr>
+      <tr class="hl"><td>Total</td><td>${fmt(Vll,0)} LL</td><td>—</td><td>${fmt(pf,3)}</td><td>${fmtK(P)}</td><td>${fmtK(Q)}</td><td>${fmtK(S)}</td></tr>
+      </tbody>`;
+  }
+
+  /* ── Populate results ── */
+  document.getElementById('r-kw').textContent   = fmtK(P);
+  document.getElementById('r-kvar').textContent = fmtK(Math.abs(Q));
+  document.getElementById('r-kva').textContent  = fmtK(S);
+  document.getElementById('r-kvar-sub').textContent = Q < 0 ? 'Leading (capacitive)' : 'Lagging (inductive)';
+
+  document.getElementById('m-pf').textContent  = fmt(pf, 3);
+  document.getElementById('m-phi').textContent = fmt(phi, 1) + '°';
+  document.getElementById('m-eff').textContent = fmt(pf*100, 1) + '%';
+  document.getElementById('m-ub').textContent  = fmt(unbalPct, 1) + '%';
+
+  document.getElementById('breakdown-table').innerHTML = breakdown;
+
+  /* PF bar */
+  const pfPct = Math.min(pf * 100, 100);
+  document.getElementById('pf-bar-label').textContent = fmt(pf, 3);
+  const bar = document.getElementById('pf-bar');
+  bar.style.width = pfPct + '%';
+  bar.className = 'pfc-bar ' + (pf >= 0.9 ? 'pfc-good' : pf >= 0.75 ? 'pfc-warn' : 'pfc-bad');
+
+  const pfBadge = document.getElementById('pf-badge');
+  let pfCls, pfTxt, pfAdvice;
+  if (pf >= 0.95) {
+    pfCls='s-good'; pfTxt='✓ Excellent';
+    pfAdvice='<strong>Power factor is excellent.</strong> No correction required. Your system is operating efficiently. Maintain this level to avoid reactive energy charges.';
+  } else if (pf >= 0.85) {
+    pfCls='s-warn'; pfTxt='⚠ Acceptable';
+    pfAdvice='<strong>Power factor meets IE Rules minimum (0.85).</strong> Consider improving to ≥ 0.95 to avoid DISCOM surcharges and reduce reactive current losses. Use the PF Correction tab to size a capacitor bank.';
+  } else if (pf >= 0.70) {
+    pfCls='s-bad'; pfTxt='✗ Poor — Penalty Risk';
+    pfAdvice='<strong>Power factor is below 0.85 (IE Rules requirement).</strong> DISCOM penalty surcharge likely applies. Immediate power factor correction recommended. Go to the PF Correction tab to calculate required capacitor kVAR.';
+  } else {
+    pfCls='s-bad'; pfTxt='✗ Very Poor — Immediate Action';
+    pfAdvice='<strong>Critical: Power factor is very low.</strong> Excessive reactive current is overloading cables, transformers, and switchgear. Significant DISCOM penalties apply. Install APFC panel immediately.';
+  }
+  pfBadge.innerHTML = `<span class="status-pill ${pfCls}">${pfTxt}</span>`;
+  document.getElementById('pf-advice').innerHTML = pfAdvice;
+
+  /* Energy estimates */
+  document.getElementById('e-kwh').textContent  = fmtK(P,1) + ' kWh';
+  document.getElementById('e-loss').textContent = fmtK(Math.abs(Q),1) + ' kVARh';
+  document.getElementById('e-cost').textContent = '₹' + fmt(P/1000*8, 1);
+
+  /* Note */
+  document.getElementById('result-note').innerHTML =
+    `<strong>Result:</strong> Total active power P = ${fmtK(P)} kW, reactive power Q = ${fmtK(Math.abs(Q))} kVAR (${Q<0?'leading':'lagging'}), apparent power S = ${fmtK(S)} kVA, power factor = ${fmt(pf,3)} (φ = ${fmt(phi,1)}°). ` +
+    (unbalPct > 10 ? `<strong>⚠ Current unbalance of ${fmt(unbalPct,1)}% exceeds 10% threshold — investigate load imbalance.</strong> ` : '') +
+    `Verify with site measurements. All values are fundamental frequency components.`;
+
+  document.getElementById('result-area').className = 'result-area visible';
+  document.getElementById('result-area').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  /* Save phasor data */
+  phasorData = { balanced: sysType==='balanced', phi, phases };
+}
+
+/* ══════════ PHASOR DIAGRAM ══════════ */
+function drawPhasor() {
+  const canvas = document.getElementById('phasor-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, R = Math.min(cx,cy) - 40;
+
+  ctx.clearRect(0, 0, W, H);
+
+  /* Background */
+  ctx.fillStyle = '#0f2744';
+  ctx.fillRect(0, 0, W, H);
+
+  /* Grid circles */
+  [0.33, 0.66, 1].forEach(f => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, R*f, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  /* Axes */
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx-R-10,cy); ctx.lineTo(cx+R+10,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy-R-10); ctx.lineTo(cx,cy+R+10); ctx.stroke();
+
+  /* Labels */
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '11px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('0°', cx+R+18, cy+4);
+  ctx.fillText('90°', cx+2, cy-R-14);
+  ctx.fillText('180°', cx-R-20, cy+4);
+  ctx.fillText('270°', cx+2, cy+R+18);
+
+  /* Draw phasors */
+  const phColors = ['#e53935','#f9a825','#1976d2'];
+  const phNames  = ['VR','VY','VB'];
+  const phAngles = [0, -120, -240]; // degrees (positive = CCW)
+  const phiAngle = phasorData.phi;
+
+  phAngles.forEach((ang, i) => {
+    const vAngle = toRad(ang);         // voltage angle
+    const iAngle = toRad(ang - phiAngle);  // current lags voltage by phi
+
+    /* Voltage phasor */
+    const vx = cx + R * Math.cos(vAngle);
+    const vy = cy - R * Math.sin(vAngle);
+    drawArrow(ctx, cx, cy, vx, vy, phColors[i], 2.5, false);
+
+    /* Current phasor (70% length, dashed) */
+    const iLen = R * 0.7;
+    const ix = cx + iLen * Math.cos(iAngle);
+    const iy = cy - iLen * Math.sin(iAngle);
+    drawArrow(ctx, cx, cy, ix, iy, phColors[i], 1.5, true);
+
+    /* Labels */
+    ctx.fillStyle = phColors[i];
+    ctx.font = 'bold 13px Segoe UI';
+    ctx.textAlign = 'center';
+    const labelR = R + 22;
+    ctx.fillText(phNames[i], cx + labelR*Math.cos(vAngle), cy - labelR*Math.sin(vAngle) + 4);
+
+    const iNameR = iLen + 22;
+    ctx.font = '11px Segoe UI';
+    ctx.fillText('I'+phNames[i].slice(1), cx + iNameR*Math.cos(iAngle), cy - iNameR*Math.sin(iAngle) + 4);
+  });
+
+  /* Center dot */
+  ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fill();
+
+  /* Legend */
+  ctx.font = '12px Segoe UI';
+  ctx.textAlign = 'left';
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(20,H-40); ctx.lineTo(45,H-40); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fillText('Voltage', 50, H-36);
+
+  ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(20,H-22); ctx.lineTo(45,H-22); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillText('Current (lagging φ=' + fmt(phiAngle,1) + '°)', 50, H-18);
+}
+
+function drawArrow(ctx, x1, y1, x2, y2, color, lw, dashed) {
+  const angle = Math.atan2(y2-y1, x2-x1);
+  ctx.strokeStyle = color;
+  ctx.fillStyle   = color;
+  ctx.lineWidth   = lw;
+  if (dashed) ctx.setLineDash([6,4]); else ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.setLineDash([]);
+  /* Arrowhead */
+  const al = 10, aw = 5;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - al*Math.cos(angle-0.4), y2 - al*Math.sin(angle-0.4));
+  ctx.lineTo(x2 - al*Math.cos(angle+0.4), y2 - al*Math.sin(angle+0.4));
+  ctx.closePath(); ctx.fill();
+}
+
+/* ══════════ PF CORRECTION ══════════ */
+function calcPFC() {
+  const P   = parseFloat(document.getElementById('pfc-kw').value) * 1000;
+  const pf1 = parseFloat(document.getElementById('pfc-pf1').value);
+  const pf2 = parseFloat(document.getElementById('pfc-pf2').value);
+  const Vll = parseFloat(document.getElementById('pfc-vll').value);
+  const freq = parseFloat(document.querySelector('input[name="pfc-f"]:checked').value);
+
+  const phi1 = Math.acos(pf1), phi2 = Math.acos(pf2);
+  const Qc   = P * (Math.tan(phi1) - Math.tan(phi2));  // kVAR needed (in W → /1000)
+  const Qc_kvar = Qc / 1000;
+
+  const S1 = P / pf1, S2 = P / pf2;
+  const I1 = S1 / (sqrt3 * Vll), I2 = S2 / (sqrt3 * Vll);
+  const iRed   = ((I1-I2)/I1)*100;
+  const lossRed = ((I1*I1 - I2*I2)/(I1*I1))*100;
+
+  /* Capacitance for each step */
+  const Xc = (Vll*Vll) / (Qc);   // ohms for total (Xc = V²/Q)
+  const C_total = 1 / (2 * Math.PI * freq * Xc) * 1e6; // µF (per phase, delta)
+
+  document.getElementById('pfc-kvar').textContent = fmt(Qc_kvar,1) + ' kVAR';
+  document.getElementById('pfc-kvar-sub').textContent =
+    `Improve PF from ${pf1} to ${pf2} — ${fmt(C_total,1)} µF (Δ-connected, per phase)`;
+  document.getElementById('pfc-old-kva').textContent = fmt(S1/1000,1) + ' kVA';
+  document.getElementById('pfc-new-kva').textContent = fmt(S2/1000,1) + ' kVA';
+  document.getElementById('pfc-i-red').textContent   = fmt(iRed,1) + '%';
+  document.getElementById('pfc-loss-sav').textContent = fmt(lossRed,1) + '%';
+
+  /* Suggest capacitor steps */
+  const steps = [5,10,15,20,25,30,50,75,100];
+  let remaining = Qc_kvar, rows = '', stepNum = 1;
+  while (remaining > 1 && stepNum <= 8) {
+    let best = steps[0];
+    for (const s of steps) { if (s <= remaining) best = s; else break; }
+    const C_step = 1e6 / (2 * Math.PI * freq * (Vll*Vll) / (best*1000));
+    rows += `<tr><td>Step ${stepNum}</td><td>${best} kVAR</td><td>${Vll} V</td><td>Self-healing PP, ${fmt(C_step/3,1)} µF/ph (Y) · ${fmt(C_step,1)} µF/ph (Δ)</td></tr>`;
+    remaining -= best;
+    stepNum++;
+  }
+  if (remaining > 0.5) rows += `<tr><td>Step ${stepNum}</td><td>${fmt(remaining,1)} kVAR</td><td>${Vll} V</td><td>Custom / nearest standard</td></tr>`;
+  document.getElementById('pfc-cap-tbody').innerHTML = rows;
+  document.getElementById('pfc-results').style.display = '';
+}
+
+/* ══════════ INIT ══════════ */
+window.onload = () => { drawPhasor(); };
 </script>
 </body>
 </html>
