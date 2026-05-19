@@ -475,7 +475,7 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
       <!-- Punch & Die -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🔨</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Punch &amp; Die Design Calculator</div><p class="mech-card-desc">Calculate punch &amp; die clearance, blank size, cutting force, stripper force and tonnage for sheet metal operations.</p><div class="mech-tags"><span class="mech-tag">Punch & Die</span><span class="mech-tag">Clearance</span><span class="mech-tag">Sheet Metal</span></div><a href="punch-die-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
 
-      <!-- ✅ NEW: Standard Parts Catalog Card -->
+      <!-- Standard Parts Catalog -->
       <div class="mech-card metal-card reveal">
         <div class="mech-card-top">
           <div class="mech-icon mech-icon-blue">🗂️</div>
@@ -489,23 +489,6 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
           <span class="mech-tag mech-tag-blue">Carr-Lane · Destaco</span>
         </div>
         <a href="parts-catalog.html" target="_blank" class="mech-open-btn mech-open-btn-blue">Open Catalog <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
-      </div>
-
-      <!-- Part Gallery Card -->
-      <div class="mech-card reveal" style="border-color:#e0d4f0;">
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#b45309,#f59e0b);opacity:0;transition:opacity 0.22s;" class="part-gallery-bar"></div>
-        <div class="mech-card-top">
-          <div class="mech-icon" style="background:linear-gradient(135deg,rgba(244,96,12,0.10),rgba(124,58,237,0.10));border:1px solid rgba(180,83,9,0.20);">🖼️</div>
-          <span class="mech-badge-live">● Live</span>
-        </div>
-        <div class="mech-card-name">Part Gallery</div>
-        <p class="mech-card-desc">Browse a visual reference gallery of standard mechanical parts — fasteners, bearings, seals, gears, flanges, couplings and more. Perfect for quick part identification and design reference.</p>
-        <div class="mech-tags">
-          <span class="mech-tag">Parts Library</span>
-          <span class="mech-tag">Visual Ref</span>
-          <span class="mech-tag">Standard Parts</span>
-        </div>
-        <a href="part-gallery.html" target="_blank" class="mech-open-btn">Open Gallery <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
       </div>
 
     </div>
@@ -690,14 +673,6 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 reveals.forEach(el => observer.observe(el));
-
-document.querySelectorAll('.mech-card').forEach(card => {
-  const bar = card.querySelector('.part-gallery-bar');
-  if (bar) {
-    card.addEventListener('mouseenter', () => bar.style.opacity = '1');
-    card.addEventListener('mouseleave', () => bar.style.opacity = '0');
-  }
-});
 </script>
 </body>
 </html>
