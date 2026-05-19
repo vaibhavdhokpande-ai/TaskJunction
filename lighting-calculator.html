@@ -3,220 +3,1462 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lighting Design — ElecCalc Pro</title>
-<link rel="stylesheet" href="styles.css">
+<title>Lighting Design Calculator | IS 3646 / IS 1944</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f172a;--navy-800:#1e293b;--navy-700:#334155;--navy-600:#475569;
+  --navy-500:#64748b;--navy-400:#94a3b8;--navy-300:#cbd5e1;--navy-200:#e2e8f0;
+  --navy-100:#f1f5f9;--navy-50:#f8fafc;
+  --amber:#f59e0b;--amber-600:#d97706;--amber-100:#fef3c7;--amber-50:#fffbeb;
+  --blue:#3b82f6;--blue-100:#dbeafe;
+  --green:#10b981;--green-100:#d1fae5;--green-50:#ecfdf5;
+  --red:#ef4444;--red-100:#fee2e2;--red-50:#fef2f2;
+  --orange:#f97316;--orange-100:#ffedd5;
+  --teal:#0d9488;--teal-100:#ccfbf1;
+  --radius:8px;--radius-lg:12px;--radius-xl:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--navy-100);color:var(--navy);min-height:100vh;font-size:14px;}
+/* ── Header ── */
+.hdr{background:var(--navy);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.06);}
+.hdr-left{display:flex;align-items:center;gap:12px;}
+.logo{width:36px;height:36px;background:var(--amber);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo svg{width:20px;height:20px;}
+.hdr-title{color:#fff;font-size:15px;font-weight:800;letter-spacing:-0.4px;}
+.hdr-sub{color:var(--navy-500);font-size:11px;margin-top:1px;}
+.std-badge{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--amber);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.6px;white-space:nowrap;}
+/* ── Tabs ── */
+.tab-bar{background:var(--navy-800);padding:0 24px;display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.tbtn{padding:13px 18px;color:var(--navy-400);font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;display:flex;align-items:center;gap:7px;transition:all .18s;white-space:nowrap;}
+.tbtn:hover{color:var(--navy-200);}
+.tbtn.active{color:var(--amber);border-bottom-color:var(--amber);}
+.tbtn svg{width:14px;height:14px;opacity:.7;}
+.tbtn.active svg{opacity:1;}
+/* ── Layout ── */
+.main{max-width:1380px;margin:0 auto;padding:20px 24px;display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start;}
+@media(max-width:1100px){.main{grid-template-columns:1fr;}}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+/* ── Cards ── */
+.card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--navy-200);overflow:hidden;margin-bottom:16px;}
+.card:last-child{margin-bottom:0;}
+.card-hdr{padding:13px 18px;border-bottom:1px solid var(--navy-100);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--navy-700);display:flex;align-items:center;gap:8px;}
+.cticon{width:20px;height:20px;background:var(--amber-100);border-radius:5px;display:flex;align-items:center;justify-content:center;color:var(--amber-600);flex-shrink:0;}
+.cticon svg{width:11px;height:11px;}
+.card-ref{font-size:10px;color:var(--navy-400);font-weight:500;}
+.card-body{padding:18px;}
+/* ── Section label ── */
+.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--navy-500);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--navy-100);}
+/* ── Forms ── */
+.fg3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.fg4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.fg1{margin-bottom:14px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field.full{grid-column:1/-1;}
+label{font-size:11px;font-weight:600;color:var(--navy-700);line-height:1.3;}
+.fu{font-size:10px;color:var(--navy-400);font-weight:400;margin-left:3px;}
+input[type="number"],input[type="text"],select{
+  width:100%;padding:7px 10px;border:1px solid var(--navy-200);border-radius:var(--radius);
+  font-size:12px;font-family:inherit;color:var(--navy);background:#fff;
+  transition:border-color .14s,box-shadow .14s;appearance:none;-webkit-appearance:none;
+}
+input[type="number"]:focus,select:focus,input[type="text"]:focus{
+  outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.13);
+}
+input[readonly]{background:var(--navy-50);color:var(--navy-600);cursor:default;}
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;padding-right:28px;
+}
+/* ── Slider ── */
+.sfield{display:flex;flex-direction:column;gap:5px;}
+.srow{display:flex;align-items:center;gap:8px;}
+input[type="range"]{flex:1;height:4px;border-radius:2px;background:var(--navy-200);outline:none;-webkit-appearance:none;cursor:pointer;}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--amber);cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px var(--amber);}
+.sval{font-size:11px;font-weight:600;color:var(--navy);min-width:34px;text-align:right;background:var(--navy-50);padding:3px 7px;border-radius:4px;border:1px solid var(--navy-200);}
+/* ── Info rows ── */
+.irow{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:var(--navy-50);border-radius:var(--radius);border:1px solid var(--navy-100);margin-bottom:7px;}
+.irow:last-child{margin-bottom:0;}
+.ilbl{font-size:11px;color:var(--navy-600);}
+.ival{font-size:12px;font-weight:700;color:var(--navy);font-family:'JetBrains Mono',monospace;}
+/* ── Computed display ── */
+.cdisplay{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-800) 100%);border-radius:var(--radius);padding:11px 15px;display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,0.05);margin-top:2px;}
+.clbl{font-size:10px;color:var(--navy-400);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.csub{font-size:10px;color:var(--navy-600);margin-top:2px;font-style:italic;}
+.cval{font-size:18px;font-weight:700;color:var(--amber);font-family:'JetBrains Mono',monospace;}
+/* ── Calc button ── */
+.calc-btn{width:100%;padding:11px 20px;background:var(--amber);color:var(--navy);font-family:inherit;font-size:13px;font-weight:700;border:none;border-radius:var(--radius);cursor:pointer;transition:background .14s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.2px;margin-top:4px;}
+.calc-btn:hover{background:var(--amber-600);}
+.calc-btn:active{transform:scale(.99);}
+.calc-btn svg{width:15px;height:15px;}
+/* ── Divider ── */
+.divider{height:1px;background:var(--navy-100);margin:14px 0;}
+/* ── Results ── */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px;}
+.mcard{background:var(--navy-50);border:1px solid var(--navy-100);border-radius:var(--radius);padding:12px 14px;}
+.mcard.hi{background:var(--amber-50);border-color:rgba(245,158,11,.28);}
+.mcard.gr{background:var(--green-50);border-color:rgba(16,185,129,.25);}
+.mcard.rd{background:var(--red-50);border-color:rgba(239,68,68,.25);}
+.mlbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--navy-500);margin-bottom:5px;}
+.mval{font-size:20px;font-weight:700;color:var(--navy);font-family:'JetBrains Mono',monospace;letter-spacing:-.5px;line-height:1.2;}
+.mval.am{color:var(--amber-600);}
+.mval.gr{color:var(--green);}
+.mval.rd{color:var(--red);}
+.munit{font-size:11px;font-weight:500;color:var(--navy-500);margin-top:2px;}
+/* ── Status rows ── */
+.srow2{display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:var(--radius);border:1px solid;margin-bottom:10px;}
+.srow2.pass{background:var(--green-50);border-color:rgba(16,185,129,.22);color:#065f46;}
+.srow2.fail{background:var(--red-50);border-color:rgba(239,68,68,.22);color:#7f1d1d;}
+.srow2.warn{background:var(--amber-50);border-color:rgba(245,158,11,.22);color:#78350f;}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.srow2.pass .sdot{background:var(--green);}
+.srow2.fail .sdot{background:var(--red);}
+.srow2.warn .sdot{background:var(--amber);}
+.stxt{font-size:11px;font-weight:600;flex:1;}
+/* ── Detail rows ── */
+.drow{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--navy-100);}
+.drow:last-child{border-bottom:none;}
+.dkey{font-size:11px;color:var(--navy-600);}
+.dval{font-size:11px;font-weight:700;color:var(--navy);font-family:'JetBrains Mono',monospace;}
+/* ── Formula box ── */
+.fbox{margin-top:14px;padding:11px 13px;background:var(--navy-50);border-radius:var(--radius);border:1px solid var(--navy-100);}
+.fbox-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--navy-500);margin-bottom:7px;}
+.fbox-text{font-size:11px;color:var(--navy-700);line-height:1.9;font-family:'JetBrains Mono',monospace;}
+.fbox-result{margin-top:8px;font-size:11px;color:var(--navy);font-family:'JetBrains Mono',monospace;border-top:1px solid var(--navy-200);padding-top:8px;}
+/* ── Chips ── */
+.chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.chip.bl{background:var(--blue-100);color:#1e3a8a;}
+.chip.am{background:var(--amber-100);color:#78350f;}
+.chip.gr{background:var(--green-100);color:#064e3b;}
+.chip.rd{background:var(--red-100);color:#7f1d1d;}
+/* ── Canvas/Viz ── */
+.viz{background:var(--navy);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--navy-700);}
+.viz-hdr{padding:11px 15px;border-bottom:1px solid var(--navy-700);display:flex;align-items:center;justify-content:space-between;}
+.viz-title{font-size:10px;font-weight:700;color:var(--navy-500);text-transform:uppercase;letter-spacing:.6px;}
+.viz-stats{display:flex;gap:14px;}
+.vstat{font-size:10px;color:var(--navy-600);}
+.vstat span{color:var(--amber);font-weight:600;}
+canvas{display:block;width:100%;}
+/* ── Empty state ── */
+.empty{text-align:center;padding:36px 20px;color:var(--navy-400);}
+.empty svg{margin:0 auto 12px;opacity:.25;}
+.empty p{font-size:12px;line-height:1.6;}
+/* ── ECBC Badge ── */
+.ecbc-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;margin-left:6px;}
+.ecbc-pass{background:var(--green-100);color:#064e3b;}
+.ecbc-fail{background:var(--red-100);color:#7f1d1d;}
+/* ── Scrollable results ── */
+.results-panel{position:sticky;top:80px;}
+@media(max-width:1100px){.results-panel{position:static;}}
+/* ── Lux scale indicator ── */
+.lux-scale{display:flex;align-items:center;gap:6px;margin-top:8px;}
+.lux-bar{flex:1;height:6px;border-radius:3px;background:linear-gradient(to right,#1e3a5f 0%,#1d4ed8 20%,#16a34a 50%,#f59e0b 75%,#ef4444 100%);}
+.lux-needle{position:relative;}
+.lux-label{font-size:10px;color:var(--navy-500);}
+</style>
 </head>
 <body>
-<nav class="top-nav">
-  <a href="index.html" class="nav-logo">⚡ ELECCALC<span> PRO</span></a>
-  <a href="index.html" class="nav-back">← BACK</a>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-left">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.5"/>
+        <line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/>
+        <line x1="4.22" y1="4.22" x2="5.93" y2="5.93"/><line x1="18.07" y1="18.07" x2="19.78" y2="19.78"/>
+        <line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.93" y2="18.07"/><line x1="18.07" y1="5.93" x2="19.78" y2="4.22"/>
+      </svg>
+    </div>
+    <div>
+      <div class="hdr-title">Lighting Design Calculator</div>
+      <div class="hdr-sub">Professional Illuminance &amp; Luminaire Layout Tool — TaskJunction</div>
+    </div>
+  </div>
+  <div class="std-badge">IS 3646 · IS 1944 · ECBC</div>
+</header>
+
+<!-- TAB BAR -->
+<nav class="tab-bar">
+  <button class="tbtn active" onclick="switchTab('indoor',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Indoor Lighting
+  </button>
+  <button class="tbtn" onclick="switchTab('outdoor',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    Outdoor &amp; Road Lighting
+  </button>
+  <button class="tbtn" onclick="switchTab('guide',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    IS 3646 Reference
+  </button>
 </nav>
-<div class="calc-header">
-  <div class="calc-tag">// CALCULATOR 07 OF 08</div>
-  <h1 class="calc-title"><span class="icon">💡</span>Lighting Design Calculator</h1>
-  <p class="calc-desc">Lumen method for indoor lighting design. Number of luminaires, power density (LPD) and layout per IS 3646.</p>
-</div>
 
-<div class="calc-body">
-  <div class="panel">
-    <div class="panel-title">⚙ Room & Luminaire Data</div>
-    <div class="field">
-      <label>Room Length (L) <span class="unit">[ m ]</span></label>
-      <input type="number" id="rlen" placeholder="e.g. 10" step="any">
-    </div>
-    <div class="field">
-      <label>Room Width (W) <span class="unit">[ m ]</span></label>
-      <input type="number" id="rwid" placeholder="e.g. 8" step="any">
-    </div>
-    <div class="field">
-      <label>Room Height (H) <span class="unit">[ m ]</span></label>
-      <input type="number" id="rhgt" placeholder="e.g. 3" step="any">
-    </div>
-    <div class="field">
-      <label>Work Plane Height <span class="unit">[ m ]</span></label>
-      <input type="number" id="wph" value="0.8" step="any">
-    </div>
-    <div class="field">
-      <label>Space Type / Required Illuminance</label>
-      <select id="spacetype" onchange="setLux()">
-        <option value="100">Staircase / Corridor — 100 lux</option>
-        <option value="150">Storage / Warehouse — 150 lux</option>
-        <option value="200">Lobby / Reception — 200 lux</option>
-        <option value="300" selected>Office / Classroom — 300 lux</option>
-        <option value="500">Design / Drawing — 500 lux</option>
-        <option value="750">Fine Assembly — 750 lux</option>
-        <option value="1000">Inspection / Surgery — 1000 lux</option>
-        <option value="custom">Custom</option>
-      </select>
-    </div>
-    <div class="field" id="luxfield" style="display:none">
-      <label>Required Illuminance (E) <span class="unit">[ lux ]</span></label>
-      <input type="number" id="elux" placeholder="e.g. 300" step="any">
-    </div>
-    <div class="field">
-      <label>Lamp Type / Output</label>
-      <select id="lamptype" onchange="setLamp()">
-        <option value="LED Panel 36W|36|3200">LED Panel 36W — 3200 lm</option>
-        <option value="LED Panel 40W|40|4000">LED Panel 40W — 4000 lm</option>
-        <option value="LED Batten 18W|18|1800">LED Batten 18W — 1800 lm</option>
-        <option value="LED Downlight 15W|15|1200">LED Downlight 15W — 1200 lm</option>
-        <option value="CFL 26W|26|1800">CFL 26W — 1800 lm</option>
-        <option value="TFL 2×36W|72|5200">Tubelight 2×36W — 5200 lm</option>
-        <option value="Metal Halide 250W|250|20000">Metal Halide 250W — 20000 lm</option>
-        <option value="custom">Custom</option>
-      </select>
-    </div>
-    <div id="lampfields" style="display:none">
-      <div class="field">
-        <label>Lamp Wattage <span class="unit">[ W ]</span></label>
-        <input type="number" id="lampW" step="any">
+<!-- ══════════════════════════════════════════════
+     INDOOR TAB
+════════════════════════════════════════════════ -->
+<div id="tab-indoor" class="tab-panel active">
+<div class="main">
+
+  <!-- ── Left: Inputs ── -->
+  <div>
+    <!-- Room Dimensions -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+          Room Dimensions
+        </div>
+        <span class="card-ref">IS 3646 Pt.1 — Lumen Method</span>
       </div>
-      <div class="field">
-        <label>Lamp Lumens <span class="unit">[ lm ]</span></label>
-        <input type="number" id="lampLm" step="any">
+      <div class="card-body">
+        <div class="fg3">
+          <div class="field">
+            <label>Length (L) <span class="fu">m</span></label>
+            <input type="number" id="in-L" value="10" min="1" step="0.5" oninput="indoorLive()">
+          </div>
+          <div class="field">
+            <label>Width (W) <span class="fu">m</span></label>
+            <input type="number" id="in-W" value="8" min="1" step="0.5" oninput="indoorLive()">
+          </div>
+          <div class="field">
+            <label>Height (H) <span class="fu">m</span></label>
+            <input type="number" id="in-H" value="3.0" min="2" step="0.1" oninput="indoorLive()">
+          </div>
+          <div class="field">
+            <label>Work Plane Ht. <span class="fu">m</span></label>
+            <input type="number" id="in-Hw" value="0.85" min="0" step="0.05" oninput="indoorLive()">
+          </div>
+          <div class="field">
+            <label>Mounting Ht. <span class="fu">m above WP</span></label>
+            <input type="number" id="in-Hm" value="" min="0.5" step="0.1" placeholder="Auto" oninput="indoorLive()">
+          </div>
+          <div class="field">
+            <label>Floor Area <span class="fu">m²</span></label>
+            <input type="text" id="in-area" readonly value="80.0">
+          </div>
+        </div>
+        <div class="cdisplay">
+          <div>
+            <div class="clbl">Room Index (K)</div>
+            <div class="csub">K = (L × W) / [Hm × (L + W)]</div>
+          </div>
+          <div class="cval" id="ri-val">—</div>
+        </div>
       </div>
     </div>
-    <div class="field">
-      <label>Ceiling Reflectance (ρ<sub>c</sub>) <span class="unit">[ % ]</span></label>
-      <select id="rhoc">
-        <option value="0.7">70% — White ceiling</option>
-        <option value="0.5" selected>50% — Light colour</option>
-        <option value="0.3">30% — Medium</option>
-        <option value="0.1">10% — Dark</option>
-      </select>
+
+    <!-- Space Type & Illuminance -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/><line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/></svg></div>
+          Space Type &amp; Target Illuminance
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="fg1 field full">
+          <label>Space / Activity Type (IS 3646 Table 1)</label>
+          <select id="in-space" onchange="spaceChange()">
+            <optgroup label="Circulation &amp; Support">
+              <option value="100|Corridor / Passage|E">Corridor / Passage — 100 lux</option>
+              <option value="150|Staircase|E">Staircase — 150 lux</option>
+              <option value="100|General Storage|E">General Storage — 100 lux</option>
+              <option value="150|Storage (fine items)|E">Storage (fine items) — 150 lux</option>
+              <option value="200|Toilet / Wash Room|D">Toilet / Washroom — 200 lux</option>
+            </optgroup>
+            <optgroup label="Office &amp; Commercial">
+              <option value="200|Reception / Lobby|D">Reception / Lobby — 200 lux</option>
+              <option value="300|General Office|C" selected>General Office — 300 lux</option>
+              <option value="500|Executive / Private Office|B">Executive Office — 500 lux</option>
+              <option value="500|Drawing Office|B">Drawing Office — 500 lux</option>
+              <option value="750|Detailed Drawing / CAD|A">Detailed Drawing / CAD — 750 lux</option>
+              <option value="300|Conference Room|C">Conference / Meeting Room — 300 lux</option>
+              <option value="200|Waiting Lounge|D">Waiting Area / Lounge — 200 lux</option>
+            </optgroup>
+            <optgroup label="Educational">
+              <option value="300|Classroom (general)|C">Classroom (general) — 300 lux</option>
+              <option value="500|Classroom (technical / art)|B">Classroom (technical) — 500 lux</option>
+              <option value="300|Lecture Theatre|C">Lecture Theatre — 300 lux</option>
+              <option value="500|Library (reading areas)|B">Library (reading) — 500 lux</option>
+              <option value="300|Laboratory (general)|C">Laboratory (general) — 300 lux</option>
+              <option value="500|Laboratory (precision)|B">Laboratory (precision) — 500 lux</option>
+            </optgroup>
+            <optgroup label="Industrial / Workshop">
+              <option value="150|Workshop (rough work)|E">Workshop (rough) — 150 lux</option>
+              <option value="200|Workshop (medium work)|D">Workshop (medium) — 200 lux</option>
+              <option value="300|Workshop (general)|C">Workshop (general) — 300 lux</option>
+              <option value="500|Workshop (fine / bench work)|B">Workshop (fine work) — 500 lux</option>
+              <option value="750|Inspection (medium detail)|A">Inspection (medium) — 750 lux</option>
+              <option value="1000|Inspection (fine detail)|A">Inspection (fine) — 1000 lux</option>
+              <option value="1500|Precision Work / Jewellery|A+">Precision work — 1500 lux</option>
+            </optgroup>
+            <optgroup label="Hospitality &amp; Retail">
+              <option value="200|Restaurant / Dining|D">Restaurant / Dining — 200 lux</option>
+              <option value="500|Kitchen (commercial)|B">Kitchen (commercial) — 500 lux</option>
+              <option value="500|Retail / Shop Floor|B">Retail / Shop floor — 500 lux</option>
+              <option value="750|Supermarket / Hypermarket|A">Supermarket — 750 lux</option>
+              <option value="1000|Display / Showroom|A">Display Showroom — 1000 lux</option>
+            </optgroup>
+            <optgroup label="Healthcare">
+              <option value="100|Hospital Ward (night)|E">Hospital Ward (night) — 100 lux</option>
+              <option value="300|Hospital Ward (general)|C">Hospital Ward (general) — 300 lux</option>
+              <option value="500|Examination Room|B">Examination Room — 500 lux</option>
+              <option value="1000|Operating Theatre|A">Operating Theatre — 1000 lux</option>
+            </optgroup>
+            <optgroup label="Custom">
+              <option value="custom|Custom Space|—">Custom — enter manually</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="fg2">
+          <div class="field">
+            <label>Required Illuminance (E) <span class="fu">lux</span></label>
+            <input type="number" id="in-E" value="300" min="50" step="50" oninput="indoorLive()">
+          </div>
+          <div class="field">
+            <label>IS 3646 Classification</label>
+            <input type="text" id="in-class" readonly value="Class C — 300 lux">
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="field">
-      <label>Wall Reflectance (ρ<sub>w</sub>) <span class="unit">[ % ]</span></label>
-      <select id="rhow">
-        <option value="0.5">50% — Light walls</option>
-        <option value="0.3" selected>30% — Medium</option>
-        <option value="0.1">10% — Dark walls</option>
-      </select>
+
+    <!-- Luminaire Specs -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18h6M10 22h4M12 2a7 7 0 017 7c0 3.5-2 5.5-2 5.5H7S5 12.5 5 9a7 7 0 017-7z"/></svg></div>
+          Luminaire Specifications
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="fg3">
+          <div class="field">
+            <label>Luminaire Type</label>
+            <select id="in-lumtype" onchange="lumTypeChange()">
+              <option value="led-panel|3200|30">LED Panel 600×600 (30 W)</option>
+              <option value="led-panel-lg|4500|36">LED Panel 600×1200 (36 W)</option>
+              <option value="led-troffer|4000|35">LED Troffer 1200×300 (35 W)</option>
+              <option value="led-linear|5500|44">LED Linear 1200 mm (44 W)</option>
+              <option value="led-highbay|18000|150">LED High Bay 150 W</option>
+              <option value="led-highbay-sm|9000|80">LED High Bay 80 W</option>
+              <option value="led-downlight|800|9">LED Downlight 9 W</option>
+              <option value="led-cob|1200|12">LED COB Downlight 12 W</option>
+              <option value="led-spot|650|8">LED Spotlight 8 W</option>
+              <option value="t5-2x28|5000|56">T5 Fluorescent 2×28 W</option>
+              <option value="t5-4x14|6500|56">T5 Fluorescent 4×14 W</option>
+              <option value="t8-2x36|6000|72">T8 Fluorescent 2×36 W</option>
+              <option value="cfl-2x26|3200|52">CFL Compact 2×26 W</option>
+              <option value="custom|0|0">Custom</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Lumens / Luminaire <span class="fu">lm</span></label>
+            <input type="number" id="in-lumens" value="3200" min="100" step="100" oninput="indoorLive()">
+          </div>
+          <div class="field">
+            <label>Watts / Luminaire <span class="fu">W</span></label>
+            <input type="number" id="in-watts" value="30" min="1" step="1" oninput="indoorLive()">
+          </div>
+          <div class="field">
+            <label>Luminaire Efficacy <span class="fu">lm/W</span></label>
+            <input type="text" id="in-eff" readonly value="107 lm/W">
+          </div>
+          <div class="field">
+            <label>Spacing:Height Ratio (SHR)</label>
+            <select id="in-shr" onchange="indoorLive()">
+              <option value="0.75">0.75 — Recessed downlights</option>
+              <option value="1.0">1.00 — Deep recessed</option>
+              <option value="1.25" selected>1.25 — LED panel / troffer</option>
+              <option value="1.5">1.50 — Linear fluorescent</option>
+              <option value="1.75">1.75 — Wide-beam luminaire</option>
+              <option value="2.0">2.00 — Indirect / uplighting</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Number of Lamps / Fitting</label>
+            <input type="number" id="in-lamps" value="1" min="1" max="8" step="1" oninput="indoorLive()">
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="field">
-      <label>Maintenance Factor (MF)</label>
-      <select id="mf">
-        <option value="0.8" selected>0.8 — Good maintenance</option>
-        <option value="0.7">0.7 — Average</option>
-        <option value="0.6">0.6 — Poor</option>
-      </select>
+
+    <!-- Factors -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          Utilization &amp; Maintenance Factors
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="sec-lbl">Surface Reflectances (for UF calculation)</div>
+        <div class="fg3">
+          <div class="sfield">
+            <label>Ceiling ρc <span class="fu">%</span></label>
+            <div class="srow">
+              <input type="range" id="refl-c" min="10" max="90" value="70" oninput="indoorLive();document.getElementById('rv-c').textContent=this.value+'%'">
+              <span class="sval" id="rv-c">70%</span>
+            </div>
+          </div>
+          <div class="sfield">
+            <label>Wall ρw <span class="fu">%</span></label>
+            <div class="srow">
+              <input type="range" id="refl-w" min="10" max="80" value="50" oninput="indoorLive();document.getElementById('rv-w').textContent=this.value+'%'">
+              <span class="sval" id="rv-w">50%</span>
+            </div>
+          </div>
+          <div class="sfield">
+            <label>Floor ρf <span class="fu">%</span></label>
+            <div class="srow">
+              <input type="range" id="refl-f" min="5" max="50" value="20" oninput="indoorLive();document.getElementById('rv-f').textContent=this.value+'%'">
+              <span class="sval" id="rv-f">20%</span>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="sec-lbl">Light Loss Factors</div>
+        <div class="fg2">
+          <div class="field">
+            <label>Environment / Maintenance Schedule</label>
+            <select id="in-mf" onchange="indoorLive()">
+              <option value="0.80">Very Clean — offices, hospitals (MF = 0.80)</option>
+              <option value="0.70" selected>Clean — offices, schools (MF = 0.70)</option>
+              <option value="0.65">Normal — light industrial (MF = 0.65)</option>
+              <option value="0.55">Dirty / Industrial (MF = 0.55)</option>
+              <option value="0.50">Very Dirty — foundry, cement (MF = 0.50)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Utilization Factor (UF) — override</label>
+            <input type="number" id="in-uf" value="" min="0.10" max="0.95" step="0.01" placeholder="Leave blank = auto" oninput="indoorLive()">
+          </div>
+        </div>
+        <div class="fg2">
+          <div class="irow">
+            <span class="ilbl">Maintenance Factor (MF)</span>
+            <span class="ival" id="mf-disp">0.70</span>
+          </div>
+          <div class="irow">
+            <span class="ilbl">Utilization Factor (UF — auto)</span>
+            <span class="ival" id="uf-disp">—</span>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcIndoor()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+          Calculate Lighting Layout
+        </button>
+      </div>
     </div>
-    <button class="btn" onclick="calcLight()">CALCULATE LIGHTING</button>
-    <button class="btn btn-outline" onclick="clrLight()">CLEAR</button>
+
+    <!-- Canvas Visualization -->
+    <div class="viz" id="in-viz">
+      <div class="viz-hdr">
+        <span class="viz-title">Luminaire Layout Plan (Room View)</span>
+        <div class="viz-stats" id="in-vizstats"><span class="vstat">— Calculate to render layout —</span></div>
+      </div>
+      <canvas id="in-canvas" height="300"></canvas>
+    </div>
   </div>
 
-  <div class="panel">
-    <div class="panel-title">📊 Lighting Results</div>
-    <div class="result-grid">
-      <div class="result-item" id="rl-A"><div class="result-label">Room Area</div><div class="result-value" id="rv-A">—</div><div class="result-unit">m²</div></div>
-      <div class="result-item" id="rl-RI"><div class="result-label">Room Index (K)</div><div class="result-value" id="rv-RI">—</div></div>
-      <div class="result-item" id="rl-UF"><div class="result-label">Utilization Factor</div><div class="result-value" id="rv-UF">—</div></div>
-      <div class="result-item" id="rl-TL"><div class="result-label">Total Lumens Req.</div><div class="result-value" id="rv-TL">—</div><div class="result-unit">lm</div></div>
-      <div class="result-item full" id="rl-N"><div class="result-label">Number of Luminaires</div><div class="result-value" id="rv-N">—</div></div>
-      <div class="result-item" id="rl-TW"><div class="result-label">Total Wattage</div><div class="result-value" id="rv-TW">—</div><div class="result-unit">W</div></div>
-      <div class="result-item" id="rl-LPD"><div class="result-label">Lighting Power Density</div><div class="result-value" id="rv-LPD">—</div><div class="result-unit">W/m²</div></div>
-      <div class="result-item full" id="rl-layout"><div class="result-label">Suggested Layout</div><div class="result-value" id="rv-layout">—</div></div>
-    </div>
-    <div class="formula-box">
-      <strong>LUMEN METHOD:</strong><br>
-      N = (E × A) / (Φ × UF × MF)<br>
-      <strong>Room Index:</strong> K = L×W / (H<sub>m</sub>×(L+W))<br>
-      <strong>H<sub>m</sub></strong> = Mounting ht − Work plane ht<br>
-      <strong>LPD</strong> = Total Watts / Area (W/m²)
+  <!-- ── Right: Results ── -->
+  <div class="results-panel">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          Calculation Results
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="in-empty" class="empty">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/><line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/><line x1="4.22" y1="4.22" x2="5.93" y2="5.93"/><line x1="18.07" y1="18.07" x2="19.78" y2="19.78"/><line x1="4.22" y1="19.78" x2="5.93" y2="18.07"/><line x1="18.07" y1="5.93" x2="19.78" y2="4.22"/></svg>
+          <p>Fill in room dimensions &amp;<br>luminaire data, then click<br><strong>Calculate</strong></p>
+        </div>
+        <div id="in-results" style="display:none">
+          <div id="in-status" class="srow2 pass">
+            <div class="sdot"></div>
+            <div class="stxt" id="in-stxt">—</div>
+          </div>
+          <div class="mgrid">
+            <div class="mcard hi">
+              <div class="mlbl">Luminaires Reqd.</div>
+              <div class="mval am" id="r-count">—</div>
+              <div class="munit">nos.</div>
+            </div>
+            <div class="mcard">
+              <div class="mlbl">Achieved Avg. Lux</div>
+              <div class="mval" id="r-lux">—</div>
+              <div class="munit">lux (avg)</div>
+            </div>
+            <div class="mcard">
+              <div class="mlbl">Power Density (LPD)</div>
+              <div class="mval" id="r-lpd">—</div>
+              <div class="munit">W/m²</div>
+            </div>
+            <div class="mcard">
+              <div class="mlbl">Total Connected Load</div>
+              <div class="mval" id="r-kw">—</div>
+              <div class="munit">watts</div>
+            </div>
+          </div>
+          <div id="in-unif-status" class="srow2 pass" style="margin-top:0">
+            <div class="sdot"></div>
+            <div class="stxt" id="in-unif-txt">—</div>
+          </div>
+
+          <div style="margin-top:14px">
+            <div class="sec-lbl">Design Parameters</div>
+            <div class="drow"><span class="dkey">Room Index (K)</span><span class="dval" id="d-k">—</span></div>
+            <div class="drow"><span class="dkey">Utilization Factor (UF)</span><span class="dval" id="d-uf">—</span></div>
+            <div class="drow"><span class="dkey">Maintenance Factor (MF)</span><span class="dval" id="d-mf">—</span></div>
+            <div class="drow"><span class="dkey">Mounting Height (Hm)</span><span class="dval" id="d-hm">—</span></div>
+            <div class="drow"><span class="dkey">Max. Spacing (SHR × Hm)</span><span class="dval" id="d-maxs">—</span></div>
+            <div class="drow"><span class="dkey">Grid Arrangement</span><span class="dval" id="d-grid">—</span></div>
+            <div class="drow"><span class="dkey">Spacing along Length (SL)</span><span class="dval" id="d-sl">—</span></div>
+            <div class="drow"><span class="dkey">Spacing along Width (SW)</span><span class="dval" id="d-sw">—</span></div>
+            <div class="drow"><span class="dkey">Uniformity Ratio (Uo)</span><span class="dval" id="d-uo">—</span></div>
+            <div class="drow"><span class="dkey">Luminaire Efficacy</span><span class="dval" id="d-eff">—</span></div>
+            <div class="drow"><span class="dkey">LPD vs ECBC Limit</span><span class="dval" id="d-lpd2">—</span></div>
+          </div>
+
+          <div style="margin-top:14px">
+            <div class="sec-lbl">IS 3646 Compliance Checklist</div>
+            <div class="chip-row" id="in-chips"></div>
+          </div>
+
+          <div class="fbox">
+            <div class="fbox-lbl">Lumen Method (IS 3646 Cl.7)</div>
+            <div class="fbox-text">
+              N = (E × A) / (F × UF × MF)<br>
+              <span style="color:var(--navy-400);font-size:10px;">N=luminaires, E=lux, A=m²</span><br>
+              <span style="color:var(--navy-400);font-size:10px;">F=lumens/unit, UF=utilization, MF=maintenance</span>
+            </div>
+            <div class="fbox-result" id="in-formula">—</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="panel panel-full">
-    <div class="panel-title">📋 IS 3646 — Recommended Illuminance Levels</div>
-    <table class="ref-table">
-      <thead><tr><th>Space / Task</th><th>Illuminance (lux)</th><th>LPD Limit (W/m²)</th></tr></thead>
-      <tbody>
-        <tr><td>Parking / Staircase</td><td>50–100</td><td>3</td></tr>
-        <tr><td>Lobby / Corridor</td><td>100–200</td><td>5</td></tr>
-        <tr><td>Stores / Warehouse</td><td>100–200</td><td>4</td></tr>
-        <tr><td>General Office</td><td>300–500</td><td>10</td></tr>
-        <tr><td>Classroom</td><td>300–500</td><td>9</td></tr>
-        <tr><td>Drawing Office</td><td>500–750</td><td>14</td></tr>
-        <tr><td>Hospital Ward</td><td>100–300</td><td>8</td></tr>
-        <tr><td>Operating Theatre</td><td>1000+</td><td>—</td></tr>
-        <tr><td>Fine Assembly</td><td>750–1500</td><td>20</td></tr>
-        <tr><td>Retail</td><td>300–750</td><td>15</td></tr>
-        <tr><td>Outdoor Roads</td><td>15–30</td><td>—</td></tr>
-      </tbody>
-    </table>
+</div><!-- /main -->
+</div><!-- /tab-indoor -->
+
+
+<!-- ══════════════════════════════════════════════
+     OUTDOOR TAB
+════════════════════════════════════════════════ -->
+<div id="tab-outdoor" class="tab-panel">
+<div class="main">
+  <div>
+    <!-- Outdoor area config -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="22" height="18" rx="2"/><path d="M1 9h22M1 15h22M8 3v18M16 3v18"/></svg></div>
+          Outdoor Area Configuration
+        </div>
+        <span class="card-ref">IS 1944 / IS 3646 Part 3</span>
+      </div>
+      <div class="card-body">
+        <div class="fg2">
+          <div class="field">
+            <label>Application Type</label>
+            <select id="out-type" onchange="outTypeChange()">
+              <option value="road">Road / Street Lighting</option>
+              <option value="parking">Car Park / Parking Area</option>
+              <option value="sports">Sports Field / Floodlighting</option>
+              <option value="industrial">Industrial Yard / Compound</option>
+              <option value="pedestrian">Pedestrian / Cycle Path</option>
+              <option value="security">Security / Perimeter Fencing</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Road / Area Category</label>
+            <select id="out-cat" onchange="outCatChange()">
+              <option value="P1|20|0.4">P1 — Expressways / National Highways (20 lux)</option>
+              <option value="P2|15|0.4">P2 — Major Urban Arterial Roads (15 lux)</option>
+              <option value="P3|10|0.35" selected>P3 — Secondary / Collector Roads (10 lux)</option>
+              <option value="P4|7.5|0.35">P4 — Residential Collector Roads (7.5 lux)</option>
+              <option value="P5|5|0.30">P5 — Local / Residential Streets (5 lux)</option>
+              <option value="custom|0|0">Custom</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg3">
+          <div class="field">
+            <label>Road / Area Width <span class="fu">m</span></label>
+            <input type="number" id="out-W" value="10" min="2" step="0.5" oninput="outLive()">
+          </div>
+          <div class="field">
+            <label>Road / Area Length <span class="fu">m</span></label>
+            <input type="number" id="out-L" value="300" min="20" step="10" oninput="outLive()">
+          </div>
+          <div class="field">
+            <label>Required Avg. Illuminance <span class="fu">lux</span></label>
+            <input type="number" id="out-E" value="10" min="1" step="0.5" oninput="outLive()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pole specs -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="2" x2="12" y2="22"/><path d="M12 7C12 7 16 9 20 9"/></svg></div>
+          Pole &amp; Luminaire Specifications
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="fg3">
+          <div class="field">
+            <label>Mounting Height (H) <span class="fu">m</span></label>
+            <input type="number" id="out-H" value="8" min="4" max="30" step="0.5" oninput="outLive()">
+          </div>
+          <div class="field">
+            <label>Arm Overhang <span class="fu">m</span></label>
+            <input type="number" id="out-overhang" value="1.5" min="0" max="4" step="0.1" oninput="outLive()">
+          </div>
+          <div class="field">
+            <label>Tilt Angle <span class="fu">°</span></label>
+            <input type="number" id="out-tilt" value="5" min="0" max="20" step="1" oninput="outLive()">
+          </div>
+          <div class="field">
+            <label>Pole Arrangement</label>
+            <select id="out-arr" onchange="outLive()">
+              <option value="single">Single Side</option>
+              <option value="opposite" selected>Opposite / Bilateral</option>
+              <option value="staggered">Staggered / Alternate</option>
+              <option value="median">Central Median</option>
+              <option value="twin">Twin-Arm (both sides)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Luminaire Output <span class="fu">lm</span></label>
+            <input type="number" id="out-F" value="12000" min="1000" step="500" oninput="outLive()">
+          </div>
+          <div class="field">
+            <label>Watts / Luminaire <span class="fu">W</span></label>
+            <input type="number" id="out-watts" value="100" min="10" step="5" oninput="outLive()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Correction Factors -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg></div>
+          Road Lighting Factors
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="fg3">
+          <div class="field">
+            <label>Maintenance Factor (MF)</label>
+            <select id="out-mf" onchange="outLive()">
+              <option value="0.80">Good — clean area (MF = 0.80)</option>
+              <option value="0.72" selected>Normal — IS 1944 (MF = 0.72)</option>
+              <option value="0.65">Poor — dusty / industrial (MF = 0.65)</option>
+              <option value="0.55">Very poor — heavy pollution (MF = 0.55)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Utilization Coefficient (CU)</label>
+            <input type="number" id="out-cu" value="0.40" min="0.10" max="0.75" step="0.01" oninput="outLive()">
+          </div>
+          <div class="field">
+            <label>Road Surface Type</label>
+            <select id="out-surface" onchange="outLive()">
+              <option value="1.0">R2 — Asphalt (standard)</option>
+              <option value="0.9">R1 — Concrete</option>
+              <option value="1.1">R3 — Wet asphalt</option>
+              <option value="1.15">R4 — Very dark road</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg2">
+          <div class="irow">
+            <span class="ilbl">H : W Ratio</span>
+            <span class="ival" id="hw-ratio">—</span>
+          </div>
+          <div class="irow">
+            <span class="ilbl">Recommended H/W</span>
+            <span class="ival">≥ 0.5 : 1</span>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcOutdoor()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+          Calculate Outdoor Lighting
+        </button>
+      </div>
+    </div>
+
+    <!-- Outdoor canvas -->
+    <div class="viz" id="out-viz">
+      <div class="viz-hdr">
+        <span class="viz-title">Pole Layout — Plan View</span>
+        <div class="viz-stats" id="out-vizstats"><span class="vstat">— Calculate to render —</span></div>
+      </div>
+      <canvas id="out-canvas" height="260"></canvas>
+    </div>
+  </div>
+
+  <!-- Outdoor results -->
+  <div class="results-panel">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">
+          <div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          Outdoor Results
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="out-empty" class="empty">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/><line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/></svg>
+          <p>Configure outdoor parameters<br>and click Calculate</p>
+        </div>
+        <div id="out-results" style="display:none">
+          <div id="out-status" class="srow2 pass">
+            <div class="sdot"></div>
+            <div class="stxt" id="out-stxt">—</div>
+          </div>
+          <div class="mgrid">
+            <div class="mcard hi">
+              <div class="mlbl">Poles Required</div>
+              <div class="mval am" id="or-poles">—</div>
+              <div class="munit">nos.</div>
+            </div>
+            <div class="mcard">
+              <div class="mlbl">Total Luminaires</div>
+              <div class="mval" id="or-lums">—</div>
+              <div class="munit">nos.</div>
+            </div>
+            <div class="mcard">
+              <div class="mlbl">Avg. Illuminance</div>
+              <div class="mval" id="or-lux">—</div>
+              <div class="munit">lux</div>
+            </div>
+            <div class="mcard">
+              <div class="mlbl">Total Connected Load</div>
+              <div class="mval" id="or-w">—</div>
+              <div class="munit">watts</div>
+            </div>
+          </div>
+          <div id="out-unif-status" class="srow2 pass" style="margin-top:0">
+            <div class="sdot"></div>
+            <div class="stxt" id="out-unif-txt">—</div>
+          </div>
+          <div style="margin-top:14px">
+            <div class="sec-lbl">Road Lighting Details</div>
+            <div class="drow"><span class="dkey">Pole Spacing (S)</span><span class="dval" id="od-s">—</span></div>
+            <div class="drow"><span class="dkey">Spacing : Height (S/H)</span><span class="dval" id="od-sh">—</span></div>
+            <div class="drow"><span class="dkey">Height : Width (H/W)</span><span class="dval" id="od-hw">—</span></div>
+            <div class="drow"><span class="dkey">Utilization Coeff. (CU)</span><span class="dval" id="od-cu">—</span></div>
+            <div class="drow"><span class="dkey">Maintenance Factor (MF)</span><span class="dval" id="od-mf">—</span></div>
+            <div class="drow"><span class="dkey">Surface Correction Factor</span><span class="dval" id="od-sf">—</span></div>
+            <div class="drow"><span class="dkey">Power Density</span><span class="dval" id="od-lpd">—</span></div>
+            <div class="drow"><span class="dkey">Min. Uniformity Req. (Uo)</span><span class="dval" id="od-uoreq">—</span></div>
+            <div class="drow"><span class="dkey">Est. Uniformity (Uo)</span><span class="dval" id="od-uo">—</span></div>
+          </div>
+          <div class="fbox">
+            <div class="fbox-lbl">Road Lighting Formula (IS 1944)</div>
+            <div class="fbox-text">Eavg = (F × CU × MF) / (S × W)<br><span style="color:var(--navy-400);font-size:10px;">S=spacing, W=road width, F=lumens</span></div>
+            <div class="fbox-result" id="out-formula">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div class="footer">// ELECCALC PRO · LIGHTING DESIGN · IS 3646</div>
+</div><!-- /tab-outdoor -->
+
+
+<!-- ══════════════════════════════════════════════
+     REFERENCE TAB
+════════════════════════════════════════════════ -->
+<div id="tab-guide" class="tab-panel">
+<div style="max-width:1100px;margin:0 auto;padding:24px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>IS 3646 Recommended Illuminances</div></div>
+      <div class="card-body">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead><tr style="background:var(--navy-50);">
+            <th style="text-align:left;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">Space Type</th>
+            <th style="text-align:right;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">Lux (E)</th>
+            <th style="text-align:center;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">Class</th>
+          </tr></thead>
+          <tbody id="ref-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>Maintenance Factors (MF)</div></div>
+        <div class="card-body">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;">
+            <thead><tr style="background:var(--navy-50);">
+              <th style="text-align:left;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">Environment</th>
+              <th style="text-align:right;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">MF</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Very clean (hospitals, labs)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">0.80</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Clean (offices, schools)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">0.70</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Normal (light industrial)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">0.65</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Dirty (workshops, plants)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">0.55</td></tr>
+              <tr><td style="padding:6px 10px;">Very dirty (foundries)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;">0.50</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div class="card-hdr"><div class="card-title"><div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>Uniformity Requirements</div></div>
+        <div class="card-body">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;">
+            <thead><tr style="background:var(--navy-50);">
+              <th style="text-align:left;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">Space</th>
+              <th style="text-align:right;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">Min. Uo</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">General interior spaces</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">0.60</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Escape routes</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">0.40</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Road (P1/P2)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">0.40</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Road (P3/P4)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">0.35</td></tr>
+              <tr><td style="padding:6px 10px;">Road (P5 residential)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;">0.30</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div class="card-hdr"><div class="card-title"><div class="cticon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="8" x2="12" y2="16"/></svg></div>ECBC Light Power Density Limits</div></div>
+        <div class="card-body">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;">
+            <thead><tr style="background:var(--navy-50);">
+              <th style="text-align:left;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">Space</th>
+              <th style="text-align:right;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid var(--navy-200);">LPD W/m²</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Office (open plan)</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">10.5</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Classroom</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">11.0</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Retail / Shop</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">14.0</td></tr>
+              <tr><td style="padding:6px 10px;border-bottom:1px solid var(--navy-100);">Hospital ward</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;border-bottom:1px solid var(--navy-100);">10.5</td></tr>
+              <tr><td style="padding:6px 10px;">Workshop / industrial</td><td style="padding:6px 10px;text-align:right;font-weight:700;font-family:monospace;">14.0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div><!-- /tab-guide -->
+
+
 <script>
-function setLux() {
-  const v = document.getElementById('spacetype').value;
-  document.getElementById('luxfield').style.display = v === 'custom' ? '' : 'none';
-  if (v !== 'custom') document.getElementById('elux').value = v;
+// ═══════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
 }
-function setLamp() {
-  const v = document.getElementById('lamptype').value;
-  const cf = document.getElementById('lampfields');
-  cf.style.display = v === 'custom' ? '' : 'none';
-  if (v !== 'custom') {
-    const parts = v.split('|');
-    document.getElementById('lampW').value = parts[1];
-    document.getElementById('lampLm').value = parts[2];
+
+const ECBC_LPD = {
+  50:5, 100:5, 150:6, 200:8, 300:10.5, 500:14, 750:18, 1000:22, 1500:28
+};
+
+function nearestECBC(E) {
+  const keys = Object.keys(ECBC_LPD).map(Number);
+  const closest = keys.reduce((a,b)=>Math.abs(b-E)<Math.abs(a-E)?b:a);
+  return ECBC_LPD[closest];
+}
+
+// UF from Room Index + reflectances (IS 3646 Appendix C approximation)
+function computeUF(K, ceilR, wallR) {
+  const c = ceilR/100, w = wallR/100;
+  const base = 0.22 + 0.21*Math.log(Math.max(K,0.3)+0.6);
+  const rc = 0.10*c + 0.06*w;
+  return Math.min(Math.max(base+rc, 0.22), 0.86);
+}
+
+// ═══════════════════════════════════════════════
+// INDOOR — LIVE UPDATE
+// ═══════════════════════════════════════════════
+const LUM_DB = {
+  'led-panel|3200|30':    {l:3200,w:30},
+  'led-panel-lg|4500|36': {l:4500,w:36},
+  'led-troffer|4000|35':  {l:4000,w:35},
+  'led-linear|5500|44':   {l:5500,w:44},
+  'led-highbay|18000|150':{l:18000,w:150},
+  'led-highbay-sm|9000|80':{l:9000,w:80},
+  'led-downlight|800|9':  {l:800,w:9},
+  'led-cob|1200|12':      {l:1200,w:12},
+  'led-spot|650|8':       {l:650,w:8},
+  't5-2x28|5000|56':      {l:5000,w:56},
+  't5-4x14|6500|56':      {l:6500,w:56},
+  't8-2x36|6000|72':      {l:6000,w:72},
+  'cfl-2x26|3200|52':     {l:3200,w:52},
+};
+
+function lumTypeChange() {
+  const v = document.getElementById('in-lumtype').value;
+  if (LUM_DB[v]) {
+    document.getElementById('in-lumens').value = LUM_DB[v].l;
+    document.getElementById('in-watts').value  = LUM_DB[v].w;
+  }
+  indoorLive();
+}
+
+function spaceChange() {
+  const v = document.getElementById('in-space').value;
+  if (v.startsWith('custom')) return;
+  const [lux, name, cls] = v.split('|');
+  document.getElementById('in-E').value = lux;
+  document.getElementById('in-class').value = `Class ${cls} — ${lux} lux`;
+  indoorLive();
+}
+
+function indoorLive() {
+  const L  = +document.getElementById('in-L').value  || 10;
+  const W  = +document.getElementById('in-W').value  || 8;
+  const H  = +document.getElementById('in-H').value  || 3;
+  const Hw = +document.getElementById('in-Hw').value || 0.85;
+  let   Hm = +document.getElementById('in-Hm').value;
+  if (!Hm || isNaN(Hm) || Hm <= 0) Hm = H - Hw;
+  Hm = Math.max(Hm, 0.5);
+
+  document.getElementById('in-area').value = (L*W).toFixed(1);
+  const K = (L*W)/(Hm*(L+W));
+  document.getElementById('ri-val').textContent = K.toFixed(2);
+
+  const cR = +document.getElementById('refl-c').value;
+  const wR = +document.getElementById('refl-w').value;
+  const uf = computeUF(K, cR, wR);
+  document.getElementById('uf-disp').textContent = uf.toFixed(2);
+
+  const mf = +document.getElementById('in-mf').value;
+  document.getElementById('mf-disp').textContent = mf.toFixed(2);
+
+  const lumens = +document.getElementById('in-lumens').value || 3200;
+  const watts  = +document.getElementById('in-watts').value  || 30;
+  document.getElementById('in-eff').value = (lumens/watts).toFixed(0)+' lm/W';
+
+  // H/W ratio for outdoor
+  const hw = +document.getElementById('in-H').value / +document.getElementById('in-W').value;
+  if (!isNaN(hw)) {}
+}
+
+// ═══════════════════════════════════════════════
+// INDOOR — CALCULATE
+// ═══════════════════════════════════════════════
+function calcIndoor() {
+  const L  = +document.getElementById('in-L').value  || 10;
+  const W  = +document.getElementById('in-W').value  || 8;
+  const H  = +document.getElementById('in-H').value  || 3;
+  const Hw = +document.getElementById('in-Hw').value || 0.85;
+  let   Hm = +document.getElementById('in-Hm').value;
+  if (!Hm || isNaN(Hm) || Hm <= 0) Hm = H - Hw;
+  Hm = Math.max(Hm, 0.5);
+
+  const E    = +document.getElementById('in-E').value      || 300;
+  const A    = L * W;
+  const F    = +document.getElementById('in-lumens').value  || 3200;
+  const Wlum = +document.getElementById('in-watts').value   || 30;
+  const mf   = +document.getElementById('in-mf').value      || 0.70;
+  const shr  = +document.getElementById('in-shr').value     || 1.25;
+  const cR   = +document.getElementById('refl-c').value;
+  const wR   = +document.getElementById('refl-w').value;
+  const K    = (L*W)/(Hm*(L+W));
+
+  const ufManual = +document.getElementById('in-uf').value;
+  const uf = (!isNaN(ufManual) && ufManual > 0.05) ? ufManual : computeUF(K, cR, wR);
+
+  // Lumen method
+  const N_exact = (E * A) / (F * uf * mf);
+  const N = Math.ceil(N_exact);
+
+  // Grid
+  const nL = Math.max(1, Math.round(Math.sqrt(N * L / W)));
+  const nW = Math.max(1, Math.ceil(N / nL));
+  const nTotal = nL * nW;
+  const sL = L / nL;
+  const sW = W / nW;
+
+  const E_ach = (nTotal * F * uf * mf) / A;
+  const maxS  = shr * Hm;
+
+  // Uniformity (IS 3646 Cl. 8.3 — spacing check)
+  const spacingOK = (sL <= maxS * 1.05) && (sW <= maxS * 1.05);
+  const Uo = spacingOK
+    ? Math.min(0.92, 0.55 + 0.12 * (uf / 0.55))
+    : Math.max(0.25, 0.58 - 0.08 * Math.max((sL-maxS)/maxS, (sW-maxS)/maxS, 0));
+
+  const totalW = nTotal * Wlum;
+  const lpd    = totalW / A;
+  const ecbc   = nearestECBC(E);
+  const lpdOK  = lpd <= ecbc * 1.05;
+  const luxOK  = E_ach >= E * 0.90;
+  const unifOK = Uo >= 0.60;
+
+  // Show
+  document.getElementById('in-empty').style.display = 'none';
+  document.getElementById('in-results').style.display = 'block';
+
+  document.getElementById('r-count').textContent = nTotal;
+  document.getElementById('r-lux').textContent   = E_ach.toFixed(0);
+  document.getElementById('r-kw').textContent    = totalW;
+  document.getElementById('r-lpd').textContent   = lpd.toFixed(1);
+
+  const allOK = luxOK && unifOK;
+  const sd = document.getElementById('in-status');
+  sd.className = 'srow2 ' + (allOK?'pass': luxOK?'warn':'fail');
+  document.getElementById('in-stxt').textContent = allOK
+    ? '✓ Design compliant with IS 3646:2020'
+    : luxOK ? '⚠ Partially compliant — check spacing / uniformity'
+    : '✗ Achieved illuminance below IS 3646 minimum';
+
+  const su = document.getElementById('in-unif-status');
+  su.className = 'srow2 ' + (unifOK?'pass':'fail');
+  document.getElementById('in-unif-txt').textContent =
+    `Uniformity Uo ≈ ${Uo.toFixed(2)} (IS 3646 min: 0.60) — ${unifOK?'PASS':'FAIL — reduce spacing'}`;
+
+  document.getElementById('d-k').textContent    = K.toFixed(2);
+  document.getElementById('d-uf').textContent   = uf.toFixed(3);
+  document.getElementById('d-mf').textContent   = mf.toFixed(2);
+  document.getElementById('d-hm').textContent   = Hm.toFixed(2)+' m';
+  document.getElementById('d-maxs').textContent = maxS.toFixed(2)+' m';
+  document.getElementById('d-grid').textContent = `${nL} × ${nW}`;
+  document.getElementById('d-sl').textContent   = sL.toFixed(2)+' m '+(sL<=maxS?'✓':'⚠');
+  document.getElementById('d-sw').textContent   = sW.toFixed(2)+' m '+(sW<=maxS?'✓':'⚠');
+  document.getElementById('d-uo').textContent   = Uo.toFixed(2)+(unifOK?' ✓':' ✗');
+  document.getElementById('d-eff').textContent  = (F/Wlum).toFixed(0)+' lm/W';
+  document.getElementById('d-lpd2').textContent = lpd.toFixed(1)+' / '+ecbc+' W/m² '+(lpdOK?'✓':'⚠');
+
+  document.getElementById('in-formula').innerHTML =
+    `N = (${E} × ${A.toFixed(0)}) / (${F} × ${uf.toFixed(2)} × ${mf.toFixed(2)})<br>`+
+    `N = ${(E*A).toFixed(0)} / ${(F*uf*mf).toFixed(0)} = <strong>${N_exact.toFixed(2)} → ${N} (rounded up)</strong><br>`+
+    `Installed: ${nL}×${nW} = <strong>${nTotal} luminaires</strong>`;
+
+  // Chips
+  const chips = [];
+  chips.push(luxOK ? {t:'Illuminance ✓',c:'gr'} : {t:'Add luminaires',c:'am'});
+  chips.push(unifOK? {t:'Uniformity ✓',c:'gr'} : {t:'Reduce spacing',c:'rd'});
+  chips.push(lpdOK ? {t:'LPD ≤ ECBC ✓',c:'gr'} : {t:'LPD exceeds ECBC',c:'am'});
+  chips.push({t:`K = ${K.toFixed(2)}`, c:'bl'});
+  chips.push({t:`${(F/Wlum).toFixed(0)} lm/W`,c:'bl'});
+  chips.push({t:`${nTotal} units`, c:'bl'});
+  document.getElementById('in-chips').innerHTML = chips.map(ch=>
+    `<span class="chip ${ch.c}">${ch.t}</span>`).join('');
+
+  // Visualise
+  drawIndoor(L, W, nL, nW, sL, sW, E_ach, E, Hm, maxS);
+  document.getElementById('in-vizstats').innerHTML =
+    `<span class="vstat">Total: <span>${nTotal}</span></span>`+
+    `<span class="vstat">Grid: <span>${nL}×${nW}</span></span>`+
+    `<span class="vstat">Spacing: <span>${sL.toFixed(1)}m × ${sW.toFixed(1)}m</span></span>`+
+    `<span class="vstat">Avg: <span>${E_ach.toFixed(0)} lux</span></span>`;
+}
+
+function drawIndoor(L, W, nL, nW, sL, sW, Each, Ereq, Hm, maxS) {
+  const canvas = document.getElementById('in-canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const cw = canvas.parentElement.offsetWidth;
+  const ch = 300;
+  canvas.width  = cw * dpr;
+  canvas.height = ch * dpr;
+  canvas.style.width  = cw+'px';
+  canvas.style.height = ch+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const PAD = 44, BOTT = 28;
+  const avW = cw - PAD*2;
+  const avH = ch - PAD - BOTT;
+  const sc  = Math.min(avW/L, avH/W);
+  const rW  = L*sc, rH = W*sc;
+  const ox  = PAD + (avW-rW)/2;
+  const oy  = PAD;
+
+  ctx.clearRect(0, 0, cw, ch);
+  ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,cw,ch);
+
+  // Floor colour by lux ratio
+  const ratio = Math.min(Each/Math.max(Ereq,1), 2.5);
+  const alpha = 0.12 + ratio*0.08;
+  ctx.fillStyle=`rgba(245,195,80,${Math.min(alpha,0.4)})`;
+  ctx.fillRect(ox,oy,rW,rH);
+
+  // Grid cells
+  ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=0.5;
+  for(let i=1;i<nL;i++){const x=ox+i*sL*sc;ctx.beginPath();ctx.moveTo(x,oy);ctx.lineTo(x,oy+rH);ctx.stroke();}
+  for(let j=1;j<nW;j++){const y=oy+j*sW*sc;ctx.beginPath();ctx.moveTo(ox,y);ctx.lineTo(ox+rW,y);ctx.stroke();}
+
+  // Spacing violation hint
+  if(sL>maxS||sW>maxS){
+    ctx.strokeStyle='rgba(239,68,68,0.25)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    const msPx=maxS*sc;
+    for(let i=0;i<nL;i++)for(let j=0;j<nW;j++){
+      const cx2=ox+(i+0.5)*sL*sc,cy2=oy+(j+0.5)*sW*sc;
+      ctx.strokeRect(cx2-msPx/2,cy2-msPx/2,msPx,msPx);
+    }
+    ctx.setLineDash([]);
+  }
+
+  // Room border
+  ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;ctx.strokeRect(ox,oy,rW,rH);
+
+  // Dimension labels
+  ctx.fillStyle='#475569';ctx.font='11px Plus Jakarta Sans,sans-serif';
+  ctx.textAlign='center';ctx.fillText(L.toFixed(1)+' m',ox+rW/2,oy-8);
+  ctx.save();ctx.translate(ox-10,oy+rH/2);ctx.rotate(-Math.PI/2);
+  ctx.fillText(W.toFixed(1)+' m',0,0);ctx.restore();
+
+  // Luminaires
+  for(let i=0;i<nL;i++){
+    for(let j=0;j<nW;j++){
+      const cx2=ox+(i+0.5)*sL*sc;
+      const cy2=oy+(j+0.5)*sW*sc;
+      const r=Math.max(3, Math.min(9, sc*0.28));
+      // Glow
+      const g=ctx.createRadialGradient(cx2,cy2,0,cx2,cy2,r*5);
+      g.addColorStop(0,'rgba(253,230,138,.4)');g.addColorStop(1,'rgba(253,230,138,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx2,cy2,r*5,0,2*Math.PI);ctx.fill();
+      // Body
+      ctx.fillStyle='#fef3c7';ctx.strokeStyle='#f59e0b';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(cx2,cy2,r,0,2*Math.PI);ctx.fill();ctx.stroke();
+      // Cross
+      ctx.strokeStyle='rgba(245,158,11,.7)';ctx.lineWidth=0.5;
+      ctx.beginPath();ctx.moveTo(cx2-r-3,cy2);ctx.lineTo(cx2+r+3,cy2);
+      ctx.moveTo(cx2,cy2-r-3);ctx.lineTo(cx2,cy2+r+3);ctx.stroke();
+    }
+  }
+
+  // Bottom legend
+  ctx.font='10px Plus Jakarta Sans,sans-serif';ctx.textAlign='left';
+  ctx.fillStyle='#475569';ctx.fillText('● luminaire (ceiling plan)',ox,oy+rH+18);
+  ctx.textAlign='right';
+  ctx.fillStyle=Each>=Ereq*0.9?'#10b981':'#f59e0b';
+  ctx.fillText(`Avg: ${Each.toFixed(0)} lux  (target: ${Ereq} lux)`,ox+rW,oy+rH+18);
+}
+
+
+// ═══════════════════════════════════════════════
+// OUTDOOR — LIVE
+// ═══════════════════════════════════════════════
+function outTypeChange() {
+  const t=document.getElementById('out-type').value;
+  const c=document.getElementById('out-cat');
+  if(t==='road'){
+    c.innerHTML=`
+      <option value="P1|20|0.4">P1 — Expressways / NH (20 lux)</option>
+      <option value="P2|15|0.4">P2 — Major Urban Arterials (15 lux)</option>
+      <option value="P3|10|0.35" selected>P3 — Secondary Roads (10 lux)</option>
+      <option value="P4|7.5|0.35">P4 — Residential Collectors (7.5 lux)</option>
+      <option value="P5|5|0.30">P5 — Local / Residential (5 lux)</option>`;
+    document.getElementById('out-H').value=8;
+    document.getElementById('out-F').value=12000;
+    document.getElementById('out-watts').value=100;
+    document.getElementById('out-cu').value=0.40;
+  } else if(t==='parking'){
+    c.innerHTML=`
+      <option value="PK1|50|0.4" selected>Open-air parking (50 lux)</option>
+      <option value="PK2|30|0.35">General parking (30 lux)</option>
+      <option value="PK3|20|0.35">Low-use parking (20 lux)</option>`;
+    document.getElementById('out-H').value=6;
+    document.getElementById('out-F').value=8000;
+    document.getElementById('out-watts').value=70;
+    document.getElementById('out-cu').value=0.45;
+  } else if(t==='sports'){
+    c.innerHTML=`
+      <option value="SP1|500|0.6">International competition (500 lux)</option>
+      <option value="SP2|300|0.5">National competition (300 lux)</option>
+      <option value="SP3|200|0.5" selected>Local competition (200 lux)</option>
+      <option value="SP4|100|0.4">Training / practice (100 lux)</option>`;
+    document.getElementById('out-H').value=16;
+    document.getElementById('out-F').value=60000;
+    document.getElementById('out-watts').value=400;
+    document.getElementById('out-cu').value=0.35;
+  } else if(t==='industrial'){
+    c.innerHTML=`
+      <option value="IY1|50|0.4" selected>Industrial yard (50 lux)</option>
+      <option value="IY2|30|0.35">Storage yard (30 lux)</option>
+      <option value="IY3|20|0.35">External walkways (20 lux)</option>`;
+    document.getElementById('out-H').value=10;
+    document.getElementById('out-F').value=20000;
+    document.getElementById('out-watts').value=150;
+    document.getElementById('out-cu').value=0.40;
+  } else if(t==='pedestrian'){
+    c.innerHTML=`
+      <option value="PE1|20|0.4">Busy pedestrian (20 lux)</option>
+      <option value="PE2|10|0.35" selected>Normal footpath (10 lux)</option>
+      <option value="PE3|5|0.30">Low-use path (5 lux)</option>`;
+    document.getElementById('out-H').value=5;
+    document.getElementById('out-F').value=4000;
+    document.getElementById('out-watts').value=35;
+    document.getElementById('out-cu').value=0.45;
+  } else if(t==='security'){
+    c.innerHTML=`
+      <option value="SE1|50|0.4">High security (50 lux)</option>
+      <option value="SE2|20|0.35" selected>Normal perimeter (20 lux)</option>
+      <option value="SE3|5|0.30">Basic (5 lux)</option>`;
+    document.getElementById('out-H').value=6;
+    document.getElementById('out-F').value=6000;
+    document.getElementById('out-watts').value=50;
+    document.getElementById('out-cu').value=0.42;
+  }
+  outCatChange();
+}
+
+function outCatChange() {
+  const v=document.getElementById('out-cat').value.split('|');
+  if(v[1]) document.getElementById('out-E').value=v[1];
+  outLive();
+}
+
+function outLive() {
+  const H=+document.getElementById('out-H').value||8;
+  const W=+document.getElementById('out-W').value||10;
+  document.getElementById('hw-ratio').textContent=(H/W).toFixed(2)+':1';
+}
+
+// ═══════════════════════════════════════════════
+// OUTDOOR — CALCULATE
+// ═══════════════════════════════════════════════
+function calcOutdoor() {
+  const W      = +document.getElementById('out-W').value    || 10;
+  const totLen = +document.getElementById('out-L').value    || 300;
+  const Ereq   = +document.getElementById('out-E').value    || 10;
+  const H      = +document.getElementById('out-H').value    || 8;
+  const F      = +document.getElementById('out-F').value    || 12000;
+  const Wlum   = +document.getElementById('out-watts').value|| 100;
+  const mf     = +document.getElementById('out-mf').value   || 0.72;
+  const cu     = +document.getElementById('out-cu').value   || 0.40;
+  const sf     = +document.getElementById('out-surface').value||1.0;
+  const arr    = document.getElementById('out-arr').value;
+
+  const catV   = document.getElementById('out-cat').value.split('|');
+  const uoReq  = parseFloat(catV[2])||0.35;
+
+  // Luminaires per pole
+  let lumsPerPole = 1, effCU = cu;
+  if(arr==='twin')    {lumsPerPole=2;}
+  if(arr==='median')  {lumsPerPole=2; effCU=cu*1.7;}
+  if(arr==='opposite'){lumsPerPole=2;}
+  if(arr==='staggered'){lumsPerPole=1;}
+
+  // Effective output per mounting position
+  const Fp = F * lumsPerPole;
+
+  // Pole spacing (from Eavg formula)
+  const S_calc = (Fp * effCU * mf * sf) / (Ereq * W);
+  const maxSHR = 3.5*H;
+  const S = Math.min(S_calc, maxSHR);
+
+  const nPoles   = Math.ceil(totLen/S) + 1;
+  const nLums    = nPoles * lumsPerPole;
+  const Sactual  = totLen / Math.max(nPoles-1,1);
+
+  // Achieved illuminance
+  const Each = (Fp * effCU * mf * sf) / (Sactual * W);
+
+  // Uniformity estimate (SHR-based, IS 1944 Annex)
+  const shrA = Sactual/H;
+  const Uo   = Math.max(0.18, 0.70 - 0.07*shrA);
+
+  const totalW = nLums * Wlum;
+  const lpd    = totalW / (totLen * W);
+  const luxOK  = Each >= Ereq*0.90;
+  const unifOK = Uo   >= uoReq;
+
+  document.getElementById('out-empty').style.display   = 'none';
+  document.getElementById('out-results').style.display = 'block';
+
+  document.getElementById('or-poles').textContent = nPoles;
+  document.getElementById('or-lums').textContent  = nLums;
+  document.getElementById('or-lux').textContent   = Each.toFixed(1);
+  document.getElementById('or-w').textContent     = totalW;
+
+  const os = document.getElementById('out-status');
+  os.className = 'srow2 '+(luxOK&&unifOK?'pass':'warn');
+  document.getElementById('out-stxt').textContent = luxOK&&unifOK
+    ? '✓ Compliant with IS 1944 / IS 3646 Part 3'
+    : '⚠ Review spacing — verify with photometric data';
+
+  const ous = document.getElementById('out-unif-status');
+  ous.className = 'srow2 '+(unifOK?'pass':'warn');
+  document.getElementById('out-unif-txt').textContent =
+    `Est. uniformity Uo ≈ ${Uo.toFixed(2)} (required: ${uoReq.toFixed(2)}) — ${unifOK?'PASS':'Use photometric simulation'}`;
+
+  document.getElementById('od-s').textContent    = Sactual.toFixed(1)+' m';
+  document.getElementById('od-sh').textContent   = shrA.toFixed(2);
+  document.getElementById('od-hw').textContent   = (H/W).toFixed(2);
+  document.getElementById('od-cu').textContent   = cu.toFixed(2);
+  document.getElementById('od-mf').textContent   = mf.toFixed(2);
+  document.getElementById('od-sf').textContent   = sf.toFixed(2);
+  document.getElementById('od-lpd').textContent  = lpd.toFixed(2)+' W/m²';
+  document.getElementById('od-uoreq').textContent= uoReq.toFixed(2)+' (IS 1944)';
+  document.getElementById('od-uo').textContent   = Uo.toFixed(2)+(unifOK?' ✓':' ⚠');
+
+  document.getElementById('out-formula').innerHTML =
+    `S = (${F}×${effCU.toFixed(2)}×${mf}×${sf}) / (${Ereq}×${W})<br>`+
+    `S = ${S_calc.toFixed(1)} m → used: <strong>${Sactual.toFixed(1)} m</strong><br>`+
+    `Poles: ceil(${totLen}÷${Sactual.toFixed(1)})+1 = <strong>${nPoles} nos.</strong>`;
+
+  drawOutdoor(W, totLen, nPoles, Sactual, H, arr, Each, Ereq);
+  document.getElementById('out-vizstats').innerHTML =
+    `<span class="vstat">Poles: <span>${nPoles}</span></span>`+
+    `<span class="vstat">Spacing: <span>${Sactual.toFixed(1)} m</span></span>`+
+    `<span class="vstat">Load: <span>${totalW} W</span></span>`+
+    `<span class="vstat">Avg: <span>${Each.toFixed(1)} lux</span></span>`;
+}
+
+function drawLum2(ctx, x, y, r) {
+  const g=ctx.createRadialGradient(x,y,0,x,y,r*6);
+  g.addColorStop(0,'rgba(253,230,138,.5)');g.addColorStop(1,'rgba(253,230,138,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fef3c7';ctx.strokeStyle='#f59e0b';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+}
+
+function drawOutdoor(W, totLen, nPoles, spacing, H, arr, Each, Ereq) {
+  const canvas=document.getElementById('out-canvas');
+  const dpr=window.devicePixelRatio||1;
+  const cw=canvas.parentElement.offsetWidth;
+  const ch=260;
+  canvas.width=cw*dpr; canvas.height=ch*dpr;
+  canvas.style.width=cw+'px'; canvas.style.height=ch+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,cw,ch);
+
+  const PAD=52;
+  const rw=cw-PAD*2;
+  const roadPxH=Math.min(Math.max(50, rw*0.12), 100);
+  const roadY=ch/2-roadPxH/2;
+
+  // Road fill
+  ctx.fillStyle='#1e293b'; ctx.fillRect(PAD,roadY,rw,roadPxH);
+  ctx.strokeStyle='#475569'; ctx.lineWidth=1;
+  ctx.strokeRect(PAD,roadY,rw,roadPxH);
+  // Centre line
+  ctx.strokeStyle='rgba(245,158,11,.25)';ctx.lineWidth=0.5;ctx.setLineDash([8,8]);
+  ctx.beginPath();ctx.moveTo(PAD,roadY+roadPxH/2);ctx.lineTo(PAD+rw,roadY+roadPxH/2);ctx.stroke();
+  ctx.setLineDash([]);
+
+  const maxVis=Math.min(nPoles, Math.floor(rw/18)+1);
+  const visSp=rw/Math.max(maxVis-1,1);
+  const POLE_R=4;
+
+  for(let i=0;i<maxVis;i++){
+    const x=PAD+i*visSp;
+    ctx.strokeStyle='#64748b'; ctx.lineWidth=2;
+    if(arr==='single'){
+      ctx.beginPath();ctx.moveTo(x,roadY-4);ctx.lineTo(x,roadY-26);ctx.stroke();
+      drawLum2(ctx,x,roadY-30,POLE_R);
+    } else if(arr==='opposite'){
+      ctx.beginPath();ctx.moveTo(x,roadY-4);ctx.lineTo(x,roadY-24);ctx.stroke();
+      drawLum2(ctx,x,roadY-28,POLE_R);
+      ctx.beginPath();ctx.moveTo(x,roadY+roadPxH+4);ctx.lineTo(x,roadY+roadPxH+24);ctx.stroke();
+      drawLum2(ctx,x,roadY+roadPxH+28,POLE_R);
+    } else if(arr==='staggered'){
+      if(i%2===0){ctx.beginPath();ctx.moveTo(x,roadY-4);ctx.lineTo(x,roadY-24);ctx.stroke();drawLum2(ctx,x,roadY-28,POLE_R);}
+      else{ctx.beginPath();ctx.moveTo(x,roadY+roadPxH+4);ctx.lineTo(x,roadY+roadPxH+24);ctx.stroke();drawLum2(ctx,x,roadY+roadPxH+28,POLE_R);}
+    } else if(arr==='median'){
+      const my=roadY+roadPxH/2;
+      ctx.beginPath();ctx.moveTo(x,my-4);ctx.lineTo(x,my-22);ctx.stroke();
+      drawLum2(ctx,x-5,my-26,POLE_R);drawLum2(ctx,x+5,my-26,POLE_R);
+    } else { // twin
+      ctx.beginPath();ctx.moveTo(x,roadY-4);ctx.lineTo(x,roadY-24);ctx.stroke();
+      drawLum2(ctx,x-5,roadY-28,POLE_R);drawLum2(ctx,x+5,roadY-28,POLE_R);
+    }
+  }
+
+  // Labels
+  ctx.font='10px Plus Jakarta Sans,sans-serif';
+  ctx.fillStyle='#475569';ctx.textAlign='center';
+  ctx.fillText('W = '+W.toFixed(0)+' m',PAD+rw/2,roadY+roadPxH+42);
+  ctx.textAlign='left';ctx.fillText('← spacing: '+spacing.toFixed(1)+' m →',PAD+4,roadY-38);
+  ctx.textAlign='right';
+  ctx.fillStyle=Each>=Ereq*0.9?'#10b981':'#f59e0b';
+  ctx.fillText(Each.toFixed(1)+' lux avg (req: '+Ereq+')',PAD+rw,roadY+roadPxH+42);
+  if(nPoles>maxVis){
+    ctx.fillStyle='#64748b';ctx.textAlign='center';ctx.font='9px Plus Jakarta Sans,sans-serif';
+    ctx.fillText('('+nPoles+' total, '+maxVis+' shown for scale)',PAD+rw/2,ch-4);
   }
 }
-setLux();
-// init values
-document.getElementById('elux').value = '300';
-document.getElementById('lampW').value = '36';
-document.getElementById('lampLm').value = '3200';
 
-function ufFromK(K, rc, rw) {
-  // Simplified utilization factor table interpolation
-  const base = 0.3 + 0.1 * Math.min(K, 5) + 0.05 * rc + 0.02 * rw;
-  return Math.min(base, 0.75);
+
+// ═══════════════════════════════════════════════
+// REFERENCE TABLE
+// ═══════════════════════════════════════════════
+const REF_DATA = [
+  ['Corridor / Passage', 100, 'E'],
+  ['Staircase', 150, 'E'],
+  ['General Storage', 100, 'E'],
+  ['Reception / Lobby', 200, 'D'],
+  ['Waiting Area', 200, 'D'],
+  ['Toilet / Washroom', 200, 'D'],
+  ['General Office', 300, 'C'],
+  ['Conference Room', 300, 'C'],
+  ['Executive Office', 500, 'B'],
+  ['Drawing Office', 500, 'B'],
+  ['CAD / Detailed Drawing', 750, 'A'],
+  ['Classroom (general)', 300, 'C'],
+  ['Classroom (technical)', 500, 'B'],
+  ['Library (reading)', 500, 'B'],
+  ['Laboratory (general)', 300, 'C'],
+  ['Laboratory (precision)', 500, 'B'],
+  ['Workshop (rough)', 150, 'E'],
+  ['Workshop (medium)', 200, 'D'],
+  ['Workshop (fine)', 500, 'B'],
+  ['Inspection (medium)', 750, 'A'],
+  ['Inspection (fine)', 1000, 'A'],
+  ['Precision Work', 1500, 'A+'],
+  ['Restaurant / Dining', 200, 'D'],
+  ['Kitchen (commercial)', 500, 'B'],
+  ['Retail / Shop floor', 500, 'B'],
+  ['Supermarket', 750, 'A'],
+  ['Hospital Ward', 100, 'E'],
+  ['Hospital Ward (reading)', 300, 'C'],
+  ['Examination Room', 500, 'B'],
+  ['Operating Theatre', 1000, 'A'],
+];
+
+function buildRefTable() {
+  const tbody = document.getElementById('ref-table');
+  if (!tbody) return;
+  tbody.innerHTML = REF_DATA.map((r,i)=>{
+    const clr = r[1]>=750?'var(--red)':r[1]>=500?'var(--orange)':r[1]>=300?'var(--amber-600)':'var(--navy-600)';
+    return `<tr style="${i%2===0?'':'background:var(--navy-50)'}">
+      <td style="padding:5px 10px;border-bottom:1px solid var(--navy-100)">${r[0]}</td>
+      <td style="padding:5px 10px;text-align:right;font-weight:700;font-family:monospace;color:${clr};border-bottom:1px solid var(--navy-100)">${r[1]}</td>
+      <td style="padding:5px 10px;text-align:center;font-weight:600;color:var(--navy-500);border-bottom:1px solid var(--navy-100)">${r[2]}</td>
+    </tr>`;
+  }).join('');
 }
 
-function calcLight() {
-  const L = parseFloat(document.getElementById('rlen').value);
-  const W = parseFloat(document.getElementById('rwid').value);
-  const H = parseFloat(document.getElementById('rhgt').value);
-  const wp = parseFloat(document.getElementById('wph').value);
-  const E = parseFloat(document.getElementById('elux').value) || parseFloat(document.getElementById('spacetype').value);
-  const lampW = parseFloat(document.getElementById('lampW').value);
-  const lampLm = parseFloat(document.getElementById('lampLm').value);
-  const rc = parseFloat(document.getElementById('rhoc').value);
-  const rw = parseFloat(document.getElementById('rhow').value);
-  const MF = parseFloat(document.getElementById('mf').value);
-
-  if ([L,W,H,E,lampW,lampLm].some(isNaN)) { alert('Fill all fields.'); return; }
-
-  const A = L * W;
-  const Hm = H - wp;
-  const K = (L * W) / (Hm * (L + W));
-  const UF = ufFromK(K, rc, rw);
-  const TL = (E * A) / (UF * MF);
-  const N = Math.ceil(TL / lampLm);
-  const TW = N * lampW;
-  const LPD = TW / A;
-
-  // Layout suggestion
-  const rowsL = Math.round(Math.sqrt(N * L / W));
-  const rowsW = Math.ceil(N / rowsL);
-  const layout = `${rowsL} × ${rowsW} = ${rowsL * rowsW} (spacing: ${(L/rowsL).toFixed(1)}m × ${(W/rowsW).toFixed(1)}m)`;
-
-  const s = (id, val) => { document.getElementById('rv-'+id).textContent = val; document.getElementById('rl-'+id).classList.add('active'); };
-  s('A', A.toFixed(1));
-  s('RI', K.toFixed(2));
-  s('UF', UF.toFixed(2));
-  s('TL', Math.round(TL).toLocaleString());
-  s('N', N + ' luminaires');
-  s('TW', TW.toFixed(0));
-  s('LPD', LPD.toFixed(2));
-  s('layout', layout);
-}
-function clrLight() {
-  ['rlen','rwid','rhgt'].forEach(id => document.getElementById(id).value = '');
-  ['A','RI','UF','TL','N','TW','LPD','layout'].forEach(id => { document.getElementById('rv-'+id).textContent='—'; document.getElementById('rl-'+id).classList.remove('active'); });
-}
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+indoorLive();
+spaceChange();
+outLive();
+buildRefTable();
 </script>
 </body>
 </html>
