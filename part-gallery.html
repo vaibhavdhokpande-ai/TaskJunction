@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part Gallery — TaskJunction</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1b2d;
+    --navy-mid: #162032;
+    --navy-light: #1e2e45;
+    --blue: #1a6ef5;
+    --blue-light: #3d87ff;
+    --orange: #f97316;
+    --orange-light: #fb923c;
+    --steel: #94a3b8;
+    --steel-light: #cbd5e1;
+    --white: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: #f1f5f9;
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    border-bottom: 2px solid var(--navy-light);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 0 24px;
+    display: flex; align-items: center; gap: 32px; height: 60px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--blue);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark svg { color: white; }
+  .logo-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 700;
+    color: #fff; letter-spacing: .5px;
+  }
+  .logo-text span { color: var(--orange); }
+  .nav {
+    display: flex; align-items: center; gap: 4px; margin-left: auto;
+  }
+  .nav a {
+    color: var(--steel); text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    padding: 6px 12px; border-radius: 6px;
+    transition: all .2s;
+  }
+  .nav a:hover { color: #fff; background: var(--navy-light); }
+  .nav a.active { color: #fff; background: var(--blue); }
+  .header-badge {
+    background: var(--orange);
+    color: white; font-size: 11px; font-weight: 700;
+    padding: 3px 8px; border-radius: 20px;
+    letter-spacing: .3px;
+  }
+
+  /* ── HERO BANNER ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a2e50 50%, #162040 100%);
+    padding: 48px 24px 40px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 1px, transparent 1px, transparent 60px
+    ), repeating-linear-gradient(
+      0deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 1px, transparent 1px, transparent 60px
+    );
+  }
+  .hero-inner { max-width: 1280px; margin: 0 auto; position: relative; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(249,115,22,.15); border: 1px solid rgba(249,115,22,.3);
+    color: var(--orange-light); font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 42px; font-weight: 800; color: #fff;
+    line-height: 1.1; letter-spacing: -.5px;
+    margin-bottom: 12px;
+  }
+  .hero h1 em { color: var(--blue-light); font-style: normal; }
+  .hero p {
+    color: var(--steel); font-size: 15px; max-width: 520px;
+    line-height: 1.6;
+  }
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 28px;
+  }
+  .stat { display: flex; flex-direction: column; }
+  .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px; font-weight: 700; color: #fff;
+    line-height: 1;
+  }
+  .stat-label { font-size: 12px; color: var(--steel); margin-top: 2px; }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky; top: 60px; z-index: 90;
+  }
+  .toolbar-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px;
+    height: 56px;
+  }
+  .search-box {
+    display: flex; align-items: center; gap: 8px;
+    background: #f8fafc; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0 12px;
+    flex: 1; max-width: 320px; height: 36px;
+    transition: border-color .2s;
+  }
+  .search-box:focus-within { border-color: var(--blue); background: #fff; }
+  .search-box svg { color: var(--text-muted); flex-shrink: 0; }
+  .search-box input {
+    border: none; background: transparent;
+    font-family: 'Barlow', sans-serif; font-size: 13px;
+    color: var(--text-primary); width: 100%; outline: none;
+  }
+  .search-box input::placeholder { color: var(--text-muted); }
+
+  .filter-tabs {
+    display: flex; gap: 4px; align-items: center;
+    overflow-x: auto;
+  }
+  .filter-tab {
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: .2px;
+    cursor: pointer; border: 1.5px solid transparent;
+    transition: all .18s; white-space: nowrap;
+    background: transparent; color: var(--text-secondary);
+  }
+  .filter-tab:hover { background: #f1f5f9; color: var(--text-primary); }
+  .filter-tab.active {
+    background: var(--navy); color: #fff;
+    border-color: var(--navy);
+  }
+
+  .view-toggle {
+    display: flex; gap: 2px; margin-left: auto;
+    background: #f1f5f9; padding: 3px; border-radius: 8px;
+  }
+  .view-btn {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; cursor: pointer; border: none;
+    background: transparent; color: var(--text-muted);
+    transition: all .15s;
+  }
+  .view-btn.active { background: #fff; color: var(--navy); box-shadow: var(--shadow-sm); }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 1280px; margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 700; color: var(--text-primary);
+    letter-spacing: .3px;
+  }
+  .section-count {
+    font-size: 12px; color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* ── PART GRID ── */
+  .parts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .parts-grid.list-view {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  /* ── PART CARD ── */
+  .part-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .22s cubic-bezier(.4,0,.2,1);
+    position: relative;
+  }
+  .part-card:hover {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(26,110,245,.08), var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+  .part-card.featured {
+    border-color: var(--orange);
+    background: linear-gradient(135deg, #fff 80%, #fff7ed);
+  }
+  .part-card.featured::before {
+    content: 'FEATURED';
+    position: absolute; top: 10px; right: 10px;
+    background: var(--orange); color: #fff;
+    font-size: 9px; font-weight: 800; letter-spacing: 1px;
+    padding: 2px 6px; border-radius: 4px;
+  }
+
+  .card-visual {
+    height: 160px;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .card-visual::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.6) 0%, transparent 60%);
+  }
+  .card-visual svg {
+    width: 100px; height: 100px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.12));
+    transition: transform .3s ease;
+  }
+  .part-card:hover .card-visual svg { transform: scale(1.08) rotate(3deg); }
+
+  .cat-badge {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .8px; padding: 3px 7px; border-radius: 4px;
+    z-index: 1;
+  }
+
+  .card-body { padding: 14px 16px 16px; }
+  .part-name {
+    font-size: 14px; font-weight: 700; color: var(--text-primary);
+    margin-bottom: 4px; line-height: 1.3;
+  }
+  .part-spec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-muted);
+    margin-bottom: 8px; letter-spacing: .3px;
+  }
+  .part-desc {
+    font-size: 12px; color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .card-footer {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .material-tag {
+    font-size: 11px; font-weight: 600;
+    color: var(--text-secondary);
+    background: #f1f5f9;
+    padding: 3px 8px; border-radius: 4px;
+  }
+  .view-detail {
+    font-size: 11px; font-weight: 700;
+    color: var(--blue); cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+    transition: gap .15s;
+  }
+  .part-card:hover .view-detail { gap: 6px; }
+
+  /* List view card */
+  .parts-grid.list-view .part-card {
+    display: flex; align-items: center;
+  }
+  .parts-grid.list-view .card-visual {
+    width: 100px; height: 80px; flex-shrink: 0; border-radius: 0;
+  }
+  .parts-grid.list-view .card-visual svg { width: 50px; height: 50px; }
+  .parts-grid.list-view .card-body { flex: 1; padding: 12px 16px; }
+  .parts-grid.list-view .part-desc { display: none; }
+  .parts-grid.list-view .card-footer { margin-top: 6px; padding-top: 6px; }
+
+  /* ── CATEGORY DIVIDER ── */
+  .cat-section { margin-bottom: 40px; }
+  .cat-title {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .cat-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .cat-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--text-primary);
+  }
+  .cat-line { flex: 1; height: 1px; background: var(--border); }
+  .cat-count { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(15,27,45,.7); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: #fff; border-radius: 16px;
+    width: 100%; max-width: 600px;
+    box-shadow: var(--shadow-lg);
+    transform: scale(.95) translateY(10px);
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+  }
+  .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+  .modal-header {
+    background: var(--navy);
+    padding: 20px 24px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .modal-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px; font-weight: 700; color: #fff;
+  }
+  .modal-subtitle { font-size: 12px; color: var(--steel); margin-top: 4px; }
+  .modal-close {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(255,255,255,.1); border: none;
+    color: #fff; cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,.2); }
+  .modal-body { padding: 24px; }
+  .modal-visual {
+    width: 100%; height: 180px;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    border-radius: 12px; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-visual svg { width: 120px; height: 120px; }
+  .specs-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-bottom: 20px;
+  }
+  .spec-item {
+    background: #f8fafc; border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px;
+  }
+  .spec-key {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .8px; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .spec-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 500; color: var(--text-primary);
+  }
+  .modal-desc {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+    border-left: 3px solid var(--blue); padding-left: 14px;
+  }
+  .modal-actions {
+    padding: 16px 24px; background: #f8fafc;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 10px;
+  }
+  .btn-primary {
+    background: var(--blue); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: 13px; font-weight: 600;
+    font-family: 'Barlow', sans-serif; cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-primary:hover { background: var(--blue-light); }
+  .btn-secondary {
+    background: #fff; color: var(--text-primary);
+    border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 20px; font-size: 13px; font-weight: 600;
+    font-family: 'Barlow', sans-serif; cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-secondary:hover { border-color: var(--navy); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--navy);
+    padding: 20px 24px; text-align: center;
+    color: var(--steel); font-size: 12px;
+  }
+  .footer strong { color: var(--orange); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center; padding: 80px 24px;
+    color: var(--text-muted);
+  }
+  .empty-state svg { margin: 0 auto 16px; opacity: .3; }
+  .empty-state h3 { font-size: 18px; font-weight: 700; color: var(--text-secondary); }
+  .empty-state p { font-size: 13px; margin-top: 6px; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 20px; }
+    .parts-grid { grid-template-columns: repeat(2, 1fr); }
+    .nav a:not(.active) { display: none; }
+    .specs-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="2" y="2" width="6" height="6" rx="1.5" fill="white"/>
+          <rect x="10" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6"/>
+          <rect x="2" y="10" width="6" height="6" rx="1.5" fill="white" opacity=".6"/>
+          <rect x="10" y="10" width="6" height="6" rx="1.5" fill="white" opacity=".35"/>
+        </svg>
+      </div>
+      <span class="logo-text">Task<span>Junction</span></span>
+    </a>
+    <nav class="nav">
+      <a href="#">Dashboard</a>
+      <a href="#">Projects</a>
+      <a href="#" class="active">Part Gallery</a>
+      <a href="#">Suppliers</a>
+      <a href="#">Reports</a>
+    </nav>
+    <span class="header-badge">PRO</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+      Visual Reference Library
+    </div>
+    <h1>Part <em>Gallery</em></h1>
+    <p>Browse standard mechanical components for quick identification and design reference. Filter by category, search by name or spec, and access detailed drawings.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">120+</span><span class="stat-label">Standard Parts</span></div>
+      <div class="stat"><span class="stat-num">8</span><span class="stat-label">Categories</span></div>
+      <div class="stat"><span class="stat-num">DIN/ISO</span><span class="stat-label">Standards</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search parts, specs…" oninput="filterParts()">
+    </div>
+    <div class="filter-tabs" id="filterTabs">
+      <button class="filter-tab active" onclick="setFilter('all', this)">All Parts</button>
+      <button class="filter-tab" onclick="setFilter('fastener', this)">Fasteners</button>
+      <button class="filter-tab" onclick="setFilter('bearing', this)">Bearings</button>
+      <button class="filter-tab" onclick="setFilter('seal', this)">Seals</button>
+      <button class="filter-tab" onclick="setFilter('gear', this)">Gears</button>
+      <button class="filter-tab" onclick="setFilter('flange', this)">Flanges</button>
+      <button class="filter-tab" onclick="setFilter('coupling', this)">Couplings</button>
+      <button class="filter-tab" onclick="setFilter('spring', this)">Springs</button>
+      <button class="filter-tab" onclick="setFilter('bushing', this)">Bushings</button>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="gridBtn" onclick="setView('grid')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </button>
+      <button class="view-btn" id="listBtn" onclick="setView('list')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+          <circle cx="3" cy="6" r="1.5" fill="currentColor"/><circle cx="3" cy="12" r="1.5" fill="currentColor"/>
+          <circle cx="3" cy="18" r="1.5" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="section-header">
+    <span class="section-title" id="sectionTitle">All Parts</span>
+    <span class="section-count" id="partCount">24 parts</span>
+  </div>
+  <div class="parts-grid" id="partsGrid"></div>
+  <div class="empty-state" id="emptyState" style="display:none">
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" stroke="#94a3b8" stroke-width="2"/><path d="M20 32h24M32 20v24" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/></svg>
+    <h3>No parts found</h3>
+    <p>Try a different search term or category filter.</p>
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle">Part Name</div>
+        <div class="modal-subtitle" id="modalSubtitle">Category • Standard</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-visual" id="modalVisual"></div>
+      <div class="specs-grid" id="modalSpecs"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary">Add to BOM</button>
+      <button class="btn-secondary">Download Drawing</button>
+      <button class="btn-secondary" onclick="document.getElementById('modal').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  © 2026 <strong>TaskJunction</strong> — Part Gallery Module. All standard part data for reference only.
+</footer>
+
+<script>
+// ── SVG PART ILLUSTRATIONS ──
+const svgs = {
+  hex_bolt: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="50,8 78,24 78,56 50,72 22,56 22,24" fill="#dbeafe" stroke="#1a6ef5" stroke-width="2.5"/>
+    <circle cx="50" cy="40" r="12" fill="#1a6ef5" opacity=".15" stroke="#1a6ef5" stroke-width="2"/>
+    <line x1="50" y1="72" x2="50" y2="92" stroke="#475569" stroke-width="10" stroke-linecap="round"/>
+    <line x1="30" y1="78" x2="70" y2="78" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="32" y1="86" x2="68" y2="86" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>`,
+  hex_nut: `<svg viewBox="0 0 100 100" fill="none">
+    <polygon points="50,12 80,29 80,63 50,80 20,63 20,29" fill="#dbeafe" stroke="#1a6ef5" stroke-width="2.5"/>
+    <circle cx="50" cy="46" r="18" fill="white" stroke="#1a6ef5" stroke-width="2.5"/>
+    <circle cx="50" cy="46" r="8" fill="white" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,2"/>
+  </svg>`,
+  washer: `<svg viewBox="0 0 100 100" fill="none">
+    <ellipse cx="50" cy="50" rx="42" ry="14" fill="#dbeafe" stroke="#1a6ef5" stroke-width="2.5"/>
+    <ellipse cx="50" cy="40" rx="42" ry="14" fill="#e0f2fe" stroke="#1a6ef5" stroke-width="2.5"/>
+    <ellipse cx="50" cy="40" rx="16" ry="5" fill="white" stroke="#94a3b8" stroke-width="2"/>
+    <line x1="8" y1="40" x2="34" y2="40" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="66" y1="40" x2="92" y2="40" stroke="#94a3b8" stroke-width="1.5"/>
+  </svg>`,
+  socket_bolt: `<svg viewBox="0 0 100 100" fill="none">
+    <rect x="28" y="8" width="44" height="36" rx="4" fill="#dbeafe" stroke="#1a6ef5" stroke-width="2.5"/>
+    <polygon points="50,20 58,26 56,35 44,35 42,26" fill="#1a6ef5" opacity=".3" stroke="#1a6ef5" stroke-width="1.5"/>
+    <rect x="42" y="44" width="16" height="48" rx="3" fill="#64748b" stroke="#475569" stroke-width="2"/>
+    <line x1="36" y1="52" x2="42" y2="52" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="58" y1="52" x2="64" y2="52" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  </svg>`,
+  ball_bearing: `<svg viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="50" r="40" fill="#f1f5f9" stroke="#475569" stroke-width="3"/>
+    <circle cx="50" cy="50" r="28" fill="white" stroke="#475569" stroke-width="2.5"/>
+    <circle cx="50" cy="50" r="14" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+    <circle cx="50" cy="22" r="5" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="72" cy="36" r="5" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="72" cy="64" r="5" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="50" cy="78" r="5" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="28" cy="64" r="5" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="28" cy="36" r="5" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+  </svg>`,
+  roller_bearing: `<svg viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="50" r="40" fill="#f1f5f9" stroke="#475569" stroke-width="3"/>
+    <circle cx="50" cy="50" r="26" fill="white" stroke="#475569" stroke-width="2.5"/>
+    <circle cx="50" cy="50" r="13" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+    <rect x="46" y="24" width="8" height="14" rx="3" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5" transform="rotate(0 50 50)"/>
+    <rect x="46" y="24" width="8" height="14" rx="3" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5" transform="rotate(60 50 50)"/>
+    <rect x="46" y="24" width="8" height="14" rx="3" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5" transform="rotate(120 50 50)"/>
+    <rect x="46" y="24" width="8" height="14" rx="3" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5" transform="rotate(180 50 50)"/>
+    <rect x="46" y="24" width="8" height="14" rx="3" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5" transform="rotate(240 50 50)"/>
+    <rect x="46" y="24" width="8" height="14" rx="3" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5" transform="rotate(300 50 50)"/>
+  </svg>`,
+  thrust_bearing: `<svg viewBox="0 0 100 100" fill="none">
+    <ellipse cx="50" cy="55" rx="42" ry="12" fill="#f1f5f9" stroke="#475569" stroke-width="2.5"/>
+    <ellipse cx="50" cy="45" rx="42" ry="12" fill="#e2e8f0" stroke="#475569" stroke-width="2.5"/>
+    <ellipse cx="50" cy="35" rx="42" ry="12" fill="#f8fafc" stroke="#475569" stroke-width="2.5"/>
+    <circle cx="25" cy="45" r="4" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="37" cy="43" r="4" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="50" cy="42" r="4" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="63" cy="43" r="4" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+    <circle cx="75" cy="45" r="4" fill="#1a6ef5" stroke="#1e40af" stroke-width="1.5"/>
+  </svg>`,
+  o_ring: `<svg viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="14" opacity=".25"/>
+    <circle cx="50" cy="50" r="38" fill="none" stroke="#16a34a" stroke-width="8"/>
+    <circle cx="50" cy="50" r="18" fill="white"/>
+    <circle cx="50" cy="50" r="18" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>
+  </svg>`,
+  lip_seal: `<svg viewBox="0 0 100 100" fill="none">
+    <rect x="15" y="28" width="70" height="44" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+    <rect x="25" y="36" width="50" height="28" rx="3" fill="white" stroke="#16a34a" stroke-width="1.5"/>
+    <path d="M 25 50 Q 50 38 75 50" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 15 50 L 25 50 M 75 50 L 85 50" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="50" cy="50" r="8" fill="#16a34a" opacity=".15" stroke="#16a34a" stroke-width="1.5"/>
+  </svg>`,
+  v_seal: `<svg viewBox="0 0 100 100" fill="none">
+    <path d="M 20 20 L 50 70 L 80 20 Z" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+    <path d="M 30 20 L 50 60 L 70 20" fill="white" stroke="#16a34a" stroke-width="2"/>
+    <rect x="15" y="68" width="70" height="14" rx="3" fill="#16a34a" opacity=".2" stroke="#16a34a" stroke-width="2"/>
+  </svg>`,
+  spur_gear: `<svg viewBox="0 0 100 100" fill="none">
+    <g transform="translate(50,50)">
+      ${Array.from({length:12},(_,i)=>{const a=i*30*Math.PI/180;const x1=Math.cos(a)*26,y1=Math.sin(a)*26,x2=Math.cos(a)*38,y2=Math.sin(a)*38,la=(i*30-8)*Math.PI/180,ra=(i*30+8)*Math.PI/180;return`<polygon points="${Math.cos(la)*26},${Math.sin(la)*26} ${Math.cos(la)*38},${Math.sin(la)*38} ${Math.cos(ra)*38},${Math.sin(ra)*38} ${Math.cos(ra)*26},${Math.sin(ra)*26}" fill="#fef3c7" stroke="#f97316" stroke-width="1.5"/>`}).join('')}
+      <circle r="26" fill="#fff7ed" stroke="#f97316" stroke-width="2.5"/>
+      <circle r="10" fill="white" stroke="#f97316" stroke-width="2"/>
+      <circle r="4" fill="#f97316"/>
+    </g>
+  </svg>`,
+  bevel_gear: `<svg viewBox="0 0 100 100" fill="none">
+    <ellipse cx="50" cy="62" rx="40" ry="14" fill="#fef3c7" stroke="#f97316" stroke-width="2.5"/>
+    <path d="M 10 62 L 26 20 L 74 20 L 90 62" fill="#fff7ed" stroke="#f97316" stroke-width="2.5" stroke-linejoin="round"/>
+    ${Array.from({length:10},(_,i)=>`<line x1="${26+i*4.8}" y1="20" x2="${15+i*6}" y2="62" stroke="#f97316" stroke-width="1.2" opacity=".5"/>`).join('')}
+    <ellipse cx="50" cy="20" rx="24" ry="7" fill="#fef3c7" stroke="#f97316" stroke-width="2"/>
+  </svg>`,
+  rack_pinion: `<svg viewBox="0 0 100 100" fill="none">
+    <rect x="8" y="55" width="84" height="22" rx="3" fill="#fef3c7" stroke="#f97316" stroke-width="2"/>
+    ${Array.from({length:10},(_,i)=>`<rect x="${14+i*8}" y="42" width="5" height="13" rx="1.5" fill="#f97316" opacity=".7"/>`).join('')}
+    <circle cx="50" cy="36" r="18" fill="#fff7ed" stroke="#f97316" stroke-width="2.5"/>
+    ${Array.from({length:8},(_,i)=>{const a=i*45*Math.PI/180;const x1=Math.cos(a)*18,y1=Math.sin(a)*18,la=(i*45-7)*Math.PI/180,ra=(i*45+7)*Math.PI/180;return`<polygon points="${50+Math.cos(la)*18},${36+Math.sin(la)*18} ${50+Math.cos(la)*26},${36+Math.sin(la)*26} ${50+Math.cos(ra)*26},${36+Math.sin(ra)*26} ${50+Math.cos(ra)*18},${36+Math.sin(ra)*18}" fill="#fef3c7" stroke="#f97316" stroke-width="1.5"/>`}).join('')}
+    <circle cx="50" cy="36" r="6" fill="#f97316" opacity=".3" stroke="#f97316" stroke-width="1.5"/>
+  </svg>`,
+  weld_flange: `<svg viewBox="0 0 100 100" fill="none">
+    <ellipse cx="50" cy="68" rx="44" ry="10" fill="#e0e7ff" stroke="#6366f1" stroke-width="2.5"/>
+    <rect x="6" y="32" width="88" height="36" rx="2" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+    <ellipse cx="50" cy="32" rx="44" ry="10" fill="#e0e7ff" stroke="#6366f1" stroke-width="2.5"/>
+    <ellipse cx="50" cy="32" rx="20" ry="5" fill="white" stroke="#6366f1" stroke-width="1.5"/>
+    <line x1="20" y1="58" x2="20" y2="68" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="35" y1="60" x2="35" y2="70" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="50" y1="61" x2="50" y2="71" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="65" y1="60" x2="65" y2="70" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="80" y1="58" x2="80" y2="68" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>`,
+  blind_flange: `<svg viewBox="0 0 100 100" fill="none">
+    <ellipse cx="50" cy="58" rx="44" ry="12" fill="#e0e7ff" stroke="#6366f1" stroke-width="2.5"/>
+    <rect x="6" y="32" width="88" height="26" rx="2" fill="#eef2ff" stroke="#6366f1" stroke-width="2.5"/>
+    <ellipse cx="50" cy="32" rx="44" ry="12" fill="#ddd6fe" stroke="#6366f1" stroke-width="2.5"/>
+    <circle cx="22" cy="32" r="5" fill="white" stroke="#6366f1" stroke-width="2"/>
+    <circle cx="50" cy="20" r="5" fill="white" stroke="#6366f1" stroke-width="2"/>
+    <circle cx="78" cy="32" r="5" fill="white" stroke="#6366f1" stroke-width="2"/>
+    <circle cx="65" cy="44" r="5" fill="white" stroke="#6366f1" stroke-width="2"/>
+    <circle cx="35" cy="44" r="5" fill="white" stroke="#6366f1" stroke-width="2"/>
+  </svg>`,
+  jaw_coupling: `<svg viewBox="0 0 100 100" fill="none">
+    <rect x="8" y="36" width="28" height="28" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="2.5"/>
+    <rect x="8" y="42" width="10" height="6" rx="2" fill="#ec4899" opacity=".5"/>
+    <rect x="8" y="52" width="10" height="6" rx="2" fill="#ec4899" opacity=".5"/>
+    <rect x="64" y="36" width="28" height="28" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="2.5"/>
+    <rect x="82" y="42" width="10" height="6" rx="2" fill="#ec4899" opacity=".5"/>
+    <rect x="82" y="52" width="10" height="6" rx="2" fill="#ec4899" opacity=".5"/>
+    <ellipse cx="50" cy="50" rx="16" ry="18" fill="#fdf4ff" stroke="#ec4899" stroke-width="2"/>
+    <path d="M 38 44 L 62 44 M 38 56 L 62 56" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-dasharray="4,3"/>
+  </svg>`,
+  disc_coupling: `<svg viewBox="0 0 100 100" fill="none">
+    <rect x="4" y="42" width="22" height="16" rx="3" fill="#fce7f3" stroke="#ec4899" stroke-width="2.5"/>
+    <rect x="74" y="42" width="22" height="16" rx="3" fill="#fce7f3" stroke="#ec4899" stroke-width="2.5"/>
+    <line x1="26" y1="50" x2="36" y2="50" stroke="#ec4899" stroke-width="3" stroke-linecap="round"/>
+    <line x1="64" y1="50" x2="74" y2="50" stroke="#ec4899" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="50" cy="50" r="18" fill="#fdf4ff" stroke="#ec4899" stroke-width="2.5"/>
+    <circle cx="50" cy="32" r="4" fill="white" stroke="#ec4899" stroke-width="2"/>
+    <circle cx="64" cy="59" r="4" fill="white" stroke="#ec4899" stroke-width="2"/>
+    <circle cx="36" cy="59" r="4" fill="white" stroke="#ec4899" stroke-width="2"/>
+    <circle cx="50" cy="50" r="6" fill="#ec4899" opacity=".2" stroke="#ec4899" stroke-width="1.5"/>
+  </svg>`,
+  compression_spring: `<svg viewBox="0 0 100 100" fill="none">
+    <line x1="50" y1="8" x2="50" y2="16" stroke="#0891b2" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 20 16 Q 35 16 50 26 Q 65 36 80 36" stroke="#0891b2" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 20 36 Q 35 36 50 46 Q 65 56 80 56" stroke="#0891b2" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 20 56 Q 35 56 50 66 Q 65 76 80 76" stroke="#0891b2" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 20 76 Q 35 76 50 86" stroke="#0891b2" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <line x1="50" y1="86" x2="50" y2="94" stroke="#0891b2" stroke-width="3" stroke-linecap="round"/>
+    <line x1="20" y1="16" x2="80" y2="16" stroke="#0891b2" stroke-width="2.5" stroke-linecap="round" opacity=".4"/>
+    <line x1="20" y1="88" x2="80" y2="88" stroke="#0891b2" stroke-width="2.5" stroke-linecap="round" opacity=".4"/>
+  </svg>`,
+  torsion_spring: `<svg viewBox="0 0 100 100" fill="none">
+    <line x1="10" y1="50" x2="28" y2="50" stroke="#0891b2" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="50" cy="50" r="22" fill="none" stroke="#0891b2" stroke-width="3"/>
+    <circle cx="50" cy="50" r="14" fill="none" stroke="#0891b2" stroke-width="2.5" opacity=".5"/>
+    <circle cx="50" cy="50" r="6" fill="none" stroke="#0891b2" stroke-width="2" opacity=".3"/>
+    <line x1="72" y1="50" x2="90" y2="50" stroke="#0891b2" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 86 44 L 92 50 L 86 56" stroke="#0891b2" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+  plain_bushing: `<svg viewBox="0 0 100 100" fill="none">
+    <ellipse cx="50" cy="72" rx="34" ry="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2.5"/>
+    <rect x="16" y="28" width="68" height="44" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="2.5"/>
+    <ellipse cx="50" cy="28" rx="34" ry="10" fill="#bbf7d0" stroke="#15803d" stroke-width="2.5"/>
+    <ellipse cx="50" cy="28" rx="16" ry="5" fill="white" stroke="#15803d" stroke-width="1.5"/>
+    <ellipse cx="50" cy="72" rx="16" ry="5" fill="white" stroke="#15803d" stroke-width="1.5"/>
+    <line x1="34" y1="28" x2="34" y2="72" stroke="#15803d" stroke-width="1.5" opacity=".4"/>
+    <line x1="66" y1="28" x2="66" y2="72" stroke="#15803d" stroke-width="1.5" opacity=".4"/>
+  </svg>`,
+  flanged_bushing: `<svg viewBox="0 0 100 100" fill="none">
+    <ellipse cx="50" cy="72" rx="26" ry="8" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+    <rect x="24" y="36" width="52" height="36" rx="2" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+    <ellipse cx="50" cy="36" rx="26" ry="8" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+    <rect x="10" y="28" width="80" height="14" rx="3" fill="#bbf7d0" stroke="#15803d" stroke-width="2.5"/>
+    <ellipse cx="50" cy="28" rx="40" ry="8" fill="#bbf7d0" stroke="#15803d" stroke-width="2.5"/>
+    <ellipse cx="50" cy="36" rx="14" ry="4" fill="white" stroke="#15803d" stroke-width="1.5"/>
+    <ellipse cx="50" cy="72" rx="14" ry="4" fill="white" stroke="#15803d" stroke-width="1.5"/>
+  </svg>`,
+  set_screw: `<svg viewBox="0 0 100 100" fill="none">
+    <rect x="38" y="10" width="24" height="80" rx="4" fill="#dbeafe" stroke="#1a6ef5" stroke-width="2.5"/>
+    <line x1="38" y1="22" x2="62" y2="22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="38" y1="30" x2="62" y2="30" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="38" y1="38" x2="62" y2="38" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="38" y1="46" x2="62" y2="46" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="38" y1="54" x2="62" y2="54" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="38" y1="62" x2="62" y2="62" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="38" y1="70" x2="62" y2="70" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <rect x="41" y="10" width="18" height="10" rx="2" fill="#1a6ef5" opacity=".3"/>
+    <line x1="44" y1="15" x2="56" y2="15" stroke="#1a6ef5" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>`,
+  stud_bolt: `<svg viewBox="0 0 100 100" fill="none">
+    <rect x="42" y="8" width="16" height="84" rx="3" fill="#dbeafe" stroke="#1a6ef5" stroke-width="2.5"/>
+    <line x1="42" y1="16" x2="58" y2="16" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="42" y1="22" x2="58" y2="22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="42" y1="28" x2="58" y2="28" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="42" y1="74" x2="58" y2="74" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="42" y1="80" x2="58" y2="80" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <line x1="42" y1="86" x2="58" y2="86" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <polygon points="50,36 62,42 62,58 50,64 38,58 38,42" fill="#dbeafe" stroke="#1a6ef5" stroke-width="2"/>
+  </svg>`,
+};
+
+// ── PARTS DATA ──
+const parts = [
+  // FASTENERS
+  { id:1, name:"Hex Head Bolt", spec:"M10×1.5×50 DIN931", cat:"fastener", catLabel:"Fastener", svgKey:"hex_bolt", material:"Grade 8.8 Steel", featured:true,
+    desc:"Standard hex head bolt with full thread. Used in structural assemblies, flanged joints, and general mechanical connections requiring high tensile strength.",
+    specs:{Standard:"DIN 931 / ISO 4014","Thread":"M10 × 1.5 mm",Length:"50 mm","Tensile Strength":"830 MPa"} },
+  { id:2, name:"Hex Nut", spec:"M10 DIN934 — ISO 4032", cat:"fastener", catLabel:"Fastener", svgKey:"hex_nut", material:"Zinc Plated Steel",
+    desc:"Standard hexagon nut. Compatible with DIN 931/933 bolts. Available in full and thin (jam nut) variants for various clamping applications.",
+    specs:{Standard:"DIN 934 / ISO 4032","Thread":"M10 × 1.5 mm","Width AF":"17 mm","Height":"8.4 mm"} },
+  { id:3, name:"Flat Washer", spec:"⌀10.5 DIN125A", cat:"fastener", catLabel:"Fastener", svgKey:"washer", material:"Stainless A2",
+    desc:"Flat plain washer for load distribution under bolt heads and nuts. Prevents surface damage and reduces the risk of loosening under vibration.",
+    specs:{Standard:"DIN 125-A / ISO 7089","Inner Dia":"10.5 mm","Outer Dia":"21 mm",Thickness:"2 mm"} },
+  { id:4, name:"Socket Cap Screw", spec:"M8×1.25×30 ISO4762", cat:"fastener", catLabel:"Fastener", svgKey:"socket_bolt", material:"Alloy Steel 12.9",
+    desc:"Allen key driven socket cap screw. Offers high clamping force in a compact envelope. Ideal for confined spaces requiring high strength fastening.",
+    specs:{Standard:"ISO 4762","Thread":"M8 × 1.25 mm",Length:"30 mm","Drive":"Hex 6 mm"} },
+  { id:5, name:"Set Screw", spec:"M6×10 DIN913 — Flat", cat:"fastener", catLabel:"Fastener", svgKey:"set_screw", material:"Alloy Steel Grade 45H",
+    desc:"Headless set screw (grub screw) with flat point. Used to lock components on shafts, preventing rotational and axial movement without protruding head.",
+    specs:{Standard:"DIN 913 / ISO 4026","Thread":"M6 × 1.0 mm",Length:"10 mm",Point:"Flat"} },
+  { id:6, name:"Stud Bolt", spec:"M12×100 DIN938 — Full", cat:"fastener", catLabel:"Fastener", svgKey:"stud_bolt", material:"Grade 8.8 Steel", featured:true,
+    desc:"Double-ended stud bolt threaded at both ends. Used in flange connections, pressure vessels, and applications where through-bolting is not possible.",
+    specs:{Standard:"DIN 938","Thread":"M12 × 1.75 mm",Length:"100 mm",Type:"Full Thread"} },
+
+  // BEARINGS
+  { id:7, name:"Deep Groove Ball Bearing", spec:"6205-2RS SKF — 25×52×15", cat:"bearing", catLabel:"Bearing", svgKey:"ball_bearing", material:"Chrome Steel GCr15", featured:true,
+    desc:"Single row deep groove ball bearing with double rubber seals. Accommodates radial and limited axial loads. Maintenance-free, pre-greased design.",
+    specs:{Standard:"ISO 15","Bore (d)":"25 mm","OD (D)":"52 mm",Width:"15 mm"} },
+  { id:8, name:"Cylindrical Roller Bearing", spec:"NU205E — 25×52×15", cat:"bearing", catLabel:"Bearing", svgKey:"roller_bearing", material:"Bearing Steel",
+    desc:"Single row cylindrical roller bearing with high radial load capacity. Separable design allows independent mounting of inner and outer rings.",
+    specs:{Standard:"ISO 15","Bore (d)":"25 mm","OD (D)":"52 mm",Width:"15 mm"} },
+  { id:9, name:"Thrust Ball Bearing", spec:"51105 — 25×42×11", cat:"bearing", catLabel:"Bearing", svgKey:"thrust_bearing", material:"Chrome Steel",
+    desc:"Single direction thrust ball bearing. Accommodates axial loads in one direction only. Used in steering columns, rotary tables, and jacking screws.",
+    specs:{Standard:"ISO 104","Bore (d)":"25 mm","OD (D)":"42 mm",Height:"11 mm"} },
+
+  // SEALS
+  { id:10, name:"O-Ring", spec:"⌀25×3 NBR70 AS568-116", cat:"seal", catLabel:"Seal", svgKey:"o_ring", material:"Nitrile NBR 70 Shore",
+    desc:"Standard O-ring for static and dynamic sealing. Suitable for oils, hydraulic fluids, and mild chemicals. Compression fit in standard groove dimensions.",
+    specs:{Standard:"AS568 / ISO 3601","ID":"25 mm","CS (Thickness)":"3 mm",Material:"NBR 70°"} },
+  { id:11, name:"Radial Lip Seal", spec:"25×40×7 TC-FKM Viton", cat:"seal", catLabel:"Seal", svgKey:"lip_seal", material:"FKM Viton",
+    desc:"Rotary shaft lip seal with garter spring loaded primary lip. Retains lubricants and excludes contaminants on rotating shafts. Double lip version for harsh environments.",
+    specs:{Standard:"ISO 6194","Shaft (d)":"25 mm","Housing (D)":"40 mm",Width:"7 mm"} },
+  { id:12, name:"V-Ring Seal", spec:"V-40S Freudenberg — ⌀36-46", cat:"seal", catLabel:"Seal", svgKey:"v_seal", material:"NBR/Carbon Black",
+    desc:"All-rubber axial lip seal. Mounts directly on the shaft and seals against a counterface. Tolerates shaft runout and misalignment better than lip seals.",
+    specs:{Type:"V-Ring","Shaft Range":"36–46 mm",Material:"NBR",Mounting:"Axial"} },
+
+  // GEARS
+  { id:13, name:"Spur Gear", spec:"M2 Z=20 PA20° — B20", cat:"gear", catLabel:"Gear", svgKey:"spur_gear", material:"Steel C45 or Delrin", featured:true,
+    desc:"Parallel axis spur gear with straight teeth. Simplest and most economical gear type for power transmission between parallel shafts. Available in steel, brass and polymer.",
+    specs:{Module:"M2","Teeth (Z)":"20","PA":"20°","Face Width":"20 mm"} },
+  { id:14, name:"Bevel Gear", spec:"M2 Z=20 PA20° — Spiral", cat:"gear", catLabel:"Gear", svgKey:"bevel_gear", material:"Case Hardened Steel",
+    desc:"Spiral bevel gear for transmitting power between intersecting shafts, typically at 90°. Spiral cut provides smoother engagement and higher load capacity than straight bevel.",
+    specs:{Module:"M2","Teeth (Z)":"20","Shaft Angle":"90°",Type:"Spiral"} },
+  { id:15, name:"Rack & Pinion", spec:"M2 — L500mm + Z16", cat:"gear", catLabel:"Gear", svgKey:"rack_pinion", material:"Steel 1045",
+    desc:"Rack and pinion set for converting rotary motion to linear. Used in CNC machines, steering systems, and linear actuators. Supplied as matched set for optimal backlash.",
+    specs:{Module:"M2","Pinion Teeth":"16","Rack Length":"500 mm","PA":"20°"} },
+
+  // FLANGES
+  { id:16, name:"Weld Neck Flange", spec:"DN50 PN16 — ANSI B16.5", cat:"flange", catLabel:"Flange", svgKey:"weld_flange", material:"Carbon Steel A105", featured:true,
+    desc:"Weld neck flange with long tapered hub. Provides excellent strength and stress distribution under high-pressure and cyclic loading conditions. Butt-welded to pipe.",
+    specs:{Standard:"ANSI B16.5 / EN 1092","DN":"50 (2\")","PN":"16 (232 psi)","Bolts":"4 × M16"} },
+  { id:17, name:"Blind Flange", spec:"DN80 PN40 — EN1092-1", cat:"flange", catLabel:"Flange", svgKey:"blind_flange", material:"Stainless 316L",
+    desc:"Solid disc flange for closing the end of a pipe, pressure vessel or valve. Can be easily removed for future access, inspection or modification of the system.",
+    specs:{Standard:"EN 1092-1 Type 05","DN":"80 (3\")","PN":"40 (580 psi)","Bolts":"8 × M16"} },
+
+  // COUPLINGS
+  { id:18, name:"Jaw / Spider Coupling", spec:"L075 — ⌀14–28mm", cat:"coupling", catLabel:"Coupling", svgKey:"jaw_coupling", material:"Aluminum + Polyurethane", featured:true,
+    desc:"Three-piece jaw (spider) coupling with elastomeric spider insert. Absorbs shock loads and vibration. Fail-safe: if spider fails, jaws still transmit torque.",
+    specs:{Series:"L075","Bore Range":"14–28 mm","Max Torque":"150 Nm","Spider":"{PU 98 Shore A}"} },
+  { id:19, name:"Disc Pack Coupling", spec:"DSD-50 — ⌀20–32mm", cat:"coupling", catLabel:"Coupling", svgKey:"disc_coupling", material:"Stainless Steel",
+    desc:"Metallic disc pack coupling. Zero-backlash, torsionally rigid with accommodation for angular and axial misalignment. Maintenance-free, suitable for high-speed servo drives.",
+    specs:{Series:"DSD-50","Bore Range":"20–32 mm","Max Speed":"8000 rpm","Max Torque":"50 Nm"} },
+
+  // SPRINGS
+  { id:20, name:"Compression Spring", spec:"D=20 d=2.5 L₀=60 n=8", cat:"spring", catLabel:"Spring", svgKey:"compression_spring", material:"Chrome-Vanadium 51CrV4",
+    desc:"Helical compression spring for pushing or compressing applications. Open ends ground flat for stable seating. Available in stock sizes or custom wound to specification.",
+    specs:{"OD (D)":"20 mm","Wire (d)":"2.5 mm","Free Length":"60 mm","Active Coils":"8"} },
+  { id:21, name:"Torsion Spring", spec:"D=25 d=2.0 Θ=90° — DIN2089", cat:"spring", catLabel:"Spring", svgKey:"torsion_spring", material:"Spring Steel",
+    desc:"Double-torsion coil spring that applies torque when twisted. Used in hinges, door mechanisms, and return mechanisms. Wound left or right hand as required.",
+    specs:{"Coil OD":"25 mm","Wire (d)":"2.0 mm",Angle:"90°",Standard:"DIN 2089"} },
+
+  // BUSHINGS
+  { id:22, name:"Plain Bearing Bushing", spec:"⌀20/⌀24×25 — DU Type", cat:"bushing", catLabel:"Bushing", svgKey:"plain_bushing", material:"Steel-Bronze-PTFE (DU)",
+    desc:"Dry plain bearing with steel backing, sintered bronze interlayer and PTFE sliding surface. Maintenance-free, self-lubricating. Suitable for oscillating and slow rotating motion.",
+    specs:{Standard:"ISO 4379",ID:"20 mm",OD:"24 mm",Length:"25 mm"} },
+  { id:23, name:"Flanged Bushing", spec:"⌀20/⌀24×25 FL28×2.5", cat:"bushing", catLabel:"Bushing", svgKey:"flanged_bushing", material:"Bronze CuSn8",
+    desc:"Flanged plain bearing bushing with integral flange for axial location. Suitable for medium-to-heavy radial and thrust loads. Can be relubricated via grease groove.",
+    specs:{ID:"20 mm",OD:"24 mm",Length:"25 mm","Flange Dia":"28 mm"} },
+  { id:24, name:"Split Bush / Collet", spec:"⌀20-⌀22 Reduction Collet", cat:"bushing", catLabel:"Bushing", svgKey:"plain_bushing", material:"Cast Iron GG25",
+    desc:"Split taper collet bush for reducing bore size in sheaves, sprockets and hubs. Taper lock principle provides self-centering, backlash-free connection with easy disassembly.",
+    specs:{Bore:"20 mm","OD":"22 mm",Type:"Taper Lock",Standard:"European Std"} },
+];
+
+// Category colors
+const catColors = {
+  fastener: { bg:'#dbeafe', text:'#1d4ed8', icon:'#1a6ef5' },
+  bearing:  { bg:'#e0f2fe', text:'#075985', icon:'#0284c7' },
+  seal:     { bg:'#dcfce7', text:'#15803d', icon:'#16a34a' },
+  gear:     { bg:'#fef3c7', text:'#b45309', icon:'#f97316' },
+  flange:   { bg:'#e0e7ff', text:'#3730a3', icon:'#6366f1' },
+  coupling: { bg:'#fce7f3', text:'#9d174d', icon:'#ec4899' },
+  spring:   { bg:'#cffafe', text:'#164e63', icon:'#0891b2' },
+  bushing:  { bg:'#dcfce7', text:'#166534', icon:'#15803d' },
+};
+
+let activeFilter = 'all';
+let activeView = 'grid';
+
+function getFilteredParts() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  return parts.filter(p => {
+    const matchCat = activeFilter === 'all' || p.cat === activeFilter;
+    const matchQ = !q || p.name.toLowerCase().includes(q) || p.spec.toLowerCase().includes(q) || p.material.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+}
+
+function renderParts() {
+  const filtered = getFilteredParts();
+  const grid = document.getElementById('partsGrid');
+  const empty = document.getElementById('emptyState');
+  const count = document.getElementById('partCount');
+
+  count.textContent = `${filtered.length} part${filtered.length !== 1 ? 's' : ''}`;
+
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // Group by category if showing all
+  grid.innerHTML = filtered.map(p => {
+    const col = catColors[p.cat];
+    return `<div class="part-card${p.featured?' featured':''}" onclick="openModal(${p.id})">
+      <div class="card-visual" style="background:linear-gradient(135deg,${col.bg}55,${col.bg}aa)">
+        <span class="cat-badge" style="background:${col.bg};color:${col.text}">${p.catLabel}</span>
+        ${svgs[p.svgKey] || ''}
+      </div>
+      <div class="card-body">
+        <div class="part-name">${p.name}</div>
+        <div class="part-spec">${p.spec}</div>
+        <div class="part-desc">${p.desc.substring(0, 80)}…</div>
+        <div class="card-footer">
+          <span class="material-tag">${p.material.split(' ')[0]}</span>
+          <span class="view-detail">Details →</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const titles = { all:'All Parts', fastener:'Fasteners', bearing:'Bearings', seal:'Seals', gear:'Gears', flange:'Flanges', coupling:'Couplings', spring:'Springs', bushing:'Bushings' };
+  document.getElementById('sectionTitle').textContent = titles[cat];
+  renderParts();
+}
+
+function setView(v) {
+  activeView = v;
+  const grid = document.getElementById('partsGrid');
+  document.getElementById('gridBtn').classList.toggle('active', v === 'grid');
+  document.getElementById('listBtn').classList.toggle('active', v === 'list');
+  grid.className = 'parts-grid' + (v === 'list' ? ' list-view' : '');
+}
+
+function filterParts() { renderParts(); }
+
+function openModal(id) {
+  const p = parts.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = p.name;
+  document.getElementById('modalSubtitle').textContent = `${p.catLabel} • ${p.spec}`;
+  const col = catColors[p.cat];
+  document.getElementById('modalVisual').style.background = `linear-gradient(135deg, ${col.bg}55, ${col.bg}cc)`;
+  document.getElementById('modalVisual').innerHTML = svgs[p.svgKey] || '';
+  document.getElementById('modalSpecs').innerHTML = Object.entries(p.specs).map(([k,v]) =>
+    `<div class="spec-item"><div class="spec-key">${k}</div><div class="spec-val">${v}</div></div>`
+  ).join('');
+  document.getElementById('modalDesc').textContent = p.desc;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal'))
+    document.getElementById('modal').classList.remove('open');
+}
+
+// Init
+renderParts();
+</script>
+</body>
+</html>
