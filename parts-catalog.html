@@ -6,11 +6,10 @@
 <title>Parts Hub — Industrial Standard Parts Catalog</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --bg-page:       #F4F5F7;
     --bg-surface:    #FFFFFF;
@@ -35,535 +34,181 @@
     --radius-lg:     13px;
     --font-sans:     'DM Sans', system-ui, sans-serif;
     --font-mono:     'DM Mono', monospace;
-    --sidebar-w:     230px;
-    --detail-w:      310px;
+    --sidebar-w:     234px;
+    --detail-w:      316px;
     --topbar-h:      56px;
   }
-
-  html, body { height: 100%; }
-  body {
-    font-family: var(--font-sans);
-    background: var(--bg-page);
-    color: var(--text-primary);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  /* ── Layout ── */
-  .layout { display: flex; height: 100vh; overflow: hidden; }
-
-  /* ── Sidebar ── */
-  .sidebar {
-    width: var(--sidebar-w);
-    flex-shrink: 0;
-    background: var(--bg-surface);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .sidebar-header {
-    padding: 18px 16px 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo-mark {
-    width: 34px; height: 34px;
-    border-radius: 8px;
-    background: var(--accent);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    letter-spacing: -0.5px;
-  }
-  .logo-text { line-height: 1.25; }
-  .logo-text .name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
-  .logo-text .sub  { font-size: 11px; color: var(--text-muted); }
-
-  .sidebar-scroll { flex: 1; overflow-y: auto; padding-bottom: 12px; }
-
-  .nav-section {
-    padding: 16px 14px 4px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    margin: 1px 6px;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--text-secondary);
-    transition: background .12s, color .12s;
-    user-select: none;
-  }
-  .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
-  .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 500; }
-  .nav-item i { font-size: 16px; flex-shrink: 0; }
-  .nav-badge {
-    margin-left: auto;
-    font-size: 10px;
-    background: var(--bg-muted);
-    color: var(--text-muted);
-    border-radius: 20px;
-    padding: 1px 7px;
-    border: 1px solid var(--border);
-  }
-  .nav-item.active .nav-badge { background: var(--accent-mid); color: var(--accent); border-color: var(--accent-mid); }
-  .vendor-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* ── Main ── */
-  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-
-  .topbar {
-    height: var(--topbar-h);
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-shrink: 0;
-  }
-  .topbar-left { flex: 1; }
-  .breadcrumb { font-size: 12px; color: var(--text-muted); }
-  .breadcrumb b { color: var(--text-secondary); font-weight: 500; }
-  .page-title { font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
-
-  .search-wrap {
-    position: relative;
-    width: 320px;
-  }
-  .search-wrap .ti-search {
-    position: absolute; left: 10px; top: 50%;
-    transform: translateY(-50%);
-    font-size: 15px; color: var(--text-muted);
-    pointer-events: none;
-  }
-  .search-wrap input {
-    width: 100%;
-    padding: 8px 12px 8px 34px;
-    font-size: 13px;
-    font-family: var(--font-sans);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-md);
-    background: var(--bg-muted);
-    color: var(--text-primary);
-    transition: border-color .15s, background .15s;
-    outline: none;
-  }
-  .search-wrap input:focus {
-    border-color: var(--accent);
-    background: var(--bg-surface);
-    box-shadow: 0 0 0 3px rgba(24,95,165,.12);
-  }
-  .search-wrap input::placeholder { color: var(--text-muted); }
-
-  /* ── Filter bar ── */
-  .filter-bar {
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 24px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    flex-shrink: 0;
-  }
-  .filter-label { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-right: 4px; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 11px;
-    border-radius: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: var(--bg-muted);
-    color: var(--text-secondary);
-    transition: all .12s;
-    user-select: none;
-  }
-  .chip:hover { border-color: var(--border-strong); color: var(--text-primary); background: var(--bg-hover); }
-  .chip.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 500; }
-
-  /* ── Stat strip ── */
-  .stat-strip {
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 24px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    flex-shrink: 0;
-  }
-  .stat-card {
-    background: var(--bg-muted);
-    border-radius: var(--radius-md);
-    padding: 10px 14px;
-  }
-  .stat-card .slabel { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
-  .stat-card .sval   { font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1.1; }
-  .stat-card .ssub   { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .stat-card .sval.green { color: var(--success-text); }
-
-  /* ── Toolbar row ── */
-  .toolbar {
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-    padding: 8px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-  }
-  .results-info { font-size: 12px; color: var(--text-muted); }
-  .results-info b { color: var(--text-secondary); font-weight: 500; }
-
-  .view-toggle { display: flex; gap: 4px; }
-  .view-btn {
-    width: 30px; height: 30px;
-    border-radius: var(--radius-sm);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; border: 1px solid var(--border);
-    background: transparent; color: var(--text-muted); font-size: 15px;
-    transition: all .12s;
-  }
-  .view-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
-  .view-btn.active { background: var(--bg-muted); border-color: var(--border-strong); color: var(--text-primary); }
-
-  /* ── Content area ── */
-  .content-wrap { display: flex; flex: 1; overflow: hidden; }
-  .content {
-    flex: 1; overflow-y: auto;
-    padding: 18px 24px 32px;
-  }
-
-  /* ── Grid ── */
-  .parts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 12px;
-  }
-
-  .part-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color .14s, box-shadow .14s;
-  }
-  .part-card:hover {
-    border-color: var(--accent-mid);
-    box-shadow: 0 2px 12px rgba(24,95,165,.09);
-  }
-  .part-card.selected {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(24,95,165,.18);
-  }
-  .card-icon {
-    height: 88px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--bg-muted);
-    border-bottom: 1px solid var(--border);
-    font-size: 30px;
-    color: var(--text-muted);
-  }
-  .card-body { padding: 10px 12px 12px; }
-  .vendor-tag {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 10px; font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 20px;
-    margin-bottom: 7px;
-    letter-spacing: .02em;
-  }
-  .card-name { font-size: 13px; font-weight: 500; color: var(--text-primary); line-height: 1.35; margin-bottom: 3px; }
-  .card-num  { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 8px; }
-  .card-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    border-top: 1px solid var(--border);
-    padding-top: 8px; margin-top: 2px;
-  }
-  .card-price { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-  .stock-badge {
-    font-size: 10px; font-weight: 500;
-    padding: 2px 8px; border-radius: 20px;
-  }
-  .in-stock   { background: var(--success-bg); color: var(--success-text); }
-  .low-stock  { background: var(--warn-bg);    color: var(--warn-text); }
-  .out-stock  { background: var(--danger-bg);  color: var(--danger-text); }
-
-  /* ── List view ── */
-  .list-header {
-    display: grid;
-    grid-template-columns: 36px 1fr 130px 110px 80px 90px;
-    gap: 12px;
-    padding: 7px 14px;
-    font-size: 11px; font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: .06em;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 4px;
-  }
-  .parts-list { display: flex; flex-direction: column; gap: 4px; }
-  .list-row {
-    display: grid;
-    grid-template-columns: 36px 1fr 130px 110px 80px 90px;
-    gap: 12px; align-items: center;
-    padding: 9px 14px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: border-color .12s;
-    font-size: 12px;
-  }
-  .list-row:hover { border-color: var(--accent-mid); }
-  .list-row.selected { border-color: var(--accent); background: var(--accent-light); }
-  .list-row .icon { font-size: 18px; color: var(--text-muted); text-align: center; }
-  .list-row .lname { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-  .list-row .lnum  { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
-  .list-row .lprice { font-weight: 600; }
-
-  /* ── Detail panel ── */
-  .detail-panel {
-    width: var(--detail-w);
-    flex-shrink: 0;
-    background: var(--bg-surface);
-    border-left: 1px solid var(--border);
-    display: flex; flex-direction: column;
-    overflow: hidden;
-    transition: width .2s;
-  }
-  .detail-panel.hidden { width: 0; border-left: none; overflow: hidden; }
-
-  .detail-header {
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    flex-shrink: 0;
-  }
-  .detail-header h3 { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-  .close-btn {
-    width: 28px; height: 28px;
-    border-radius: var(--radius-sm);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: var(--text-muted); font-size: 16px;
-    border: 1px solid var(--border);
-    transition: background .12s;
-  }
-  .close-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
-
-  .detail-img {
-    height: 120px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--bg-muted);
-    border-bottom: 1px solid var(--border);
-    font-size: 48px; color: var(--text-muted);
-    flex-shrink: 0;
-  }
-  .detail-body { flex: 1; overflow-y: auto; padding: 14px 16px; }
-
-  .detail-section { margin-bottom: 18px; }
-  .detail-section-title {
-    font-size: 10px; font-weight: 600;
-    letter-spacing: .08em; text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-  }
-  .spec-row {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    padding: 5px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px;
-    gap: 8px;
-  }
-  .spec-row:last-child { border-bottom: none; }
-  .spec-key   { color: var(--text-secondary); flex-shrink: 0; }
-  .spec-val   { font-weight: 500; color: var(--text-primary); text-align: right; font-family: var(--font-mono); font-size: 11px; word-break: break-all; }
-  .spec-val.plain { font-family: var(--font-sans); font-size: 12px; }
-
-  .desc-text { font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
-
-  .detail-actions {
-    padding: 12px 16px;
-    border-top: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 8px;
-    flex-shrink: 0;
-  }
-  .btn {
-    width: 100%; padding: 9px 14px;
-    border-radius: var(--radius-md);
-    font-size: 13px; font-weight: 500;
-    font-family: var(--font-sans);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 7px;
-    transition: all .12s;
-    border: none;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: #1252a0; }
-  .btn-outline {
-    background: transparent; color: var(--text-secondary);
-    border: 1px solid var(--border-strong);
-  }
-  .btn-outline:hover { background: var(--bg-hover); color: var(--text-primary); }
-  .btn i { font-size: 15px; }
-
-  /* ── Empty state ── */
-  .empty-state {
-    padding: 60px 24px; text-align: center;
-    color: var(--text-muted); font-size: 14px;
-  }
-  .empty-state i { font-size: 40px; display: block; margin-bottom: 10px; }
-
-  /* ── Scrollbar ── */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-
-  /* ── Toast ── */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px;
-    background: #111; color: #fff;
-    font-size: 13px; padding: 10px 16px;
-    border-radius: var(--radius-md);
-    opacity: 0; transform: translateY(8px);
-    transition: all .2s; pointer-events: none; z-index: 999;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .toast.show { opacity: 1; transform: translateY(0); }
-
-  /* ── Print / responsive tweaks ── */
-  @media (max-width: 900px) {
-    .detail-panel { display: none; }
-    .stat-strip { grid-template-columns: repeat(2, 1fr); }
-    .search-wrap { width: 220px; }
-  }
-  @media (max-width: 600px) {
-    .sidebar { display: none; }
-    .search-wrap { width: 180px; }
-  }
+  html,body{height:100%;}
+  body{font-family:var(--font-sans);background:var(--bg-page);color:var(--text-primary);font-size:14px;line-height:1.5;}
+  .layout{display:flex;height:100vh;overflow:hidden;}
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+  .sidebar-header{padding:18px 16px 14px;border-bottom:1px solid var(--border);}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;letter-spacing:-0.5px;}
+  .logo-text .name{font-size:14px;font-weight:600;color:var(--text-primary);}
+  .logo-text .sub{font-size:11px;color:var(--text-muted);}
+  .sidebar-scroll{flex:1;overflow-y:auto;padding-bottom:12px;}
+  .nav-section{padding:16px 14px 4px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);}
+  .nav-item{display:flex;align-items:center;gap:8px;padding:8px 12px;margin:1px 6px;border-radius:var(--radius-md);cursor:pointer;font-size:13px;color:var(--text-secondary);transition:background .12s,color .12s;user-select:none;}
+  .nav-item:hover{background:var(--bg-hover);color:var(--text-primary);}
+  .nav-item.active{background:var(--accent-light);color:var(--accent);font-weight:500;}
+  .nav-item i{font-size:16px;flex-shrink:0;}
+  .nav-badge{margin-left:auto;font-size:10px;background:var(--bg-muted);color:var(--text-muted);border-radius:20px;padding:1px 7px;border:1px solid var(--border);}
+  .nav-item.active .nav-badge{background:var(--accent-mid);color:var(--accent);border-color:var(--accent-mid);}
+  .vendor-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+  .topbar{height:var(--topbar-h);background:var(--bg-surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
+  .topbar-left{flex:1;}
+  .breadcrumb{font-size:12px;color:var(--text-muted);}
+  .breadcrumb b{color:var(--text-secondary);font-weight:500;}
+  .page-title{font-size:16px;font-weight:600;color:var(--text-primary);line-height:1.2;}
+  .search-wrap{position:relative;width:320px;}
+  .search-wrap .ti-search{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--text-muted);pointer-events:none;}
+  .search-wrap input{width:100%;padding:8px 12px 8px 34px;font-size:13px;font-family:var(--font-sans);border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--bg-muted);color:var(--text-primary);transition:border-color .15s,background .15s;outline:none;}
+  .search-wrap input:focus{border-color:var(--accent);background:var(--bg-surface);box-shadow:0 0 0 3px rgba(24,95,165,.12);}
+  .search-wrap input::placeholder{color:var(--text-muted);}
+  .filter-bar{background:var(--bg-surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0;}
+  .filter-label{font-size:11px;font-weight:500;color:var(--text-muted);margin-right:4px;}
+  .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:var(--bg-muted);color:var(--text-secondary);transition:all .12s;user-select:none;}
+  .chip:hover{border-color:var(--border-strong);color:var(--text-primary);background:var(--bg-hover);}
+  .chip.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent);font-weight:500;}
+  .stat-strip{background:var(--bg-surface);border-bottom:1px solid var(--border);padding:10px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex-shrink:0;}
+  .stat-card{background:var(--bg-muted);border-radius:var(--radius-md);padding:10px 14px;}
+  .stat-card .slabel{font-size:11px;color:var(--text-muted);margin-bottom:2px;}
+  .stat-card .sval{font-size:22px;font-weight:600;color:var(--text-primary);line-height:1.1;}
+  .stat-card .ssub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+  .stat-card .sval.green{color:var(--success-text);}
+  .toolbar{background:var(--bg-surface);border-bottom:1px solid var(--border);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+  .results-info{font-size:12px;color:var(--text-muted);}
+  .results-info b{color:var(--text-secondary);font-weight:500;}
+  .toolbar-right{display:flex;align-items:center;gap:8px;}
+  .sort-select{font-size:12px;font-family:var(--font-sans);padding:5px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-muted);color:var(--text-secondary);cursor:pointer;outline:none;}
+  .view-toggle{display:flex;gap:4px;}
+  .view-btn{width:30px;height:30px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:15px;transition:all .12s;}
+  .view-btn:hover{background:var(--bg-hover);color:var(--text-primary);}
+  .view-btn.active{background:var(--bg-muted);border-color:var(--border-strong);color:var(--text-primary);}
+  .content-wrap{display:flex;flex:1;overflow:hidden;}
+  .content{flex:1;overflow-y:auto;padding:18px 24px 32px;}
+  .parts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
+  .part-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:border-color .14s,box-shadow .14s;}
+  .part-card:hover{border-color:var(--accent-mid);box-shadow:0 2px 12px rgba(24,95,165,.09);}
+  .part-card.selected{border-color:var(--accent);box-shadow:0 0 0 2px rgba(24,95,165,.18);}
+  .card-icon{height:88px;display:flex;align-items:center;justify-content:center;background:var(--bg-muted);border-bottom:1px solid var(--border);font-size:30px;color:var(--text-muted);}
+  .card-body{padding:10px 12px 12px;}
+  .vendor-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:7px;letter-spacing:.02em;}
+  .card-name{font-size:13px;font-weight:500;color:var(--text-primary);line-height:1.35;margin-bottom:3px;}
+  .card-num{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:8px;}
+  .card-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:8px;margin-top:2px;}
+  .card-price{font-size:13px;font-weight:600;color:var(--text-primary);}
+  .stock-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;}
+  .in-stock{background:var(--success-bg);color:var(--success-text);}
+  .low-stock{background:var(--warn-bg);color:var(--warn-text);}
+  .out-stock{background:var(--danger-bg);color:var(--danger-text);}
+  .list-header{display:grid;grid-template-columns:36px 1fr 130px 110px 80px 90px;gap:12px;padding:7px 14px;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);margin-bottom:4px;}
+  .parts-list{display:flex;flex-direction:column;gap:4px;}
+  .list-row{display:grid;grid-template-columns:36px 1fr 130px 110px 80px 90px;gap:12px;align-items:center;padding:9px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:border-color .12s;font-size:12px;}
+  .list-row:hover{border-color:var(--accent-mid);}
+  .list-row.selected{border-color:var(--accent);background:var(--accent-light);}
+  .list-row .icon{font-size:18px;color:var(--text-muted);text-align:center;}
+  .list-row .lname{font-size:13px;font-weight:500;color:var(--text-primary);}
+  .list-row .lnum{font-size:11px;font-family:var(--font-mono);color:var(--text-muted);}
+  .list-row .lprice{font-weight:600;}
+  .detail-panel{width:var(--detail-w);flex-shrink:0;background:var(--bg-surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .2s;}
+  .detail-panel.hidden{width:0;border-left:none;overflow:hidden;}
+  .detail-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+  .detail-header h3{font-size:13px;font-weight:600;color:var(--text-primary);}
+  .close-btn{width:28px;height:28px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);font-size:16px;border:1px solid var(--border);transition:background .12s;}
+  .close-btn:hover{background:var(--bg-hover);color:var(--text-primary);}
+  .detail-img{height:120px;display:flex;align-items:center;justify-content:center;background:var(--bg-muted);border-bottom:1px solid var(--border);font-size:48px;color:var(--text-muted);flex-shrink:0;}
+  .detail-body{flex:1;overflow-y:auto;padding:14px 16px;}
+  .detail-section{margin-bottom:18px;}
+  .detail-section-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+  .spec-row{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px;}
+  .spec-row:last-child{border-bottom:none;}
+  .spec-key{color:var(--text-secondary);flex-shrink:0;}
+  .spec-val{font-weight:500;color:var(--text-primary);text-align:right;font-family:var(--font-mono);font-size:11px;word-break:break-all;}
+  .spec-val.plain{font-family:var(--font-sans);font-size:12px;}
+  .desc-text{font-size:12px;color:var(--text-secondary);line-height:1.65;}
+  .detail-actions{padding:12px 16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;flex-shrink:0;}
+  .btn{width:100%;padding:9px 14px;border-radius:var(--radius-md);font-size:13px;font-weight:500;font-family:var(--font-sans);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .12s;border:none;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:#1252a0;}
+  .btn-outline{background:transparent;color:var(--text-secondary);border:1px solid var(--border-strong);}
+  .btn-outline:hover{background:var(--bg-hover);color:var(--text-primary);}
+  .btn i{font-size:15px;}
+  .empty-state{padding:60px 24px;text-align:center;color:var(--text-muted);font-size:14px;}
+  .empty-state i{font-size:40px;display:block;margin-bottom:10px;}
+  ::-webkit-scrollbar{width:5px;height:5px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px;}
+  .toast{position:fixed;bottom:24px;right:24px;background:#111;color:#fff;font-size:13px;padding:10px 16px;border-radius:var(--radius-md);opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none;z-index:999;display:flex;align-items:center;gap:8px;}
+  .toast.show{opacity:1;transform:translateY(0);}
+  @media(max-width:900px){.detail-panel{display:none;}.stat-strip{grid-template-columns:repeat(2,1fr);}.search-wrap{width:220px;}}
+  @media(max-width:600px){.sidebar{display:none;}.search-wrap{width:180px;}}
 </style>
 </head>
 <body>
-
 <div class="layout">
-
-  <!-- ══ SIDEBAR ══ -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <div class="logo">
-        <div class="logo-mark">TJ</div>
+        <div class="logo-mark">PH</div>
         <div class="logo-text">
           <div class="name">Parts Hub</div>
           <div class="sub">Standard Components</div>
         </div>
       </div>
     </div>
-
     <div class="sidebar-scroll">
       <div class="nav-section">Overview</div>
       <div class="nav-item active" onclick="showAllCatalog(this)">
-        <i class="ti ti-category"></i>
-        All Catalog
-        <span class="nav-badge">847</span>
+        <i class="ti ti-category"></i>All Catalog<span class="nav-badge" id="nb-all">0</span>
       </div>
       <div class="nav-item" onclick="alert('Feature: Recently viewed parts history')">
-        <i class="ti ti-clock"></i>
-        Recently Viewed
+        <i class="ti ti-clock"></i>Recently Viewed
       </div>
       <div class="nav-item" onclick="alert('Feature: Saved / bookmarked parts')">
-        <i class="ti ti-bookmark"></i>
-        Saved Parts
-        <span class="nav-badge">12</span>
+        <i class="ti ti-bookmark"></i>Saved Parts<span class="nav-badge">12</span>
       </div>
-
       <div class="nav-section">Vendors</div>
       <div class="nav-item" id="vnav-all" onclick="filterVendor(this,'all')">
-        <i class="ti ti-building-store"></i>
-        All Vendors
-        <span class="nav-badge">847</span>
+        <i class="ti ti-building-store"></i>All Vendors<span class="nav-badge" id="nb-vall">0</span>
       </div>
       <div class="nav-item" id="vnav-mcmaster" onclick="filterVendor(this,'McMaster-Carr')">
-        <div class="vendor-dot" style="background:#185FA5"></div>
-        McMaster-Carr
-        <span class="nav-badge">210</span>
+        <div class="vendor-dot" style="background:#185FA5"></div>McMaster-Carr<span class="nav-badge" id="nb-mcmaster">0</span>
       </div>
       <div class="nav-item" id="vnav-misumi" onclick="filterVendor(this,'MISUMI')">
-        <div class="vendor-dot" style="background:#0F6E56"></div>
-        MISUMI
-        <span class="nav-badge">195</span>
+        <div class="vendor-dot" style="background:#0F6E56"></div>MISUMI<span class="nav-badge" id="nb-misumi">0</span>
       </div>
       <div class="nav-item" id="vnav-thk" onclick="filterVendor(this,'THK')">
-        <div class="vendor-dot" style="background:#D85A30"></div>
-        THK
-        <span class="nav-badge">88</span>
+        <div class="vendor-dot" style="background:#D85A30"></div>THK<span class="nav-badge" id="nb-thk">0</span>
       </div>
       <div class="nav-item" id="vnav-carr" onclick="filterVendor(this,'Carr-Lane')">
-        <div class="vendor-dot" style="background:#BA7517"></div>
-        Carr-Lane
-        <span class="nav-badge">124</span>
+        <div class="vendor-dot" style="background:#BA7517"></div>Carr-Lane<span class="nav-badge" id="nb-carr">0</span>
       </div>
       <div class="nav-item" id="vnav-steel" onclick="filterVendor(this,'Steel Smith')">
-        <div class="vendor-dot" style="background:#5F5E5A"></div>
-        Steel Smith
-        <span class="nav-badge">76</span>
+        <div class="vendor-dot" style="background:#5F5E5A"></div>Steel Smith<span class="nav-badge" id="nb-steel">0</span>
       </div>
       <div class="nav-item" id="vnav-destaco" onclick="filterVendor(this,'Destaco')">
-        <div class="vendor-dot" style="background:#A32D2D"></div>
-        Destaco
-        <span class="nav-badge">64</span>
+        <div class="vendor-dot" style="background:#A32D2D"></div>Destaco<span class="nav-badge" id="nb-destaco">0</span>
       </div>
       <div class="nav-item" id="vnav-skf" onclick="filterVendor(this,'SKF')">
-        <div class="vendor-dot" style="background:#534AB7"></div>
-        SKF
-        <span class="nav-badge">90</span>
+        <div class="vendor-dot" style="background:#534AB7"></div>SKF<span class="nav-badge" id="nb-skf">0</span>
       </div>
-
       <div class="nav-section">Categories</div>
-      <div class="nav-item" onclick="filterCatFromNav('Fasteners')">
-        <i class="ti ti-bolt"></i> Fasteners
-      </div>
-      <div class="nav-item" onclick="filterCatFromNav('Linear Motion')">
-        <i class="ti ti-arrows-horizontal"></i> Linear Motion
-      </div>
-      <div class="nav-item" onclick="filterCatFromNav('Bearings')">
-        <i class="ti ti-rotate-clockwise"></i> Bearings
-      </div>
-      <div class="nav-item" onclick="filterCatFromNav('Clamps')">
-        <i class="ti ti-grip-horizontal"></i> Clamps
-      </div>
-      <div class="nav-item" onclick="filterCatFromNav('Structural')">
-        <i class="ti ti-box"></i> Structural
-      </div>
-      <div class="nav-item" onclick="filterCatFromNav('Springs')">
-        <i class="ti ti-wave-sine"></i> Springs
-      </div>
+      <div class="nav-item" onclick="filterCatFromNav('Fasteners')"><i class="ti ti-bolt"></i>Fasteners</div>
+      <div class="nav-item" onclick="filterCatFromNav('Linear Motion')"><i class="ti ti-arrows-horizontal"></i>Linear Motion</div>
+      <div class="nav-item" onclick="filterCatFromNav('Bearings')"><i class="ti ti-rotate-clockwise"></i>Bearings</div>
+      <div class="nav-item" onclick="filterCatFromNav('Clamps')"><i class="ti ti-grip-horizontal"></i>Clamps</div>
+      <div class="nav-item" onclick="filterCatFromNav('Structural')"><i class="ti ti-box"></i>Structural</div>
+      <div class="nav-item" onclick="filterCatFromNav('Springs')"><i class="ti ti-wave-sine"></i>Springs</div>
+      <div class="nav-item" onclick="filterCatFromNav('Locating')"><i class="ti ti-crosshair"></i>Locating</div>
+      <div class="nav-item" onclick="filterCatFromNav('Seals')"><i class="ti ti-circle-dashed"></i>Seals</div>
+      <div class="nav-item" onclick="filterCatFromNav('Pneumatics')"><i class="ti ti-wind"></i>Pneumatics</div>
+      <div class="nav-item" onclick="filterCatFromNav('Workholding')"><i class="ti ti-tool"></i>Workholding</div>
     </div>
   </aside>
-
-  <!-- ══ MAIN ══ -->
   <main class="main">
-
-    <!-- Top bar -->
     <div class="topbar">
       <div class="topbar-left">
         <div class="breadcrumb" id="breadcrumb">All Catalog <b>/ Standard Parts</b></div>
@@ -574,8 +219,6 @@
         <input type="text" id="search" placeholder="Search name, number, material…" oninput="render()">
       </div>
     </div>
-
-    <!-- Category chips -->
     <div class="filter-bar">
       <span class="filter-label">Category:</span>
       <div class="chip active" onclick="setCat(this,'all')">All</div>
@@ -588,18 +231,17 @@
       <div class="chip" onclick="setCat(this,'Springs')">Springs</div>
       <div class="chip" onclick="setCat(this,'Locating')">Locating</div>
       <div class="chip" onclick="setCat(this,'Seals')">Seals</div>
+      <div class="chip" onclick="setCat(this,'Workholding')">Workholding</div>
     </div>
-
-    <!-- Stats -->
     <div class="stat-strip">
       <div class="stat-card">
         <div class="slabel">Total Parts</div>
-        <div class="sval" id="stat-total">847</div>
+        <div class="sval" id="stat-total">0</div>
         <div class="ssub">across 7 vendors</div>
       </div>
       <div class="stat-card">
         <div class="slabel">In Stock</div>
-        <div class="sval green" id="stat-instock">621</div>
+        <div class="sval green" id="stat-instock">0</div>
         <div class="ssub">ready to order</div>
       </div>
       <div class="stat-card">
@@ -613,21 +255,24 @@
         <div class="ssub" id="stat-filt-sub">no filter active</div>
       </div>
     </div>
-
-    <!-- Toolbar -->
     <div class="toolbar">
-      <div class="results-info" id="results-info">Showing all <b>28</b> parts</div>
-      <div class="view-toggle">
-        <button class="view-btn active" id="btn-grid" onclick="setView('grid')" title="Grid view"><i class="ti ti-layout-grid"></i></button>
-        <button class="view-btn" id="btn-list" onclick="setView('list')" title="List view"><i class="ti ti-list"></i></button>
+      <div class="results-info" id="results-info">Loading…</div>
+      <div class="toolbar-right">
+        <select class="sort-select" onchange="setSortMode(this.value)">
+          <option value="default">Sort: Default</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="name-asc">Name: A → Z</option>
+          <option value="stock">In Stock First</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-grid" onclick="setView('grid')" title="Grid view"><i class="ti ti-layout-grid"></i></button>
+          <button class="view-btn" id="btn-list" onclick="setView('list')" title="List view"><i class="ti ti-list"></i></button>
+        </div>
       </div>
     </div>
-
-    <!-- Parts + Detail -->
     <div class="content-wrap">
       <div class="content" id="parts-content"></div>
-
-      <!-- Detail panel -->
       <div class="detail-panel hidden" id="detail-panel">
         <div class="detail-header">
           <h3 id="d-title">Part Details</h3>
@@ -660,126 +305,264 @@
     </div>
   </main>
 </div>
-
-<!-- Toast -->
 <div class="toast" id="toast"><i class="ti ti-check"></i> <span id="toast-msg"></span></div>
-
 <script>
-/* ── Data ── */
 const VENDORS = {
-  'McMaster-Carr': { color:'#185FA5', bg:'#DDEEFF', text:'#0C4478', url:'https://www.mcmaster.com/' },
-  'MISUMI':        { color:'#0F6E56', bg:'#D4F0E5', text:'#095C44', url:'https://us.misumi-ec.com/' },
-  'THK':           { color:'#D85A30', bg:'#FADDCC', text:'#A03A18', url:'https://www.thk.com/' },
-  'Carr-Lane':     { color:'#BA7517', bg:'#FAEAC2', text:'#8A5410', url:'https://www.carrlane.com/' },
-  'Steel Smith':   { color:'#5F5E5A', bg:'#ECEAE3', text:'#3E3D3A', url:'https://steelsmith.com/' },
-  'Destaco':       { color:'#A32D2D', bg:'#FAD9D9', text:'#791F1F', url:'https://www.destaco.com/' },
-  'SKF':           { color:'#534AB7', bg:'#E3E1F9', text:'#3A3289', url:'https://www.skf.com/' },
+  'McMaster-Carr':{ color:'#185FA5', bg:'#DDEEFF', text:'#0C4478', url:'https://www.mcmaster.com/' },
+  'MISUMI':       { color:'#0F6E56', bg:'#D4F0E5', text:'#095C44', url:'https://us.misumi-ec.com/' },
+  'THK':          { color:'#D85A30', bg:'#FADDCC', text:'#A03A18', url:'https://www.thk.com/' },
+  'Carr-Lane':    { color:'#BA7517', bg:'#FAEAC2', text:'#8A5410', url:'https://www.carrlane.com/' },
+  'Steel Smith':  { color:'#5F5E5A', bg:'#ECEAE3', text:'#3E3D3A', url:'https://steelsmith.com/' },
+  'Destaco':      { color:'#A32D2D', bg:'#FAD9D9', text:'#791F1F', url:'https://www.destaco.com/' },
+  'SKF':          { color:'#534AB7', bg:'#E3E1F9', text:'#3A3289', url:'https://www.skf.com/' },
 };
-
 const ICONS = {
   'Fasteners':'ti-bolt','Linear Motion':'ti-arrows-horizontal','Bearings':'ti-rotate-clockwise',
   'Clamps':'ti-grip-horizontal','Structural':'ti-box','Pneumatics':'ti-wind',
   'Springs':'ti-wave-sine','Seals':'ti-circle-dashed','Locating':'ti-crosshair',
   'Drive':'ti-gps','Workholding':'ti-tool'
 };
-
-const SPEC_LABELS = {
-  mat:'Material', thread:'Thread', len:'Length', grade:'Grade', head:'Head Type',
-  drive:'Drive', shoulder:'Shoulder Dia', OD:'Outer Dia', ID:'Inner Dia',
-  bore:'Bore', width:'Width', seal:'Seal', dynLoad:'Dynamic Load', angle:'Contact Angle',
-  rows:'Rows', dia:'Diameter', lead:'Lead', acc:'Accuracy', rate:'Spring Rate',
-  type:'Type', size:'Size', rails:'Rails', preload:'Preload', lubrication:'Lubrication',
-  seals:'Seals', sect:'Section', slot:'Slot Width', finish:'Finish', free_len:'Free Length',
-  wire:'Wire Dia', stroke:'Stroke', stud:'Stud', shank:'Shank', fit:'Fit Class',
-  arm:'Arm Style', base:'Base', cap:'Capacity', action:'Action', mount:'Mount',
-  force:'Force', actuation:'Actuation', swing:'Swing', thick:'Thickness', gauge:'Gauge',
-  CS:'Cross Section', standard:'Standard', temp:'Temp Range', spring:'Spring Loaded'
+const SL = {
+  mat:'Material',thread:'Thread',len:'Length',grade:'Grade',head:'Head Type',
+  drive:'Drive',shoulder:'Shoulder Dia',OD:'Outer Dia',ID:'Inner Dia',
+  bore:'Bore',width:'Width',seal:'Seal',dynLoad:'Dynamic Load',angle:'Contact Angle',
+  rows:'Rows',dia:'Diameter',lead:'Lead',acc:'Accuracy',rate:'Spring Rate',
+  type:'Type',size:'Size',rails:'Rails',preload:'Preload',lubrication:'Lubrication',
+  seals:'Seals',sect:'Section',slot:'Slot Width',finish:'Finish',free_len:'Free Length',
+  wire:'Wire Dia',stroke:'Stroke',stud:'Stud',shank:'Shank',fit:'Fit Class',
+  arm:'Arm Style',base:'Base',cap:'Capacity',action:'Action',mount:'Mount',
+  force:'Force',actuation:'Actuation',swing:'Swing',thick:'Thickness',gauge:'Gauge',
+  CS:'Cross Section',standard:'Standard',temp:'Temp Range',spring:'Spring Loaded',
+  point:'Point Style',class:'Class',pitch:'Pitch',turns:'Active Turns',
+  dir:'Wind Direction',bore2:'Bore 2',coupling:'Coupling Type',clamp_f:'Clamp Force',
+  travel:'Travel',speed:'Max Speed',repeatability:'Repeatability',life:'Life Rating',
+  lube:'Lubrication',material:'Material',style:'Style',qty:'Qty/Pkg',
+  shaft:'Shaft Dia',config:'Configuration',series:'Series',
+  port:'Port Size',pressure:'Max Pressure',bore_d:'Bore Dia',cyl_stroke:'Cylinder Stroke',
+  tol:'Tolerance',inner_ring:'Inner Ring',outer_ring:'Outer Ring',
+  pcd:'P.C.D',hole:'Hole Dia',count:'Hole Count',nut_size:'Nut Size',
+  ext:'External',profile:'Profile',alloy:'Alloy',temper:'Temper'
 };
 
 const PARTS = [
-  {id:1, name:'Hex Cap Screw M8×1.25×30mm',         num:'91290A175', vendor:'McMaster-Carr', cat:'Fasteners',     price:0.18, stock:'in',  mat:'A2 Stainless',    thread:'M8×1.25', len:'30mm',   grade:'A2-70', head:'Hex',     drive:'N/A',           desc:'Standard metric hex cap screw in A2 stainless steel. Fully threaded. Per-piece pricing.'},
-  {id:2, name:'Socket Head Cap Screw M6×1.0×20',    num:'91292A132', vendor:'McMaster-Carr', cat:'Fasteners',     price:0.14, stock:'in',  mat:'18-8 SS',         thread:'M6×1.0',  len:'20mm',   grade:'A2-70', head:'Socket',  drive:'Hex',           desc:'Metric socket head cap screw for precision assemblies. Reusable high-strength fastener.'},
-  {id:3, name:'Shoulder Bolt M8 Shoulder × M6',     num:'91259A445', vendor:'McMaster-Carr', cat:'Fasteners',     price:2.43, stock:'in',  mat:'Alloy Steel',     shoulder:'8mm',   thread:'M6',  len:'25mm',   grade:'12.9',                          desc:'Precision shoulder bolt for dowel-pin style fitment. Hardened alloy steel.'},
-  {id:4, name:'T-Slot Nut M6 for 30mm Rail',        num:'5537T111',  vendor:'McMaster-Carr', cat:'Structural',    price:0.97, stock:'in',  mat:'Zinc-pl. Steel',  slot:'8mm',       thread:'M6',  spring:'Yes',                                          desc:'Hammer-in T-nut for 30mm aluminum extrusion. Spring loaded for positioning.'},
-  {id:5, name:'Flat Head Screw M4×0.7×10 DIN7991',  num:'91263A151', vendor:'McMaster-Carr', cat:'Fasteners',     price:0.10, stock:'in',  mat:'Alloy Steel',     thread:'M4×0.7',  len:'10mm',   grade:'12.9', head:'Flat',    drive:'Hex',           desc:'Metric flat head cap screw for countersunk holes. High-strength 12.9 grade alloy steel.'},
-  {id:6, name:'Viton O-Ring 2-210 AS568',           num:'9262K543',  vendor:'McMaster-Carr', cat:'Seals',         price:0.58, stock:'in',  mat:'Viton',           ID:'9/16"',       CS:'3/32"',   standard:'AS568-210', temp:'-20 to 400°F',         desc:'Fluoroelastomer O-ring for high-temperature or chemical-resistant sealing. MIL-R-25988 compliant.'},
-  {id:7, name:'Linear Rail HSR20R 300mm',           num:'HSR20R0300',vendor:'THK',           cat:'Linear Motion', price:78.50,stock:'in',  mat:'SCM440 Steel',    size:'HSR20',     len:'300mm',  rails:'Single', preload:'C0',                        desc:'THK HSR series miniature linear guide rail. Four-direction equal load. Industry standard.'},
-  {id:8, name:'Linear Block HSR20RM Flange',        num:'HSR20RM1SS',vendor:'THK',           cat:'Linear Motion', price:92.00,stock:'low', mat:'SCM440 + SS Balls',size:'HSR20',    type:'Flange',seals:'Both ends',lubrication:'Grease nipple',        desc:'HSR20 flange-type carriage block with stainless steel ball elements. Double-lip seals on both ends.'},
-  {id:9, name:'Ball Screw SFU1605 500mm',           num:'SFU1605-500',vendor:'THK',          cat:'Linear Motion', price:145.00,stock:'in', dia:'16mm',            lead:'5mm',       len:'500mm',  acc:'C7',                                              desc:'Rolled ball screw 1605 configuration. CNC and automation high-efficiency linear actuation.'},
-  {id:10,name:'Linear Actuator KR20 300mm Stroke',  num:'KR20-300',  vendor:'THK',           cat:'Linear Motion', price:340.00,stock:'low',stroke:'300mm',        type:'Ball Screw',lead:'5mm',   rails:'HSR15',                                         desc:'THK KR series compact actuator with integrated rail and ball screw. Self-contained motion module.'},
-  {id:11,name:'Cam Follower KR16PP',                num:'KR16PP',    vendor:'THK',           cat:'Bearings',      price:18.50,stock:'in',  stud:'M8',             OD:'16mm',        width:'28mm', type:'Stud Cam',                                       desc:'THK KR series cam follower with crowned outer ring. Needle roller for track-follower applications.'},
-  {id:12,name:'Deep Groove Ball Bearing 6204-2RS',  num:'6204-2RS',  vendor:'SKF',           cat:'Bearings',      price:8.40, stock:'in',  bore:'20mm',           OD:'47mm',        width:'14mm', seal:'Rubber',  dynLoad:'12.7 kN',                   desc:'SKF 6204-2RS deep groove ball bearing with rubber seals, C3 clearance. For motors and gearboxes.'},
-  {id:13,name:'Angular Contact Bearing 7206 BEP',   num:'7206 BEP',  vendor:'SKF',           cat:'Bearings',      price:32.60,stock:'in',  bore:'30mm',           OD:'62mm',        width:'16mm', angle:'40°',                                           desc:'Single row angular contact ball bearing for combined axial and radial loads. Pairable.'},
-  {id:14,name:'Spherical Roller Bearing 22210 E',   num:'22210 E/C3',vendor:'SKF',           cat:'Bearings',      price:54.20,stock:'low', bore:'50mm',           OD:'90mm',        width:'23mm', rows:'Double',                                         desc:'Spherical roller bearing, self-aligning. Ideal for heavy radial loads and misalignment.'},
-  {id:15,name:'Pillow Block Bearing UCP205',        num:'UCP205',    vendor:'SKF',           cat:'Bearings',      price:22.30,stock:'in',  bore:'25mm',           type:'Pillow Blk',mat:'Cast Iron',seals:'Rubber',                                      desc:'SNL/SNH plummer block with SKF sealed insert bearing. Shaft-to-frame mounting.'},
-  {id:16,name:'Shoulder Locating Pin Ø10h6 L40',   num:'CL-18-200', vendor:'Carr-Lane',     cat:'Locating',      price:4.75, stock:'in',  mat:'H13 Tool Steel',  dia:'10mm',       fit:'h6',     len:'40mm',   shank:'Smooth',                          desc:'Precision ground locating pin for fixture tooling. H13 tool steel Rc 60–62. Press-fit shank.'},
-  {id:17,name:'Drill Jig Bushing Press-Fit Ø8mm',  num:'CL-34-412', vendor:'Carr-Lane',     cat:'Locating',      price:3.20, stock:'in',  mat:'Hardened Steel',  ID:'8mm',         OD:'13mm',    len:'12mm',   type:'Press-Fit',                        desc:'Standard drill jig bushing for guiding cutting tools. Ground to H7 inside diameter.'},
-  {id:18,name:'Toggle Clamp Horizontal 225 lb',     num:'CL-150-HTC',vendor:'Carr-Lane',     cat:'Clamps',        price:38.00,stock:'in',  cap:'225 lb',          type:'Horizontal',arm:'Standard',base:'Slotted',                                      desc:'Horizontal toggle clamp for quick workholding in jigs and fixtures. Solid bar arm with swivel pad.'},
-  {id:19,name:'Hold-Down Toggle Clamp 600N',        num:'DE-205-U',  vendor:'Destaco',       cat:'Clamps',        price:42.50,stock:'in',  force:'600N',          type:'Hold-Down', action:'Manual',mount:'Base plate',                                  desc:'Destaco series 205 hold-down clamp. Compact for tight fixture spaces. Cast iron construction.'},
-  {id:20,name:'Pneumatic Swing Clamp 700N',         num:'DE-SP82-10',vendor:'Destaco',       cat:'Clamps',        price:185.00,stock:'in', force:'700N',          type:'Swing',     actuation:'Pneumatic',bore:'32mm',                                    desc:'Pneumatic swing clamp with 90° rotation. Pre-set torque limiting. High-cycle automation.'},
-  {id:21,name:'Power Clamp PA 20-Degree Swing',     num:'DE-82M2-041',vendor:'Destaco',      cat:'Clamps',        price:220.00,stock:'low',force:'1.5 kN',        type:'Power',     swing:'20°',  actuation:'Pneumatic',                                 desc:'High-force power clamp for automotive and heavy fixture applications. Sealed for coolant.'},
-  {id:22,name:'Aluminum Extrusion 30×30 L1000',    num:'HFSB5-3030-1000',vendor:'MISUMI',   cat:'Structural',    price:24.80,stock:'in',  mat:'A6063 Aluminum',  sect:'30×30',     len:'1000mm', slot:'8mm',   finish:'Clear Anodized',                 desc:'MISUMI HFSB series aluminum extrusion. Compatible with 8mm slot accessories. Precision cut.'},
-  {id:23,name:'Shaft Collar Clamp Type Ø20',       num:'SCCM20',    vendor:'MISUMI',        cat:'Structural',    price:6.90, stock:'in',  mat:'S45C Steel',      bore:'20mm',      type:'Clamp', finish:'Black Oxide',                                   desc:'MISUMI clamp-type shaft collar. Two-piece design for easy installation.'},
-  {id:24,name:'Compression Spring Ø10 × L30',      num:'WC10×30',   vendor:'MISUMI',        cat:'Springs',       price:1.40, stock:'in',  OD:'10mm',             free_len:'30mm',  wire:'1.2mm', mat:'SWP-B',  rate:'2.8 N/mm',                         desc:'MISUMI standard compression spring. High-precision wound, ends ground flat.'},
-  {id:25,name:'Linear Bushing LM10UU',              num:'LM10UU',    vendor:'MISUMI',        cat:'Linear Motion', price:5.80, stock:'in',  bore:'10mm',           OD:'19mm',        len:'29mm',   type:'Closed',                                         desc:'Standard linear ball bushing for 10mm smooth shaft. Full ball complement.'},
-  {id:26,name:'Steel Square Tube 1"×1"×0.065"',    num:'ST-SQ-1-065',vendor:'Steel Smith',  cat:'Structural',    price:8.60, stock:'in',  mat:'A500 Steel',      sect:'1"×1"',     thick:'0.065"',len:'1 ft',                                            desc:'Cold-formed A500 steel square tube. Sold per linear foot. Frames, brackets, and supports.'},
-  {id:27,name:'Steel Flat Bar 1/4" × 2" × 12"',   num:'FB-025-200-12',vendor:'Steel Smith', cat:'Structural',    price:6.20, stock:'in',  mat:'A36 Steel',       thick:'0.25"',    width:'2"',   len:'12"',    finish:'Hot Rolled',                     desc:'A36 hot-rolled steel flat bar. Versatile stock for plates, brackets, and weldments.'},
-  {id:28,name:'Cold Rolled Sheet 16ga 12×24"',      num:'CRS-16-1224',vendor:'Steel Smith',  cat:'Structural',    price:14.80,stock:'in',  mat:'CRS 1008/1010',   gauge:'16 ga',    thick:'0.060"',size:'12"×24"',                                       desc:'Cold rolled steel sheet. Tight tolerances, smooth surface finish. For formed sheet metal parts.'},
+/* ═══════════════════════════════════════════════════
+   McMASSTER-CARR — FASTENERS
+═══════════════════════════════════════════════════ */
+{id:1,  name:'Hex Cap Screw M8×1.25×30',        num:'91290A175', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.18,stock:'in',  mat:'A2 Stainless',thread:'M8×1.25',len:'30mm',  grade:'A2-70',head:'Hex',   drive:'N/A',   desc:'Metric hex cap screw in A2 stainless. Fully threaded. Per-piece pricing. DIN 933.'},
+{id:2,  name:'Socket Head Cap Screw M6×1.0×20', num:'91292A132', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.14,stock:'in',  mat:'18-8 SS',     thread:'M6×1.0', len:'20mm',  grade:'A2-70',head:'Socket',drive:'Hex',   desc:'Metric socket head cap screw for precision assemblies. DIN 912.'},
+{id:3,  name:'Shoulder Bolt M8 × M6 × 25',      num:'91259A445', vendor:'McMaster-Carr',cat:'Fasteners',    price:2.43,stock:'in',  mat:'Alloy Steel', shoulder:'8mm',  thread:'M6', len:'25mm',  grade:'12.9',               desc:'Precision shoulder bolt for dowel-pin style fitment. Hardened alloy steel.'},
+{id:4,  name:'Button Head Screw M5×0.8×12',      num:'92095A209', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.12,stock:'in',  mat:'18-8 SS',     thread:'M5×0.8', len:'12mm',  grade:'A2-70',head:'Button',drive:'Hex',   desc:'Low-profile button head socket screw. DIN EN ISO 7380-1.'},
+{id:5,  name:'Flat Head Screw M4×0.7×10',        num:'91263A151', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.10,stock:'in',  mat:'Alloy Steel', thread:'M4×0.7', len:'10mm',  grade:'12.9', head:'Flat',  drive:'Hex',   desc:'Flat head cap screw for countersunk holes. High-strength 12.9 grade. DIN 7991.'},
+{id:6,  name:'Set Screw M6×1.0×8 Cup Point',     num:'92015A633', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.09,stock:'in',  mat:'Alloy Steel', thread:'M6×1.0', len:'8mm',   grade:'12.9', point:'Cup',   drive:'Hex',   desc:'Fully threaded set screw (grub screw) with cup point. ISO 4029.'},
+{id:7,  name:'Set Screw M8×1.25×10 Dog Point',   num:'92015A649', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.18,stock:'in',  mat:'Alloy Steel', thread:'M8×1.25',len:'10mm',  grade:'12.9', point:'Dog',   drive:'Hex',   desc:'Dog point grub screw for positive shaft location. Will not mar bore surface.'},
+{id:8,  name:'Hex Nut M8×1.25 DIN 934',          num:'90592A022', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.07,stock:'in',  mat:'18-8 SS',     thread:'M8×1.25',grade:'A2-70',type:'Hex Nut',                             desc:'Standard hex nut, A2 stainless. DIN 934. Per-piece pricing.'},
+{id:9,  name:'Nylon Lock Nut M10×1.5',            num:'90576A320', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.15,stock:'in',  mat:'18-8 SS',     thread:'M10×1.5',type:'Nylon Lock',                                          desc:'All-metal alternative locknut with nylon insert. DIN 985. Self-locking.'},
+{id:10, name:'Flange Nut M6×1.0 Serrated',        num:'90215A231', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.12,stock:'in',  mat:'18-8 SS',     thread:'M6×1.0', type:'Flange Nut',                                          desc:'Serrated flange nut provides clamping and resistance to loosening. DIN 6923.'},
+{id:11, name:'Flat Washer M8 DIN 125',             num:'98689A115', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.04,stock:'in',  mat:'18-8 SS',     size:'M8',       type:'Flat Washer',                                         desc:'Metric flat washer, stainless steel. DIN 125-A. Per-piece pricing.'},
+{id:12, name:'Split Lock Washer M6',               num:'98689A040', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.04,stock:'in',  mat:'18-8 SS',     size:'M6',       type:'Split Lock',                                          desc:'Standard split lock washer. Prevents loosening under vibration. DIN 127-B.'},
+{id:13, name:'Dowel Pin Ø6 h6 × 20mm',            num:'97395A426', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.62,stock:'in',  mat:'Alloy Steel', dia:'6mm',       fit:'h6',    len:'20mm',  finish:'Hardened',             desc:'Precision ground dowel pin. Hardened and ground to h6 tolerance. ISO 8734.'},
+{id:14, name:'Dowel Pin Ø8 h6 × 30mm',            num:'97395A444', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.88,stock:'in',  mat:'Alloy Steel', dia:'8mm',       fit:'h6',    len:'30mm',  finish:'Hardened',             desc:'Precision hardened dowel pin h6 tolerance for accurate fixture alignment. ISO 8734.'},
+{id:15, name:'Roll (Spring) Pin Ø4 × 16mm',       num:'97176A710', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.11,stock:'in',  mat:'Carbon Steel',dia:'4mm',       len:'16mm',  type:'Roll Pin',                                desc:'Slotted spring pin. Absorbs shock loads, permits press fit in variety of hole tolerances. ISO 8752.'},
+{id:16, name:'External Retaining Ring Ø25mm',     num:'98556A146', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.25,stock:'in',  mat:'Carbon Steel',dia:'25mm',      type:'E-Ring Ext',finish:'Phosphate',                       desc:'External snap ring for shaft retention. Standard DIN 471 E-clip.'},
+{id:17, name:'Internal Retaining Ring Ø35mm',     num:'98541A146', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.28,stock:'in',  mat:'Carbon Steel',dia:'35mm',      type:'Internal',  finish:'Phosphate',                       desc:'Internal circlip for housing bore retention. DIN 472.'},
+{id:18, name:'Threaded Insert M6 × 9mm Helicoil', num:'91732A541', vendor:'McMaster-Carr',cat:'Fasteners',    price:0.58,stock:'in',  mat:'18-8 SS',     thread:'M6×1.0', len:'9mm',   type:'Helicoil',                               desc:'Wire thread insert for strengthening tapped holes in soft metals. ISO 5828.'},
+{id:19, name:'Thumb Screw M6×1.0×20 Knurled',    num:'93015A119', vendor:'McMaster-Carr',cat:'Fasteners',    price:1.10,stock:'in',  mat:'18-8 SS',     thread:'M6×1.0', len:'20mm',  head:'Knurled',                                desc:'Thumb screw with large knurled head for hand tightening without tools.'},
+{id:20, name:'Eye Bolt M8 DIN 580',               num:'3014T18',   vendor:'McMaster-Carr',cat:'Fasteners',    price:1.85,stock:'in',  mat:'Carbon Steel',thread:'M8×1.25',grade:'4.6', type:'Eye Bolt',finish:'Zinc',                desc:'Forged eye bolt for lifting and rigging. DIN 580. Tested load capacity.'},
+{id:21, name:'T-Slot Nut M6 for 30mm Rail',       num:'5537T111',  vendor:'McMaster-Carr',cat:'Structural',   price:0.97,stock:'in',  mat:'Zinc-pl. Steel',slot:'8mm',   thread:'M6', spring:'Yes',                                  desc:'Hammer-in T-nut for 30mm aluminum extrusion. Spring loaded for positioning.'},
+/* McMaster SEALS */
+{id:22, name:'Viton O-Ring AS568-210',            num:'9262K543',  vendor:'McMaster-Carr',cat:'Seals',        price:0.58,stock:'in',  mat:'Viton',       ID:'9/16"',     CS:'3/32"',  standard:'AS568-210',temp:'-20 to 400°F',   desc:'FKM O-ring for high-temperature or chemical-resistant sealing. MIL-R-25988 compliant.'},
+{id:23, name:'Buna-N O-Ring AS568-112',           num:'9452K116',  vendor:'McMaster-Carr',cat:'Seals',        price:0.09,stock:'in',  mat:'Buna-N',      ID:'3/4"',      CS:'3/32"',  standard:'AS568-112',temp:'-40 to 250°F',   desc:'General-purpose Buna-N (NBR) O-ring. Excellent resistance to petroleum oils.'},
+{id:24, name:'Silicone O-Ring AS568-214',         num:'9396K236',  vendor:'McMaster-Carr',cat:'Seals',        price:0.76,stock:'in',  mat:'Silicone',    ID:'13/16"',    CS:'3/32"',  standard:'AS568-214',temp:'-65 to 400°F',   desc:'Silicone O-ring for extreme temperature ranges. Non-reactive with food and pharma applications.'},
+{id:25, name:'PTFE Backup Ring AS568-209',        num:'9396K125',  vendor:'McMaster-Carr',cat:'Seals',        price:1.10,stock:'in',  mat:'PTFE',        size:'AS568-209',type:'Backup Ring',temp:'-100 to 500°F',                  desc:'PTFE backup ring prevents O-ring extrusion under high pressure. Used with dynamic seals.'},
+{id:26, name:'Lip Seal 25×40×7mm TC Type',        num:'9278T411',  vendor:'McMaster-Carr',cat:'Seals',        price:2.30,stock:'in',  mat:'Nitrile',     ID:'25mm',      OD:'40mm',   width:'7mm',  type:'TC Double Lip',           desc:'Rotary shaft seal with double lip and garter spring. Grease and oil retention.'},
+/* McMaster WORKHOLDING */
+{id:27, name:'Step Block Set 3/4"-2" Range',      num:'3422A31',   vendor:'McMaster-Carr',cat:'Workholding',  price:18.50,stock:'in', mat:'Carbon Steel',style:'Step Block',finish:'Black Oxide',                                    desc:'Adjustable step block for T-slot fixturing. Set of two blocks and T-bolts included.'},
+{id:28, name:'Strap Clamp Kit 1/2" T-Slot',       num:'5147A21',   vendor:'McMaster-Carr',cat:'Workholding',  price:12.80,stock:'in', mat:'Carbon Steel',style:'Strap Clamp',slot:'1/2"',                                            desc:'Universal strap clamp kit for milling machine T-slots. Step bolt and nut included.'},
+
+/* ═══════════════════════════════════════════════════
+   THK — LINEAR MOTION & BEARINGS
+═══════════════════════════════════════════════════ */
+{id:30, name:'Linear Rail HSR15R 200mm',           num:'HSR15R0200',vendor:'THK',          cat:'Linear Motion',price:58.00,stock:'in', mat:'SCM440 Steel',size:'HSR15',   len:'200mm',  rails:'Single',preload:'C0',                desc:'THK HSR15 miniature linear guide rail. Four-direction equal load capacity. DIN standard.'},
+{id:31, name:'Linear Rail HSR20R 300mm',           num:'HSR20R0300',vendor:'THK',          cat:'Linear Motion',price:78.50,stock:'in', mat:'SCM440 Steel',size:'HSR20',   len:'300mm',  rails:'Single',preload:'C0',                desc:'THK HSR20 linear guide rail. Industry standard profile with mounting holes.'},
+{id:32, name:'Linear Rail HSR25R 400mm',           num:'HSR25R0400',vendor:'THK',          cat:'Linear Motion',price:95.00,stock:'in', mat:'SCM440 Steel',size:'HSR25',   len:'400mm',  rails:'Single',preload:'C0',                desc:'THK HSR25 medium-duty linear rail. Higher load rating than HSR20.'},
+{id:33, name:'Linear Rail HSR30R 500mm',           num:'HSR30R0500',vendor:'THK',          cat:'Linear Motion',price:130.00,stock:'in',mat:'SCM440 Steel',size:'HSR30',   len:'500mm',  rails:'Single',preload:'C0',                desc:'THK HSR30 heavy-duty linear guide rail. For larger CNC and industrial machinery.'},
+{id:34, name:'Linear Block HSR20RM Flange',        num:'HSR20RM1SS',vendor:'THK',          cat:'Linear Motion',price:92.00,stock:'low',mat:'SCM440+SS',   size:'HSR20',   type:'Flange',seals:'Both ends',lube:'Grease nipple',     desc:'HSR20 flange-type carriage with stainless balls and double-lip seals both ends.'},
+{id:35, name:'Linear Block HSR25RM Square',        num:'HSR25RM1SS',vendor:'THK',          cat:'Linear Motion',price:108.00,stock:'in',mat:'SCM440+SS',   size:'HSR25',   type:'Square',seals:'Both ends',lube:'Grease nipple',     desc:'HSR25 square-type carriage block. Standard mounting pattern.'},
+{id:36, name:'Linear Block HSR15RM Square',        num:'HSR15RM1SS',vendor:'THK',          cat:'Linear Motion',price:74.00,stock:'in', mat:'SCM440+SS',   size:'HSR15',   type:'Square',seals:'Both ends',lube:'Grease nipple',     desc:'Compact HSR15 carriage for tight-space applications.'},
+{id:37, name:'SHS15C Linear Carriage (Light)',     num:'SHS15C1SS', vendor:'THK',          cat:'Linear Motion',price:68.00,stock:'in', mat:'SCM440+SS',   size:'SHS15',   type:'Standard',seals:'Both ends',preload:'Light',        desc:'THK SHS series compact linear guide carriage. Reduced height profile.'},
+{id:38, name:'Ball Screw SFU1204-300mm',           num:'SFU1204-300',vendor:'THK',         cat:'Linear Motion',price:88.00,stock:'in', dia:'12mm',        lead:'4mm',     len:'300mm',  acc:'C7',                                   desc:'Compact 1204 rolled ball screw. For smaller precision positioning systems.'},
+{id:39, name:'Ball Screw SFU1605-500mm',           num:'SFU1605-500',vendor:'THK',         cat:'Linear Motion',price:145.00,stock:'in',dia:'16mm',        lead:'5mm',     len:'500mm',  acc:'C7',                                   desc:'Rolled ball screw 1605 configuration. CNC and automation high-efficiency linear actuation.'},
+{id:40, name:'Ball Screw SFU2005-600mm',           num:'SFU2005-600',vendor:'THK',         cat:'Linear Motion',price:195.00,stock:'in',dia:'20mm',        lead:'5mm',     len:'600mm',  acc:'C7',                                   desc:'20mm diameter rolled ball screw, 5mm lead. For heavier CNC axis drives.'},
+{id:41, name:'Ball Screw SFU2510-800mm',           num:'SFU2510-800',vendor:'THK',         cat:'Linear Motion',price:265.00,stock:'low',dia:'25mm',       lead:'10mm',    len:'800mm',  acc:'C7',                                   desc:'25mm diameter, 10mm lead. High-speed ball screw for rapid traverse axes.'},
+{id:42, name:'Linear Actuator KR20 300mm Stroke',  num:'KR20-300',  vendor:'THK',          cat:'Linear Motion',price:340.00,stock:'low',stroke:'300mm',  type:'Ball Screw',lead:'5mm', rails:'HSR15',                              desc:'THK KR20 compact actuator with integrated rail and ball screw, self-contained module.'},
+{id:43, name:'Linear Actuator KR33 500mm Stroke',  num:'KR33-500',  vendor:'THK',          cat:'Linear Motion',price:560.00,stock:'low',stroke:'500mm',  type:'Ball Screw',lead:'6mm', rails:'HSR20',                              desc:'THK KR33 actuator unit with longer travel. Motor mounting bracket available.'},
+{id:44, name:'Cam Follower KR16PP Stud Type',      num:'KR16PP',    vendor:'THK',          cat:'Bearings',     price:18.50,stock:'in', stud:'M8',         OD:'16mm',      width:'28mm', type:'Stud Cam',                            desc:'THK KR cam follower with crowned outer ring. Needle roller for track applications.'},
+{id:45, name:'Cam Follower KR22PP Stud Type',      num:'KR22PP',    vendor:'THK',          cat:'Bearings',     price:22.40,stock:'in', stud:'M10',        OD:'22mm',      width:'36mm', type:'Stud Cam',                            desc:'THK KR22 cam follower with needle rollers. Eccentric stud for preload adjustment.'},
+{id:46, name:'Cross Roller Ring RB8016 IDS',       num:'RB8016',    vendor:'THK',          cat:'Bearings',     price:285.00,stock:'low',ID:'80mm',        OD:'120mm',     width:'16mm', type:'Cross Roller',                        desc:'THK RB series inner ring rotation cross roller ring. High rigidity for robot joints.'},
+
+/* ═══════════════════════════════════════════════════
+   SKF — BEARINGS
+═══════════════════════════════════════════════════ */
+{id:50, name:'Deep Groove Bearing 6000-2RS',       num:'6000-2RS',  vendor:'SKF',          cat:'Bearings',     price:4.20, stock:'in', bore:'10mm',       OD:'26mm',      width:'8mm',  seal:'Rubber',  dynLoad:'4.6 kN',           desc:'SKF 6000-2RS miniature deep groove ball bearing. Sealed both sides with rubber seals.'},
+{id:51, name:'Deep Groove Bearing 6004-2RS',       num:'6004-2RS',  vendor:'SKF',          cat:'Bearings',     price:5.80, stock:'in', bore:'20mm',       OD:'42mm',      width:'12mm', seal:'Rubber',  dynLoad:'9.36 kN',          desc:'SKF 6004-2RS with rubber seals. Common replacement bearing for motors and pumps.'},
+{id:52, name:'Deep Groove Bearing 6204-2RS',       num:'6204-2RS',  vendor:'SKF',          cat:'Bearings',     price:8.40, stock:'in', bore:'20mm',       OD:'47mm',      width:'14mm', seal:'Rubber',  dynLoad:'12.7 kN',          desc:'SKF 6204-2RS deep groove ball bearing with rubber seals, C3 clearance.'},
+{id:53, name:'Deep Groove Bearing 6305-2RS',       num:'6305-2RS',  vendor:'SKF',          cat:'Bearings',     price:9.80, stock:'in', bore:'25mm',       OD:'62mm',      width:'17mm', seal:'Rubber',  dynLoad:'17.8 kN',          desc:'Heavy series deep groove bearing. For higher loads in electric motors and gearboxes.'},
+{id:54, name:'Deep Groove Bearing 6208-2RS',       num:'6208-2RS',  vendor:'SKF',          cat:'Bearings',     price:14.20,stock:'in', bore:'40mm',       OD:'80mm',      width:'18mm', seal:'Rubber',  dynLoad:'29.5 kN',          desc:'SKF 6208-2RS medium-bore sealed bearing. Common in conveyor and pump applications.'},
+{id:55, name:'Angular Contact Bearing 7206 BEP',   num:'7206 BEP',  vendor:'SKF',          cat:'Bearings',     price:32.60,stock:'in', bore:'30mm',       OD:'62mm',      width:'16mm', angle:'40°',                                desc:'Single row angular contact ball bearing for combined axial and radial loads. Pairable.'},
+{id:56, name:'Angular Contact Bearing 7208 BEP',   num:'7208 BEP',  vendor:'SKF',          cat:'Bearings',     price:48.20,stock:'in', bore:'40mm',       OD:'80mm',      width:'18mm', angle:'40°',                                desc:'SKF 7208 angular contact bearing. Back-to-back mounting for bidirectional axial loading.'},
+{id:57, name:'Spherical Roller Bearing 22210 E',   num:'22210 E/C3',vendor:'SKF',          cat:'Bearings',     price:54.20,stock:'low',bore:'50mm',       OD:'90mm',      width:'23mm', rows:'Double',                              desc:'Spherical roller bearing, self-aligning for heavy radial loads and shaft misalignment.'},
+{id:58, name:'Needle Roller Bearing NK 25/20',     num:'NK 25/20',  vendor:'SKF',          cat:'Bearings',     price:12.40,stock:'in', bore:'25mm',       OD:'33mm',      width:'20mm', type:'Needle',                              desc:'Drawn cup needle roller bearing without inner ring. Compact radial space design.'},
+{id:59, name:'Thrust Ball Bearing 51106',          num:'51106',     vendor:'SKF',          cat:'Bearings',     price:9.50, stock:'in', bore:'30mm',       OD:'47mm',      width:'11mm', type:'Thrust',                              desc:'Single direction thrust ball bearing. For applications with pure axial loads.'},
+{id:60, name:'Pillow Block UCP205',                num:'UCP205',    vendor:'SKF',          cat:'Bearings',     price:22.30,stock:'in', bore:'25mm',       type:'Pillow Block',mat:'Cast Iron',seals:'Rubber',                       desc:'SNL plummer block with SKF sealed insert bearing. For shaft-to-frame mounting.'},
+{id:61, name:'Pillow Block UCP208',                num:'UCP208',    vendor:'SKF',          cat:'Bearings',     price:34.50,stock:'in', bore:'40mm',       type:'Pillow Block',mat:'Cast Iron',seals:'Rubber',                       desc:'SKF UCP208 pillow block for 40mm shaft. Set screw locking, self-aligning insert.'},
+{id:62, name:'Tapered Roller Bearing 30207',       num:'30207 J2',  vendor:'SKF',          cat:'Bearings',     price:28.60,stock:'in', bore:'35mm',       OD:'72mm',      width:'17mm', type:'Tapered',                             desc:'SKF single row tapered roller bearing. For combined radial and one-direction axial loads.'},
+{id:63, name:'Flanged Ball Bearing F6002-2RS',     num:'F6002-2RS', vendor:'SKF',          cat:'Bearings',     price:7.80, stock:'in', bore:'15mm',       OD:'32mm',      width:'9mm',  type:'Flanged',  seal:'Rubber',             desc:'Flanged deep groove ball bearing for through-hole or plate mounting. F-series SKF.'},
+
+/* ═══════════════════════════════════════════════════
+   MISUMI — STRUCTURAL, LINEAR, SPRINGS, COUPLINGS
+═══════════════════════════════════════════════════ */
+{id:70, name:'Aluminum Extrusion 20×20 L1000',    num:'HFSB5-2020-1000',vendor:'MISUMI',  cat:'Structural',   price:14.20,stock:'in', mat:'A6063 Aluminum',sect:'20×20',  len:'1000mm', slot:'6mm',   finish:'Clear Anodized',    desc:'MISUMI HFSB5 series 20×20 aluminum extrusion, 6mm slot. Precision cut to length.'},
+{id:71, name:'Aluminum Extrusion 30×30 L1000',    num:'HFSB5-3030-1000',vendor:'MISUMI',  cat:'Structural',   price:24.80,stock:'in', mat:'A6063 Aluminum',sect:'30×30',  len:'1000mm', slot:'8mm',   finish:'Clear Anodized',    desc:'MISUMI HFSB series 30×30 extrusion, 8mm slot. Compatible with standard accessories.'},
+{id:72, name:'Aluminum Extrusion 40×40 L1000',    num:'HFSB5-4040-1000',vendor:'MISUMI',  cat:'Structural',   price:38.60,stock:'in', mat:'A6063 Aluminum',sect:'40×40',  len:'1000mm', slot:'8mm',   finish:'Clear Anodized',    desc:'Heavy-duty 40×40 profile for machine frames and larger assemblies.'},
+{id:73, name:'Aluminum Extrusion 40×80 L1000',    num:'HFSB5-4080-1000',vendor:'MISUMI',  cat:'Structural',   price:58.20,stock:'in', mat:'A6063 Aluminum',sect:'40×80',  len:'1000mm', slot:'8mm',   finish:'Clear Anodized',    desc:'Wide format 40×80 extrusion for high-span horizontal members and tables.'},
+{id:74, name:'T-Slot Nut M5 for 20mm Rail',       num:'HNTTB5-5',  vendor:'MISUMI',       cat:'Structural',   price:0.60, stock:'in', mat:'Steel',         slot:'6mm',    thread:'M5', spring:'Yes',                              desc:'Pre-assembly T-nut for MISUMI 20-series extrusion. Drop-in before assembly.'},
+{id:75, name:'Corner Bracket 20-Series',           num:'HBLFSNF5',  vendor:'MISUMI',       cat:'Structural',   price:1.20, stock:'in', mat:'Zinc Die-Cast', type:'L-Bracket',size:'20mm',                                          desc:'Inside corner bracket for 20-series extrusion joints. Screw and nut included.'},
+{id:76, name:'End Cap 30×30 Extrusion',            num:'HEKPB5-3030',vendor:'MISUMI',      cat:'Structural',   price:0.95, stock:'in', mat:'ABS Plastic',   sect:'30×30',  type:'End Cap',                                         desc:'Push-fit end cap for 30×30 aluminum extrusion. Snap-in retention, neat appearance.'},
+{id:77, name:'Shaft Collar Clamp Ø20mm',          num:'SCCM20',    vendor:'MISUMI',       cat:'Structural',   price:6.90, stock:'in', mat:'S45C Steel',    bore:'20mm',   type:'Clamp', finish:'Black Oxide',                       desc:'MISUMI clamp-type shaft collar. Two-piece for easy installation without disassembly.'},
+{id:78, name:'Shaft Collar Clamp Ø12mm',          num:'SCCM12',    vendor:'MISUMI',       cat:'Structural',   price:4.50, stock:'in', mat:'S45C Steel',    bore:'12mm',   type:'Clamp', finish:'Black Oxide',                       desc:'Small-bore clamp collar for 12mm shafts. Hardened clamping screw.'},
+{id:79, name:'Rigid Coupling Ø14mm to Ø14mm',     num:'CCRS14-14', vendor:'MISUMI',       cat:'Structural',   price:12.50,stock:'in', bore:'14mm',         bore2:'14mm',  coupling:'Rigid',mat:'A2017 Aluminum',                   desc:'Precision rigid shaft coupling, same bore. Used for collinear shaft connections.'},
+{id:80, name:'Beam Coupling Ø10mm to Ø12mm',      num:'MCJB10-12', vendor:'MISUMI',       cat:'Structural',   price:16.80,stock:'in', bore:'10mm',         bore2:'12mm',  coupling:'Beam',mat:'A2017 Aluminum',                    desc:'Helical beam coupling for misalignment compensation. Low backlash for encoders and steppers.'},
+{id:81, name:'Oldham Coupling Ø10mm to Ø10mm',    num:'MCOCA10-10',vendor:'MISUMI',       cat:'Structural',   price:18.40,stock:'in', bore:'10mm',         bore2:'10mm',  coupling:'Oldham',mat:'Aluminum+Acetal',                 desc:'Three-piece Oldham coupling for parallel misalignment. Zero-backlash disc design.'},
+{id:82, name:'Compression Spring Ø10 × L30',      num:'WC10X30',   vendor:'MISUMI',       cat:'Springs',      price:1.40, stock:'in', OD:'10mm',           free_len:'30mm',wire:'1.2mm',mat:'SWP-B', rate:'2.8 N/mm',             desc:'Standard compression spring. High-precision wound, ends ground flat. Catalog grade.'},
+{id:83, name:'Compression Spring Ø16 × L50',      num:'WC16X50',   vendor:'MISUMI',       cat:'Springs',      price:2.20, stock:'in', OD:'16mm',           free_len:'50mm',wire:'1.8mm',mat:'SWP-B', rate:'5.2 N/mm',             desc:'Medium compression spring. Suitable for fixture clamping and return mechanisms.'},
+{id:84, name:'Compression Spring Ø25 × L80 Die',  num:'SWPB25X80', vendor:'MISUMI',       cat:'Springs',      price:4.80, stock:'in', OD:'25mm',           free_len:'80mm',wire:'3.0mm',mat:'SWP-B', rate:'12.5 N/mm',            desc:'Heavy-duty die spring in round wire. For high-load press tools and punching dies.'},
+{id:85, name:'Extension Spring Ø8 × L50',         num:'WE8X50',    vendor:'MISUMI',       cat:'Springs',      price:1.80, stock:'in', OD:'8mm',            free_len:'50mm',wire:'0.9mm',mat:'SWP-B', rate:'0.8 N/mm',             desc:'Standard extension spring with hook ends. For return and tensioning mechanisms.'},
+{id:86, name:'Torsion Spring Ø12 × 20°',          num:'WT12-20',   vendor:'MISUMI',       cat:'Springs',      price:2.60, stock:'in', OD:'12mm',           wire:'1.0mm',  dir:'Right Hand',mat:'SWP-B',                            desc:'Torsion spring, right-hand wound. For latches, clips, and rotary return mechanisms.'},
+{id:87, name:'Linear Bushing LM8UU',              num:'LM8UU',     vendor:'MISUMI',       cat:'Linear Motion',price:4.20, stock:'in', bore:'8mm',          OD:'15mm',     len:'24mm',   type:'Closed',                              desc:'Linear ball bushing for 8mm smooth shaft. Full ball complement for smooth motion.'},
+{id:88, name:'Linear Bushing LM10UU',             num:'LM10UU',    vendor:'MISUMI',       cat:'Linear Motion',price:5.80, stock:'in', bore:'10mm',         OD:'19mm',     len:'29mm',   type:'Closed',                              desc:'Standard linear ball bushing for 10mm precision shaft.'},
+{id:89, name:'Linear Bushing LM12UU',             num:'LM12UU',    vendor:'MISUMI',       cat:'Linear Motion',price:6.50, stock:'in', bore:'12mm',         OD:'21mm',     len:'30mm',   type:'Closed',                              desc:'12mm linear bushing, precision ground housing. Sealed retainer design.'},
+{id:90, name:'Linear Bushing LM16UU',             num:'LM16UU',    vendor:'MISUMI',       cat:'Linear Motion',price:8.20, stock:'in', bore:'16mm',         OD:'28mm',     len:'37mm',   type:'Closed',                              desc:'16mm bore linear bushing. Larger shaft size for increased load capacity.'},
+{id:91, name:'Shaft Support Open Type Ø10',       num:'SSP10',     vendor:'MISUMI',       cat:'Linear Motion',price:7.80, stock:'in', dia:'10mm',          type:'Open',   mat:'Cast Iron',                                         desc:'Open type shaft support for quick shaft mounting. Accepts 10mm shafts.'},
+{id:92, name:'Shaft Support Closed Type Ø12',     num:'SCS12',     vendor:'MISUMI',       cat:'Linear Motion',price:9.40, stock:'in', dia:'12mm',          type:'Closed', mat:'Cast Iron',                                         desc:'Closed type shaft support for precise linear axis construction. Bolt-down base.'},
+
+/* ═══════════════════════════════════════════════════
+   CARR-LANE — LOCATING, CLAMPS, WORKHOLDING
+═══════════════════════════════════════════════════ */
+{id:100,name:'Locating Pin Ø6 h6 L30 Smooth',    num:'CL-18-100', vendor:'Carr-Lane',    cat:'Locating',     price:3.20, stock:'in', mat:'H13 Tool Steel',dia:'6mm',     fit:'h6',    len:'30mm',  shank:'Smooth',             desc:'Precision ground locating pin. H13 tool steel Rc 60–62. Standard press-fit shank.'},
+{id:101,name:'Locating Pin Ø10 h6 L40 Smooth',   num:'CL-18-200', vendor:'Carr-Lane',    cat:'Locating',     price:4.75, stock:'in', mat:'H13 Tool Steel',dia:'10mm',    fit:'h6',    len:'40mm',  shank:'Smooth',             desc:'Standard 10mm locating pin for fixture tooling. Ground and hardened. DIN 6321.'},
+{id:102,name:'Locating Pin Ø12 h6 L50 Threaded', num:'CL-18-250', vendor:'Carr-Lane',    cat:'Locating',     price:6.40, stock:'in', mat:'H13 Tool Steel',dia:'12mm',    fit:'h6',    len:'50mm',  shank:'Threaded',           desc:'12mm locating pin with M8 threaded shank for bolt-in mounting. Removable.'},
+{id:103,name:'Diamond Pin Ø10 h6 Relieved',      num:'CL-18-300', vendor:'Carr-Lane',    cat:'Locating',     price:7.20, stock:'in', mat:'H13 Tool Steel',dia:'10mm',    fit:'h6',    type:'Diamond',                           desc:'Diamond (relieved) locating pin for two-pin workpiece location. Compensates for hole spacing tolerance.'},
+{id:104,name:'Drill Jig Bushing Press-Fit Ø8',   num:'CL-34-412', vendor:'Carr-Lane',    cat:'Locating',     price:3.20, stock:'in', mat:'Hardened Steel',ID:'8mm',      OD:'13mm',   len:'12mm',  type:'Press-Fit',           desc:'Standard drill bushing for guiding cutting tools. Ground to H7 inside diameter.'},
+{id:105,name:'Drill Jig Bushing Press-Fit Ø10',  num:'CL-34-420', vendor:'Carr-Lane',    cat:'Locating',     price:3.60, stock:'in', mat:'Hardened Steel',ID:'10mm',     OD:'16mm',   len:'15mm',  type:'Press-Fit',           desc:'10mm press-fit drill jig bushing. Hardened to Rc 60-62. Precision ground bore.'},
+{id:106,name:'Liner Bushing Ø8 for Slip Bushings',num:'CL-33-212',vendor:'Carr-Lane',    cat:'Locating',     price:4.80, stock:'in', mat:'Hardened Steel',ID:'14mm',     OD:'18mm',   len:'20mm',  type:'Liner',               desc:'Liner bushing for slip/fixed renewable drill bushings. Pressed into fixture plate.'},
+{id:107,name:'Rest Button Flat Ø25mm',            num:'CL-6-100',  vendor:'Carr-Lane',    cat:'Locating',     price:2.10, stock:'in', mat:'Hardened Steel',dia:'25mm',    type:'Flat Rest',finish:'Rc 60-62',                   desc:'Ground flat rest button for locating face contact. Screw-in or press-in mounting.'},
+{id:108,name:'Rest Button Spherical Ø19mm',       num:'CL-6-200',  vendor:'Carr-Lane',    cat:'Locating',     price:2.40, stock:'in', mat:'Hardened Steel',dia:'19mm',    type:'Spherical',finish:'Rc 60-62',                   desc:'Spherical rest button for point contact on rough workpiece surfaces.'},
+{id:109,name:'Jack Screw M8 Adjustable',          num:'CL-23-100', vendor:'Carr-Lane',    cat:'Locating',     price:5.60, stock:'in', mat:'Steel',          thread:'M8×1.25',type:'Jack Screw',finish:'Black Oxide',           desc:'Adjustable jack screw for third-point support in three-two-one location. Locking nut.'},
+{id:110,name:'Knurled Knob M6 Stainless',         num:'CL-26-050', vendor:'Carr-Lane',    cat:'Workholding',  price:2.80, stock:'in', mat:'303 SS',          thread:'M6×1.0',type:'Knurled',dia:'25mm',                       desc:'Stainless steel knurled knob for hand-adjustment. Black oxide or SS available.'},
+{id:111,name:'Toggle Clamp Horizontal 225 lb',    num:'CL-150-HTC',vendor:'Carr-Lane',    cat:'Clamps',       price:38.00,stock:'in', cap:'225 lb',         type:'Horizontal',arm:'Standard',base:'Slotted',                  desc:'Horizontal toggle clamp for quick workholding in jigs and fixtures. Swivel pad.'},
+{id:112,name:'Toggle Clamp Vertical 300 lb',      num:'CL-150-VTC',vendor:'Carr-Lane',    cat:'Clamps',       price:42.00,stock:'in', cap:'300 lb',         type:'Vertical',  arm:'Solid Bar',base:'Slotted',                 desc:'Vertical handle toggle clamp for fixtures with limited overhead clearance.'},
+{id:113,name:'Straight-Line Push-Pull Clamp 250lb',num:'CL-150-SLC',vendor:'Carr-Lane',   cat:'Clamps',       price:46.00,stock:'in', cap:'250 lb',         type:'Push-Pull', action:'Straight',                               desc:'Inline push-pull toggle clamp. Linear force action for collinear component clamping.'},
+{id:114,name:'Plunger Clamp CL-250-PLC',          num:'CL-250-PLC',vendor:'Carr-Lane',    cat:'Clamps',       price:55.00,stock:'low',cap:'500 lb',         type:'Plunger',   action:'Manual',finish:'Chromate',               desc:'Plunger-style vertical-action toggle clamp. Large capacity for heavy workpieces.'},
+{id:115,name:'U-Hook Toggle Clamp 440 lb',        num:'CL-152-UHC',vendor:'Carr-Lane',    cat:'Clamps',       price:58.00,stock:'in', cap:'440 lb',         type:'U-Hook',    arm:'U-Bar',   base:'Slotted',                  desc:'U-hook arm toggle clamp for over-center vertical hold-down with large clearance.'},
+
+/* ═══════════════════════════════════════════════════
+   DESTACO — CLAMPS & PNEUMATICS
+═══════════════════════════════════════════════════ */
+{id:120,name:'Hold-Down Toggle Clamp 205-U 600N', num:'DE-205-U',  vendor:'Destaco',      cat:'Clamps',       price:42.50,stock:'in', force:'600N',         type:'Hold-Down', action:'Manual',mount:'Base plate',             desc:'Destaco series 205 hold-down clamp. Compact for tight fixture spaces. Cast iron.'},
+{id:121,name:'Hold-Down Toggle Clamp 207-U 1200N',num:'DE-207-U',  vendor:'Destaco',      cat:'Clamps',       price:56.00,stock:'in', force:'1200N',        type:'Hold-Down', action:'Manual',mount:'Base plate',             desc:'Higher-force hold-down clamp series 207. Heavier casting, greater rigidity.'},
+{id:122,name:'Hold-Down Clamp 225-U 2250N',       num:'DE-225-U',  vendor:'Destaco',      cat:'Clamps',       price:78.00,stock:'in', force:'2250N',        type:'Hold-Down', action:'Manual',mount:'Base plate',             desc:'Large Destaco 225 hold-down for heavy steel fixtures. Forged arm.'},
+{id:123,name:'Horizontal Toggle Clamp 341 700N',  num:'DE-341',    vendor:'Destaco',      cat:'Clamps',       price:38.00,stock:'in', force:'700N',         type:'Horizontal',action:'Manual',arm:'Solid Bar',               desc:'Destaco 341 series horizontal toggle clamp. Flat base for T-slot mounting.'},
+{id:124,name:'Horizontal Clamp 344 1100N',        num:'DE-344',    vendor:'Destaco',      cat:'Clamps',       price:52.00,stock:'in', force:'1100N',        type:'Horizontal',action:'Manual',arm:'Solid Bar',               desc:'Larger horizontal toggle clamp for welding fixtures and heavy clamping.'},
+{id:125,name:'Push-Pull Clamp 350 600N',          num:'DE-350',    vendor:'Destaco',      cat:'Clamps',       price:44.00,stock:'in', force:'600N',         type:'Push-Pull', action:'Manual',mount:'Inline',                desc:'Inline push-pull toggle clamp. Series 350 for straight-line clamping force.'},
+{id:126,name:'Pneumatic Swing Clamp 82M2 700N',   num:'DE-SP82-10',vendor:'Destaco',      cat:'Clamps',       price:185.00,stock:'in',force:'700N',         type:'Swing',     actuation:'Pneumatic',bore_d:'32mm',             desc:'Pneumatic swing clamp 90° rotation. Pre-set torque limiting. High-cycle automation.'},
+{id:127,name:'Pneumatic Hold-Down Clamp 8010',    num:'DE-8010-HL',vendor:'Destaco',      cat:'Clamps',       price:195.00,stock:'in',force:'1200N',        type:'Hold-Down', actuation:'Pneumatic',bore_d:'40mm',             desc:'Destaco 8010 pneumatic hold-down clamp. Double-acting cylinder. Spring return available.'},
+{id:128,name:'Pneumatic Swing Clamp 82M5 1500N',  num:'DE-SP82-50',vendor:'Destaco',      cat:'Clamps',       price:245.00,stock:'low',force:'1500N',       type:'Swing',     actuation:'Pneumatic',bore_d:'50mm',swing:'90°', desc:'High-force pneumatic swing clamp. For automotive-scale fixtures and transfer lines.'},
+{id:129,name:'Power Clamp PA 20-Degree 82M2-041', num:'DE-82M2-041',vendor:'Destaco',     cat:'Clamps',       price:220.00,stock:'low',force:'1500N',       type:'Power',     swing:'20°',  actuation:'Pneumatic',             desc:'High-force power clamp for automotive heavy fixtures. Sealed for coolant.'},
+{id:130,name:'Power Clamp 895 Series 3000N',      num:'DE-895-20',  vendor:'Destaco',     cat:'Clamps',       price:380.00,stock:'low',force:'3000N',       type:'Power',     actuation:'Pneumatic',mount:'Weld/Bolt',         desc:'Destaco 895 series weld clamp with proximity switch ports. Heavy automotive duty.'},
+/* Destaco Pneumatics */
+{id:131,name:'Pneumatic Gripper 5100-Series',     num:'DE-5100-5', vendor:'Destaco',      cat:'Pneumatics',   price:165.00,stock:'in', type:'Parallel Gripper',actuation:'Pneumatic',bore_d:'25mm',force:'140N',            desc:'Destaco 5100 series two-jaw parallel gripper. Double-acting, adjustable stroke.'},
+{id:132,name:'Pneumatic Rotary Actuator DA-10',   num:'DE-DA-10',  vendor:'Destaco',      cat:'Pneumatics',   price:135.00,stock:'in', type:'Rotary Actuator',actuation:'Pneumatic',swing:'180°',bore_d:'20mm',             desc:'Double-acting rotary actuator, rack and pinion. 90° or 180° rotation with adjustable stops.'},
+
+/* ═══════════════════════════════════════════════════
+   STEEL SMITH — STRUCTURAL STEEL
+═══════════════════════════════════════════════════ */
+{id:140,name:'Steel Square Tube 1"×1"×0.065"',   num:'ST-SQ-1-065',vendor:'Steel Smith',  cat:'Structural',   price:8.60, stock:'in', mat:'A500 Steel',     sect:'1"×1"',   thick:'0.065"',len:'1 ft',                        desc:'Cold-formed A500 steel square tube. Per linear foot. Frames, brackets, and supports.'},
+{id:141,name:'Steel Square Tube 2"×2"×0.120"',   num:'ST-SQ-2-120',vendor:'Steel Smith',  cat:'Structural',   price:15.80,stock:'in', mat:'A500 Steel',     sect:'2"×2"',   thick:'0.120"',len:'1 ft',                        desc:'Heavier 2" square tube for structural machine frames. Good weldability.'},
+{id:142,name:'Steel Rectangular Tube 2"×1"×0.083"',num:'ST-REC-21-083',vendor:'Steel Smith',cat:'Structural', price:11.40,stock:'in', mat:'A500 Steel',     sect:'2"×1"',   thick:'0.083"',len:'1 ft',                        desc:'Rectangular structural tube for asymmetric cross-section members.'},
+{id:143,name:'Steel Flat Bar 1/4"×2"×12"',       num:'FB-025-200-12',vendor:'Steel Smith', cat:'Structural',   price:6.20, stock:'in', mat:'A36 Steel',      thick:'0.25"',  width:'2"',  len:'12"',   finish:'Hot Rolled',       desc:'A36 hot-rolled steel flat bar. For plates, brackets, and weldments.'},
+{id:144,name:'Steel Flat Bar 1/2"×3"×12"',       num:'FB-050-300-12',vendor:'Steel Smith', cat:'Structural',   price:12.40,stock:'in', mat:'A36 Steel',      thick:'0.50"',  width:'3"',  len:'12"',   finish:'Hot Rolled',       desc:'Heavier flat bar for gussets and structural plates. A36 HR.'},
+{id:145,name:'Steel Round Bar Ø1" L12"',          num:'RB-100-12', vendor:'Steel Smith',  cat:'Structural',   price:7.80, stock:'in', mat:'1018 CRS',       dia:'1"',        len:'12"',   finish:'Cold Drawn',                   desc:'Cold drawn 1018 steel round bar. Tight OD tolerances, good surface finish.'},
+{id:146,name:'Steel Round Bar Ø1.5" L12"',        num:'RB-150-12', vendor:'Steel Smith',  cat:'Structural',   price:14.60,stock:'in', mat:'1018 CRS',       dia:'1.5"',      len:'12"',   finish:'Cold Drawn',                   desc:'Cold drawn 1018 round bar, 1.5" diameter. For machined shafts and pins.'},
+{id:147,name:'Cold Rolled Sheet 16ga 12×24"',     num:'CRS-16-1224',vendor:'Steel Smith',  cat:'Structural',   price:14.80,stock:'in', mat:'CRS 1008/1010',  gauge:'16 ga',  thick:'0.060"',size:'12"×24"',                   desc:'Cold rolled steel sheet. Tight tolerances, smooth surface for formed sheet metal.'},
+{id:148,name:'Cold Rolled Sheet 11ga 12×24"',     num:'CRS-11-1224',vendor:'Steel Smith',  cat:'Structural',   price:22.40,stock:'in', mat:'CRS 1008/1010',  gauge:'11 ga',  thick:'0.120"',size:'12"×24"',                   desc:'Heavier 11 gauge CRS sheet for structural panels and supports.'},
+{id:149,name:'Steel Angle Iron 1"×1"×1/8"×12"',  num:'AI-100-125-12',vendor:'Steel Smith', cat:'Structural',   price:5.40, stock:'in', mat:'A36 Steel',      sect:'1"×1"',   thick:'0.125"',len:'12"',  finish:'Hot Rolled',     desc:'Equal leg angle iron for brackets and corner reinforcements. Hot rolled A36.'},
+{id:150,name:'Steel Channel 3"×1.41" C-Channel',  num:'CH-300-12', vendor:'Steel Smith',  cat:'Structural',   price:18.60,stock:'in', mat:'A36 Steel',      sect:'3" C',    thick:'0.170"',len:'12"',  finish:'Hot Rolled',     desc:'Standard C-channel for structural framing and track mounting. ASTM A36.'},
 ];
 
-/* ── State ── */
-let activeVendor  = 'all';
-let activeCat     = 'all';
-let viewMode      = 'grid';
-let selectedId    = null;
+/* ═══ State ═══ */
+let activeVendor='all', activeCat='all', viewMode='grid', selectedId=null, sortMode='default';
 
-function filtered() {
-  const q = document.getElementById('search').value.toLowerCase();
-  return PARTS.filter(p => {
-    const vm = activeVendor === 'all' || p.vendor === activeVendor;
-    const cm = activeCat    === 'all' || p.cat    === activeCat;
-    const sm = !q || p.name.toLowerCase().includes(q)
-                  || p.num.toLowerCase().includes(q)
-                  || (p.mat||'').toLowerCase().includes(q)
-                  || (p.thread||'').toLowerCase().includes(q);
-    return vm && cm && sm;
+function filtered(){
+  const q=document.getElementById('search').value.toLowerCase();
+  let fp=PARTS.filter(p=>{
+    const vm=activeVendor==='all'||p.vendor===activeVendor;
+    const cm=activeCat==='all'||p.cat===activeCat;
+    const sm=!q||p.name.toLowerCase().includes(q)||p.num.toLowerCase().includes(q)
+               ||(p.mat||'').toLowerCase().includes(q)||(p.thread||'').toLowerCase().includes(q)
+               ||p.vendor.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q);
+    return vm&&cm&&sm;
   });
+  if(sortMode==='price-asc')   fp.sort((a,b)=>a.price-b.price);
+  else if(sortMode==='price-desc') fp.sort((a,b)=>b.price-a.price);
+  else if(sortMode==='name-asc')   fp.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sortMode==='stock')      fp.sort((a,b)=>(a.stock==='in'?0:a.stock==='low'?1:2)-(b.stock==='in'?0:b.stock==='low'?1:2));
+  return fp;
 }
 
-/* ── Stock helpers ── */
-function stockClass(s) { return s==='in'?'in-stock':s==='low'?'low-stock':'out-stock'; }
-function stockLabel(s) { return s==='in'?'In Stock':s==='low'?'Low Stock':'Out of Stock'; }
+function stockClass(s){return s==='in'?'in-stock':s==='low'?'low-stock':'out-stock';}
+function stockLabel(s){return s==='in'?'In Stock':s==='low'?'Low Stock':'Out of Stock';}
 
-/* ── Render ── */
-function render() {
-  const fp = filtered();
-  const container = document.getElementById('parts-content');
-  const active = activeVendor!=='all' || activeCat!=='all' || document.getElementById('search').value;
+function initBadges(){
+  const total=PARTS.length;
+  const inStock=PARTS.filter(p=>p.stock==='in').length;
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-instock').textContent=inStock;
+  document.getElementById('nb-all').textContent=total;
+  document.getElementById('nb-vall').textContent=total;
+  Object.keys(VENDORS).forEach(v=>{
+    const key=v.toLowerCase().replace(/[^a-z]/g,'').replace('mcmastercarr','mcmaster').replace('steelsmith','steel').replace('carrlane','carr');
+    const el=document.getElementById('nb-'+key);
+    if(el) el.textContent=PARTS.filter(p=>p.vendor===v).length;
+  });
+  /* manual fixes */
+  document.getElementById('nb-mcmaster').textContent=PARTS.filter(p=>p.vendor==='McMaster-Carr').length;
+  document.getElementById('nb-misumi').textContent=PARTS.filter(p=>p.vendor==='MISUMI').length;
+  document.getElementById('nb-thk').textContent=PARTS.filter(p=>p.vendor==='THK').length;
+  document.getElementById('nb-carr').textContent=PARTS.filter(p=>p.vendor==='Carr-Lane').length;
+  document.getElementById('nb-steel').textContent=PARTS.filter(p=>p.vendor==='Steel Smith').length;
+  document.getElementById('nb-destaco').textContent=PARTS.filter(p=>p.vendor==='Destaco').length;
+  document.getElementById('nb-skf').textContent=PARTS.filter(p=>p.vendor==='SKF').length;
+}
 
-  document.getElementById('results-info').innerHTML = `Showing <b>${fp.length}</b> of <b>${PARTS.length}</b> parts`;
-  document.getElementById('stat-filt').textContent = active ? fp.length : '—';
-  document.getElementById('stat-filt-sub').textContent = active ? 'matching filters' : 'no filter active';
-
-  if (!fp.length) {
-    container.innerHTML = '<div class="empty-state"><i class="ti ti-search-off"></i>No parts match your filter.</div>';
-    return;
-  }
-
-  if (viewMode === 'grid') {
-    container.innerHTML = `<div class="parts-grid">${fp.map(cardHTML).join('')}</div>`;
+function render(){
+  const fp=filtered();
+  const container=document.getElementById('parts-content');
+  const active=activeVendor!=='all'||activeCat!=='all'||document.getElementById('search').value;
+  document.getElementById('results-info').innerHTML=`Showing <b>${fp.length}</b> of <b>${PARTS.length}</b> parts`;
+  document.getElementById('stat-filt').textContent=active?fp.length:'—';
+  document.getElementById('stat-filt-sub').textContent=active?'matching filters':'no filter active';
+  if(!fp.length){container.innerHTML='<div class="empty-state"><i class="ti ti-search-off"></i>No parts match your filter.</div>';return;}
+  if(viewMode==='grid'){
+    container.innerHTML=`<div class="parts-grid">${fp.map(cardHTML).join('')}</div>`;
   } else {
-    container.innerHTML = `
-      <div class="list-header">
-        <div></div><div>Part</div><div>Vendor</div><div>Category</div><div>Price</div><div>Stock</div>
-      </div>
+    container.innerHTML=`
+      <div class="list-header"><div></div><div>Part</div><div>Vendor</div><div>Category</div><div>Price</div><div>Stock</div></div>
       <div class="parts-list">${fp.map(rowHTML).join('')}</div>`;
   }
 }
 
-function cardHTML(p) {
-  const v = VENDORS[p.vendor];
-  const ic = ICONS[p.cat] || 'ti-box';
-  const sel = selectedId === p.id ? ' selected' : '';
+function cardHTML(p){
+  const v=VENDORS[p.vendor];const ic=ICONS[p.cat]||'ti-box';const sel=selectedId===p.id?' selected':'';
   return `<div class="part-card${sel}" onclick="openDetail(${p.id})">
     <div class="card-icon"><i class="ti ${ic}"></i></div>
     <div class="card-body">
@@ -794,10 +577,8 @@ function cardHTML(p) {
   </div>`;
 }
 
-function rowHTML(p) {
-  const v = VENDORS[p.vendor];
-  const ic = ICONS[p.cat] || 'ti-box';
-  const sel = selectedId === p.id ? ' selected' : '';
+function rowHTML(p){
+  const v=VENDORS[p.vendor];const ic=ICONS[p.cat]||'ti-box';const sel=selectedId===p.id?' selected':'';
   return `<div class="list-row${sel}" onclick="openDetail(${p.id})">
     <div class="icon"><i class="ti ${ic}"></i></div>
     <div><div class="lname">${p.name}</div><div class="lnum">${p.num}</div></div>
@@ -808,110 +589,76 @@ function rowHTML(p) {
   </div>`;
 }
 
-/* ── Detail panel ── */
-function openDetail(id) {
-  const p = PARTS.find(x => x.id === id);
-  if (!p) return;
-  selectedId = id;
-  const v  = VENDORS[p.vendor];
-  const ic = ICONS[p.cat] || 'ti-box';
-
+function openDetail(id){
+  const p=PARTS.find(x=>x.id===id);if(!p)return;
+  selectedId=id;const v=VENDORS[p.vendor];const ic=ICONS[p.cat]||'ti-box';
   document.getElementById('detail-panel').classList.remove('hidden');
-  document.getElementById('d-title').textContent  = p.name;
-  document.getElementById('d-icon').innerHTML     = `<i class="ti ${ic}" style="font-size:48px"></i>`;
-  document.getElementById('d-num').textContent    = p.num;
-  document.getElementById('d-vendor').textContent = p.vendor;
-  document.getElementById('d-cat').textContent    = p.cat;
-  document.getElementById('d-price').textContent  = `$${p.price.toFixed(2)} / ea`;
-  document.getElementById('d-stock').innerHTML    = `<span class="stock-badge ${stockClass(p.stock)}">${stockLabel(p.stock)}</span>`;
-  document.getElementById('d-desc').textContent   = p.desc;
-
-  const skip = ['id','name','num','vendor','cat','price','stock','desc'];
-  const specs = Object.keys(p).filter(k => !skip.includes(k));
-  document.getElementById('d-specs').innerHTML = specs.map(k =>
-    `<div class="spec-row">
-      <span class="spec-key">${SPEC_LABELS[k]||k}</span>
-      <span class="spec-val">${p[k]}</span>
-    </div>`
+  document.getElementById('d-title').textContent=p.name;
+  document.getElementById('d-icon').innerHTML=`<i class="ti ${ic}" style="font-size:48px"></i>`;
+  document.getElementById('d-num').textContent=p.num;
+  document.getElementById('d-vendor').textContent=p.vendor;
+  document.getElementById('d-cat').textContent=p.cat;
+  document.getElementById('d-price').textContent=`$${p.price.toFixed(2)} / ea`;
+  document.getElementById('d-stock').innerHTML=`<span class="stock-badge ${stockClass(p.stock)}">${stockLabel(p.stock)}</span>`;
+  document.getElementById('d-desc').textContent=p.desc;
+  const skip=['id','name','num','vendor','cat','price','stock','desc'];
+  const specs=Object.keys(p).filter(k=>!skip.includes(k));
+  document.getElementById('d-specs').innerHTML=specs.map(k=>
+    `<div class="spec-row"><span class="spec-key">${SL[k]||k}</span><span class="spec-val">${p[k]}</span></div>`
   ).join('');
-
   render();
 }
 
-function closeDetail() {
-  selectedId = null;
-  document.getElementById('detail-panel').classList.add('hidden');
-  render();
+function closeDetail(){selectedId=null;document.getElementById('detail-panel').classList.add('hidden');render();}
+function openVendor(){const p=PARTS.find(x=>x.id===selectedId);if(p)window.open(VENDORS[p.vendor].url,'_blank');}
+function copyNum(){
+  const p=PARTS.find(x=>x.id===selectedId);if(!p)return;
+  navigator.clipboard.writeText(p.num).then(()=>showToast('Copied: '+p.num)).catch(()=>showToast('Part #: '+p.num));
 }
 
-function openVendor() {
-  const p = PARTS.find(x => x.id === selectedId);
-  if (p) window.open(VENDORS[p.vendor].url, '_blank');
-}
-
-function copyNum() {
-  const p = PARTS.find(x => x.id === selectedId);
-  if (!p) return;
-  navigator.clipboard.writeText(p.num).then(() => {
-    showToast('Part number copied: ' + p.num);
-  }).catch(() => showToast('Copy: ' + p.num));
-}
-
-/* ── Filters ── */
-function filterVendor(el, v) {
-  activeVendor = v;
-  document.querySelectorAll('[id^="vnav-"]').forEach(n => n.classList.remove('active'));
+function filterVendor(el,v){
+  activeVendor=v;
+  document.querySelectorAll('[id^="vnav-"]').forEach(n=>n.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('breadcrumb').innerHTML =
-    v === 'all' ? 'All Catalog <b>/ Standard Parts</b>' : `<b>${v}</b> / Parts Catalog`;
-  document.getElementById('page-title').textContent =
-    v === 'all' ? 'Standard Parts Catalog' : v + ' — Parts';
+  document.getElementById('breadcrumb').innerHTML=v==='all'?'All Catalog <b>/ Standard Parts</b>':`<b>${v}</b> / Parts Catalog`;
+  document.getElementById('page-title').textContent=v==='all'?'Standard Parts Catalog':v+' — Parts';
   render();
 }
-
-function setCat(el, cat) {
-  activeCat = cat;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
+function setCat(el,cat){
+  activeCat=cat;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');render();
+}
+function filterCatFromNav(cat){
+  activeCat=cat;
+  document.querySelectorAll('.chip').forEach(c=>{c.classList.toggle('active',c.textContent.trim()===cat);});
   render();
 }
-
-function filterCatFromNav(cat) {
-  activeCat = cat;
-  document.querySelectorAll('.chip').forEach(c => {
-    c.classList.toggle('active', c.textContent.trim() === cat);
-  });
-  render();
-}
-
-function showAllCatalog(el) {
-  activeVendor = 'all'; activeCat = 'all';
-  document.getElementById('search').value = '';
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+function showAllCatalog(el){
+  activeVendor='all';activeCat='all';
+  document.getElementById('search').value='';
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('vnav-all').classList.add('active');
-  document.querySelectorAll('.chip').forEach((c,i) => c.classList.toggle('active', i===0));
-  document.getElementById('breadcrumb').innerHTML = 'All Catalog <b>/ Standard Parts</b>';
-  document.getElementById('page-title').textContent = 'Standard Parts Catalog';
+  document.querySelectorAll('.chip').forEach((c,i)=>c.classList.toggle('active',i===0));
+  document.getElementById('breadcrumb').innerHTML='All Catalog <b>/ Standard Parts</b>';
+  document.getElementById('page-title').textContent='Standard Parts Catalog';
   render();
 }
-
-function setView(v) {
-  viewMode = v;
-  document.getElementById('btn-grid').classList.toggle('active', v==='grid');
-  document.getElementById('btn-list').classList.toggle('active', v==='list');
+function setView(v){
+  viewMode=v;
+  document.getElementById('btn-grid').classList.toggle('active',v==='grid');
+  document.getElementById('btn-list').classList.toggle('active',v==='list');
   render();
 }
-
-/* ── Toast ── */
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+function setSortMode(v){sortMode=v;render();}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-/* ── Init ── */
+initBadges();
 render();
 </script>
 </body>
