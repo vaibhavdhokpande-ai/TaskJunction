@@ -179,7 +179,6 @@ nav ul li a:hover { background: var(--orange4); color: var(--orange); }
 .mech-open-btn-civil { background: rgba(5,150,105,0.10)!important; color: #059669!important; border-color: rgba(5,150,105,0.22)!important; }
 .mech-open-btn-civil:hover { background: rgba(5,150,105,0.18)!important; }
 
-/* Electrical */
 .mech-card.elec-card { border-color: #fde68a; }
 .mech-card.elec-card::before { background: linear-gradient(90deg,#d97706,#f59e0b,#fbbf24); }
 .mech-card.elec-card:hover { border-color: rgba(217,119,6,0.40); box-shadow: 0 10px 36px rgba(217,119,6,0.12); }
@@ -189,7 +188,6 @@ nav ul li a:hover { background: var(--orange4); color: var(--orange); }
 .mech-open-btn-elec { background: rgba(217,119,6,0.10)!important; color: #d97706!important; border-color: rgba(217,119,6,0.22)!important; }
 .mech-open-btn-elec:hover { background: rgba(217,119,6,0.18)!important; }
 
-/* Electronics */
 .mech-card.elex-card { border-color: #ddd6fe; }
 .mech-card.elex-card::before { background: linear-gradient(90deg,#7c3aed,#8b5cf6,#a78bfa); }
 .mech-card.elex-card:hover { border-color: rgba(124,58,237,0.40); box-shadow: 0 10px 36px rgba(124,58,237,0.12); }
@@ -241,7 +239,6 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
 .reveal.visible { opacity: 1; transform: none; }
 
-/* MOBILE NAV */
 .mobile-nav-overlay { display: none; position: fixed; inset: 0; z-index: 998; background: rgba(15,14,12,0.5); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.25s; pointer-events: none; }
 .mobile-nav-overlay.show { opacity: 1; pointer-events: all; }
 .mobile-nav-drawer { display: none; position: fixed; top: 0; left: 0; bottom: 0; width: min(300px, 85vw); height: 100%; z-index: 999; background: var(--white); border-right: 1px solid var(--border); box-shadow: 4px 0 24px rgba(15,14,12,0.12); padding: 80px 16px 40px; flex-direction: column; gap: 4px; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; -webkit-overflow-scrolling: touch; }
@@ -385,7 +382,6 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
       <div class="dd-divider"></div>
       <a href="#ebooks" class="dd-item" onclick="closeMenu()"><div class="dd-icon">📚</div> eBooks (Recommended) <span class="badge-live">Live</span></a>
       <a href="#apps" class="dd-item" onclick="closeMenu()"><div class="dd-icon">🌐</div> Web Applications <span class="badge-live">Live</span></a>
-      
     </div>
   </div>
 </nav>
@@ -447,25 +443,57 @@ footer { background: var(--text); color: #fff; padding: 56px 32px 36px; text-ali
     <div class="sec-title">Mechanical <span style="color:#b45309;">Design</span> Calculators</div>
     <p style="font-size:15px;color:var(--text2);max-width:600px;margin-bottom:40px;line-height:1.75;">Professional-grade mechanical engineering calculators — pneumatics, gear systems, drive selection, metal weight &amp; pricing, conveyor design and more. All tools run in your browser. No install, no account required.</p>
     <div class="mech-grid">
+
+      <!-- Metal Weight -->
       <div class="mech-card metal-card reveal"><div class="mech-card-top"><div class="mech-icon mech-icon-blue">🔩</div><span class="mech-badge-live mech-badge-blue">● Live</span></div><div class="mech-card-name">Metal Weight &amp; Price Selector</div><p class="mech-card-desc">Select from 12 metal shapes and 13 materials. Enter dimensions, quantity and price/kg — live weight &amp; total cost calculated instantly.</p><div class="mech-tags"><span class="mech-tag mech-tag-blue">Metal Shapes</span><span class="mech-tag mech-tag-blue">Weight Calc</span><span class="mech-tag mech-tag-blue">Live Price ₹</span></div><a href="metal_weight_price_calculator.html" target="_blank" class="mech-open-btn mech-open-btn-blue">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Pneumatic -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🔧</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Pneumatic Cylinder Force</div><p class="mech-card-desc">Calculate extend &amp; retract forces for pneumatic cylinders. Bore, rod diameter, supply &amp; back pressure. Live cross-section diagram. SI / Imperial toggle.</p><div class="mech-tags"><span class="mech-tag">Pneumatics</span><span class="mech-tag">Force Calc</span><span class="mech-tag">SI + IMP</span></div><a href="pneumatic-force-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Gear -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">⚙️</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Gear Ratio Calculator</div><p class="mech-card-desc">Compute gear ratios, output speed and torque for spur, helical &amp; planetary gear systems. Multi-stage support with live animated visualization.</p><div class="mech-tags"><span class="mech-tag">Gears</span><span class="mech-tag">Torque</span><span class="mech-tag">Speed</span></div><a href="gear-ratio-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Beam -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">📐</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Beam Stress &amp; Deflection</div><p class="mech-card-desc">Simply supported, cantilever &amp; fixed beam analysis. Bending stress, shear force diagrams and max deflection.</p><div class="mech-tags"><span class="mech-tag">Structural</span><span class="mech-tag">Bending</span><span class="mech-tag">Deflection</span></div><a href="beam-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Bolt -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🔩</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Bolt Torque Calculator</div><p class="mech-card-desc">Tightening torque for bolted joints. Metric &amp; UNC/UNF fasteners, friction coefficients and clamp force.</p><div class="mech-tags"><span class="mech-tag">Fasteners</span><span class="mech-tag">Torque</span><span class="mech-tag">Metric</span></div><a href="bolt-torque-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Hydraulic Force -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">💧</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Hydraulic Force Calculator</div><p class="mech-card-desc">Calculate cylinder extend &amp; retract forces for hydraulic systems. Bore, rod diameter, pressure inputs with SI / Imperial unit toggle.</p><div class="mech-tags"><span class="mech-tag">Hydraulics</span><span class="mech-tag">Force Calc</span><span class="mech-tag">SI + IMP</span></div><a href="hydraulic_calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Spring -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🌀</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Spring Calculator</div><p class="mech-card-desc">Calculate spring constant, deflection, stress and natural frequency for compression, extension &amp; torsion springs. Material library included.</p><div class="mech-tags"><span class="mech-tag">Springs</span><span class="mech-tag">Deflection</span><span class="mech-tag">Stress</span></div><a href="spring-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Motor -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">⚡</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Motor &amp; Gearbox Selector</div><p class="mech-card-desc">Select the right motor and gearbox by entering linear velocity, RPM, load torque, duty cycle and ambient temperature.</p><div class="mech-tags"><span class="mech-tag">Motor</span><span class="mech-tag">Gearbox</span><span class="mech-tag">Drive System</span></div><a href="motor-gearbox-selector.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Chain Drive -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🔗</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Chain Drive Calculator</div><p class="mech-card-desc">Design roller chain drives — chain pitch, sprocket teeth, centre distance, chain length, speed ratio and power transmitted.</p><div class="mech-tags"><span class="mech-tag">Chain Drive</span><span class="mech-tag">Sprocket</span><span class="mech-tag">Power Trans.</span></div><a href="chain-drive-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Belt Drive -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🔄</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Belt Drive Calculator</div><p class="mech-card-desc">Calculate V-belt and flat belt drives — belt length, speed ratio, tension, power capacity and centre distance.</p><div class="mech-tags"><span class="mech-tag">Belt Drive</span><span class="mech-tag">Pulley</span><span class="mech-tag">V-Belt</span></div><a href="belt-drive-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Conveyor -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🏭</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Conveyor Calculator</div><p class="mech-card-desc">Full conveyor system design — belt speed, capacity, motor power, tension and drive requirements.</p><div class="mech-tags"><span class="mech-tag">Conveyor</span><span class="mech-tag">Belt Speed</span><span class="mech-tag">Capacity</span></div><a href="conveyor-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- GDT -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">📏</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">GD&amp;T Calculator</div><p class="mech-card-desc">Geometric Dimensioning &amp; Tolerancing calculator — compute true position, flatness, circularity, concentricity and bonus tolerance.</p><div class="mech-tags"><span class="mech-tag">GD&amp;T</span><span class="mech-tag">Tolerance</span><span class="mech-tag">True Position</span></div><a href="gdt_calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Hydraulic System -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🛢️</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Hydraulic System Selector</div><p class="mech-card-desc">Select the right hydraulic system components — pump type, valve configuration, actuator sizing and fluid lines.</p><div class="mech-tags"><span class="mech-tag">Hydraulics</span><span class="mech-tag">Pump</span><span class="mech-tag">System Design</span></div><a href="hydro-select.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Circular Saw -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🔵</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Circular Saw Cutting Force</div><p class="mech-card-desc">Calculate tangential cutting force, torque, power and feed force for circular saw operations. Supports wood, metal and composite materials.</p><div class="mech-tags"><span class="mech-tag">Cutting Force</span><span class="mech-tag">Saw Blade</span><span class="mech-tag">Machining</span></div><a href="saw_calc.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      <!-- Punch & Die -->
       <div class="mech-card reveal"><div class="mech-card-top"><div class="mech-icon">🔨</div><span class="mech-badge-live">● Live</span></div><div class="mech-card-name">Punch &amp; Die Design Calculator</div><p class="mech-card-desc">Calculate punch &amp; die clearance, blank size, cutting force, stripper force and tonnage for sheet metal operations.</p><div class="mech-tags"><span class="mech-tag">Punch & Die</span><span class="mech-tag">Clearance</span><span class="mech-tag">Sheet Metal</span></div><a href="punch-die-calculator.html" target="_blank" class="mech-open-btn">Open Calculator <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
 
-      <!-- ✅ NEW: Part Gallery Card -->
+      <!-- ✅ NEW: Standard Parts Catalog Card -->
+      <div class="mech-card metal-card reveal">
+        <div class="mech-card-top">
+          <div class="mech-icon mech-icon-blue">🗂️</div>
+          <span class="mech-badge-live mech-badge-blue">● Live</span>
+        </div>
+        <div class="mech-card-name">Standard Parts Catalog</div>
+        <p class="mech-card-desc">Read-only reference catalog for standard parts from McMaster-Carr, MISUMI, THK, Carr-Lane, Steel Smith, Destaco and SKF. Search, filter by vendor or category, view full specs and link direct to supplier.</p>
+        <div class="mech-tags">
+          <span class="mech-tag mech-tag-blue">McMaster · MISUMI</span>
+          <span class="mech-tag mech-tag-blue">THK · SKF</span>
+          <span class="mech-tag mech-tag-blue">Carr-Lane · Destaco</span>
+        </div>
+        <a href="parts-catalog.html" target="_blank" class="mech-open-btn mech-open-btn-blue">Open Catalog <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+      </div>
+
+      <!-- Part Gallery Card -->
       <div class="mech-card reveal" style="border-color:#e0d4f0;">
-        <div style="content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#b45309,#f59e0b);opacity:0;transition:opacity 0.22s;" class="part-gallery-bar"></div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#b45309,#f59e0b);opacity:0;transition:opacity 0.22s;" class="part-gallery-bar"></div>
         <div class="mech-card-top">
           <div class="mech-icon" style="background:linear-gradient(135deg,rgba(244,96,12,0.10),rgba(124,58,237,0.10));border:1px solid rgba(180,83,9,0.20);">🖼️</div>
           <span class="mech-badge-live">● Live</span>
@@ -663,7 +691,6 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 reveals.forEach(el => observer.observe(el));
 
-// Part Gallery card hover bar animation
 document.querySelectorAll('.mech-card').forEach(card => {
   const bar = card.querySelector('.part-gallery-bar');
   if (bar) {
