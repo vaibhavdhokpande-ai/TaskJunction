@@ -3,134 +3,1055 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Metal Weight &amp; Price Calculator Free Online &mdash; 12 Shapes 13 Materials | TaskJunction</title>
-<meta name="description" content="Free online metal weight and price calculator — calculate weight and cost for 12 metal shapes (square bar, rectangular bar, flat plate, round bar, hex bar, hollow pipe, angle, channel, T-section, I-beam, square tube, sheet/coil) and 13 materials. MS steel, SS 304/316, aluminum, copper, brass, titanium. Instant live results, no login required.">
-<meta name="keywords" content="metal weight calculator free online, steel weight calculator India, MS steel weight calculator, stainless steel weight calculator, aluminum weight calculator, copper weight calculator, square bar weight calculator, round bar weight calculator, flat plate weight calculator, hollow pipe weight calculator, I-beam weight calculator, metal price calculator online, steel price per kg calculator, engineering material weight calculator free">
-<meta name="author" content="Vaibhav Dhokpande">
-<meta name="robots" content="index, follow">
-<meta name="language" content="English">
-<link rel="canonical" href="https://vaibhavdhokpande-ai.github.io/metal_weight_price_calculator.html">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Metal Weight &amp; Price Calculator Free Online | TaskJunction">
-<meta property="og:description" content="Calculate metal weight and price for 12 shapes and 13 materials. MS steel, SS 304/316, aluminum, copper, brass, titanium. Free, no login, instant live results.">
-<meta property="og:url" content="https://vaibhavdhokpande-ai.github.io/metal_weight_price_calculator.html">
-<meta property="og:site_name" content="TaskJunction">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Metal Weight &amp; Price Calculator Free | TaskJunction">
-<meta name="twitter:description" content="Free metal weight and price calculator — 12 shapes, 13 materials, live results. No login required.">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Metal Weight & Price Calculator",
-  "description": "Free online metal weight and price calculator for 12 metal shapes and 13 materials.",
-  "url": "https://vaibhavdhokpande-ai.github.io/metal_weight_price_calculator.html",
-  "applicationCategory": "EngineeringApplication",
-  "operatingSystem": "Web Browser",
-  "offers": {"@type":"Offer","price":"0","priceCurrency":"INR"},
-  "author": {"@type":"Person","name":"Vaibhav Dhokpande","url":"https://vaibhavdhokpande-ai.github.io"},
-  "publisher": {"@type":"Organization","name":"TaskJunction","url":"https://vaibhavdhokpande-ai.github.io"}
-}
-</script>
+<title>Metal Weight &amp; Price Calculator Free Online — 12 Shapes 13 Materials | TaskJunction</title>
+<meta name="description" content="Free online metal weight and price calculator — calculate weight and cost for 12 metal shapes and 13 materials. MS steel, SS 304/316, aluminum, copper, brass, titanium. Instant live results, no login required.">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--bg:#f4f6f9;--surface:#ffffff;--border:#dde3ec;--navy:#0d1f3c;--blue:#1d6fe8;--blue2:#2563eb;--blue-soft:rgba(29,111,232,0.09);--blue-pill:rgba(29,111,232,0.13);--text:#0d1f3c;--text2:#4a5a72;--text3:#8899b0;--green:#00c97a;--shadow-sm:0 1px 4px rgba(13,31,60,0.07);--shadow:0 3px 14px rgba(13,31,60,0.09);--shadow-lg:0 8px 32px rgba(13,31,60,0.13);--radius:14px;--radius-sm:9px;}
+:root{
+  --bg:#f4f6f9;--surface:#ffffff;--border:#dde3ec;
+  --navy:#0d1f3c;--blue:#1d6fe8;--blue2:#2563eb;
+  --blue-soft:rgba(29,111,232,0.09);--blue-pill:rgba(29,111,232,0.13);
+  --text:#0d1f3c;--text2:#4a5a72;--text3:#8899b0;
+  --green:#00c97a;
+  --shadow-sm:0 1px 4px rgba(13,31,60,0.07);
+  --shadow:0 3px 14px rgba(13,31,60,0.09);
+  --shadow-lg:0 8px 32px rgba(13,31,60,0.13);
+  --radius:14px;--radius-sm:9px;
+}
 body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;}
+
+/* NAV */
 nav{position:sticky;top:0;z-index:200;background:var(--navy);height:62px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.22);}
 .nav-logo{font-size:20px;font-weight:700;color:#fff;text-decoration:none;}.nav-logo span{color:#4fa3ff;}
 .nav-home{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:#4fa3ff;background:rgba(79,163,255,0.12);border:1.5px solid rgba(79,163,255,0.3);padding:7px 18px;border-radius:8px;text-decoration:none;transition:all 0.18s;}.nav-home:hover{background:rgba(79,163,255,0.22);}
+
+/* HERO */
 .hero{background:linear-gradient(135deg,#0d1f3c 0%,#1a3060 55%,#0d2848 100%);padding:36px 28px 34px;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(79,163,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(79,163,255,0.05) 1px,transparent 1px);background-size:36px 36px;}
-.hero-inner{position:relative;z-index:1;max-width:960px;margin:0 auto;}
+.hero-inner{position:relative;z-index:1;max-width:980px;margin:0 auto;}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(79,163,255,0.15);border:1px solid rgba(79,163,255,0.35);border-radius:99px;padding:5px 14px;font-size:11px;color:#7fc4ff;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;}
 .hero h1{font-size:clamp(22px,4vw,34px);font-weight:700;color:#fff;letter-spacing:-0.02em;margin-bottom:8px;}.hero h1 span{color:#4fa3ff;}
 .hero p{font-size:14px;color:rgba(255,255,255,0.5);}
-.main{max-width:960px;margin:0 auto;padding:28px 20px 80px;display:grid;gap:20px;}
+
+/* MAIN */
+.main{max-width:980px;margin:0 auto;padding:28px 20px 80px;display:grid;gap:20px;}
+
+/* CARD */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;}
 .card-head{display:flex;align-items:center;gap:10px;padding:15px 20px 13px;border-bottom:1px solid var(--border);background:#fafbfd;}
-.step-num{width:26px;height:26px;border-radius:7px;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}.step-num.grey{background:#64748b;}
-.card-title{font-size:14px;font-weight:700;color:var(--text);}.card-sub{font-size:12px;color:var(--text3);margin-left:auto;}
+.step-num{width:26px;height:26px;border-radius:7px;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-num.grey{background:#64748b;}
+.card-title{font-size:14px;font-weight:700;color:var(--text);}
+.card-sub{font-size:12px;color:var(--text3);margin-left:auto;}
 .card-body{padding:20px;}
-.shape-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
-@media(max-width:600px){.shape-grid{grid-template-columns:repeat(4,1fr);}}@media(max-width:380px){.shape-grid{grid-template-columns:repeat(3,1fr);}}
-.shape-btn{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 4px 8px;cursor:pointer;text-align:center;background:var(--surface);transition:all 0.15s;user-select:none;}
-.shape-btn:hover{border-color:var(--blue2);background:var(--blue-soft);transform:translateY(-1px);}.shape-btn.active{border-color:var(--blue2);background:var(--blue-pill);box-shadow:0 0 0 2px rgba(37,99,235,0.15);}
-.shape-icon{font-size:20px;display:block;margin-bottom:5px;line-height:1;}.shape-label{font-size:10px;font-weight:600;color:var(--text2);line-height:1.3;}.shape-btn.active .shape-label{color:var(--blue2);}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}@media(max-width:640px){.two-col{grid-template-columns:1fr;}}
-.metal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:7px;}
+
+/* SHAPE GRID - bigger buttons */
+.shape-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+@media(max-width:700px){.shape-grid{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:420px){.shape-grid{grid-template-columns:repeat(3,1fr);}}
+
+.shape-btn{
+  border:1.5px solid var(--border);border-radius:10px;
+  padding:14px 6px 11px;cursor:pointer;text-align:center;
+  background:var(--surface);transition:all 0.15s;user-select:none;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.shape-btn:hover{border-color:var(--blue2);background:var(--blue-soft);transform:translateY(-2px);box-shadow:0 4px 12px rgba(37,99,235,0.12);}
+.shape-btn.active{border-color:var(--blue2);background:var(--blue-pill);box-shadow:0 0 0 2px rgba(37,99,235,0.18);}
+.shape-icon-wrap{width:52px;height:44px;display:flex;align-items:center;justify-content:center;}
+.shape-icon-wrap svg{width:100%;height:100%;}
+.shape-label{font-size:10px;font-weight:700;color:var(--text2);line-height:1.3;text-align:center;}
+.shape-btn.active .shape-label{color:var(--blue2);}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:680px){.two-col{grid-template-columns:1fr;}}
+
+/* METAL PILLS */
+.metal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:7px;}
 .mpill{border:1.5px solid var(--border);border-radius:8px;padding:7px 8px;font-size:11px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--text2);transition:all 0.15s;text-align:center;line-height:1.3;}
-.mpill:hover{border-color:var(--blue2);color:var(--blue2);background:var(--blue-soft);}.mpill.active{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(13,31,60,0.25);}
-.mpill .d-tag{display:block;font-size:9px;color:rgba(255,255,255,0.5);font-weight:400;margin-top:2px;}.mpill:not(.active) .d-tag{color:var(--text3);}
+.mpill:hover{border-color:var(--blue2);color:var(--blue2);background:var(--blue-soft);}
+.mpill.active{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(13,31,60,0.25);}
+.mpill .d-tag{display:block;font-size:9px;color:rgba(255,255,255,0.5);font-weight:400;margin-top:2px;}
+.mpill:not(.active) .d-tag{color:var(--text3);}
 .density-row{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);}
-.density-row label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;}.density-row input{flex:1;}
+.density-row label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;}
+.density-row input{flex:1;}
+
+/* FIELDS */
 .field{margin-bottom:14px;}.field:last-child{margin-bottom:0;}
 .field label{display:block;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px;}
 input[type=number],select{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--text);padding:9px 12px;border-radius:var(--radius-sm);font-family:Arial,sans-serif;font-size:15px;font-weight:600;outline:none;transition:border-color 0.18s,box-shadow 0.18s;-moz-appearance:textfield;}
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
-input:focus,select:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(37,99,235,0.1);background:#fff;}select{font-weight:500;font-size:13px;cursor:pointer;}
-.dim-grid{display:grid;gap:12px;grid-template-columns:1fr 1fr;}.dim-grid.c3{grid-template-columns:1fr 1fr 1fr;}.dim-grid.c4{grid-template-columns:1fr 1fr 1fr 1fr;}.dim-grid.c5{grid-template-columns:1fr 1fr 1fr 1fr 1fr;}
+input:focus,select:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(37,99,235,0.1);background:#fff;}
+select{font-weight:500;font-size:13px;cursor:pointer;}
+.dim-grid{display:grid;gap:12px;grid-template-columns:1fr 1fr;}
+.dim-grid.c3{grid-template-columns:1fr 1fr 1fr;}
+.dim-grid.c4{grid-template-columns:1fr 1fr 1fr 1fr;}
+.dim-grid.c5{grid-template-columns:1fr 1fr 1fr 1fr 1fr;}
 @media(max-width:500px){.dim-grid.c3,.dim-grid.c4,.dim-grid.c5{grid-template-columns:1fr 1fr;}}
-.step4-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}@media(max-width:520px){.step4-grid{grid-template-columns:1fr 1fr;}}
+
+/* STEP 4 */
+.step4-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:520px){.step4-grid{grid-template-columns:1fr 1fr;}}
+
+/* RESULTS */
 .results-panel{background:linear-gradient(135deg,#0d1f3c 0%,#132848 50%,#0a1a35 100%);border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
 .res-header{padding:18px 24px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-.res-title{font-size:10px;font-weight:700;color:rgba(255,255,255,0.38);letter-spacing:0.16em;text-transform:uppercase;}.res-name{font-size:15px;font-weight:700;color:#fff;margin-top:3px;}
+.res-title{font-size:10px;font-weight:700;color:rgba(255,255,255,0.38);letter-spacing:0.16em;text-transform:uppercase;}
+.res-name{font-size:15px;font-weight:700;color:#fff;margin-top:3px;}
 .live-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;}
 .live-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.6s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.75);}}
-.res-body{padding:20px 24px;}.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}@media(max-width:620px){.res-grid{grid-template-columns:1fr 1fr;}}
+.res-body{padding:20px 24px;}
+.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+@media(max-width:620px){.res-grid{grid-template-columns:1fr 1fr;}}
 .res-block{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;}
 .res-lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,0.38);letter-spacing:0.09em;text-transform:uppercase;margin-bottom:8px;}
-.res-val{font-size:26px;font-weight:700;line-height:1;letter-spacing:-0.02em;}.res-val.w{color:#60b4ff;}.res-val.p{color:var(--green);}
+.res-val{font-size:26px;font-weight:700;line-height:1;letter-spacing:-0.02em;}
+.res-val.w{color:#60b4ff;}.res-val.p{color:var(--green);}
 .res-unit{font-size:11px;color:rgba(255,255,255,0.3);margin-left:3px;}
 .formula-strip{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:11px 14px;font-family:Arial,monospace;font-size:11.5px;color:rgba(255,255,255,0.35);line-height:1.8;word-break:break-all;}
 .formula-strip b{color:rgba(255,255,255,0.6);}
-.ref-wrap{overflow-x:auto;}.ref-table{width:100%;border-collapse:collapse;}.ref-table thead tr{border-bottom:2px solid var(--border);}
-.ref-table th{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;text-align:left;padding:0 14px 10px;white-space:nowrap;}.ref-table th:first-child{padding-left:20px;}
-.ref-table tbody tr{border-bottom:1px solid var(--border);transition:background 0.12s;}.ref-table tbody tr:last-child{border-bottom:none;}.ref-table tbody tr:hover{background:var(--blue-soft);}
-.ref-table td{padding:10px 14px;font-size:13px;color:var(--text2);}.ref-table td:first-child{font-weight:700;color:var(--text);padding-left:20px;}
+
+/* SIZES PANEL */
+.sizes-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;}
+.sizes-head{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border);background:#fafbfd;}
+.sizes-title{font-size:13px;font-weight:700;color:var(--text);}
+.sizes-sub{font-size:11px;color:var(--text3);margin-left:auto;}
+.sizes-body{padding:16px 20px;}
+.sizes-tabs{display:flex;gap:6px;margin-bottom:14px;}
+.stab{padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);color:var(--text2);background:var(--surface);transition:all 0.15s;}
+.stab.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.stab:hover:not(.active){border-color:var(--blue2);color:var(--blue2);background:var(--blue-soft);}
+.sizes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;}
+.size-chip{
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:7px;padding:7px 11px;
+  font-size:12px;font-weight:600;color:var(--text2);
+  cursor:pointer;transition:all 0.13s;line-height:1.4;
+}
+.size-chip:hover{border-color:var(--blue2);color:var(--blue2);background:var(--blue-soft);}
+.size-chip.used{border-color:var(--blue2);background:var(--blue-pill);color:var(--blue2);}
+.size-chip-label{font-size:9px;font-weight:400;color:var(--text3);display:block;}
+
+/* REF TABLE */
+.ref-wrap{overflow-x:auto;}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table thead tr{border-bottom:2px solid var(--border);}
+.ref-table th{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;text-align:left;padding:0 14px 10px;white-space:nowrap;}
+.ref-table th:first-child{padding-left:20px;}
+.ref-table tbody tr{border-bottom:1px solid var(--border);transition:background 0.12s;}
+.ref-table tbody tr:last-child{border-bottom:none;}
+.ref-table tbody tr:hover{background:var(--blue-soft);}
+.ref-table td{padding:10px 14px;font-size:13px;color:var(--text2);}
+.ref-table td:first-child{font-weight:700;color:var(--text);padding-left:20px;}
 .chip-d{display:inline-block;font-size:10px;font-weight:600;color:var(--blue2);background:var(--blue-pill);border-radius:5px;padding:2px 6px;margin-left:5px;}
 .chip-p{display:inline-block;font-size:10px;font-weight:600;color:#166534;background:rgba(22,101,52,0.1);border-radius:5px;padding:2px 6px;}
+
+/* AFF */
 .aff-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;display:flex;align-items:flex-start;gap:16px;box-shadow:var(--shadow-sm);}
 .aff-icon{width:44px;height:44px;border-radius:10px;background:var(--blue-soft);border:1px solid rgba(29,111,232,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.aff-body{flex:1;}.aff-tag{font-size:10px;font-weight:700;color:var(--blue2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
-.aff-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px;}.aff-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px;}
+.aff-body{flex:1;}
+.aff-tag{font-size:10px;font-weight:700;color:var(--blue2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.aff-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.aff-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px;}
 .aff-btn{display:inline-flex;align-items:center;gap:6px;background:var(--blue2);color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;transition:all 0.18s;}
-.aff-btn:hover{background:#1d52c8;transform:translateY(-1px);}.aff-disc{font-size:10px;color:var(--text3);margin-top:8px;}
+.aff-btn:hover{background:#1d52c8;transform:translateY(-1px);}
+.aff-disc{font-size:10px;color:var(--text3);margin-top:8px;}
 @media(max-width:480px){.aff-box{flex-direction:column;}}
-footer{background:var(--navy);color:#fff;padding:44px 24px 32px;text-align:center;}.footer-logo{font-size:22px;font-weight:700;margin-bottom:14px;}.footer-logo span{color:#4fa3ff;}
-.footer-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}.footer-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:13px;transition:color 0.15s;}.footer-links a:hover{color:#fff;}
-.footer-hr{width:60px;height:1px;background:rgba(255,255,255,0.12);margin:0 auto 16px;}.footer-copy{font-size:12px;color:rgba(255,255,255,0.3);line-height:1.8;}.footer-copy strong{color:rgba(255,255,255,0.65);}
+
+/* FOOTER */
+footer{background:var(--navy);color:#fff;padding:44px 24px 32px;text-align:center;}
+.footer-logo{font-size:22px;font-weight:700;margin-bottom:14px;}.footer-logo span{color:#4fa3ff;}
+.footer-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
+.footer-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:13px;transition:color 0.15s;}
+.footer-links a:hover{color:#fff;}
+.footer-hr{width:60px;height:1px;background:rgba(255,255,255,0.12);margin:0 auto 16px;}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.3);line-height:1.8;}
+.footer-copy strong{color:rgba(255,255,255,0.65);}
 </style>
 </head>
 <body>
-<nav><a href="index.html" class="nav-logo">Task<span>Junction</span></a><a href="index.html" class="nav-home">&#127968; Home</a></nav>
-<div class="hero"><div class="hero-inner"><div class="hero-badge">&#9881;&#65039; Engineering Tool &nbsp;&middot;&nbsp; 12 Shapes &nbsp;&middot;&nbsp; 13 Metals</div><h1>Metal Weight &amp; <span>Price Calculator</span></h1><p>Select shape, material and dimensions &mdash; instant weight &amp; cost for any quantity</p></div></div>
-<div class="main">
-<div class="card"><div class="card-head"><div class="step-num">1</div><div class="card-title">Select Cross-Section Shape</div><div class="card-sub">12 profiles</div></div><div class="card-body"><div class="shape-grid" id="shapeGrid"><div class="shape-btn active" data-shape="square_bar" onclick="selectShape(this)"><span class="shape-icon">&#11035;</span><span class="shape-label">Square Bar</span></div><div class="shape-btn" data-shape="rect_bar" onclick="selectShape(this)"><span class="shape-icon">&#9644;</span><span class="shape-label">Rect Bar</span></div><div class="shape-btn" data-shape="flat_plate" onclick="selectShape(this)"><span class="shape-icon">&#127afa;</span><span class="shape-label">Flat Plate</span></div><div class="shape-btn" data-shape="round_bar" onclick="selectShape(this)"><span class="shape-icon">&#9899;</span><span class="shape-label">Round Bar</span></div><div class="shape-btn" data-shape="hex_bar" onclick="selectShape(this)"><span class="shape-icon">&#11041;</span><span class="shape-label">Hex Bar</span></div><div class="shape-btn" data-shape="hollow_pipe" onclick="selectShape(this)"><span class="shape-icon">&#11093;</span><span class="shape-label">Hollow Pipe</span></div><div class="shape-btn" data-shape="angle" onclick="selectShape(this)"><span class="shape-icon">&#128208;</span><span class="shape-label">Angle / L</span></div><div class="shape-btn" data-shape="channel" onclick="selectShape(this)"><span class="shape-icon">&#8847;</span><span class="shape-label">Channel / C</span></div><div class="shape-btn" data-shape="tee" onclick="selectShape(this)"><span class="shape-icon">&#8868;</span><span class="shape-label">T-Section</span></div><div class="shape-btn" data-shape="i_beam" onclick="selectShape(this)"><span class="shape-icon">&#128297;</span><span class="shape-label">I-Beam</span></div><div class="shape-btn" data-shape="square_tube" onclick="selectShape(this)"><span class="shape-icon">&#11036;</span><span class="shape-label">Sq. Tube</span></div><div class="shape-btn" data-shape="sheet_coil" onclick="selectShape(this)"><span class="shape-icon">&#128196;</span><span class="shape-label">Sheet/Coil</span></div></div></div></div>
-<div class="two-col"><div class="card"><div class="card-head"><div class="step-num">2</div><div class="card-title">Material &amp; Density</div></div><div class="card-body"><div class="metal-grid" id="metalPills"></div><div class="density-row"><label>Density (g/cm&sup3;)</label><input type="number" id="densityInput" step="0.01" value="7.85" min="0.1" max="25" oninput="calcWeight()"></div></div></div><div class="card"><div class="card-head"><div class="step-num">3</div><div class="card-title">Dimensions</div><div class="card-sub"><select id="unitSel" onchange="updateUnit()" style="width:auto;padding:4px 8px;font-size:12px;border-radius:6px;font-weight:600;border-width:1px;"><option value="mm">mm</option><option value="cm">cm</option><option value="inch">inch</option><option value="m">m</option></select></div></div><div class="card-body"><div id="dimFields"></div></div></div></div>
-<div class="card"><div class="card-head"><div class="step-num">4</div><div class="card-title">Quantity &amp; Pricing</div></div><div class="card-body"><div class="step4-grid"><div class="field"><label>Quantity (pcs)</label><input type="number" id="qty" value="1" min="1" oninput="calcWeight()"></div><div class="field"><label>Price per kg (&#8377;)</label><input type="number" id="pricePerKg" value="85" min="0" oninput="calcWeight()"></div><div class="field"><label>Wastage / Margin %</label><input type="number" id="margin" value="0" min="0" max="100" step="0.5" oninput="calcWeight()"></div></div></div></div>
-<div class="results-panel"><div class="res-header"><div><div class="res-title">Live Result</div><div class="res-name" id="resShapeName">Square Bar &middot; MS Steel</div></div><div class="live-badge">Live</div></div><div class="res-body"><div class="res-grid"><div class="res-block"><div class="res-lbl">Unit Weight</div><span class="res-val w" id="resUnitWeight">&mdash;</span><span class="res-unit">kg</span></div><div class="res-block"><div class="res-lbl">Total Weight (&times;qty)</div><span class="res-val w" id="resTotalWeight">&mdash;</span><span class="res-unit">kg</span></div><div class="res-block"><div class="res-lbl">Unit Price</div><span class="res-val p" id="resUnitPrice">&mdash;</span></div><div class="res-block"><div class="res-lbl">Total Price (+margin)</div><span class="res-val p" id="resTotalPrice">&mdash;</span></div></div><div class="formula-strip" id="formulaBox">Fill in dimensions above to see calculation.</div></div></div>
-<div class="card"><div class="card-head"><div class="step-num grey">&#128203;</div><div class="card-title">Material Reference &mdash; Density &amp; Indicative Price</div></div><div class="card-body" style="padding:0;"><div class="ref-wrap"><table class="ref-table"><thead><tr><th>Material</th><th>Density (g/cm&sup3;)</th><th>Indicative &#8377;/kg</th><th>Common Application</th></tr></thead><tbody id="refTableBody"></tbody></table></div></div></div>
-<div class="aff-box"><div class="aff-icon">&#128214;</div><div class="aff-body"><div class="aff-tag">&#128218; Recommended Book</div><div class="aff-name">R.S. Khurmi &mdash; Theory of Machines &amp; Machine Design</div><div class="aff-desc">The most trusted mechanical engineering reference for Indian students &amp; professionals.</div><a href="https://amzn.to/4tEIoui" target="_blank" rel="noopener sponsored" class="aff-btn">&#128722; Buy on Amazon India &rarr;</a><p class="aff-disc">* Affiliate link &mdash; no extra cost to you.</p></div></div>
-<div class="aff-box"><div class="aff-icon">&#128207;</div><div class="aff-body"><div class="aff-tag">&#128296; Recommended Tool</div><div class="aff-name">Digital Vernier Caliper &mdash; Precision Measuring Instrument</div><div class="aff-desc">Accurate to 0.01 mm &mdash; measure OD, ID, depth &amp; step. Essential for verifying dimensions.</div><a href="https://amzn.to/496rn4W" target="_blank" rel="noopener sponsored" class="aff-btn">&#128722; Buy on Amazon India &rarr;</a><p class="aff-disc">* Affiliate link &mdash; no extra cost to you.</p></div></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">Task<span>Junction</span></a>
+  <a href="index.html" class="nav-home">🏠 Home</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">⚙️ Engineering Tool &nbsp;·&nbsp; 12 Shapes &nbsp;·&nbsp; 13 Metals</div>
+    <h1>Metal Weight &amp; <span>Price Calculator</span></h1>
+    <p>Select shape, material and dimensions — instant weight &amp; cost for any quantity</p>
+  </div>
 </div>
-<footer><div class="footer-logo">Task<span>Junction</span></div><div class="footer-links"><a href="index.html">Home</a><a href="index.html#mechanical">&#9881;&#65039; Mechanical</a><a href="index.html#apps">Apps</a><a href="index.html#privacy">Privacy</a><a href="mailto:vaibhavdhokpande@gmail.com">Contact</a></div><div class="footer-hr"></div><p class="footer-copy">Made by <strong>Vaibhav Dhokpande</strong> &nbsp;&middot;&nbsp; &copy; 2025 TaskJunction. All rights reserved.</p></footer>
+
+<div class="main">
+
+  <!-- STEP 1: SHAPE -->
+  <div class="card">
+    <div class="card-head">
+      <div class="step-num">1</div>
+      <div class="card-title">Select Cross-Section Shape</div>
+      <div class="card-sub">12 profiles</div>
+    </div>
+    <div class="card-body">
+      <div class="shape-grid" id="shapeGrid">
+
+        <!-- Square Bar -->
+        <div class="shape-btn active" data-shape="square_bar" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="4" width="36" height="36" fill="#1d6fe8" rx="2"/>
+              <rect x="12" y="8" width="28" height="28" fill="#4fa3ff" rx="1"/>
+              <line x1="8" y1="40" x2="44" y2="40" stroke="#0d1f3c" stroke-width="1.5" stroke-dasharray="3,2"/>
+              <text x="26" y="43" text-anchor="middle" font-size="5" fill="#8899b0" font-family="Arial">a × a</text>
+            </svg>
+          </div>
+          <span class="shape-label">Square Bar</span>
+        </div>
+
+        <!-- Rect Bar -->
+        <div class="shape-btn" data-shape="rect_bar" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="10" width="44" height="24" fill="#1d6fe8" rx="2"/>
+              <rect x="8" y="14" width="36" height="16" fill="#4fa3ff" rx="1"/>
+              <line x1="4" y1="8" x2="48" y2="8" stroke="#4fa3ff" stroke-width="1" stroke-dasharray="2,2" opacity=".5"/>
+              <line x1="50" y1="10" x2="50" y2="34" stroke="#4fa3ff" stroke-width="1" stroke-dasharray="2,2" opacity=".5"/>
+            </svg>
+          </div>
+          <span class="shape-label">Rect Bar</span>
+        </div>
+
+        <!-- Flat Plate -->
+        <div class="shape-btn" data-shape="flat_plate" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="16" width="46" height="12" fill="#1d6fe8" rx="2"/>
+              <rect x="6" y="18" width="40" height="8" fill="#4fa3ff" rx="1"/>
+              <line x1="3" y1="14" x2="49" y2="14" stroke="#4fa3ff" stroke-width="0.8" opacity=".4" stroke-dasharray="3,2"/>
+              <line x1="3" y1="30" x2="49" y2="30" stroke="#4fa3ff" stroke-width="0.8" opacity=".4" stroke-dasharray="3,2"/>
+              <text x="26" y="42" text-anchor="middle" font-size="5" fill="#8899b0" font-family="Arial">t</text>
+            </svg>
+          </div>
+          <span class="shape-label">Flat Plate</span>
+        </div>
+
+        <!-- Round Bar -->
+        <div class="shape-btn" data-shape="round_bar" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="26" cy="22" r="17" fill="#1d6fe8"/>
+              <circle cx="26" cy="22" r="13" fill="#4fa3ff"/>
+              <circle cx="26" cy="22" r="5" fill="#1d6fe8" opacity=".5"/>
+              <line x1="26" y1="5" x2="26" y2="39" stroke="white" stroke-width="0.6" opacity=".25"/>
+              <line x1="9" y1="22" x2="43" y2="22" stroke="white" stroke-width="0.6" opacity=".25"/>
+              <line x1="26" y1="5" x2="43" y2="22" stroke="white" stroke-width="1" opacity=".4"/>
+              <text x="35" y="18" font-size="5" fill="white" font-family="Arial" opacity=".7">r</text>
+            </svg>
+          </div>
+          <span class="shape-label">Round Bar</span>
+        </div>
+
+        <!-- Hex Bar -->
+        <div class="shape-btn" data-shape="hex_bar" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="26,4 44,13 44,31 26,40 8,31 8,13" fill="#1d6fe8"/>
+              <polygon points="26,8 40,15.5 40,29 26,36 12,29 12,15.5" fill="#4fa3ff"/>
+              <line x1="8" y1="22" x2="44" y2="22" stroke="white" stroke-width="0.8" opacity=".3" stroke-dasharray="2,2"/>
+              <text x="26" y="42" text-anchor="middle" font-size="5" fill="#8899b0" font-family="Arial">A/F</text>
+            </svg>
+          </div>
+          <span class="shape-label">Hex Bar</span>
+        </div>
+
+        <!-- Hollow Pipe -->
+        <div class="shape-btn" data-shape="hollow_pipe" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="26" cy="22" r="18" fill="#1d6fe8"/>
+              <circle cx="26" cy="22" r="11" fill="#f4f6f9"/>
+              <circle cx="26" cy="22" r="18" fill="none" stroke="#4fa3ff" stroke-width="1.5"/>
+              <circle cx="26" cy="22" r="11" fill="none" stroke="#4fa3ff" stroke-width="1.5"/>
+              <line x1="26" y1="4" x2="26" y2="11" stroke="white" stroke-width="0.8" opacity=".5"/>
+              <line x1="26" y1="11" x2="37" y2="11" stroke="white" stroke-width="0.8" opacity=".5"/>
+              <text x="37" y="14" font-size="5" fill="white" font-family="Arial" opacity=".7">OD</text>
+              <line x1="26" y1="22" x2="37" y2="22" stroke="#1d6fe8" stroke-width="0.8" opacity=".8"/>
+              <text x="38" y="25" font-size="5" fill="#4a5a72" font-family="Arial">ID</text>
+            </svg>
+          </div>
+          <span class="shape-label">Hollow Pipe</span>
+        </div>
+
+        <!-- Angle -->
+        <div class="shape-btn" data-shape="angle" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 6 L8 38 L44 38" stroke="#1d6fe8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 6 L8 38 L44 38" stroke="#4fa3ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="8" y1="38" x2="8" y2="6" stroke="white" stroke-width="0.7" opacity=".3"/>
+              <text x="18" y="43" font-size="5" fill="#8899b0" font-family="Arial">L-Section</text>
+            </svg>
+          </div>
+          <span class="shape-label">Angle / L</span>
+        </div>
+
+        <!-- Channel -->
+        <div class="shape-btn" data-shape="channel" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M40 6 L10 6 L10 38 L40 38" stroke="#1d6fe8" stroke-width="9" stroke-linecap="round" stroke-linejoin="miter" fill="none"/>
+              <path d="M40 6 L10 6 L10 38 L40 38" stroke="#4fa3ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="miter" fill="none"/>
+            </svg>
+          </div>
+          <span class="shape-label">Channel / C</span>
+        </div>
+
+        <!-- T-Section -->
+        <div class="shape-btn" data-shape="tee" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 8 L46 8" stroke="#1d6fe8" stroke-width="8" stroke-linecap="round"/>
+              <path d="M26 8 L26 40" stroke="#1d6fe8" stroke-width="8" stroke-linecap="round"/>
+              <path d="M6 8 L46 8" stroke="#4fa3ff" stroke-width="5" stroke-linecap="round"/>
+              <path d="M26 8 L26 40" stroke="#4fa3ff" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="shape-label">T-Section</span>
+        </div>
+
+        <!-- I-Beam -->
+        <div class="shape-btn" data-shape="i_beam" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="4" width="40" height="8" fill="#1d6fe8" rx="1"/>
+              <rect x="6" y="32" width="40" height="8" fill="#1d6fe8" rx="1"/>
+              <rect x="21" y="12" width="10" height="20" fill="#1d6fe8"/>
+              <rect x="8" y="5.5" width="36" height="5" fill="#4fa3ff" rx="1"/>
+              <rect x="8" y="33.5" width="36" height="5" fill="#4fa3ff" rx="1"/>
+              <rect x="23" y="12" width="6" height="20" fill="#4fa3ff"/>
+            </svg>
+          </div>
+          <span class="shape-label">I-Beam</span>
+        </div>
+
+        <!-- Square Tube -->
+        <div class="shape-btn" data-shape="square_tube" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="4" width="40" height="36" fill="#1d6fe8" rx="2"/>
+              <rect x="14" y="12" width="24" height="20" fill="#f4f6f9" rx="1"/>
+              <rect x="6" y="4" width="40" height="36" fill="none" stroke="#4fa3ff" stroke-width="1.5" rx="2"/>
+              <rect x="14" y="12" width="24" height="20" fill="none" stroke="#4fa3ff" stroke-width="1.2" rx="1"/>
+            </svg>
+          </div>
+          <span class="shape-label">Sq. Tube</span>
+        </div>
+
+        <!-- Sheet/Coil -->
+        <div class="shape-btn" data-shape="sheet_coil" onclick="selectShape(this)">
+          <div class="shape-icon-wrap">
+            <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="18" width="46" height="8" fill="#1d6fe8" rx="1"/>
+              <rect x="5" y="19.5" width="42" height="5" fill="#4fa3ff" rx="1"/>
+              <rect x="3" y="12" width="46" height="5" fill="#1d6fe8" opacity=".4" rx="1"/>
+              <rect x="3" y="27" width="46" height="5" fill="#1d6fe8" opacity=".25" rx="1"/>
+              <line x1="49" y1="17" x2="49" y2="27" stroke="#4fa3ff" stroke-width="1.2"/>
+              <line x1="47" y1="17" x2="51" y2="17" stroke="#4fa3ff" stroke-width="1.2"/>
+              <line x1="47" y1="27" x2="51" y2="27" stroke="#4fa3ff" stroke-width="1.2"/>
+              <text x="44" y="23" text-anchor="middle" font-size="4.5" fill="white" font-family="Arial">t</text>
+            </svg>
+          </div>
+          <span class="shape-label">Sheet/Coil</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2+3 TWO COL -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">2</div>
+        <div class="card-title">Material &amp; Density</div>
+      </div>
+      <div class="card-body">
+        <div class="metal-grid" id="metalPills"></div>
+        <div class="density-row">
+          <label>Density (g/cm³)</label>
+          <input type="number" id="densityInput" step="0.01" value="7.85" min="0.1" max="25" oninput="calcWeight()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">3</div>
+        <div class="card-title">Dimensions</div>
+        <div class="card-sub">
+          <select id="unitSel" onchange="updateUnit()" style="width:auto;padding:4px 8px;font-size:12px;border-radius:6px;font-weight:600;border-width:1px;">
+            <option value="mm">mm</option>
+            <option value="cm">cm</option>
+            <option value="inch">inch</option>
+            <option value="m">m</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body" id="dimFields"></div>
+    </div>
+  </div>
+
+  <!-- STANDARD SIZES PANEL -->
+  <div class="sizes-panel" id="sizesPanel">
+    <div class="sizes-head">
+      <div class="step-num" style="background:#0d1f3c;">📐</div>
+      <div class="sizes-title">Standard Available Sizes — <span id="sizesShapeName">Square Bar</span></div>
+      <div class="sizes-sub">Click to auto-fill dimensions</div>
+    </div>
+    <div class="sizes-body">
+      <div class="sizes-tabs">
+        <div class="stab active" onclick="switchSizeTab('metric',this)">Metric (mm)</div>
+        <div class="stab" onclick="switchSizeTab('inch',this)">Imperial (inch)</div>
+      </div>
+      <div class="sizes-grid" id="sizesGrid"></div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="step-num">4</div>
+      <div class="card-title">Quantity &amp; Pricing</div>
+    </div>
+    <div class="card-body">
+      <div class="step4-grid">
+        <div class="field"><label>Quantity (pcs)</label><input type="number" id="qty" value="1" min="1" oninput="calcWeight()"></div>
+        <div class="field"><label>Price per kg (₹)</label><input type="number" id="pricePerKg" value="85" min="0" oninput="calcWeight()"></div>
+        <div class="field"><label>Wastage / Margin %</label><input type="number" id="margin" value="0" min="0" max="100" step="0.5" oninput="calcWeight()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-panel">
+    <div class="res-header">
+      <div>
+        <div class="res-title">Live Result</div>
+        <div class="res-name" id="resShapeName">Square Bar · MS Steel</div>
+      </div>
+      <div class="live-badge">Live</div>
+    </div>
+    <div class="res-body">
+      <div class="res-grid">
+        <div class="res-block"><div class="res-lbl">Unit Weight</div><span class="res-val w" id="resUnitWeight">—</span><span class="res-unit">kg</span></div>
+        <div class="res-block"><div class="res-lbl">Total Weight (×qty)</div><span class="res-val w" id="resTotalWeight">—</span><span class="res-unit">kg</span></div>
+        <div class="res-block"><div class="res-lbl">Unit Price</div><span class="res-val p" id="resUnitPrice">—</span></div>
+        <div class="res-block"><div class="res-lbl">Total Price (+margin)</div><span class="res-val p" id="resTotalPrice">—</span></div>
+      </div>
+      <div class="formula-strip" id="formulaBox">Fill in dimensions above to see calculation.</div>
+    </div>
+  </div>
+
+  <!-- REF TABLE -->
+  <div class="card">
+    <div class="card-head">
+      <div class="step-num grey">📋</div>
+      <div class="card-title">Material Reference — Density &amp; Indicative Price</div>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <div class="ref-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Material</th><th>Density (g/cm³)</th><th>Indicative ₹/kg</th><th>Common Application</th></tr></thead>
+          <tbody id="refTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- AFF BOXES -->
+  <div class="aff-box">
+    <div class="aff-icon">📖</div>
+    <div class="aff-body">
+      <div class="aff-tag">📚 Recommended Book</div>
+      <div class="aff-name">R.S. Khurmi — Theory of Machines &amp; Machine Design</div>
+      <div class="aff-desc">The most trusted mechanical engineering reference for Indian students &amp; professionals.</div>
+      <a href="https://amzn.to/4tEIoui" target="_blank" rel="noopener sponsored" class="aff-btn">🛒 Buy on Amazon India →</a>
+      <p class="aff-disc">* Affiliate link — no extra cost to you.</p>
+    </div>
+  </div>
+  <div class="aff-box">
+    <div class="aff-icon">📏</div>
+    <div class="aff-body">
+      <div class="aff-tag">🔧 Recommended Tool</div>
+      <div class="aff-name">Digital Vernier Caliper — Precision Measuring Instrument</div>
+      <div class="aff-desc">Accurate to 0.01 mm — measure OD, ID, depth &amp; step. Essential for verifying dimensions.</div>
+      <a href="https://amzn.to/496rn4W" target="_blank" rel="noopener sponsored" class="aff-btn">🛒 Buy on Amazon India →</a>
+      <p class="aff-disc">* Affiliate link — no extra cost to you.</p>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<footer>
+  <div class="footer-logo">Task<span>Junction</span></div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#mechanical">⚙️ Mechanical</a>
+    <a href="index.html#apps">Apps</a>
+    <a href="index.html#privacy">Privacy</a>
+    <a href="mailto:vaibhavdhokpande@gmail.com">Contact</a>
+  </div>
+  <div class="footer-hr"></div>
+  <p class="footer-copy">Made by <strong>Vaibhav Dhokpande</strong> &nbsp;·&nbsp; © 2025 TaskJunction. All rights reserved.</p>
+</footer>
+
 <script>
-const metals=[{name:'MS Steel',density:7.85,price:85,use:'Structural, general fabrication'},{name:'SS 304',density:8.00,price:210,use:'Food, chemical, kitchenware'},{name:'SS 316',density:8.03,price:260,use:'Marine, pharma, high corrosion'},{name:'Aluminum',density:2.70,price:175,use:'Aerospace, auto, lightweight'},{name:'Copper',density:8.96,price:780,use:'Electrical, plumbing, heat ex.'},{name:'Brass',density:8.50,price:520,use:'Valves, fittings, decorative'},{name:'GI / Zinc',density:7.13,price:210,use:'Galvanized sections, corrosion'},{name:'Cast Iron',density:7.20,price:65,use:'Machine frames, pipes, brackets'},{name:'Bronze',density:8.80,price:680,use:'Bearings, bushings, marine'},{name:'Titanium',density:4.51,price:2800,use:'Aerospace, medical implants'},{name:'Nickel',density:8.90,price:1400,use:'High-temp, electroplating'},{name:'Lead',density:11.34,price:185,use:'Shielding, batteries, weights'},{name:'Custom',density:7.85,price:100,use:'User-defined material'}];
-const shapes={square_bar:{label:'Square Bar',fields:[{id:'side',lbl:'Side'},{id:'length',lbl:'Length'}]},rect_bar:{label:'Rectangular Bar',fields:[{id:'width',lbl:'Width'},{id:'height',lbl:'Height'},{id:'length',lbl:'Length'}]},flat_plate:{label:'Flat Plate',fields:[{id:'width',lbl:'Width'},{id:'thickness',lbl:'Thickness'},{id:'length',lbl:'Length'}]},round_bar:{label:'Round Bar',fields:[{id:'dia',lbl:'Diameter'},{id:'length',lbl:'Length'}]},hex_bar:{label:'Hex Bar (A/F)',fields:[{id:'af',lbl:'Across Flats'},{id:'length',lbl:'Length'}]},hollow_pipe:{label:'Hollow Pipe',fields:[{id:'od',lbl:'Outer Dia'},{id:'wt',lbl:'Wall Thick'},{id:'length',lbl:'Length'}]},angle:{label:'Angle / L-Section',fields:[{id:'a',lbl:'Leg A'},{id:'b',lbl:'Leg B'},{id:'t',lbl:'Thickness'},{id:'length',lbl:'Length'}]},channel:{label:'Channel / C-Section',fields:[{id:'h',lbl:'Height'},{id:'fw',lbl:'Flange W'},{id:'t',lbl:'Thickness'},{id:'length',lbl:'Length'}]},tee:{label:'T-Section',fields:[{id:'w',lbl:'Width'},{id:'h',lbl:'Height'},{id:'t',lbl:'Thickness'},{id:'length',lbl:'Length'}]},i_beam:{label:'I-Beam',fields:[{id:'h',lbl:'Height'},{id:'fw',lbl:'Flange W'},{id:'tw',lbl:'Web Thk'},{id:'tf',lbl:'Flg Thk'},{id:'length',lbl:'Length'}]},square_tube:{label:'Square Tube',fields:[{id:'side',lbl:'Side'},{id:'wt',lbl:'Wall Thick'},{id:'length',lbl:'Length'}]},sheet_coil:{label:'Sheet / Coil',fields:[{id:'width',lbl:'Width'},{id:'thickness',lbl:'Thickness'},{id:'length',lbl:'Length'}]}};
-let currentShape='square_bar',currentMetal=0;
+const metals=[
+  {name:'MS Steel',density:7.85,price:85,use:'Structural, general fabrication'},
+  {name:'SS 304',density:8.00,price:210,use:'Food, chemical, kitchenware'},
+  {name:'SS 316',density:8.03,price:260,use:'Marine, pharma, high corrosion'},
+  {name:'Aluminum',density:2.70,price:175,use:'Aerospace, auto, lightweight'},
+  {name:'Copper',density:8.96,price:780,use:'Electrical, plumbing, heat ex.'},
+  {name:'Brass',density:8.50,price:520,use:'Valves, fittings, decorative'},
+  {name:'GI / Zinc',density:7.13,price:210,use:'Galvanized sections, corrosion'},
+  {name:'Cast Iron',density:7.20,price:65,use:'Machine frames, pipes, brackets'},
+  {name:'Bronze',density:8.80,price:680,use:'Bearings, bushings, marine'},
+  {name:'Titanium',density:4.51,price:2800,use:'Aerospace, medical implants'},
+  {name:'Nickel',density:8.90,price:1400,use:'High-temp, electroplating'},
+  {name:'Lead',density:11.34,price:185,use:'Shielding, batteries, weights'},
+  {name:'Custom',density:7.85,price:100,use:'User-defined material'}
+];
+
+const shapes={
+  square_bar:{label:'Square Bar',fields:[{id:'side',lbl:'Side'},{id:'length',lbl:'Length'}]},
+  rect_bar:{label:'Rectangular Bar',fields:[{id:'width',lbl:'Width'},{id:'height',lbl:'Height'},{id:'length',lbl:'Length'}]},
+  flat_plate:{label:'Flat Plate',fields:[{id:'width',lbl:'Width'},{id:'thickness',lbl:'Thickness'},{id:'length',lbl:'Length'}]},
+  round_bar:{label:'Round Bar',fields:[{id:'dia',lbl:'Diameter'},{id:'length',lbl:'Length'}]},
+  hex_bar:{label:'Hex Bar (A/F)',fields:[{id:'af',lbl:'Across Flats'},{id:'length',lbl:'Length'}]},
+  hollow_pipe:{label:'Hollow Pipe',fields:[{id:'od',lbl:'Outer Dia'},{id:'wt',lbl:'Wall Thick'},{id:'length',lbl:'Length'}]},
+  angle:{label:'Angle / L-Section',fields:[{id:'a',lbl:'Leg A'},{id:'b',lbl:'Leg B'},{id:'t',lbl:'Thickness'},{id:'length',lbl:'Length'}]},
+  channel:{label:'Channel / C-Section',fields:[{id:'h',lbl:'Height'},{id:'fw',lbl:'Flange W'},{id:'t',lbl:'Thickness'},{id:'length',lbl:'Length'}]},
+  tee:{label:'T-Section',fields:[{id:'w',lbl:'Width'},{id:'h',lbl:'Height'},{id:'t',lbl:'Thickness'},{id:'length',lbl:'Length'}]},
+  i_beam:{label:'I-Beam',fields:[{id:'h',lbl:'Height'},{id:'fw',lbl:'Flange W'},{id:'tw',lbl:'Web Thk'},{id:'tf',lbl:'Flg Thk'},{id:'length',lbl:'Length'}]},
+  square_tube:{label:'Square Tube',fields:[{id:'side',lbl:'Side'},{id:'wt',lbl:'Wall Thick'},{id:'length',lbl:'Length'}]},
+  sheet_coil:{label:'Sheet / Coil',fields:[{id:'width',lbl:'Width'},{id:'thickness',lbl:'Thickness'},{id:'length',lbl:'Length'}]}
+};
+
+// ── STANDARD SIZES DATABASE ─────────────────────────────────────────
+// Each size: {label, fields:{fieldId:value,...}, desc?}
+const standardSizes = {
+  square_bar:{
+    metric:[
+      {label:'6 × 6',fields:{side:6,length:3000}},
+      {label:'8 × 8',fields:{side:8,length:3000}},
+      {label:'10 × 10',fields:{side:10,length:3000}},
+      {label:'12 × 12',fields:{side:12,length:6000}},
+      {label:'16 × 16',fields:{side:16,length:6000}},
+      {label:'20 × 20',fields:{side:20,length:6000}},
+      {label:'25 × 25',fields:{side:25,length:6000}},
+      {label:'32 × 32',fields:{side:32,length:6000}},
+      {label:'40 × 40',fields:{side:40,length:6000}},
+      {label:'50 × 50',fields:{side:50,length:6000}},
+      {label:'60 × 60',fields:{side:60,length:6000}},
+      {label:'65 × 65',fields:{side:65,length:6000}},
+      {label:'75 × 75',fields:{side:75,length:6000}},
+      {label:'80 × 80',fields:{side:80,length:6000}},
+      {label:'90 × 90',fields:{side:90,length:6000}},
+      {label:'100 × 100',fields:{side:100,length:6000}},
+    ],
+    inch:[
+      {label:'1/4" sq',fields:{side:6.35,length:3048}},
+      {label:'3/8" sq',fields:{side:9.525,length:3048}},
+      {label:'1/2" sq',fields:{side:12.7,length:3048}},
+      {label:'5/8" sq',fields:{side:15.875,length:3048}},
+      {label:'3/4" sq',fields:{side:19.05,length:3048}},
+      {label:'1" sq',fields:{side:25.4,length:3048}},
+      {label:'1¼" sq',fields:{side:31.75,length:3048}},
+      {label:'1½" sq',fields:{side:38.1,length:3048}},
+      {label:'2" sq',fields:{side:50.8,length:3048}},
+      {label:'2½" sq',fields:{side:63.5,length:3048}},
+      {label:'3" sq',fields:{side:76.2,length:3048}},
+      {label:'4" sq',fields:{side:101.6,length:3048}},
+    ]
+  },
+  rect_bar:{
+    metric:[
+      {label:'20 × 10',fields:{width:20,height:10,length:3000}},
+      {label:'25 × 12',fields:{width:25,height:12,length:3000}},
+      {label:'30 × 10',fields:{width:30,height:10,length:6000}},
+      {label:'40 × 10',fields:{width:40,height:10,length:6000}},
+      {label:'40 × 20',fields:{width:40,height:20,length:6000}},
+      {label:'50 × 10',fields:{width:50,height:10,length:6000}},
+      {label:'50 × 25',fields:{width:50,height:25,length:6000}},
+      {label:'50 × 40',fields:{width:50,height:40,length:6000}},
+      {label:'60 × 20',fields:{width:60,height:20,length:6000}},
+      {label:'65 × 10',fields:{width:65,height:10,length:6000}},
+      {label:'75 × 25',fields:{width:75,height:25,length:6000}},
+      {label:'100 × 50',fields:{width:100,height:50,length:6000}},
+    ],
+    inch:[
+      {label:'1" × ½"',fields:{width:25.4,height:12.7,length:3048}},
+      {label:'1" × ¾"',fields:{width:25.4,height:19.05,length:3048}},
+      {label:'1½" × ½"',fields:{width:38.1,height:12.7,length:3048}},
+      {label:'2" × ½"',fields:{width:50.8,height:12.7,length:3048}},
+      {label:'2" × 1"',fields:{width:50.8,height:25.4,length:3048}},
+      {label:'2½" × 1"',fields:{width:63.5,height:25.4,length:3048}},
+      {label:'3" × 1"',fields:{width:76.2,height:25.4,length:3048}},
+      {label:'3" × 1½"',fields:{width:76.2,height:38.1,length:3048}},
+      {label:'4" × 1"',fields:{width:101.6,height:25.4,length:3048}},
+      {label:'4" × 2"',fields:{width:101.6,height:50.8,length:3048}},
+    ]
+  },
+  flat_plate:{
+    metric:[
+      {label:'1000×3 t',fields:{width:1000,thickness:3,length:2000}},
+      {label:'1000×4 t',fields:{width:1000,thickness:4,length:2000}},
+      {label:'1000×5 t',fields:{width:1000,thickness:5,length:2000}},
+      {label:'1219×6 t',fields:{width:1219,thickness:6,length:2438}},
+      {label:'1219×8 t',fields:{width:1219,thickness:8,length:2438}},
+      {label:'1219×10 t',fields:{width:1219,thickness:10,length:2438}},
+      {label:'1500×12 t',fields:{width:1500,thickness:12,length:3000}},
+      {label:'1500×16 t',fields:{width:1500,thickness:16,length:3000}},
+      {label:'1500×20 t',fields:{width:1500,thickness:20,length:6000}},
+      {label:'2000×25 t',fields:{width:2000,thickness:25,length:6000}},
+      {label:'2000×32 t',fields:{width:2000,thickness:32,length:6000}},
+      {label:'2000×40 t',fields:{width:2000,thickness:40,length:6000}},
+    ],
+    inch:[
+      {label:'48"×⅛"',fields:{width:1219,thickness:3.175,length:2438}},
+      {label:'48"×3/16"',fields:{width:1219,thickness:4.76,length:2438}},
+      {label:'48"×¼"',fields:{width:1219,thickness:6.35,length:2438}},
+      {label:'48"×3/8"',fields:{width:1219,thickness:9.525,length:2438}},
+      {label:'48"×½"',fields:{width:1219,thickness:12.7,length:2438}},
+      {label:'60"×½"',fields:{width:1524,thickness:12.7,length:2438}},
+      {label:'60"×¾"',fields:{width:1524,thickness:19.05,length:3048}},
+      {label:'60"×1"',fields:{width:1524,thickness:25.4,length:3048}},
+      {label:'96"×1½"',fields:{width:2438,thickness:38.1,length:6096}},
+    ]
+  },
+  round_bar:{
+    metric:[
+      {label:'Ø 6',fields:{dia:6,length:3000}},
+      {label:'Ø 8',fields:{dia:8,length:3000}},
+      {label:'Ø 10',fields:{dia:10,length:3000}},
+      {label:'Ø 12',fields:{dia:12,length:6000}},
+      {label:'Ø 16',fields:{dia:16,length:6000}},
+      {label:'Ø 20',fields:{dia:20,length:6000}},
+      {label:'Ø 25',fields:{dia:25,length:6000}},
+      {label:'Ø 28',fields:{dia:28,length:6000}},
+      {label:'Ø 32',fields:{dia:32,length:6000}},
+      {label:'Ø 36',fields:{dia:36,length:6000}},
+      {label:'Ø 40',fields:{dia:40,length:6000}},
+      {label:'Ø 45',fields:{dia:45,length:6000}},
+      {label:'Ø 50',fields:{dia:50,length:6000}},
+      {label:'Ø 60',fields:{dia:60,length:6000}},
+      {label:'Ø 65',fields:{dia:65,length:6000}},
+      {label:'Ø 75',fields:{dia:75,length:6000}},
+      {label:'Ø 80',fields:{dia:80,length:6000}},
+      {label:'Ø 90',fields:{dia:90,length:6000}},
+      {label:'Ø 100',fields:{dia:100,length:6000}},
+      {label:'Ø 110',fields:{dia:110,length:6000}},
+      {label:'Ø 125',fields:{dia:125,length:6000}},
+      {label:'Ø 150',fields:{dia:150,length:6000}},
+    ],
+    inch:[
+      {label:'¼"',fields:{dia:6.35,length:3048}},
+      {label:'5/16"',fields:{dia:7.94,length:3048}},
+      {label:'3/8"',fields:{dia:9.525,length:3048}},
+      {label:'½"',fields:{dia:12.7,length:3048}},
+      {label:'5/8"',fields:{dia:15.875,length:3048}},
+      {label:'¾"',fields:{dia:19.05,length:3048}},
+      {label:'7/8"',fields:{dia:22.225,length:3048}},
+      {label:'1"',fields:{dia:25.4,length:3048}},
+      {label:'1¼"',fields:{dia:31.75,length:3048}},
+      {label:'1½"',fields:{dia:38.1,length:3048}},
+      {label:'1¾"',fields:{dia:44.45,length:3048}},
+      {label:'2"',fields:{dia:50.8,length:3048}},
+      {label:'2½"',fields:{dia:63.5,length:3048}},
+      {label:'3"',fields:{dia:76.2,length:3048}},
+      {label:'3½"',fields:{dia:88.9,length:3048}},
+      {label:'4"',fields:{dia:101.6,length:3048}},
+    ]
+  },
+  hex_bar:{
+    metric:[
+      {label:'A/F 6',fields:{af:6,length:3000}},
+      {label:'A/F 8',fields:{af:8,length:3000}},
+      {label:'A/F 10',fields:{af:10,length:3000}},
+      {label:'A/F 12',fields:{af:12,length:3000}},
+      {label:'A/F 14',fields:{af:14,length:3000}},
+      {label:'A/F 17',fields:{af:17,length:3000}},
+      {label:'A/F 19',fields:{af:19,length:3000}},
+      {label:'A/F 22',fields:{af:22,length:3000}},
+      {label:'A/F 24',fields:{af:24,length:3000}},
+      {label:'A/F 27',fields:{af:27,length:3000}},
+      {label:'A/F 30',fields:{af:30,length:3000}},
+      {label:'A/F 32',fields:{af:32,length:6000}},
+      {label:'A/F 36',fields:{af:36,length:6000}},
+      {label:'A/F 41',fields:{af:41,length:6000}},
+      {label:'A/F 50',fields:{af:50,length:6000}},
+    ],
+    inch:[
+      {label:'¼" A/F',fields:{af:6.35,length:3048}},
+      {label:'5/16"',fields:{af:7.94,length:3048}},
+      {label:'3/8"',fields:{af:9.525,length:3048}},
+      {label:'7/16"',fields:{af:11.11,length:3048}},
+      {label:'½"',fields:{af:12.7,length:3048}},
+      {label:'9/16"',fields:{af:14.29,length:3048}},
+      {label:'5/8"',fields:{af:15.875,length:3048}},
+      {label:'¾"',fields:{af:19.05,length:3048}},
+      {label:'7/8"',fields:{af:22.225,length:3048}},
+      {label:'1"',fields:{af:25.4,length:3048}},
+      {label:'1¼"',fields:{af:31.75,length:3048}},
+      {label:'1½"',fields:{af:38.1,length:3048}},
+      {label:'2"',fields:{af:50.8,length:3048}},
+    ]
+  },
+  hollow_pipe:{
+    metric:[
+      {label:'15 NB sch40',fields:{od:21.3,wt:2.77,length:6000}},
+      {label:'20 NB sch40',fields:{od:26.7,wt:2.87,length:6000}},
+      {label:'25 NB sch40',fields:{od:33.4,wt:3.38,length:6000}},
+      {label:'32 NB sch40',fields:{od:42.2,wt:3.56,length:6000}},
+      {label:'40 NB sch40',fields:{od:48.3,wt:3.68,length:6000}},
+      {label:'50 NB sch40',fields:{od:60.3,wt:3.91,length:6000}},
+      {label:'65 NB sch40',fields:{od:73.0,wt:5.16,length:6000}},
+      {label:'80 NB sch40',fields:{od:88.9,wt:5.49,length:6000}},
+      {label:'100 NB sch40',fields:{od:114.3,wt:6.02,length:6000}},
+      {label:'125 NB sch40',fields:{od:141.3,wt:6.55,length:6000}},
+      {label:'150 NB sch40',fields:{od:168.3,wt:7.11,length:6000}},
+      {label:'200 NB sch40',fields:{od:219.1,wt:8.18,length:6000}},
+    ],
+    inch:[
+      {label:'½" NB',fields:{od:21.3,wt:2.77,length:6096}},
+      {label:'¾" NB',fields:{od:26.7,wt:2.87,length:6096}},
+      {label:'1" NB',fields:{od:33.4,wt:3.38,length:6096}},
+      {label:'1¼" NB',fields:{od:42.2,wt:3.56,length:6096}},
+      {label:'1½" NB',fields:{od:48.3,wt:3.68,length:6096}},
+      {label:'2" NB',fields:{od:60.3,wt:3.91,length:6096}},
+      {label:'2½" NB',fields:{od:73.0,wt:5.16,length:6096}},
+      {label:'3" NB',fields:{od:88.9,wt:5.49,length:6096}},
+      {label:'4" NB',fields:{od:114.3,wt:6.02,length:6096}},
+      {label:'5" NB',fields:{od:141.3,wt:6.55,length:6096}},
+      {label:'6" NB',fields:{od:168.3,wt:7.11,length:6096}},
+      {label:'8" NB',fields:{od:219.1,wt:8.18,length:6096}},
+    ]
+  },
+  angle:{
+    metric:[
+      {label:'25×25×3',fields:{a:25,b:25,t:3,length:6000}},
+      {label:'25×25×5',fields:{a:25,b:25,t:5,length:6000}},
+      {label:'30×30×3',fields:{a:30,b:30,t:3,length:6000}},
+      {label:'35×35×5',fields:{a:35,b:35,t:5,length:6000}},
+      {label:'40×40×4',fields:{a:40,b:40,t:4,length:6000}},
+      {label:'45×45×5',fields:{a:45,b:45,t:5,length:6000}},
+      {label:'50×50×5',fields:{a:50,b:50,t:5,length:6000}},
+      {label:'50×50×6',fields:{a:50,b:50,t:6,length:6000}},
+      {label:'60×60×6',fields:{a:60,b:60,t:6,length:6000}},
+      {label:'65×65×8',fields:{a:65,b:65,t:8,length:6000}},
+      {label:'75×75×8',fields:{a:75,b:75,t:8,length:6000}},
+      {label:'100×100×10',fields:{a:100,b:100,t:10,length:6000}},
+      {label:'75×50×6',fields:{a:75,b:50,t:6,length:6000}},
+      {label:'100×75×8',fields:{a:100,b:75,t:8,length:6000}},
+    ],
+    inch:[
+      {label:'1"×1"×⅛"',fields:{a:25.4,b:25.4,t:3.175,length:6096}},
+      {label:'1¼"×1¼"×⅛"',fields:{a:31.75,b:31.75,t:3.175,length:6096}},
+      {label:'1½"×1½"×⅛"',fields:{a:38.1,b:38.1,t:3.175,length:6096}},
+      {label:'1½"×1½"×3/16"',fields:{a:38.1,b:38.1,t:4.76,length:6096}},
+      {label:'2"×2"×¼"',fields:{a:50.8,b:50.8,t:6.35,length:6096}},
+      {label:'2"×2"×3/16"',fields:{a:50.8,b:50.8,t:4.76,length:6096}},
+      {label:'2½"×2½"×¼"',fields:{a:63.5,b:63.5,t:6.35,length:6096}},
+      {label:'3"×3"×¼"',fields:{a:76.2,b:76.2,t:6.35,length:6096}},
+      {label:'3"×3"×3/8"',fields:{a:76.2,b:76.2,t:9.525,length:6096}},
+      {label:'4"×4"×½"',fields:{a:101.6,b:101.6,t:12.7,length:6096}},
+      {label:'3"×2"×¼"',fields:{a:76.2,b:50.8,t:6.35,length:6096}},
+      {label:'4"×3"×⅜"',fields:{a:101.6,b:76.2,t:9.525,length:6096}},
+    ]
+  },
+  channel:{
+    metric:[
+      {label:'ISMC 75',fields:{h:75,fw:40,t:7.3,length:6000}},
+      {label:'ISMC 100',fields:{h:100,fw:50,t:7.5,length:6000}},
+      {label:'ISMC 125',fields:{h:125,fw:65,t:8.1,length:6000}},
+      {label:'ISMC 150',fields:{h:150,fw:75,t:9.0,length:6000}},
+      {label:'ISMC 175',fields:{h:175,fw:75,t:10.2,length:6000}},
+      {label:'ISMC 200',fields:{h:200,fw:75,t:11.4,length:6000}},
+      {label:'ISMC 225',fields:{h:225,fw:80,t:12.4,length:6000}},
+      {label:'ISMC 250',fields:{h:250,fw:82,t:13.5,length:6000}},
+      {label:'ISMC 300',fields:{h:300,fw:90,t:13.6,length:6000}},
+      {label:'ISMC 350',fields:{h:350,fw:100,t:14.4,length:6000}},
+      {label:'ISMC 400',fields:{h:400,fw:100,t:16.0,length:6000}},
+    ],
+    inch:[
+      {label:'C3×4.1',fields:{h:76.2,fw:36.8,t:6.5,length:6096}},
+      {label:'C4×5.4',fields:{h:101.6,fw:40.5,t:7.2,length:6096}},
+      {label:'C5×6.7',fields:{h:127,fw:44.5,t:7.9,length:6096}},
+      {label:'C6×8.2',fields:{h:152.4,fw:51.7,t:8.9,length:6096}},
+      {label:'C7×9.8',fields:{h:177.8,fw:57.2,t:9.8,length:6096}},
+      {label:'C8×11.5',fields:{h:203.2,fw:58.4,t:11.2,length:6096}},
+      {label:'C10×15.3',fields:{h:254,fw:66.0,t:13.5,length:6096}},
+      {label:'C12×20.7',fields:{h:304.8,fw:76.2,t:15.9,length:6096}},
+    ]
+  },
+  tee:{
+    metric:[
+      {label:'30×30×5',fields:{w:30,h:30,t:5,length:6000}},
+      {label:'40×40×5',fields:{w:40,h:40,t:5,length:6000}},
+      {label:'50×50×6',fields:{w:50,h:50,t:6,length:6000}},
+      {label:'60×60×6',fields:{w:60,h:60,t:6,length:6000}},
+      {label:'70×70×7',fields:{w:70,h:70,t:7,length:6000}},
+      {label:'80×80×8',fields:{w:80,h:80,t:8,length:6000}},
+      {label:'100×100×10',fields:{w:100,h:100,t:10,length:6000}},
+    ],
+    inch:[
+      {label:'1"×1"×⅛"',fields:{w:25.4,h:25.4,t:3.175,length:6096}},
+      {label:'1½"×1½"×3/16"',fields:{w:38.1,h:38.1,t:4.76,length:6096}},
+      {label:'2"×2"×¼"',fields:{w:50.8,h:50.8,t:6.35,length:6096}},
+      {label:'2½"×2½"×¼"',fields:{w:63.5,h:63.5,t:6.35,length:6096}},
+      {label:'3"×3"×5/16"',fields:{w:76.2,h:76.2,t:7.94,length:6096}},
+      {label:'4"×4"×⅜"',fields:{w:101.6,h:101.6,t:9.525,length:6096}},
+    ]
+  },
+  i_beam:{
+    metric:[
+      {label:'ISMB 100',fields:{h:100,fw:75,tw:4.0,tf:7.2,length:6000}},
+      {label:'ISMB 125',fields:{h:125,fw:75,tw:4.4,tf:7.6,length:6000}},
+      {label:'ISMB 150',fields:{h:150,fw:80,tw:4.8,tf:7.6,length:6000}},
+      {label:'ISMB 175',fields:{h:175,fw:90,tw:5.5,tf:8.6,length:6000}},
+      {label:'ISMB 200',fields:{h:200,fw:100,tw:5.7,tf:10.8,length:6000}},
+      {label:'ISMB 225',fields:{h:225,fw:110,tw:6.5,tf:11.8,length:6000}},
+      {label:'ISMB 250',fields:{h:250,fw:125,tw:6.9,tf:12.5,length:6000}},
+      {label:'ISMB 300',fields:{h:300,fw:140,tw:7.5,tf:12.4,length:6000}},
+      {label:'ISMB 350',fields:{h:350,fw:140,tw:8.1,tf:14.2,length:6000}},
+      {label:'ISMB 400',fields:{h:400,fw:140,tw:8.9,tf:16.0,length:6000}},
+      {label:'ISMB 450',fields:{h:450,fw:150,tw:9.4,tf:17.4,length:6000}},
+      {label:'ISMB 500',fields:{h:500,fw:180,tw:10.2,tf:17.2,length:6000}},
+      {label:'ISMB 600',fields:{h:600,fw:210,tw:12.0,tf:20.3,length:6000}},
+    ],
+    inch:[
+      {label:'W4×13',fields:{h:106,fw:103,tw:7.5,tf:8.8,length:6096}},
+      {label:'W6×15',fields:{h:152,fw:152,tw:6.6,tf:9.9,length:6096}},
+      {label:'W8×18',fields:{h:207,fw:133,tw:5.8,tf:8.4,length:6096}},
+      {label:'W10×22',fields:{h:259,fw:146,tw:6.4,tf:9.7,length:6096}},
+      {label:'W12×26',fields:{h:310,fw:165,tw:6.1,tf:9.7,length:6096}},
+      {label:'W14×30',fields:{h:352,fw:171,tw:7.0,tf:11.2,length:6096}},
+      {label:'W16×31',fields:{h:403,fw:140,tw:7.0,tf:11.2,length:6096}},
+      {label:'W18×35',fields:{h:459,fw:153,tw:7.6,tf:10.9,length:6096}},
+      {label:'W21×44',fields:{h:549,fw:165,tw:9.1,tf:11.4,length:6096}},
+      {label:'W24×55',fields:{h:599,fw:178,tw:10.2,tf:14.0,length:6096}},
+    ]
+  },
+  square_tube:{
+    metric:[
+      {label:'20×20×2',fields:{side:20,wt:2,length:6000}},
+      {label:'25×25×2',fields:{side:25,wt:2,length:6000}},
+      {label:'25×25×3',fields:{side:25,wt:3,length:6000}},
+      {label:'32×32×3',fields:{side:32,wt:3,length:6000}},
+      {label:'40×40×3',fields:{side:40,wt:3,length:6000}},
+      {label:'40×40×4',fields:{side:40,wt:4,length:6000}},
+      {label:'50×50×3',fields:{side:50,wt:3,length:6000}},
+      {label:'50×50×4',fields:{side:50,wt:4,length:6000}},
+      {label:'60×60×4',fields:{side:60,wt:4,length:6000}},
+      {label:'75×75×4',fields:{side:75,wt:4,length:6000}},
+      {label:'75×75×6',fields:{side:75,wt:6,length:6000}},
+      {label:'100×100×5',fields:{side:100,wt:5,length:6000}},
+      {label:'100×100×6',fields:{side:100,wt:6,length:6000}},
+      {label:'150×150×8',fields:{side:150,wt:8,length:6000}},
+    ],
+    inch:[
+      {label:'¾"×¾"×16ga',fields:{side:19.05,wt:1.65,length:6096}},
+      {label:'1"×1"×16ga',fields:{side:25.4,wt:1.65,length:6096}},
+      {label:'1"×1"×14ga',fields:{side:25.4,wt:1.9,length:6096}},
+      {label:'1¼"×1¼"×14ga',fields:{side:31.75,wt:1.9,length:6096}},
+      {label:'1½"×1½"×14ga',fields:{side:38.1,wt:1.9,length:6096}},
+      {label:'2"×2"×14ga',fields:{side:50.8,wt:1.9,length:6096}},
+      {label:'2"×2"×3/16"',fields:{side:50.8,wt:4.76,length:6096}},
+      {label:'2½"×2½"×3/16"',fields:{side:63.5,wt:4.76,length:6096}},
+      {label:'3"×3"×¼"',fields:{side:76.2,wt:6.35,length:6096}},
+      {label:'4"×4"×¼"',fields:{side:101.6,wt:6.35,length:6096}},
+      {label:'4"×4"×3/8"',fields:{side:101.6,wt:9.525,length:6096}},
+      {label:'6"×6"×½"',fields:{side:152.4,wt:12.7,length:6096}},
+    ]
+  },
+  sheet_coil:{
+    metric:[
+      {label:'1219×0.5t',fields:{width:1219,thickness:0.5,length:2438}},
+      {label:'1219×0.8t',fields:{width:1219,thickness:0.8,length:2438}},
+      {label:'1219×1.0t',fields:{width:1219,thickness:1.0,length:2438}},
+      {label:'1219×1.2t',fields:{width:1219,thickness:1.2,length:2438}},
+      {label:'1219×1.5t',fields:{width:1219,thickness:1.5,length:2438}},
+      {label:'1219×2.0t',fields:{width:1219,thickness:2.0,length:2438}},
+      {label:'1219×2.5t',fields:{width:1219,thickness:2.5,length:2438}},
+      {label:'1500×3.0t',fields:{width:1500,thickness:3.0,length:3000}},
+      {label:'1500×4.0t',fields:{width:1500,thickness:4.0,length:3000}},
+      {label:'2000×5.0t',fields:{width:2000,thickness:5.0,length:4000}},
+      {label:'2000×6.0t',fields:{width:2000,thickness:6.0,length:6000}},
+      {label:'2000×8.0t',fields:{width:2000,thickness:8.0,length:6000}},
+    ],
+    inch:[
+      {label:'48"×22ga',fields:{width:1219,thickness:0.76,length:2438}},
+      {label:'48"×20ga',fields:{width:1219,thickness:0.91,length:2438}},
+      {label:'48"×18ga',fields:{width:1219,thickness:1.27,length:2438}},
+      {label:'48"×16ga',fields:{width:1219,thickness:1.52,length:2438}},
+      {label:'48"×14ga',fields:{width:1219,thickness:1.9,length:2438}},
+      {label:'48"×12ga',fields:{width:1219,thickness:2.66,length:2438}},
+      {label:'48"×11ga',fields:{width:1219,thickness:3.05,length:2438}},
+      {label:'48"×10ga',fields:{width:1219,thickness:3.43,length:2438}},
+      {label:'60"×3/16"',fields:{width:1524,thickness:4.76,length:2438}},
+      {label:'60"×¼"',fields:{width:1524,thickness:6.35,length:3048}},
+      {label:'96"×⅜"',fields:{width:2438,thickness:9.525,length:6096}},
+    ]
+  }
+};
+
+let currentShape='square_bar';
+let currentMetal=0;
+let currentSizeTab='metric';
+
 function gridCls(n){return n<=2?'dim-grid':n===3?'dim-grid c3':n===4?'dim-grid c4':'dim-grid c5';}
-function buildPills(){document.getElementById('metalPills').innerHTML=metals.map((m,i)=>`<div class="mpill${i===0?' active':''}" onclick="selectMetal(${i})">${m.name}<span class="d-tag">${m.density} g/cm³</span></div>`).join('');}
-function buildRefTable(){document.getElementById('refTableBody').innerHTML=metals.map(m=>`<tr><td>${m.name}<span class="chip-d">${m.density}</span></td><td>${m.density}</td><td><span class="chip-p">₹${m.price}/kg</span></td><td style="color:var(--text3);font-size:12px;">${m.use}</td></tr>`).join('');}
-function selectMetal(i){currentMetal=i;document.querySelectorAll('.mpill').forEach((el,j)=>el.classList.toggle('active',j===i));document.getElementById('densityInput').value=metals[i].density;document.getElementById('pricePerKg').value=metals[i].price;calcWeight();}
-function selectShape(el){document.querySelectorAll('.shape-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');currentShape=el.dataset.shape;buildDimFields();calcWeight();}
-function buildDimFields(){const sh=shapes[currentShape];const unit=document.getElementById('unitSel').value;const html=sh.fields.map(f=>{let def=f.id==='length'?1000:(f.id==='thickness'||f.id==='wt'||f.id==='tw'||f.id==='tf')?6:50;if(unit==='cm')def=+(def/10).toFixed(2);if(unit==='inch')def=+(def/25.4).toFixed(3);if(unit==='m')def=+(def/1000).toFixed(4);return `<div class="field"><label>${f.lbl} (${unit})</label><input type="number" id="dim_${f.id}" value="${def}" min="0" step="0.1" oninput="calcWeight()"></div>`;}).join('');document.getElementById('dimFields').innerHTML=`<div class="${gridCls(sh.fields.length)}">${html}</div>`;}
+
+function buildPills(){
+  document.getElementById('metalPills').innerHTML=metals.map((m,i)=>
+    `<div class="mpill${i===0?' active':''}" onclick="selectMetal(${i})">${m.name}<span class="d-tag">${m.density} g/cm³</span></div>`
+  ).join('');
+}
+
+function buildRefTable(){
+  document.getElementById('refTableBody').innerHTML=metals.map(m=>
+    `<tr><td>${m.name}<span class="chip-d">${m.density}</span></td><td>${m.density}</td><td><span class="chip-p">₹${m.price}/kg</span></td><td style="color:var(--text3);font-size:12px;">${m.use}</td></tr>`
+  ).join('');
+}
+
+function selectMetal(i){
+  currentMetal=i;
+  document.querySelectorAll('.mpill').forEach((el,j)=>el.classList.toggle('active',j===i));
+  document.getElementById('densityInput').value=metals[i].density;
+  document.getElementById('pricePerKg').value=metals[i].price;
+  calcWeight();
+}
+
+function selectShape(el){
+  document.querySelectorAll('.shape-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  currentShape=el.dataset.shape;
+  buildDimFields();
+  buildSizes();
+  calcWeight();
+}
+
+function buildDimFields(){
+  const sh=shapes[currentShape];
+  const unit=document.getElementById('unitSel').value;
+  const html=sh.fields.map(f=>{
+    let def=f.id==='length'?1000:(f.id==='thickness'||f.id==='wt'||f.id==='tw'||f.id==='tf')?6:50;
+    if(unit==='cm') def=+(def/10).toFixed(2);
+    if(unit==='inch') def=+(def/25.4).toFixed(3);
+    if(unit==='m') def=+(def/1000).toFixed(4);
+    return `<div class="field"><label>${f.lbl} (${unit})</label><input type="number" id="dim_${f.id}" value="${def}" min="0" step="0.1" oninput="calcWeight()"></div>`;
+  }).join('');
+  document.getElementById('dimFields').innerHTML=`<div class="${gridCls(sh.fields.length)}">${html}</div>`;
+}
+
+function buildSizes(){
+  const sh=shapes[currentShape];
+  document.getElementById('sizesShapeName').textContent=sh.label;
+  renderSizeChips();
+}
+
+function switchSizeTab(tab,el){
+  currentSizeTab=tab;
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderSizeChips();
+}
+
+function renderSizeChips(){
+  const data=standardSizes[currentShape]&&standardSizes[currentShape][currentSizeTab];
+  const grid=document.getElementById('sizesGrid');
+  if(!data||data.length===0){grid.innerHTML='<p style="font-size:12px;color:var(--text3);padding:4px 0;">No standard sizes listed for this shape.</p>';return;}
+  grid.innerHTML=data.map((s,i)=>{
+    const sub=s.desc||'';
+    return `<div class="size-chip" onclick="applySize(${i},'${currentSizeTab}')">${s.label}${sub?`<span class="size-chip-label">${sub}</span>`:''}</div>`;
+  }).join('');
+}
+
+function applySize(idx,tab){
+  const data=standardSizes[currentShape][tab];
+  if(!data||!data[idx])return;
+  const size=data[idx];
+  const unit=document.getElementById('unitSel').value;
+  // Always stored in mm, convert to current unit
+  Object.entries(size.fields).forEach(([fid,mmVal])=>{
+    const el=document.getElementById('dim_'+fid);
+    if(!el)return;
+    let v=mmVal;
+    if(unit==='cm') v=+(mmVal/10).toFixed(3);
+    else if(unit==='inch') v=+(mmVal/25.4).toFixed(4);
+    else if(unit==='m') v=+(mmVal/1000).toFixed(5);
+    else v=mmVal;
+    el.value=v;
+  });
+  // highlight
+  document.querySelectorAll('.size-chip').forEach((c,i)=>c.classList.toggle('used',i===idx));
+  calcWeight();
+}
+
 function getVal(id){const el=document.getElementById('dim_'+id);return el?(parseFloat(el.value)||0):0;}
-function toMM(v){const u=document.getElementById('unitSel').value;if(u==='cm')return v*10;if(u==='inch')return v*25.4;if(u==='m')return v*1000;return v;}
-function calcVolumeMM3(){const s=currentShape;if(s==='square_bar'){const a=toMM(getVal('side'));return a*a*toMM(getVal('length'));}if(s==='rect_bar'||s==='flat_plate'||s==='sheet_coil')return toMM(getVal('width'))*toMM(getVal(s==='rect_bar'?'height':'thickness'))*toMM(getVal('length'));if(s==='round_bar'){const r=toMM(getVal('dia'))/2;return Math.PI*r*r*toMM(getVal('length'));}if(s==='hex_bar'){const af=toMM(getVal('af'));return(Math.sqrt(3)/2)*af*af*toMM(getVal('length'));}if(s==='hollow_pipe'){const od=toMM(getVal('od')),wt=toMM(getVal('wt')),id2=od-2*wt;return Math.PI/4*(od*od-id2*id2)*toMM(getVal('length'));}if(s==='angle'){const a=toMM(getVal('a')),b=toMM(getVal('b')),t=toMM(getVal('t')),l=toMM(getVal('length'));return(a+b-t)*t*l;}if(s==='channel'){const h=toMM(getVal('h')),fw=toMM(getVal('fw')),t=toMM(getVal('t')),l=toMM(getVal('length'));return(h*t+2*fw*t)*l;}if(s==='tee'){const w=toMM(getVal('w')),h=toMM(getVal('h')),t=toMM(getVal('t')),l=toMM(getVal('length'));return(w+h-t)*t*l;}if(s==='i_beam'){const h=toMM(getVal('h')),fw=toMM(getVal('fw')),tw=toMM(getVal('tw')),tf=toMM(getVal('tf')),l=toMM(getVal('length'));return(2*fw*tf+(h-2*tf)*tw)*l;}if(s==='square_tube'){const side=toMM(getVal('side')),wt=toMM(getVal('wt')),inner=side-2*wt;return(side*side-inner*inner)*toMM(getVal('length'));}return 0;}
-function calcWeight(){const density=parseFloat(document.getElementById('densityInput').value)||7.85;const pricePerKg=parseFloat(document.getElementById('pricePerKg').value)||0;const qty=Math.max(1,parseInt(document.getElementById('qty').value)||1);const margin=parseFloat(document.getElementById('margin').value)||0;const vol=calcVolumeMM3();const weightKg=vol*density/1e6;const totalWt=weightKg*qty;const unitPrice=weightKg*pricePerKg;const totalFinal=unitPrice*qty*(1+margin/100);const fmt=(n,d=3)=>n.toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});const fmtRs=n=>'₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});document.getElementById('resShapeName').textContent=shapes[currentShape].label+' · '+metals[currentMetal].name;document.getElementById('resUnitWeight').textContent=fmt(weightKg);document.getElementById('resTotalWeight').textContent=fmt(totalWt);document.getElementById('resUnitPrice').textContent=fmtRs(unitPrice);document.getElementById('resTotalPrice').textContent=fmtRs(totalFinal);document.getElementById('formulaBox').innerHTML=`<b>Volume</b> = ${Math.round(vol).toLocaleString()} mm³  |  <b>Weight</b> = V × ρ / 10⁶ = ${fmt(weightKg,4)} kg  |  <b>Unit Price</b> = ${fmt(weightKg,4)} × ₹${pricePerKg} = ${fmtRs(unitPrice)}`+(margin>0?`  |  <b>Margin ${margin}%</b> added`:'');}
+
+function toMM(v){
+  const u=document.getElementById('unitSel').value;
+  if(u==='cm')return v*10;if(u==='inch')return v*25.4;if(u==='m')return v*1000;return v;
+}
+
+function calcVolumeMM3(){
+  const s=currentShape;
+  if(s==='square_bar'){const a=toMM(getVal('side'));return a*a*toMM(getVal('length'));}
+  if(s==='rect_bar'||s==='flat_plate'||s==='sheet_coil')return toMM(getVal('width'))*toMM(getVal(s==='rect_bar'?'height':'thickness'))*toMM(getVal('length'));
+  if(s==='round_bar'){const r=toMM(getVal('dia'))/2;return Math.PI*r*r*toMM(getVal('length'));}
+  if(s==='hex_bar'){const af=toMM(getVal('af'));return(Math.sqrt(3)/2)*af*af*toMM(getVal('length'));}
+  if(s==='hollow_pipe'){const od=toMM(getVal('od')),wt=toMM(getVal('wt')),id2=od-2*wt;return Math.PI/4*(od*od-id2*id2)*toMM(getVal('length'));}
+  if(s==='angle'){const a=toMM(getVal('a')),b=toMM(getVal('b')),t=toMM(getVal('t')),l=toMM(getVal('length'));return(a+b-t)*t*l;}
+  if(s==='channel'){const h=toMM(getVal('h')),fw=toMM(getVal('fw')),t=toMM(getVal('t')),l=toMM(getVal('length'));return(h*t+2*fw*t)*l;}
+  if(s==='tee'){const w=toMM(getVal('w')),h=toMM(getVal('h')),t=toMM(getVal('t')),l=toMM(getVal('length'));return(w+h-t)*t*l;}
+  if(s==='i_beam'){const h=toMM(getVal('h')),fw=toMM(getVal('fw')),tw=toMM(getVal('tw')),tf=toMM(getVal('tf')),l=toMM(getVal('length'));return(2*fw*tf+(h-2*tf)*tw)*l;}
+  if(s==='square_tube'){const side=toMM(getVal('side')),wt=toMM(getVal('wt')),inner=side-2*wt;return(side*side-inner*inner)*toMM(getVal('length'));}
+  return 0;
+}
+
+function calcWeight(){
+  const density=parseFloat(document.getElementById('densityInput').value)||7.85;
+  const pricePerKg=parseFloat(document.getElementById('pricePerKg').value)||0;
+  const qty=Math.max(1,parseInt(document.getElementById('qty').value)||1);
+  const margin=parseFloat(document.getElementById('margin').value)||0;
+  const vol=calcVolumeMM3();
+  const weightKg=vol*density/1e6;
+  const totalWt=weightKg*qty;
+  const unitPrice=weightKg*pricePerKg;
+  const totalFinal=unitPrice*qty*(1+margin/100);
+  const fmt=(n,d=3)=>n.toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const fmtRs=n=>'₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('resShapeName').textContent=shapes[currentShape].label+' · '+metals[currentMetal].name;
+  document.getElementById('resUnitWeight').textContent=fmt(weightKg);
+  document.getElementById('resTotalWeight').textContent=fmt(totalWt);
+  document.getElementById('resUnitPrice').textContent=fmtRs(unitPrice);
+  document.getElementById('resTotalPrice').textContent=fmtRs(totalFinal);
+  document.getElementById('formulaBox').innerHTML=
+    `<b>Volume</b> = ${Math.round(vol).toLocaleString()} mm³  |  <b>Weight</b> = V × ρ / 10⁶ = ${fmt(weightKg,4)} kg  |  <b>Unit Price</b> = ${fmt(weightKg,4)} × ₹${pricePerKg} = ${fmtRs(unitPrice)}`
+    +(margin>0?`  |  <b>Margin ${margin}%</b> added`:'');
+}
+
 function updateUnit(){buildDimFields();calcWeight();}
-buildPills();buildRefTable();buildDimFields();calcWeight();
+
+buildPills();
+buildRefTable();
+buildDimFields();
+buildSizes();
+calcWeight();
 </script>
 </body>
 </html>
