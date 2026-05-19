@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parts Hub — Industrial Standard Parts Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-page:       #F4F5F7;
+    --bg-surface:    #FFFFFF;
+    --bg-muted:      #F0F1F3;
+    --bg-hover:      #EAECF0;
+    --border:        #E2E5EA;
+    --border-strong: #CDD1D8;
+    --text-primary:  #111318;
+    --text-secondary:#4B5264;
+    --text-muted:    #8891A4;
+    --accent:        #185FA5;
+    --accent-light:  #E6F1FB;
+    --accent-mid:    #B5D4F4;
+    --success-bg:    #EAF5EE;
+    --success-text:  #1A7A3A;
+    --warn-bg:       #FFF5E0;
+    --warn-text:     #9A6200;
+    --danger-bg:     #FCEAEA;
+    --danger-text:   #C0281A;
+    --radius-sm:     6px;
+    --radius-md:     9px;
+    --radius-lg:     13px;
+    --font-sans:     'DM Sans', system-ui, sans-serif;
+    --font-mono:     'DM Mono', monospace;
+    --sidebar-w:     230px;
+    --detail-w:      310px;
+    --topbar-h:      56px;
+  }
+
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── Layout ── */
+  .layout { display: flex; height: 100vh; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .sidebar-header {
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-mark {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: -0.5px;
+  }
+  .logo-text { line-height: 1.25; }
+  .logo-text .name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .logo-text .sub  { font-size: 11px; color: var(--text-muted); }
+
+  .sidebar-scroll { flex: 1; overflow-y: auto; padding-bottom: 12px; }
+
+  .nav-section {
+    padding: 16px 14px 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin: 1px 6px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: background .12s, color .12s;
+    user-select: none;
+  }
+  .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 500; }
+  .nav-item i { font-size: 16px; flex-shrink: 0; }
+  .nav-badge {
+    margin-left: auto;
+    font-size: 10px;
+    background: var(--bg-muted);
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 1px 7px;
+    border: 1px solid var(--border);
+  }
+  .nav-item.active .nav-badge { background: var(--accent-mid); color: var(--accent); border-color: var(--accent-mid); }
+  .vendor-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Main ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+  .topbar {
+    height: var(--topbar-h);
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .topbar-left { flex: 1; }
+  .breadcrumb { font-size: 12px; color: var(--text-muted); }
+  .breadcrumb b { color: var(--text-secondary); font-weight: 500; }
+  .page-title { font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+
+  .search-wrap {
+    position: relative;
+    width: 320px;
+  }
+  .search-wrap .ti-search {
+    position: absolute; left: 10px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px; color: var(--text-muted);
+    pointer-events: none;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 8px 12px 8px 34px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg-muted);
+    color: var(--text-primary);
+    transition: border-color .15s, background .15s;
+    outline: none;
+  }
+  .search-wrap input:focus {
+    border-color: var(--accent);
+    background: var(--bg-surface);
+    box-shadow: 0 0 0 3px rgba(24,95,165,.12);
+  }
+  .search-wrap input::placeholder { color: var(--text-muted); }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+  .filter-label { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-right: 4px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg-muted);
+    color: var(--text-secondary);
+    transition: all .12s;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--border-strong); color: var(--text-primary); background: var(--bg-hover); }
+  .chip.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 500; }
+
+  /* ── Stat strip ── */
+  .stat-strip {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .stat-card {
+    background: var(--bg-muted);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+  }
+  .stat-card .slabel { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+  .stat-card .sval   { font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1.1; }
+  .stat-card .ssub   { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .stat-card .sval.green { color: var(--success-text); }
+
+  /* ── Toolbar row ── */
+  .toolbar {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .results-info { font-size: 12px; color: var(--text-muted); }
+  .results-info b { color: var(--text-secondary); font-weight: 500; }
+
+  .view-toggle { display: flex; gap: 4px; }
+  .view-btn {
+    width: 30px; height: 30px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted); font-size: 15px;
+    transition: all .12s;
+  }
+  .view-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .view-btn.active { background: var(--bg-muted); border-color: var(--border-strong); color: var(--text-primary); }
+
+  /* ── Content area ── */
+  .content-wrap { display: flex; flex: 1; overflow: hidden; }
+  .content {
+    flex: 1; overflow-y: auto;
+    padding: 18px 24px 32px;
+  }
+
+  /* ── Grid ── */
+  .parts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+  }
+
+  .part-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .14s, box-shadow .14s;
+  }
+  .part-card:hover {
+    border-color: var(--accent-mid);
+    box-shadow: 0 2px 12px rgba(24,95,165,.09);
+  }
+  .part-card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(24,95,165,.18);
+  }
+  .card-icon {
+    height: 88px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-muted);
+    border-bottom: 1px solid var(--border);
+    font-size: 30px;
+    color: var(--text-muted);
+  }
+  .card-body { padding: 10px 12px 12px; }
+  .vendor-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 7px;
+    letter-spacing: .02em;
+  }
+  .card-name { font-size: 13px; font-weight: 500; color: var(--text-primary); line-height: 1.35; margin-bottom: 3px; }
+  .card-num  { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 8px; }
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 8px; margin-top: 2px;
+  }
+  .card-price { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .stock-badge {
+    font-size: 10px; font-weight: 500;
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .in-stock   { background: var(--success-bg); color: var(--success-text); }
+  .low-stock  { background: var(--warn-bg);    color: var(--warn-text); }
+  .out-stock  { background: var(--danger-bg);  color: var(--danger-text); }
+
+  /* ── List view ── */
+  .list-header {
+    display: grid;
+    grid-template-columns: 36px 1fr 130px 110px 80px 90px;
+    gap: 12px;
+    padding: 7px 14px;
+    font-size: 11px; font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: .06em;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+  .parts-list { display: flex; flex-direction: column; gap: 4px; }
+  .list-row {
+    display: grid;
+    grid-template-columns: 36px 1fr 130px 110px 80px 90px;
+    gap: 12px; align-items: center;
+    padding: 9px 14px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color .12s;
+    font-size: 12px;
+  }
+  .list-row:hover { border-color: var(--accent-mid); }
+  .list-row.selected { border-color: var(--accent); background: var(--accent-light); }
+  .list-row .icon { font-size: 18px; color: var(--text-muted); text-align: center; }
+  .list-row .lname { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .list-row .lnum  { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
+  .list-row .lprice { font-weight: 600; }
+
+  /* ── Detail panel ── */
+  .detail-panel {
+    width: var(--detail-w);
+    flex-shrink: 0;
+    background: var(--bg-surface);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    transition: width .2s;
+  }
+  .detail-panel.hidden { width: 0; border-left: none; overflow: hidden; }
+
+  .detail-header {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .detail-header h3 { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .close-btn {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-muted); font-size: 16px;
+    border: 1px solid var(--border);
+    transition: background .12s;
+  }
+  .close-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+  .detail-img {
+    height: 120px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-muted);
+    border-bottom: 1px solid var(--border);
+    font-size: 48px; color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .detail-body { flex: 1; overflow-y: auto; padding: 14px 16px; }
+
+  .detail-section { margin-bottom: 18px; }
+  .detail-section-title {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .spec-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    gap: 8px;
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-key   { color: var(--text-secondary); flex-shrink: 0; }
+  .spec-val   { font-weight: 500; color: var(--text-primary); text-align: right; font-family: var(--font-mono); font-size: 11px; word-break: break-all; }
+  .spec-val.plain { font-family: var(--font-sans); font-size: 12px; }
+
+  .desc-text { font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
+
+  .detail-actions {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 8px;
+    flex-shrink: 0;
+  }
+  .btn {
+    width: 100%; padding: 9px 14px;
+    border-radius: var(--radius-md);
+    font-size: 13px; font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    transition: all .12s;
+    border: none;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #1252a0; }
+  .btn-outline {
+    background: transparent; color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-outline:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .btn i { font-size: 15px; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    padding: 60px 24px; text-align: center;
+    color: var(--text-muted); font-size: 14px;
+  }
+  .empty-state i { font-size: 40px; display: block; margin-bottom: 10px; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: #111; color: #fff;
+    font-size: 13px; padding: 10px 16px;
+    border-radius: var(--radius-md);
+    opacity: 0; transform: translateY(8px);
+    transition: all .2s; pointer-events: none; z-index: 999;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── Print / responsive tweaks ── */
+  @media (max-width: 900px) {
+    .detail-panel { display: none; }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+    .search-wrap { width: 220px; }
+  }
+  @media (max-width: 600px) {
+    .sidebar { display: none; }
+    .search-wrap { width: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-mark">TJ</div>
+        <div class="logo-text">
+          <div class="name">Parts Hub</div>
+          <div class="sub">Standard Components</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-scroll">
+      <div class="nav-section">Overview</div>
+      <div class="nav-item active" onclick="showAllCatalog(this)">
+        <i class="ti ti-category"></i>
+        All Catalog
+        <span class="nav-badge">847</span>
+      </div>
+      <div class="nav-item" onclick="alert('Feature: Recently viewed parts history')">
+        <i class="ti ti-clock"></i>
+        Recently Viewed
+      </div>
+      <div class="nav-item" onclick="alert('Feature: Saved / bookmarked parts')">
+        <i class="ti ti-bookmark"></i>
+        Saved Parts
+        <span class="nav-badge">12</span>
+      </div>
+
+      <div class="nav-section">Vendors</div>
+      <div class="nav-item" id="vnav-all" onclick="filterVendor(this,'all')">
+        <i class="ti ti-building-store"></i>
+        All Vendors
+        <span class="nav-badge">847</span>
+      </div>
+      <div class="nav-item" id="vnav-mcmaster" onclick="filterVendor(this,'McMaster-Carr')">
+        <div class="vendor-dot" style="background:#185FA5"></div>
+        McMaster-Carr
+        <span class="nav-badge">210</span>
+      </div>
+      <div class="nav-item" id="vnav-misumi" onclick="filterVendor(this,'MISUMI')">
+        <div class="vendor-dot" style="background:#0F6E56"></div>
+        MISUMI
+        <span class="nav-badge">195</span>
+      </div>
+      <div class="nav-item" id="vnav-thk" onclick="filterVendor(this,'THK')">
+        <div class="vendor-dot" style="background:#D85A30"></div>
+        THK
+        <span class="nav-badge">88</span>
+      </div>
+      <div class="nav-item" id="vnav-carr" onclick="filterVendor(this,'Carr-Lane')">
+        <div class="vendor-dot" style="background:#BA7517"></div>
+        Carr-Lane
+        <span class="nav-badge">124</span>
+      </div>
+      <div class="nav-item" id="vnav-steel" onclick="filterVendor(this,'Steel Smith')">
+        <div class="vendor-dot" style="background:#5F5E5A"></div>
+        Steel Smith
+        <span class="nav-badge">76</span>
+      </div>
+      <div class="nav-item" id="vnav-destaco" onclick="filterVendor(this,'Destaco')">
+        <div class="vendor-dot" style="background:#A32D2D"></div>
+        Destaco
+        <span class="nav-badge">64</span>
+      </div>
+      <div class="nav-item" id="vnav-skf" onclick="filterVendor(this,'SKF')">
+        <div class="vendor-dot" style="background:#534AB7"></div>
+        SKF
+        <span class="nav-badge">90</span>
+      </div>
+
+      <div class="nav-section">Categories</div>
+      <div class="nav-item" onclick="filterCatFromNav('Fasteners')">
+        <i class="ti ti-bolt"></i> Fasteners
+      </div>
+      <div class="nav-item" onclick="filterCatFromNav('Linear Motion')">
+        <i class="ti ti-arrows-horizontal"></i> Linear Motion
+      </div>
+      <div class="nav-item" onclick="filterCatFromNav('Bearings')">
+        <i class="ti ti-rotate-clockwise"></i> Bearings
+      </div>
+      <div class="nav-item" onclick="filterCatFromNav('Clamps')">
+        <i class="ti ti-grip-horizontal"></i> Clamps
+      </div>
+      <div class="nav-item" onclick="filterCatFromNav('Structural')">
+        <i class="ti ti-box"></i> Structural
+      </div>
+      <div class="nav-item" onclick="filterCatFromNav('Springs')">
+        <i class="ti ti-wave-sine"></i> Springs
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main">
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="breadcrumb" id="breadcrumb">All Catalog <b>/ Standard Parts</b></div>
+        <div class="page-title" id="page-title">Standard Parts Catalog</div>
+      </div>
+      <div class="search-wrap">
+        <i class="ti ti-search"></i>
+        <input type="text" id="search" placeholder="Search name, number, material…" oninput="render()">
+      </div>
+    </div>
+
+    <!-- Category chips -->
+    <div class="filter-bar">
+      <span class="filter-label">Category:</span>
+      <div class="chip active" onclick="setCat(this,'all')">All</div>
+      <div class="chip" onclick="setCat(this,'Fasteners')">Fasteners</div>
+      <div class="chip" onclick="setCat(this,'Linear Motion')">Linear Motion</div>
+      <div class="chip" onclick="setCat(this,'Bearings')">Bearings</div>
+      <div class="chip" onclick="setCat(this,'Clamps')">Clamps</div>
+      <div class="chip" onclick="setCat(this,'Structural')">Structural</div>
+      <div class="chip" onclick="setCat(this,'Pneumatics')">Pneumatics</div>
+      <div class="chip" onclick="setCat(this,'Springs')">Springs</div>
+      <div class="chip" onclick="setCat(this,'Locating')">Locating</div>
+      <div class="chip" onclick="setCat(this,'Seals')">Seals</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-strip">
+      <div class="stat-card">
+        <div class="slabel">Total Parts</div>
+        <div class="sval" id="stat-total">847</div>
+        <div class="ssub">across 7 vendors</div>
+      </div>
+      <div class="stat-card">
+        <div class="slabel">In Stock</div>
+        <div class="sval green" id="stat-instock">621</div>
+        <div class="ssub">ready to order</div>
+      </div>
+      <div class="stat-card">
+        <div class="slabel">Categories</div>
+        <div class="sval">10</div>
+        <div class="ssub">product families</div>
+      </div>
+      <div class="stat-card">
+        <div class="slabel">Filtered Results</div>
+        <div class="sval" id="stat-filt">—</div>
+        <div class="ssub" id="stat-filt-sub">no filter active</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="results-info" id="results-info">Showing all <b>28</b> parts</div>
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-grid" onclick="setView('grid')" title="Grid view"><i class="ti ti-layout-grid"></i></button>
+        <button class="view-btn" id="btn-list" onclick="setView('list')" title="List view"><i class="ti ti-list"></i></button>
+      </div>
+    </div>
+
+    <!-- Parts + Detail -->
+    <div class="content-wrap">
+      <div class="content" id="parts-content"></div>
+
+      <!-- Detail panel -->
+      <div class="detail-panel hidden" id="detail-panel">
+        <div class="detail-header">
+          <h3 id="d-title">Part Details</h3>
+          <div class="close-btn" onclick="closeDetail()" title="Close"><i class="ti ti-x"></i></div>
+        </div>
+        <div class="detail-img" id="d-icon"></div>
+        <div class="detail-body">
+          <div class="detail-section">
+            <div class="detail-section-title">Part Info</div>
+            <div class="spec-row"><span class="spec-key">Part Number</span><span class="spec-val" id="d-num"></span></div>
+            <div class="spec-row"><span class="spec-key">Vendor</span><span class="spec-val plain" id="d-vendor"></span></div>
+            <div class="spec-row"><span class="spec-key">Category</span><span class="spec-val plain" id="d-cat"></span></div>
+            <div class="spec-row"><span class="spec-key">Unit Price</span><span class="spec-val" id="d-price"></span></div>
+            <div class="spec-row"><span class="spec-key">Stock</span><span class="spec-val plain" id="d-stock"></span></div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-section-title">Specifications</div>
+            <div id="d-specs"></div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-section-title">Description</div>
+            <div class="desc-text" id="d-desc"></div>
+          </div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn btn-primary" onclick="openVendor()"><i class="ti ti-external-link"></i> View on Vendor Site</button>
+          <button class="btn btn-outline" id="copy-btn" onclick="copyNum()"><i class="ti ti-copy"></i> Copy Part Number</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="ti ti-check"></i> <span id="toast-msg"></span></div>
+
+<script>
+/* ── Data ── */
+const VENDORS = {
+  'McMaster-Carr': { color:'#185FA5', bg:'#DDEEFF', text:'#0C4478', url:'https://www.mcmaster.com/' },
+  'MISUMI':        { color:'#0F6E56', bg:'#D4F0E5', text:'#095C44', url:'https://us.misumi-ec.com/' },
+  'THK':           { color:'#D85A30', bg:'#FADDCC', text:'#A03A18', url:'https://www.thk.com/' },
+  'Carr-Lane':     { color:'#BA7517', bg:'#FAEAC2', text:'#8A5410', url:'https://www.carrlane.com/' },
+  'Steel Smith':   { color:'#5F5E5A', bg:'#ECEAE3', text:'#3E3D3A', url:'https://steelsmith.com/' },
+  'Destaco':       { color:'#A32D2D', bg:'#FAD9D9', text:'#791F1F', url:'https://www.destaco.com/' },
+  'SKF':           { color:'#534AB7', bg:'#E3E1F9', text:'#3A3289', url:'https://www.skf.com/' },
+};
+
+const ICONS = {
+  'Fasteners':'ti-bolt','Linear Motion':'ti-arrows-horizontal','Bearings':'ti-rotate-clockwise',
+  'Clamps':'ti-grip-horizontal','Structural':'ti-box','Pneumatics':'ti-wind',
+  'Springs':'ti-wave-sine','Seals':'ti-circle-dashed','Locating':'ti-crosshair',
+  'Drive':'ti-gps','Workholding':'ti-tool'
+};
+
+const SPEC_LABELS = {
+  mat:'Material', thread:'Thread', len:'Length', grade:'Grade', head:'Head Type',
+  drive:'Drive', shoulder:'Shoulder Dia', OD:'Outer Dia', ID:'Inner Dia',
+  bore:'Bore', width:'Width', seal:'Seal', dynLoad:'Dynamic Load', angle:'Contact Angle',
+  rows:'Rows', dia:'Diameter', lead:'Lead', acc:'Accuracy', rate:'Spring Rate',
+  type:'Type', size:'Size', rails:'Rails', preload:'Preload', lubrication:'Lubrication',
+  seals:'Seals', sect:'Section', slot:'Slot Width', finish:'Finish', free_len:'Free Length',
+  wire:'Wire Dia', stroke:'Stroke', stud:'Stud', shank:'Shank', fit:'Fit Class',
+  arm:'Arm Style', base:'Base', cap:'Capacity', action:'Action', mount:'Mount',
+  force:'Force', actuation:'Actuation', swing:'Swing', thick:'Thickness', gauge:'Gauge',
+  CS:'Cross Section', standard:'Standard', temp:'Temp Range', spring:'Spring Loaded'
+};
+
+const PARTS = [
+  {id:1, name:'Hex Cap Screw M8×1.25×30mm',         num:'91290A175', vendor:'McMaster-Carr', cat:'Fasteners',     price:0.18, stock:'in',  mat:'A2 Stainless',    thread:'M8×1.25', len:'30mm',   grade:'A2-70', head:'Hex',     drive:'N/A',           desc:'Standard metric hex cap screw in A2 stainless steel. Fully threaded. Per-piece pricing.'},
+  {id:2, name:'Socket Head Cap Screw M6×1.0×20',    num:'91292A132', vendor:'McMaster-Carr', cat:'Fasteners',     price:0.14, stock:'in',  mat:'18-8 SS',         thread:'M6×1.0',  len:'20mm',   grade:'A2-70', head:'Socket',  drive:'Hex',           desc:'Metric socket head cap screw for precision assemblies. Reusable high-strength fastener.'},
+  {id:3, name:'Shoulder Bolt M8 Shoulder × M6',     num:'91259A445', vendor:'McMaster-Carr', cat:'Fasteners',     price:2.43, stock:'in',  mat:'Alloy Steel',     shoulder:'8mm',   thread:'M6',  len:'25mm',   grade:'12.9',                          desc:'Precision shoulder bolt for dowel-pin style fitment. Hardened alloy steel.'},
+  {id:4, name:'T-Slot Nut M6 for 30mm Rail',        num:'5537T111',  vendor:'McMaster-Carr', cat:'Structural',    price:0.97, stock:'in',  mat:'Zinc-pl. Steel',  slot:'8mm',       thread:'M6',  spring:'Yes',                                          desc:'Hammer-in T-nut for 30mm aluminum extrusion. Spring loaded for positioning.'},
+  {id:5, name:'Flat Head Screw M4×0.7×10 DIN7991',  num:'91263A151', vendor:'McMaster-Carr', cat:'Fasteners',     price:0.10, stock:'in',  mat:'Alloy Steel',     thread:'M4×0.7',  len:'10mm',   grade:'12.9', head:'Flat',    drive:'Hex',           desc:'Metric flat head cap screw for countersunk holes. High-strength 12.9 grade alloy steel.'},
+  {id:6, name:'Viton O-Ring 2-210 AS568',           num:'9262K543',  vendor:'McMaster-Carr', cat:'Seals',         price:0.58, stock:'in',  mat:'Viton',           ID:'9/16"',       CS:'3/32"',   standard:'AS568-210', temp:'-20 to 400°F',         desc:'Fluoroelastomer O-ring for high-temperature or chemical-resistant sealing. MIL-R-25988 compliant.'},
+  {id:7, name:'Linear Rail HSR20R 300mm',           num:'HSR20R0300',vendor:'THK',           cat:'Linear Motion', price:78.50,stock:'in',  mat:'SCM440 Steel',    size:'HSR20',     len:'300mm',  rails:'Single', preload:'C0',                        desc:'THK HSR series miniature linear guide rail. Four-direction equal load. Industry standard.'},
+  {id:8, name:'Linear Block HSR20RM Flange',        num:'HSR20RM1SS',vendor:'THK',           cat:'Linear Motion', price:92.00,stock:'low', mat:'SCM440 + SS Balls',size:'HSR20',    type:'Flange',seals:'Both ends',lubrication:'Grease nipple',        desc:'HSR20 flange-type carriage block with stainless steel ball elements. Double-lip seals on both ends.'},
+  {id:9, name:'Ball Screw SFU1605 500mm',           num:'SFU1605-500',vendor:'THK',          cat:'Linear Motion', price:145.00,stock:'in', dia:'16mm',            lead:'5mm',       len:'500mm',  acc:'C7',                                              desc:'Rolled ball screw 1605 configuration. CNC and automation high-efficiency linear actuation.'},
+  {id:10,name:'Linear Actuator KR20 300mm Stroke',  num:'KR20-300',  vendor:'THK',           cat:'Linear Motion', price:340.00,stock:'low',stroke:'300mm',        type:'Ball Screw',lead:'5mm',   rails:'HSR15',                                         desc:'THK KR series compact actuator with integrated rail and ball screw. Self-contained motion module.'},
+  {id:11,name:'Cam Follower KR16PP',                num:'KR16PP',    vendor:'THK',           cat:'Bearings',      price:18.50,stock:'in',  stud:'M8',             OD:'16mm',        width:'28mm', type:'Stud Cam',                                       desc:'THK KR series cam follower with crowned outer ring. Needle roller for track-follower applications.'},
+  {id:12,name:'Deep Groove Ball Bearing 6204-2RS',  num:'6204-2RS',  vendor:'SKF',           cat:'Bearings',      price:8.40, stock:'in',  bore:'20mm',           OD:'47mm',        width:'14mm', seal:'Rubber',  dynLoad:'12.7 kN',                   desc:'SKF 6204-2RS deep groove ball bearing with rubber seals, C3 clearance. For motors and gearboxes.'},
+  {id:13,name:'Angular Contact Bearing 7206 BEP',   num:'7206 BEP',  vendor:'SKF',           cat:'Bearings',      price:32.60,stock:'in',  bore:'30mm',           OD:'62mm',        width:'16mm', angle:'40°',                                           desc:'Single row angular contact ball bearing for combined axial and radial loads. Pairable.'},
+  {id:14,name:'Spherical Roller Bearing 22210 E',   num:'22210 E/C3',vendor:'SKF',           cat:'Bearings',      price:54.20,stock:'low', bore:'50mm',           OD:'90mm',        width:'23mm', rows:'Double',                                         desc:'Spherical roller bearing, self-aligning. Ideal for heavy radial loads and misalignment.'},
+  {id:15,name:'Pillow Block Bearing UCP205',        num:'UCP205',    vendor:'SKF',           cat:'Bearings',      price:22.30,stock:'in',  bore:'25mm',           type:'Pillow Blk',mat:'Cast Iron',seals:'Rubber',                                      desc:'SNL/SNH plummer block with SKF sealed insert bearing. Shaft-to-frame mounting.'},
+  {id:16,name:'Shoulder Locating Pin Ø10h6 L40',   num:'CL-18-200', vendor:'Carr-Lane',     cat:'Locating',      price:4.75, stock:'in',  mat:'H13 Tool Steel',  dia:'10mm',       fit:'h6',     len:'40mm',   shank:'Smooth',                          desc:'Precision ground locating pin for fixture tooling. H13 tool steel Rc 60–62. Press-fit shank.'},
+  {id:17,name:'Drill Jig Bushing Press-Fit Ø8mm',  num:'CL-34-412', vendor:'Carr-Lane',     cat:'Locating',      price:3.20, stock:'in',  mat:'Hardened Steel',  ID:'8mm',         OD:'13mm',    len:'12mm',   type:'Press-Fit',                        desc:'Standard drill jig bushing for guiding cutting tools. Ground to H7 inside diameter.'},
+  {id:18,name:'Toggle Clamp Horizontal 225 lb',     num:'CL-150-HTC',vendor:'Carr-Lane',     cat:'Clamps',        price:38.00,stock:'in',  cap:'225 lb',          type:'Horizontal',arm:'Standard',base:'Slotted',                                      desc:'Horizontal toggle clamp for quick workholding in jigs and fixtures. Solid bar arm with swivel pad.'},
+  {id:19,name:'Hold-Down Toggle Clamp 600N',        num:'DE-205-U',  vendor:'Destaco',       cat:'Clamps',        price:42.50,stock:'in',  force:'600N',          type:'Hold-Down', action:'Manual',mount:'Base plate',                                  desc:'Destaco series 205 hold-down clamp. Compact for tight fixture spaces. Cast iron construction.'},
+  {id:20,name:'Pneumatic Swing Clamp 700N',         num:'DE-SP82-10',vendor:'Destaco',       cat:'Clamps',        price:185.00,stock:'in', force:'700N',          type:'Swing',     actuation:'Pneumatic',bore:'32mm',                                    desc:'Pneumatic swing clamp with 90° rotation. Pre-set torque limiting. High-cycle automation.'},
+  {id:21,name:'Power Clamp PA 20-Degree Swing',     num:'DE-82M2-041',vendor:'Destaco',      cat:'Clamps',        price:220.00,stock:'low',force:'1.5 kN',        type:'Power',     swing:'20°',  actuation:'Pneumatic',                                 desc:'High-force power clamp for automotive and heavy fixture applications. Sealed for coolant.'},
+  {id:22,name:'Aluminum Extrusion 30×30 L1000',    num:'HFSB5-3030-1000',vendor:'MISUMI',   cat:'Structural',    price:24.80,stock:'in',  mat:'A6063 Aluminum',  sect:'30×30',     len:'1000mm', slot:'8mm',   finish:'Clear Anodized',                 desc:'MISUMI HFSB series aluminum extrusion. Compatible with 8mm slot accessories. Precision cut.'},
+  {id:23,name:'Shaft Collar Clamp Type Ø20',       num:'SCCM20',    vendor:'MISUMI',        cat:'Structural',    price:6.90, stock:'in',  mat:'S45C Steel',      bore:'20mm',      type:'Clamp', finish:'Black Oxide',                                   desc:'MISUMI clamp-type shaft collar. Two-piece design for easy installation.'},
+  {id:24,name:'Compression Spring Ø10 × L30',      num:'WC10×30',   vendor:'MISUMI',        cat:'Springs',       price:1.40, stock:'in',  OD:'10mm',             free_len:'30mm',  wire:'1.2mm', mat:'SWP-B',  rate:'2.8 N/mm',                         desc:'MISUMI standard compression spring. High-precision wound, ends ground flat.'},
+  {id:25,name:'Linear Bushing LM10UU',              num:'LM10UU',    vendor:'MISUMI',        cat:'Linear Motion', price:5.80, stock:'in',  bore:'10mm',           OD:'19mm',        len:'29mm',   type:'Closed',                                         desc:'Standard linear ball bushing for 10mm smooth shaft. Full ball complement.'},
+  {id:26,name:'Steel Square Tube 1"×1"×0.065"',    num:'ST-SQ-1-065',vendor:'Steel Smith',  cat:'Structural',    price:8.60, stock:'in',  mat:'A500 Steel',      sect:'1"×1"',     thick:'0.065"',len:'1 ft',                                            desc:'Cold-formed A500 steel square tube. Sold per linear foot. Frames, brackets, and supports.'},
+  {id:27,name:'Steel Flat Bar 1/4" × 2" × 12"',   num:'FB-025-200-12',vendor:'Steel Smith', cat:'Structural',    price:6.20, stock:'in',  mat:'A36 Steel',       thick:'0.25"',    width:'2"',   len:'12"',    finish:'Hot Rolled',                     desc:'A36 hot-rolled steel flat bar. Versatile stock for plates, brackets, and weldments.'},
+  {id:28,name:'Cold Rolled Sheet 16ga 12×24"',      num:'CRS-16-1224',vendor:'Steel Smith',  cat:'Structural',    price:14.80,stock:'in',  mat:'CRS 1008/1010',   gauge:'16 ga',    thick:'0.060"',size:'12"×24"',                                       desc:'Cold rolled steel sheet. Tight tolerances, smooth surface finish. For formed sheet metal parts.'},
+];
+
+/* ── State ── */
+let activeVendor  = 'all';
+let activeCat     = 'all';
+let viewMode      = 'grid';
+let selectedId    = null;
+
+function filtered() {
+  const q = document.getElementById('search').value.toLowerCase();
+  return PARTS.filter(p => {
+    const vm = activeVendor === 'all' || p.vendor === activeVendor;
+    const cm = activeCat    === 'all' || p.cat    === activeCat;
+    const sm = !q || p.name.toLowerCase().includes(q)
+                  || p.num.toLowerCase().includes(q)
+                  || (p.mat||'').toLowerCase().includes(q)
+                  || (p.thread||'').toLowerCase().includes(q);
+    return vm && cm && sm;
+  });
+}
+
+/* ── Stock helpers ── */
+function stockClass(s) { return s==='in'?'in-stock':s==='low'?'low-stock':'out-stock'; }
+function stockLabel(s) { return s==='in'?'In Stock':s==='low'?'Low Stock':'Out of Stock'; }
+
+/* ── Render ── */
+function render() {
+  const fp = filtered();
+  const container = document.getElementById('parts-content');
+  const active = activeVendor!=='all' || activeCat!=='all' || document.getElementById('search').value;
+
+  document.getElementById('results-info').innerHTML = `Showing <b>${fp.length}</b> of <b>${PARTS.length}</b> parts`;
+  document.getElementById('stat-filt').textContent = active ? fp.length : '—';
+  document.getElementById('stat-filt-sub').textContent = active ? 'matching filters' : 'no filter active';
+
+  if (!fp.length) {
+    container.innerHTML = '<div class="empty-state"><i class="ti ti-search-off"></i>No parts match your filter.</div>';
+    return;
+  }
+
+  if (viewMode === 'grid') {
+    container.innerHTML = `<div class="parts-grid">${fp.map(cardHTML).join('')}</div>`;
+  } else {
+    container.innerHTML = `
+      <div class="list-header">
+        <div></div><div>Part</div><div>Vendor</div><div>Category</div><div>Price</div><div>Stock</div>
+      </div>
+      <div class="parts-list">${fp.map(rowHTML).join('')}</div>`;
+  }
+}
+
+function cardHTML(p) {
+  const v = VENDORS[p.vendor];
+  const ic = ICONS[p.cat] || 'ti-box';
+  const sel = selectedId === p.id ? ' selected' : '';
+  return `<div class="part-card${sel}" onclick="openDetail(${p.id})">
+    <div class="card-icon"><i class="ti ${ic}"></i></div>
+    <div class="card-body">
+      <div class="vendor-tag" style="background:${v.bg};color:${v.text}">${p.vendor}</div>
+      <div class="card-name">${p.name}</div>
+      <div class="card-num">${p.num}</div>
+      <div class="card-footer">
+        <div class="card-price">$${p.price.toFixed(2)}</div>
+        <div class="stock-badge ${stockClass(p.stock)}">${stockLabel(p.stock)}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function rowHTML(p) {
+  const v = VENDORS[p.vendor];
+  const ic = ICONS[p.cat] || 'ti-box';
+  const sel = selectedId === p.id ? ' selected' : '';
+  return `<div class="list-row${sel}" onclick="openDetail(${p.id})">
+    <div class="icon"><i class="ti ${ic}"></i></div>
+    <div><div class="lname">${p.name}</div><div class="lnum">${p.num}</div></div>
+    <div><span class="vendor-tag" style="background:${v.bg};color:${v.text}">${p.vendor}</span></div>
+    <div style="color:var(--text-secondary)">${p.cat}</div>
+    <div class="lprice">$${p.price.toFixed(2)}</div>
+    <div><span class="stock-badge ${stockClass(p.stock)}">${stockLabel(p.stock)}</span></div>
+  </div>`;
+}
+
+/* ── Detail panel ── */
+function openDetail(id) {
+  const p = PARTS.find(x => x.id === id);
+  if (!p) return;
+  selectedId = id;
+  const v  = VENDORS[p.vendor];
+  const ic = ICONS[p.cat] || 'ti-box';
+
+  document.getElementById('detail-panel').classList.remove('hidden');
+  document.getElementById('d-title').textContent  = p.name;
+  document.getElementById('d-icon').innerHTML     = `<i class="ti ${ic}" style="font-size:48px"></i>`;
+  document.getElementById('d-num').textContent    = p.num;
+  document.getElementById('d-vendor').textContent = p.vendor;
+  document.getElementById('d-cat').textContent    = p.cat;
+  document.getElementById('d-price').textContent  = `$${p.price.toFixed(2)} / ea`;
+  document.getElementById('d-stock').innerHTML    = `<span class="stock-badge ${stockClass(p.stock)}">${stockLabel(p.stock)}</span>`;
+  document.getElementById('d-desc').textContent   = p.desc;
+
+  const skip = ['id','name','num','vendor','cat','price','stock','desc'];
+  const specs = Object.keys(p).filter(k => !skip.includes(k));
+  document.getElementById('d-specs').innerHTML = specs.map(k =>
+    `<div class="spec-row">
+      <span class="spec-key">${SPEC_LABELS[k]||k}</span>
+      <span class="spec-val">${p[k]}</span>
+    </div>`
+  ).join('');
+
+  render();
+}
+
+function closeDetail() {
+  selectedId = null;
+  document.getElementById('detail-panel').classList.add('hidden');
+  render();
+}
+
+function openVendor() {
+  const p = PARTS.find(x => x.id === selectedId);
+  if (p) window.open(VENDORS[p.vendor].url, '_blank');
+}
+
+function copyNum() {
+  const p = PARTS.find(x => x.id === selectedId);
+  if (!p) return;
+  navigator.clipboard.writeText(p.num).then(() => {
+    showToast('Part number copied: ' + p.num);
+  }).catch(() => showToast('Copy: ' + p.num));
+}
+
+/* ── Filters ── */
+function filterVendor(el, v) {
+  activeVendor = v;
+  document.querySelectorAll('[id^="vnav-"]').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('breadcrumb').innerHTML =
+    v === 'all' ? 'All Catalog <b>/ Standard Parts</b>' : `<b>${v}</b> / Parts Catalog`;
+  document.getElementById('page-title').textContent =
+    v === 'all' ? 'Standard Parts Catalog' : v + ' — Parts';
+  render();
+}
+
+function setCat(el, cat) {
+  activeCat = cat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function filterCatFromNav(cat) {
+  activeCat = cat;
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('active', c.textContent.trim() === cat);
+  });
+  render();
+}
+
+function showAllCatalog(el) {
+  activeVendor = 'all'; activeCat = 'all';
+  document.getElementById('search').value = '';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('vnav-all').classList.add('active');
+  document.querySelectorAll('.chip').forEach((c,i) => c.classList.toggle('active', i===0));
+  document.getElementById('breadcrumb').innerHTML = 'All Catalog <b>/ Standard Parts</b>';
+  document.getElementById('page-title').textContent = 'Standard Parts Catalog';
+  render();
+}
+
+function setView(v) {
+  viewMode = v;
+  document.getElementById('btn-grid').classList.toggle('active', v==='grid');
+  document.getElementById('btn-list').classList.toggle('active', v==='list');
+  render();
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ── Init ── */
+render();
+</script>
+</body>
+</html>
